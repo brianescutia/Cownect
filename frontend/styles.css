@@ -1,0 +1,61 @@
+body {
+    margin: 0;
+    font-family: 'Helvetica', sans-serif;
+    background-color: #ffffff;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+}
+
+.navbar .logo {
+    height: 40px;
+}
+
+.nav-links {
+    list-style: none;
+    display: flex;
+    gap: 1.5rem;
+}
+
+.nav-links a {
+    text-decoration: none;
+    font-weight: 500;
+    color: #333;
+}
+
+.account-btn {
+    background-color: #dbe9ff;
+    padding: 0.4rem 0.9rem;
+    border-radius: 20px;
+}
+
+.hero {
+    position: relative;
+    text-align: center;
+    padding: 5rem 2rem;
+}
+
+.background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: -1;
+    opacity: 0.9;
+}
+
+.hero-text h1 {
+    font-size: 2.5rem;
+    font-weight: 800;
+    line-height: 1.2;
+}
+
+.hero-text p {
+    max-width: 600px;
+    margin: 1.5rem auto 0;
+    color: #444;
+}
