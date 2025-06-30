@@ -38,5 +38,6 @@ Cownect is a student-built web platform designed to help UC Davis students disco
 ---
 
 ## 📁 File Structure
+n/a
 
 
