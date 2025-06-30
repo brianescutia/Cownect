@@ -21,6 +21,7 @@ Cownect is a student-built web platform designed to help UC Davis students disco
 - 🖼️ **Club Cards** – Each card displays logo, tags, and a short description
 - 🔎 **Searchable List** – (Planned) Input field for name or keyword lookup
 - 🎨 **Minimalist Design** – Mobile-friendly UI designed in Figma
+- 📅 **Event Schedule** - (Planned) Calendar for upcoming events for various clubs
 
 ---
 
