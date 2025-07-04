@@ -8,9 +8,9 @@ app.use(express.static('public'));
 
 // Serve the HTML file
 app.get('/', (req, res) => {
-  res.send('Hello, World!');
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+  res.sendFile(path.join(__dirname, 'public/pages/index.html'));
 });
+
 
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
