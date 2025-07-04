@@ -31,10 +31,17 @@
 
 <div class="search-wrapper">
   <input type="text" class="search-bar" placeholder="Search for your club here..." />
-  <img src="../assets/filter.png" alt="Search" class="search-icon" />
+  <img src="../assets/filter.png" alt="Search" class="search-icon" id="filterToggle" />
 </div>
 
-
+<div class="filter-tags hidden" id="filterTags">
+  <span class="tag">#AI</span>
+  <span class="tag">#hardware</span>
+  <span class="tag">#design</span>
+  <span class="tag">#software</span>
+  <span class="tag">#webdev</span>
+  <!-- Add more as needed -->
+</div>
 
 
   <!-- Club Cards Grid -->
@@ -123,6 +130,8 @@
   </section>
 
   <script src="../scripts/pagination.js"></script>
+  <script src="../scripts/filterToggle.js"></script>
+
 
 </body>
 </html>

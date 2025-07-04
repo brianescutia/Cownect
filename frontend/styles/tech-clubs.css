@@ -135,6 +135,34 @@ button {
     filter: brightness(0.8);
 }
 
+
+.filter-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    max-width: 65.5vw;
+    margin: 0 auto 1rem auto;
+    padding: 0.75rem 1rem;
+    background-color: rgba(183, 183, 183, 0.2);
+    border-radius: 15px;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.tag {
+    background-color: #5F96C5;
+    color: white;
+    padding: 0.4rem 0.8rem;
+    border-radius: 12px;
+    font-size: 0.9rem;
+    cursor: pointer;
+}
+
+.hidden {
+    display: none;
+}
+
+
 /* Club Grid */
 .clubs-grid {
     display: grid;
