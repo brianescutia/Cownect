@@ -7,7 +7,9 @@
     <title>Cownect - Log In</title>
     <link rel="stylesheet" href="../styles/login.css">
     <link href="https://fonts.googleapis.com/css2?family=Rethink+Sans&display=swap" rel="stylesheet">
-      <link rel="stylesheet" href="/styles/login.css" />
+    <link rel="stylesheet" href="/styles/login.css" />
+    <script src="/scripts/login.js" defer></script>
+
 
 </head>
 
@@ -20,18 +22,36 @@
                     Cownect
                 </h1>
             </header>
-            <form>
-                <label for="email">E-mail</label>
-                <input type="email" id="email" placeholder="user@ucdavis.edu" required>
+            <form method="POST" action="/login">
+  <label for="email">E-mail</label>
+  <input type="email" id="email" name="email" required placeholder="user@ucdavis.edu" />
 
-                <label for="password">Password</label>
-                <input type="password" id="password" placeholder="••••••••" required>
+  <label for="password">Password</label>
+  <input type="password" id="password" name="password" required placeholder="••••••••" />
 
-                <button type="submit">Sign In</button>
-            </form>
+  <button type="submit">Sign In</button>
+</form>
+
+
         </section>
     </main>
-  <script src="/scripts/login.js" defer></script>
+  <script>
+  const urlParams = new URLSearchParams(window.location.search);
+  const showError = urlParams.get('error');
+
+  if (showError) {
+    const form = document.querySelector('form');
+    const errorMsg = document.createElement('p');
+    errorMsg.textContent = "Incorrect email or password. Please try again.";
+    errorMsg.style.color = "red";
+    errorMsg.style.position = "relative";
+    errorMsg.style.top = "40px";
+    errorMsg.style.left = "15px";      
+
+    form.prepend(errorMsg);
+  }
+</script>
+
 
 </body>
 
