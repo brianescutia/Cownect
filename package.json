@@ -1,18 +1,24 @@
 {
   "name": "cownect",
   "version": "1.0.0",
-  "description": "WIP",
-  "main": "app.js",
+  "description": "Tech club discovery platform for UC Davis students",
+  "main": "backend/app.js",
   "scripts": {
     "start": "node backend/app.js",
+    "dev": "nodemon backend/app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/brianescutia/Cownect.git"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "tech",
+    "clubs",
+    "ucdavis",
+    "students"
+  ],
+  "author": "Brian Escutia",
   "license": "ISC",
   "type": "commonjs",
   "bugs": {
@@ -20,8 +26,14 @@
   },
   "homepage": "https://github.com/brianescutia/Cownect#readme",
   "dependencies": {
+    "bcrypt": "^5.1.1",
+    "connect-mongo": "^5.1.0",
     "dotenv": "^17.2.0",
     "express": "^5.1.0",
+    "express-session": "^1.18.0",
     "mongoose": "^8.16.3"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
   }
 }
