@@ -2,37 +2,48 @@ const express = require('express');
 const path = require('path');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
-const session = require('express-session');
-const MongoStore = require('connect-mongo');
-const User = require('./models/User'); // Import the User model
+const session = require('express-session');  // For user session management
+const MongoStore = require('connect-mongo');  // Store sessions in MongoDB
+const User = require('./models/User');        // Import our User model
 
 dotenv.config();
 
 const app = express();
 const port = 3000;
 
-// Middleware
-app.use(express.static(path.join(__dirname, '../frontend')));
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
+// =============================================================================
+// MIDDLEWARE SETUP
+// =============================================================================
 
-// Session configuration
+// Basic Express Middleware
+app.use(express.static(path.join(__dirname, '../frontend')));  // Serve static files
+app.use(express.urlencoded({ extended: true }));               // Parse form data
+app.use(express.json());                                       // Parse JSON data
+
+// 🎟️ SESSION CONFIGURATION - Like setting up a wristband system at a concert
 app.use(session({
-  secret: process.env.SESSION_SECRET || 'your-secret-key-change-this',
+  // This is the "ink" used to create secure wristbands - keep it secret!
+  secret: process.env.SESSION_SECRET || 'change-this-in-production',
+
+  // Don't save empty sessions (saves database space)
   resave: false,
   saveUninitialized: false,
+
+  // Store sessions in MongoDB (like a filing cabinet for wristbands)
   store: MongoStore.create({
     mongoUrl: process.env.MONGO_URI,
-    collectionName: 'sessions'
+    collectionName: 'sessions'  // Creates a 'sessions' collection in your DB
   }),
+
+  // Wristband settings
   cookie: {
-    secure: false, // Set to true in production with HTTPS
-    httpOnly: true,
-    maxAge: 1000 * 60 * 60 * 24 // 24 hours
+    secure: false,      // Set to true when using HTTPS in production
+    httpOnly: true,     // Prevents JavaScript from accessing the cookie (security)
+    maxAge: 1000 * 60 * 60 * 24  // 24 hours (wristband expires after 1 day)
   }
 }));
 
-// Connect to MongoDB
+// Connect to MongoDB Atlas
 mongoose.connect(process.env.MONGO_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -40,22 +51,34 @@ mongoose.connect(process.env.MONGO_URI, {
   .then(() => console.log('Connected to MongoDB Atlas'))
   .catch(err => console.error('MongoDB connection error:', err));
 
-// Middleware to check if user is authenticated
+// 🎟️ AUTHENTICATION MIDDLEWARE - Our "bouncer" function
+// This checks if someone has a valid wristband before letting them into protected areas
 const requireAuth = (req, res, next) => {
   if (req.session.userId) {
+    // They have a wristband with a valid userId! Let them in
     next();
   } else {
+    // No wristband? Send them to get one (login page)
     res.redirect('/login');
   }
 };
 
-// Routes
+// =============================================================================
+// ROUTES
+// =============================================================================
+
+// 🏠 HOME ROUTE
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '../frontend/index.html'));
 });
 
+// =============================================================================
+// AUTHENTICATION ROUTES
+// =============================================================================
+
+// 🚪 LOGIN ROUTES
 app.get('/login', (req, res) => {
-  // Redirect to home if already logged in
+  // If user already has a wristband (logged in), send them home
   if (req.session.userId) {
     return res.redirect('/');
   }
@@ -69,20 +92,22 @@ app.post('/login', async (req, res) => {
     // Step 1: Find user by email (convert to lowercase for consistency)
     const user = await User.findOne({ email: email.toLowerCase() });
 
-    // Step 2: If no user found, show error
     if (!user) {
       return res.redirect('/login?error=invalid');
     }
 
-    // Step 3: Use our new comparePassword method (the ID checker!)
+    // Step 2: Use our secure password comparison (the ID checker!)
     const isPasswordValid = await user.comparePassword(password);
 
     if (!isPasswordValid) {
       return res.redirect('/login?error=invalid');
     }
 
-    // Step 4: Password is correct! (We'll add sessions next week)
-    console.log('Login successful for:', user.email);
+    // Step 3: 🎟️ ISSUE THE WRISTBAND! Store user info in session
+    req.session.userId = user._id;
+    req.session.userEmail = user.email;
+
+    console.log('Login successful, session created for:', user.email);
     res.redirect('/');
 
   } catch (err) {
@@ -91,81 +116,104 @@ app.post('/login', async (req, res) => {
   }
 });
 
-// Add this to your app.js file, after your login routes
-
-// GET route for signup page
+// 📝 SIGNUP ROUTES
 app.get('/signup', (req, res) => {
+  // If user already has a wristband (logged in), send them home
+  if (req.session.userId) {
+    return res.redirect('/');
+  }
   res.sendFile(path.join(__dirname, '../frontend/pages/signup.html'));
 });
 
-// POST route to handle user registration
 app.post('/signup', async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    // Check if user already exists
+    // Step 1: Check if user already exists
     const existingUser = await User.findOne({ email: email.toLowerCase() });
 
     if (existingUser) {
       return res.redirect('/signup?error=exists');
     }
 
-    // Optional: Validate UC Davis email domain
+    // Step 2: Validate UC Davis email domain (customize for your school!)
     if (!email.toLowerCase().endsWith('@ucdavis.edu')) {
       return res.redirect('/signup?error=email');
     }
 
-    // Create new user (password will be automatically hashed by our pre-save middleware!)
+    // Step 3: Create new user (password gets hashed automatically by our User model!)
     const newUser = new User({
       email: email.toLowerCase(),
-      password: password  // This gets hashed automatically!
+      password: password  // This gets transformed into a hash by bcrypt
     });
 
     await newUser.save();
 
-    console.log('New user created:', newUser.email);
+    // Step 4: 🎟️ AUTO-LOGIN: Give them a wristband immediately after signup
+    req.session.userId = newUser._id;
+    req.session.userEmail = newUser.email;
 
-    // For now, just redirect to login (next week we'll add auto-login)
-    res.redirect('/login?success=1');
+    console.log('New user created and logged in:', newUser.email);
+    res.redirect('/');
 
   } catch (err) {
     console.error('Signup error:', err);
-
     if (err.code === 11000) {
-      // MongoDB duplicate key error
+      // MongoDB duplicate key error (shouldn't happen due to our check above)
       return res.redirect('/signup?error=exists');
     }
-
     res.redirect('/signup?error=server');
   }
 });
 
+// 🚪 LOGOUT ROUTE
 app.get('/logout', (req, res) => {
+  // 🗑️ REMOVE THE WRISTBAND - Destroy the session completely
   req.session.destroy((err) => {
     if (err) {
       console.error('Logout error:', err);
     }
+    console.log('User logged out');
     res.redirect('/login');
   });
 });
 
-// Protected route example
+// =============================================================================
+// PROTECTED ROUTES - Only for users with valid wristbands!
+// =============================================================================
+
+// 🏛️ TECH CLUBS PAGE - Protected route example
 app.get('/tech-clubs', requireAuth, (req, res) => {
+  // This line only runs if the user passed the requireAuth bouncer check
+  console.log('Tech clubs accessed by:', req.session.userEmail);
   res.sendFile(path.join(__dirname, '../frontend/pages/tech-clubs.html'));
 });
 
-// API endpoint to get current user info
+// =============================================================================
+// API ROUTES - For frontend JavaScript to check authentication status
+// =============================================================================
+
+// 🔍 USER STATUS API - Let frontend know if someone is logged in
 app.get('/api/user', (req, res) => {
   if (req.session.userId) {
+    // User has a valid wristband - send their info
     res.json({
       isLoggedIn: true,
-      email: req.session.userEmail
+      email: req.session.userEmail,
+      userId: req.session.userId
     });
   } else {
+    // No wristband - they're not logged in
     res.json({ isLoggedIn: false });
   }
 });
 
+// =============================================================================
+// START SERVER
+// =============================================================================
+
 app.listen(port, () => {
-  console.log(`Server running at http://localhost:${port}`);
+  console.log(`🚀 Cownect server running at http://localhost:${port}`);
+  console.log(`📊 Database: MongoDB Atlas`);
+  console.log(`🔐 Authentication: bcrypt + sessions`);
 });
