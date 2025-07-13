@@ -66,25 +66,25 @@ app.post('/login', async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    // Find user by email
+    // Step 1: Find user by email (convert to lowercase for consistency)
     const user = await User.findOne({ email: email.toLowerCase() });
 
+    // Step 2: If no user found, show error
     if (!user) {
       return res.redirect('/login?error=invalid');
     }
 
-    // Check password
+    // Step 3: Use our new comparePassword method (the ID checker!)
     const isPasswordValid = await user.comparePassword(password);
 
     if (!isPasswordValid) {
       return res.redirect('/login?error=invalid');
     }
 
-    // Create session
-    req.session.userId = user._id;
-    req.session.userEmail = user.email;
-
+    // Step 4: Password is correct! (We'll add sessions next week)
+    console.log('Login successful for:', user.email);
     res.redirect('/');
+
   } catch (err) {
     console.error('Login error:', err);
     res.redirect('/login?error=server');
