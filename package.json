@@ -4,7 +4,7 @@
   "description": "WIP",
   "main": "app.js",
   "scripts": {
-    "start": "node app.js",
+    "start": "node backend/app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -20,6 +20,8 @@
   },
   "homepage": "https://github.com/brianescutia/Cownect#readme",
   "dependencies": {
-    "express": "^5.1.0"
+    "dotenv": "^17.2.0",
+    "express": "^5.1.0",
+    "mongoose": "^8.16.3"
   }
 }

@@ -1,0 +1,3 @@
+;/*FB_PKG_DELIM*/
+
+__d("PolarisHttp500UnexpectedErrorPageDeferred.react",["CometPlaceholder.react","IGDSSpinner.react","JSResourceForInteraction","lazyLoadComponent","react","react-compiler-runtime"],(function(a,b,c,d,e,f,g){"use strict";var h,i=h||d("react"),j=c("lazyLoadComponent")(c("JSResourceForInteraction")("PolarisHttp500UnexpectedErrorPage.react").__setRef("PolarisHttp500UnexpectedErrorPageDeferred.react"));function a(){var a=d("react-compiler-runtime").c(1),b;a[0]===Symbol["for"]("react.memo_cache_sentinel")?(b=i.jsx(c("CometPlaceholder.react"),{fallback:i.jsx(c("IGDSSpinner.react"),{position:"absolute"}),children:i.jsx(j,{})}),a[0]=b):b=a[0];return b}g["default"]=a}),98);
