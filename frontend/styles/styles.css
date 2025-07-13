@@ -20,16 +20,16 @@ body {
 }
 
 .navbar-container {
+    display: flex;
+    align-items: center;
+    gap: 3rem;
+    /* Adds equal space between each item */
+    padding: 0 2rem;
     background-color: rgba(183, 183, 183, 0.30);
     border-radius: 25px;
-    width: 73.5vw;
-    /* 1129px / 1536px = 73.5% of screen */
-    height: 6vw;
+    width: 90%;
     max-width: 1129px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 1rem;
+    height: 6vw;
 }
 
 .navbar .logo {
@@ -38,9 +38,9 @@ body {
 }
 
 .nav-links {
+    gap: 6rem;
     list-style: none;
     display: flex;
-    gap: 6rem;
     align-items: center;
     margin: 0;
 
