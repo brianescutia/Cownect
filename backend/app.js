@@ -91,14 +91,14 @@ app.post('/login', async (req, res) => {
   }
 });
 
+// Add this to your app.js file, after your login routes
+
+// GET route for signup page
 app.get('/signup', (req, res) => {
-  // Redirect to home if already logged in
-  if (req.session.userId) {
-    return res.redirect('/');
-  }
   res.sendFile(path.join(__dirname, '../frontend/pages/signup.html'));
 });
 
+// POST route to handle user registration
 app.post('/signup', async (req, res) => {
   const { email, password } = req.body;
 
@@ -110,30 +110,32 @@ app.post('/signup', async (req, res) => {
       return res.redirect('/signup?error=exists');
     }
 
-    // Validate UC Davis email (optional)
+    // Optional: Validate UC Davis email domain
     if (!email.toLowerCase().endsWith('@ucdavis.edu')) {
       return res.redirect('/signup?error=email');
     }
 
-    // Create new user
+    // Create new user (password will be automatically hashed by our pre-save middleware!)
     const newUser = new User({
       email: email.toLowerCase(),
-      password: password
+      password: password  // This gets hashed automatically!
     });
 
     await newUser.save();
 
-    // Auto-login after signup
-    req.session.userId = newUser._id;
-    req.session.userEmail = newUser.email;
+    console.log('New user created:', newUser.email);
 
-    res.redirect('/');
+    // For now, just redirect to login (next week we'll add auto-login)
+    res.redirect('/login?success=1');
+
   } catch (err) {
     console.error('Signup error:', err);
+
     if (err.code === 11000) {
-      // Duplicate key error
+      // MongoDB duplicate key error
       return res.redirect('/signup?error=exists');
     }
+
     res.redirect('/signup?error=server');
   }
 });
