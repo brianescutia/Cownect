@@ -17,7 +17,7 @@ body {
 .background {
     width: 100vw;
     height: 100vh;
-    background-image: url('../assets/WAVES.png');
+    background-image: url('assets/WAVES.png');
     background-size: cover;
     /* or tweak with 110% if needed */
     background-repeat: no-repeat;
