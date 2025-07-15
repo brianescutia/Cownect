@@ -381,3 +381,83 @@
         font-size: 1.5rem;
     }
 }
+
+
+/* Mini Club Cards in Bookmarks */
+.bookmark-clubs-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.mini-club-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.mini-club-card:hover {
+    transform: translateY(-2px);
+    background: rgba(255, 255, 255, 0.4);
+}
+
+.mini-club-info {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.mini-club-logo {
+    width: 30px;
+    height: 30px;
+    border-radius: 6px;
+    object-fit: cover;
+}
+
+.mini-club-details {
+    display: flex;
+    flex-direction: column;
+}
+
+.mini-club-name {
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: #2c3e50;
+}
+
+.mini-club-category {
+    font-size: 0.75rem;
+    color: #7f8c8d;
+}
+
+.mini-club-tags {
+    display: flex;
+    gap: 0.25rem;
+}
+
+.mini-tag {
+    font-size: 0.7rem;
+    background: #5F96C5;
+    color: white;
+    padding: 0.15rem 0.4rem;
+    border-radius: 4px;
+}
+
+.view-all-btn {
+    display: inline-block;
+    margin-top: 1rem;
+    padding: 0.5rem 1rem;
+    background: #5F96C5;
+    color: white;
+    text-decoration: none;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    text-align: center;
+}

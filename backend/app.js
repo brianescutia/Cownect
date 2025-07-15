@@ -191,6 +191,136 @@ app.get('/tech-clubs', requireAuth, (req, res) => {
   res.sendFile(path.join(__dirname, '../frontend/pages/tech-clubs.html'));
 });
 
+app.get('/api/bookmarks', requireAuth, async (req, res) => {
+  try {
+    console.log(`📖 Fetching bookmarks for user: ${req.session.userEmail}`);
+
+    // Get user with populated bookmark details
+    const userWithBookmarks = await User.findWithBookmarks(req.session.userId);
+
+    if (!userWithBookmarks) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    console.log(`✅ Found ${userWithBookmarks.bookmarkedClubs.length} bookmarks`);
+
+    res.json({
+      bookmarks: userWithBookmarks.bookmarkedClubs,
+      totalBookmarks: userWithBookmarks.bookmarkedClubs.length
+    });
+
+  } catch (error) {
+    console.error('💥 Error fetching bookmarks:', error);
+    res.status(500).json({ error: 'Failed to fetch bookmarks' });
+  }
+});
+
+// 🔖 ADD BOOKMARK - Save a club to user's bookmarks
+app.post('/api/bookmarks', requireAuth, async (req, res) => {
+  try {
+    const { clubId } = req.body;
+
+    // Validate input
+    if (!clubId) {
+      return res.status(400).json({ error: 'Club ID is required' });
+    }
+
+    console.log(`📌 Adding bookmark: ${clubId} for user: ${req.session.userEmail}`);
+
+    // Check if club exists
+    const Club = require('./models/Club');
+    const club = await Club.findById(clubId);
+    if (!club) {
+      return res.status(404).json({ error: 'Club not found' });
+    }
+
+    // Get user and add bookmark
+    const user = await User.findById(req.session.userId);
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    // Add bookmark (method handles duplicates)
+    const wasAdded = await user.addBookmark(clubId);
+
+    if (wasAdded) {
+      res.json({
+        message: 'Bookmark added successfully',
+        clubId: clubId,
+        clubName: club.name,
+        totalBookmarks: user.getBookmarkCount()
+      });
+    } else {
+      res.status(409).json({
+        error: 'Club already bookmarked',
+        clubId: clubId
+      });
+    }
+
+  } catch (error) {
+    console.error('💥 Error adding bookmark:', error);
+    res.status(500).json({ error: 'Failed to add bookmark' });
+  }
+});
+
+// 🗑️ REMOVE BOOKMARK - Remove a club from user's bookmarks
+app.delete('/api/bookmarks/:clubId', requireAuth, async (req, res) => {
+  try {
+    const { clubId } = req.params;
+
+    console.log(`🗑️ Removing bookmark: ${clubId} for user: ${req.session.userEmail}`);
+
+    // Get user and remove bookmark
+    const user = await User.findById(req.session.userId);
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    // Remove bookmark (method handles if not bookmarked)
+    const wasRemoved = await user.removeBookmark(clubId);
+
+    if (wasRemoved) {
+      res.json({
+        message: 'Bookmark removed successfully',
+        clubId: clubId,
+        totalBookmarks: user.getBookmarkCount()
+      });
+    } else {
+      res.status(404).json({
+        error: 'Club was not bookmarked',
+        clubId: clubId
+      });
+    }
+
+  } catch (error) {
+    console.error('💥 Error removing bookmark:', error);
+    res.status(500).json({ error: 'Failed to remove bookmark' });
+  }
+});
+
+// 🔍 CHECK BOOKMARK STATUS - Check if a specific club is bookmarked
+app.get('/api/bookmarks/check/:clubId', requireAuth, async (req, res) => {
+  try {
+    const { clubId } = req.params;
+
+    const user = await User.findById(req.session.userId);
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    const isBookmarked = user.hasBookmarked(clubId);
+
+    res.json({
+      clubId: clubId,
+      isBookmarked: isBookmarked
+    });
+
+  } catch (error) {
+    console.error('💥 Error checking bookmark:', error);
+    res.status(500).json({ error: 'Failed to check bookmark status' });
+  }
+});
+
 
 // 👤 USER DASHBOARD - Protected route for user profile and management
 app.get('/dashboard', requireAuth, (req, res) => {
@@ -252,24 +382,44 @@ app.get('/api/clubs/search', async (req, res) => {
   }
 });
 
+// =============================================================================
+// UPDATED DASHBOARD API - Replace your existing /api/user/profile route
+// =============================================================================
+
 // 📊 ENHANCED USER API - More detailed user information for dashboard
 app.get('/api/user/profile', requireAuth, async (req, res) => {
   try {
-    // Find the full user document from database
-    const user = await User.findById(req.session.userId).select('-password'); // Exclude password
+    // Find the user with populated bookmarks
+    const userWithBookmarks = await User.findWithBookmarks(req.session.userId);
 
-    if (!user) {
+    if (!userWithBookmarks) {
       return res.status(404).json({ error: 'User not found' });
     }
 
+    // Calculate additional stats
+    const bookmarkCount = userWithBookmarks.getBookmarkCount();
+    const joinDate = userWithBookmarks.createdAt;
+    const daysActive = Math.ceil((new Date() - joinDate) / (1000 * 60 * 60 * 24));
+
+    console.log(`📊 Dashboard data for ${userWithBookmarks.email}: ${bookmarkCount} bookmarks, ${daysActive} days active`);
+
     // Return comprehensive user data for dashboard
     res.json({
-      id: user._id,
-      email: user.email,
-      joinDate: user.createdAt,
-      // Future: Add bookmarks, preferences, etc.
-      bookmarkedClubs: [], // Placeholder for Week 4
-      totalBookmarks: 0    // Placeholder for Week 4
+      id: userWithBookmarks._id,
+      email: userWithBookmarks.email,
+      joinDate: joinDate,
+
+      // 🔖 REAL BOOKMARK DATA
+      bookmarkedClubs: userWithBookmarks.bookmarkedClubs, // Full club objects
+      totalBookmarks: bookmarkCount,
+
+      // 📊 CALCULATED STATS
+      daysActive: daysActive,
+
+      // 🎯 FUTURE: Additional user stats
+      clubsViewed: 12,      // Placeholder - could track this later
+      eventsInterested: 3,  // Placeholder - for events feature
+      searchesPerformed: 8  // Placeholder - could track this later
     });
 
   } catch (error) {

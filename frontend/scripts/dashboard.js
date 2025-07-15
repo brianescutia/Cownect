@@ -1,41 +1,20 @@
 // =============================================================================
-// DASHBOARD FUNCTIONALITY
+// UPDATED DASHBOARD FUNCTIONALITY - Now with Real Bookmarks
 // =============================================================================
-// This file loads and displays user profile data on the dashboard page
-// Connects to the /api/user/profile endpoint for detailed user information
+
+// 🎯 GLOBAL STATE: Store dashboard data
+let dashboardData = null;
 
 // 🎯 WAIT FOR PAGE TO LOAD
 document.addEventListener('DOMContentLoaded', async () => {
 
     // 🔍 FIND DASHBOARD ELEMENTS
     const loadingOverlay = document.getElementById('loadingOverlay');
-    const userEmail = document.getElementById('userEmail');
-    const joinDate = document.getElementById('joinDate');
-    const bookmarkCount = document.getElementById('bookmarkCount');
-    const bookmarkList = document.getElementById('bookmarkList');
-
-    // Stats elements (placeholder for future features)
-    const clubsViewed = document.getElementById('clubsViewed');
-    const eventsInterested = document.getElementById('eventsInterested');
-    const daysActive = document.getElementById('daysActive');
-    const searchesPerformed = document.getElementById('searchesPerformed');
 
     try {
         // 📡 FETCH USER PROFILE DATA
         console.log('Loading user profile data...');
-        const response = await fetch('/api/user/profile');
-
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        const profileData = await response.json();
-        console.log('Profile data loaded:', profileData);
-
-        // 🎨 UPDATE UI WITH PROFILE DATA
-        updateProfileInfo(profileData);
-        updateBookmarksSection(profileData);
-        updateStatsSection(profileData);
+        await loadDashboardData();
 
         // ✅ HIDE LOADING OVERLAY
         hideLoadingOverlay();
@@ -46,6 +25,23 @@ document.addEventListener('DOMContentLoaded', async () => {
         hideLoadingOverlay();
     }
 });
+
+// 📡 FUNCTION: Load dashboard data from API
+async function loadDashboardData() {
+    const response = await fetch('/api/user/profile');
+
+    if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    dashboardData = await response.json();
+    console.log('Profile data loaded:', dashboardData);
+
+    // 🎨 UPDATE ALL DASHBOARD SECTIONS
+    updateProfileInfo(dashboardData);
+    updateBookmarksSection(dashboardData);
+    updateStatsSection(dashboardData);
+}
 
 // =============================================================================
 // UPDATE PROFILE INFORMATION SECTION
@@ -74,7 +70,7 @@ function updateProfileInfo(profileData) {
 }
 
 // =============================================================================
-// UPDATE BOOKMARKS SECTION
+// UPDATE BOOKMARKS SECTION - NOW WITH REAL DATA!
 // =============================================================================
 function updateBookmarksSection(profileData) {
     const bookmarkCount = document.getElementById('bookmarkCount');
@@ -84,12 +80,13 @@ function updateBookmarksSection(profileData) {
     if (bookmarkCount) {
         const count = profileData.totalBookmarks || 0;
         bookmarkCount.textContent = count;
+        console.log(`📊 Updated bookmark count to: ${count}`);
     }
 
     // 📝 UPDATE BOOKMARK LIST
     if (bookmarkList) {
         if (profileData.bookmarkedClubs && profileData.bookmarkedClubs.length > 0) {
-            // Show actual bookmarked clubs (Week 4 will implement this)
+            // Show actual bookmarked clubs
             displayBookmarkedClubs(profileData.bookmarkedClubs, bookmarkList);
         } else {
             // Show placeholder message
@@ -101,45 +98,26 @@ function updateBookmarksSection(profileData) {
         }
     }
 
-    console.log('Bookmarks section updated');
+    console.log('Bookmarks section updated with real data');
 }
 
 // =============================================================================
-// UPDATE STATS SECTION
-// =============================================================================
-function updateStatsSection(profileData) {
-    // 📊 CALCULATE DAYS ACTIVE
-    const daysActiveElement = document.getElementById('daysActive');
-    if (daysActiveElement && profileData.joinDate) {
-        const joinDate = new Date(profileData.joinDate);
-        const today = new Date();
-        const diffTime = Math.abs(today - joinDate);
-        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-        daysActiveElement.textContent = diffDays;
-    }
-
-    // 🔢 PLACEHOLDER STATS (Will be real data in future weeks)
-    const clubsViewed = document.getElementById('clubsViewed');
-    const eventsInterested = document.getElementById('eventsInterested');
-    const searchesPerformed = document.getElementById('searchesPerformed');
-
-    // For now, show placeholder values
-    if (clubsViewed) clubsViewed.textContent = '12';
-    if (eventsInterested) eventsInterested.textContent = '3';
-    if (searchesPerformed) searchesPerformed.textContent = '8';
-
-    console.log('Stats section updated');
-}
-
-// =============================================================================
-// DISPLAY BOOKMARKED CLUBS (Preview for Week 4)
+// DISPLAY BOOKMARKED CLUBS
 // =============================================================================
 function displayBookmarkedClubs(bookmarkedClubs, container) {
     // 🎴 CREATE MINI CLUB CARDS for bookmarked clubs
     const clubsHTML = bookmarkedClubs.map(club => `
-        <div class="mini-club-card">
-            <span class="club-icon">${club.icon || '🏛️'}</span>
-            <span class="club-name">${club.name}</span>
+        <div class="mini-club-card" onclick="goToClub('${club._id}')">
+            <div class="mini-club-info">
+                <img src="${club.logoUrl}" alt="${club.name}" class="mini-club-logo" />
+                <div class="mini-club-details">
+                    <span class="mini-club-name">${club.name}</span>
+                    <span class="mini-club-category">${club.category}</span>
+                </div>
+            </div>
+            <div class="mini-club-tags">
+                ${club.tags.slice(0, 2).map(tag => `<span class="mini-tag">#${tag}</span>`).join('')}
+            </div>
         </div>
     `).join('');
 
@@ -147,9 +125,64 @@ function displayBookmarkedClubs(bookmarkedClubs, container) {
         <div class="bookmark-clubs-grid">
             ${clubsHTML}
         </div>
-        <p class="bookmark-note">Click on any club to view details</p>
+        <div class="bookmark-actions">
+            <a href="/tech-clubs" class="view-all-btn">View All Clubs</a>
+        </div>
     `;
 }
+
+// =============================================================================
+// UPDATE STATS SECTION
+// =============================================================================
+function updateStatsSection(profileData) {
+    // 📊 UPDATE DAYS ACTIVE (now calculated from server)
+    const daysActiveElement = document.getElementById('daysActive');
+    if (daysActiveElement && profileData.daysActive) {
+        daysActiveElement.textContent = profileData.daysActive;
+    }
+
+    // 🔢 UPDATE OTHER STATS
+    const clubsViewed = document.getElementById('clubsViewed');
+    const eventsInterested = document.getElementById('eventsInterested');
+    const searchesPerformed = document.getElementById('searchesPerformed');
+
+    if (clubsViewed) clubsViewed.textContent = profileData.clubsViewed || '12';
+    if (eventsInterested) eventsInterested.textContent = profileData.eventsInterested || '3';
+    if (searchesPerformed) searchesPerformed.textContent = profileData.searchesPerformed || '8';
+
+    console.log('Stats section updated');
+}
+
+// =============================================================================
+// REAL-TIME BOOKMARK UPDATES
+// =============================================================================
+
+// 🔄 FUNCTION: Refresh bookmark data (called when bookmarks change)
+async function refreshBookmarkData() {
+    try {
+        console.log('🔄 Refreshing bookmark data...');
+        await loadDashboardData();
+        console.log('✅ Bookmark data refreshed');
+    } catch (error) {
+        console.error('💥 Error refreshing bookmark data:', error);
+    }
+}
+
+// 🎯 FUNCTION: Handle navigation to club details
+function goToClub(clubId) {
+    // For now, just go to tech-clubs page
+    // Later we could add a specific club detail page
+    window.location.href = '/tech-clubs';
+}
+
+// =============================================================================
+// LISTEN FOR BOOKMARK CHANGES
+// =============================================================================
+// Listen for custom events from bookmark system
+document.addEventListener('bookmarkChanged', () => {
+    console.log('📡 Bookmark change detected, refreshing dashboard...');
+    refreshBookmarkData();
+});
 
 // =============================================================================
 // LOADING AND ERROR STATES
@@ -163,22 +196,16 @@ function hideLoadingOverlay() {
 }
 
 function showErrorState() {
-    // 🚨 SHOW ERROR MESSAGE if profile loading fails
     const userEmail = document.getElementById('userEmail');
     const joinDate = document.getElementById('joinDate');
 
     if (userEmail) userEmail.textContent = 'Error loading profile';
     if (joinDate) joinDate.textContent = 'Unable to load';
 
-    // Show error notification
     showNotification('Failed to load profile data. Please refresh the page.', 'error');
 }
 
-// =============================================================================
-// NOTIFICATION SYSTEM (Simple version)
-// =============================================================================
 function showNotification(message, type = 'info') {
-    // Create notification element
     const notification = document.createElement('div');
     notification.className = `notification ${type}`;
     notification.innerHTML = `
@@ -186,7 +213,6 @@ function showNotification(message, type = 'info') {
         <button onclick="this.parentElement.remove()">&times;</button>
     `;
 
-    // Add styles
     notification.style.cssText = `
         position: fixed;
         top: 20px;
@@ -203,10 +229,8 @@ function showNotification(message, type = 'info') {
         max-width: 300px;
     `;
 
-    // Add to page
     document.body.appendChild(notification);
 
-    // Auto-remove after 5 seconds
     setTimeout(() => {
         if (notification.parentElement) {
             notification.remove();
@@ -214,27 +238,6 @@ function showNotification(message, type = 'info') {
     }, 5000);
 }
 
-// =============================================================================
-// HOW THIS WORKS:
-// =============================================================================
-//
-// 1. Page loads → Show loading overlay
-// 2. Fetch /api/user/profile → Get detailed user data
-// 3. Update each dashboard section with real data:
-//    - Profile: email, join date, status
-//    - Bookmarks: count and list (placeholder for now)
-//    - Stats: calculated days active, placeholder metrics
-// 4. Hide loading overlay → Show completed dashboard
-//
-// ERROR HANDLING:
-// - Network errors → Show error state
-// - API errors → Display error notification
-// - Missing data → Graceful fallbacks
-//
-// FUTURE ENHANCEMENTS (Week 4+):
-// - Real bookmark data from database
-// - Activity tracking and analytics
-// - Profile editing capabilities
-// - Settings and preferences management
-//
-// =============================================================================
+// 🌐 GLOBAL FUNCTIONS (for external access)
+window.refreshBookmarkData = refreshBookmarkData;
+window.goToClub = goToClub;
