@@ -348,3 +348,52 @@ button {
     cursor: pointer;
     font-size: 1rem;
 }
+
+/* Search Results Info */
+.search-results-info {
+    max-width: 1200px;
+    margin: 0 auto 1rem auto;
+    padding: 1rem;
+}
+
+.results-summary {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    background: rgba(95, 150, 197, 0.1);
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+}
+
+.results-count {
+    font-weight: 600;
+    color: #5F96C5;
+}
+
+.search-term {
+    font-style: italic;
+    color: #666;
+}
+
+.clear-all-btn,
+.clear-filters-btn {
+    background: #5F96C5;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+.active-filter {
+    background-color: #e74c3c !important;
+    color: white !important;
+}
+
+.no-results {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 3rem;
+    color: #666;
+}
