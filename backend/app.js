@@ -189,6 +189,39 @@ app.get('/tech-clubs', requireAuth, (req, res) => {
   res.sendFile(path.join(__dirname, '../frontend/pages/tech-clubs.html'));
 });
 
+
+// 👤 USER DASHBOARD - Protected route for user profile and management
+app.get('/dashboard', requireAuth, (req, res) => {
+  console.log('Dashboard accessed by:', req.session.userEmail);
+  res.sendFile(path.join(__dirname, '../frontend/pages/dashboard.html'));
+});
+
+// 📊 ENHANCED USER API - More detailed user information for dashboard
+app.get('/api/user/profile', requireAuth, async (req, res) => {
+  try {
+    // Find the full user document from database
+    const user = await User.findById(req.session.userId).select('-password'); // Exclude password
+
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    // Return comprehensive user data for dashboard
+    res.json({
+      id: user._id,
+      email: user.email,
+      joinDate: user.createdAt,
+      // Future: Add bookmarks, preferences, etc.
+      bookmarkedClubs: [], // Placeholder for Week 4
+      totalBookmarks: 0    // Placeholder for Week 4
+    });
+
+  } catch (error) {
+    console.error('Profile API error:', error);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
 // =============================================================================
 // API ROUTES - For frontend JavaScript to check authentication status
 // =============================================================================
