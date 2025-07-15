@@ -5,6 +5,8 @@ const dotenv = require('dotenv');
 const session = require('express-session');  // For user session management
 const MongoStore = require('connect-mongo');  // Store sessions in MongoDB
 const User = require('./models/User');        // Import our User model
+const Club = require('./models/Club');
+
 
 dotenv.config();
 
@@ -194,6 +196,60 @@ app.get('/tech-clubs', requireAuth, (req, res) => {
 app.get('/dashboard', requireAuth, (req, res) => {
   console.log('Dashboard accessed by:', req.session.userEmail);
   res.sendFile(path.join(__dirname, '../frontend/pages/dashboard.html'));
+});
+
+// 🏛️ GET ALL CLUBS - Replace static HTML cards
+app.get('/api/clubs', async (req, res) => {
+  try {
+    const clubs = await Club.find({ isActive: true })
+      .sort({ createdAt: -1 })
+      .limit(50);
+
+    console.log(`📊 Serving ${clubs.length} clubs from database`);
+    res.json(clubs);
+  } catch (error) {
+    console.error('Error fetching clubs:', error);
+    res.status(500).json({ error: 'Failed to fetch clubs' });
+  }
+});
+
+// 🔍 SEARCH CLUBS - Database-powered search  
+app.get('/api/clubs/search', async (req, res) => {
+  try {
+    const { q, category, tags } = req.query;
+
+    let searchCriteria = { isActive: true };
+
+    // Add search query if provided
+    if (q && q.trim()) {
+      searchCriteria.$or = [
+        { name: { $regex: q, $options: 'i' } },
+        { description: { $regex: q, $options: 'i' } },
+        { tags: { $in: [new RegExp(q, 'i')] } }
+      ];
+    }
+
+    // Add category filter if provided
+    if (category) {
+      searchCriteria.category = category;
+    }
+
+    // Add tag filter if provided  
+    if (tags) {
+      const tagArray = tags.split(',');
+      searchCriteria.tags = { $in: tagArray };
+    }
+
+    const clubs = await Club.find(searchCriteria)
+      .sort({ memberCount: -1 })
+      .limit(50);
+
+    console.log(`🔍 Search for "${q}" found ${clubs.length} clubs`);
+    res.json(clubs);
+  } catch (error) {
+    console.error('Error searching clubs:', error);
+    res.status(500).json({ error: 'Failed to search clubs' });
+  }
 });
 
 // 📊 ENHANCED USER API - More detailed user information for dashboard
