@@ -149,7 +149,7 @@ body {
     position: absolute;
     top: -220px;
     /* pull it up a bit */
-    left: -130px;
+    left: -10vw;
     /* move it to the left a bit */
     width: 60%;
     /* or try 50% depending on how large you want it */
@@ -159,7 +159,7 @@ body {
 .wave2 {
     position: absolute;
     top: -180px;
-    right: -150px;
+    right: -10vw;
     width: 55%;
     opacity: 0.9;
 }
