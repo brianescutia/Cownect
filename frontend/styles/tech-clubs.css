@@ -408,3 +408,19 @@ button {
     font-weight: 500;
     font-size: 0.95rem;
 }
+
+/* Add this to hide filters by default */
+.filter-tags {
+    display: none;
+    /* Hide by default */
+}
+
+.filter-tags:not(.hidden) {
+    display: flex;
+    /* Show when not hidden */
+}
+
+.filter-tags.hidden {
+    display: none !important;
+    /* Force hide when hidden class is present */
+}

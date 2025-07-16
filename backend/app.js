@@ -71,7 +71,7 @@ const requireAuth = (req, res, next) => {
 
 // 🏠 HOME ROUTE
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, '../frontend/index.html'));
+  res.sendFile(path.join(__dirname, '../frontend/pages/index.html'));
 });
 
 // =============================================================================
@@ -346,11 +346,23 @@ app.get('/api/clubs', async (req, res) => {
 // 🔍 SEARCH CLUBS - Database-powered search  
 app.get('/api/clubs/search', async (req, res) => {
   try {
-    const { q, category, tags } = req.query;
+    const {
+      q,           // Search query
+      tags,        // Comma-separated tags
+      category,    // Single category
+      sortBy,      // Sort field: 'name', 'members', 'newest'
+      sortOrder,   // 'asc' or 'desc'
+      page,        // Page number (default 1)
+      limit        // Results per page (default 10)
+    } = req.query;
 
+    console.log('🔍 Advanced search request:', req.query);
+
+    // 📊 BUILD SEARCH PIPELINE
     let searchCriteria = { isActive: true };
+    let sortCriteria = {};
 
-    // Add search query if provided
+    // 🔤 TEXT SEARCH - Search across multiple fields
     if (q && q.trim()) {
       searchCriteria.$or = [
         { name: { $regex: q, $options: 'i' } },
@@ -359,26 +371,129 @@ app.get('/api/clubs/search', async (req, res) => {
       ];
     }
 
-    // Add category filter if provided
-    if (category) {
+    // 🏷️ TAG FILTERING - Support multiple tags
+    if (tags) {
+      const tagArray = tags.split(',').map(tag => tag.trim().toLowerCase());
+      // Use $in for "OR" logic (club has ANY of these tags)
+      searchCriteria.tags = { $in: tagArray };
+
+      // For "AND" logic (club has ALL tags), use:
+      // searchCriteria.tags = { $all: tagArray };
+    }
+
+    // 📂 CATEGORY FILTERING
+    if (category && category !== 'all') {
       searchCriteria.category = category;
     }
 
-    // Add tag filter if provided  
-    if (tags) {
-      const tagArray = tags.split(',');
-      searchCriteria.tags = { $in: tagArray };
+    // 📈 SORTING LOGIC
+    switch (sortBy) {
+      case 'name':
+        sortCriteria.name = sortOrder === 'desc' ? -1 : 1;
+        break;
+      case 'members':
+        sortCriteria.memberCount = sortOrder === 'desc' ? -1 : 1;
+        break;
+      case 'newest':
+        sortCriteria.createdAt = -1; // Always newest first
+        break;
+      default:
+        sortCriteria.memberCount = -1; // Default: most popular first
     }
 
-    const clubs = await Club.find(searchCriteria)
-      .sort({ memberCount: -1 })
-      .limit(50);
+    // 📄 PAGINATION SETUP
+    const pageNum = parseInt(page) || 1;
+    const pageLimit = parseInt(limit) || 10;
+    const skip = (pageNum - 1) * pageLimit;
 
-    console.log(`🔍 Search for "${q}" found ${clubs.length} clubs`);
-    res.json(clubs);
+    // 🗃️ EXECUTE SEARCH WITH PAGINATION
+    const [clubs, totalCount] = await Promise.all([
+      Club.find(searchCriteria)
+        .sort(sortCriteria)
+        .skip(skip)
+        .limit(pageLimit)
+        .lean(), // .lean() for better performance
+
+      Club.countDocuments(searchCriteria) // Get total for pagination
+    ]);
+
+    // 📊 CALCULATE PAGINATION INFO
+    const totalPages = Math.ceil(totalCount / pageLimit);
+    const hasNextPage = pageNum < totalPages;
+    const hasPreviousPage = pageNum > 1;
+
+    console.log(`✅ Search found ${totalCount} clubs, returning page ${pageNum}/${totalPages}`);
+
+    // 📤 SEND COMPREHENSIVE RESPONSE
+    res.json({
+      clubs,
+      pagination: {
+        currentPage: pageNum,
+        totalPages,
+        totalCount,
+        hasNextPage,
+        hasPreviousPage,
+        limit: pageLimit
+      },
+      searchInfo: {
+        query: q || '',
+        tags: tags ? tags.split(',') : [],
+        category: category || 'all',
+        sortBy: sortBy || 'members',
+        sortOrder: sortOrder || 'desc'
+      }
+    });
+
   } catch (error) {
-    console.error('Error searching clubs:', error);
-    res.status(500).json({ error: 'Failed to search clubs' });
+    console.error('💥 Search error:', error);
+    res.status(500).json({
+      error: 'Search failed',
+      message: error.message
+    });
+  }
+});
+
+// 📊 GET SEARCH METADATA - Categories, popular tags, etc.
+app.get('/api/clubs/metadata', async (req, res) => {
+  try {
+    console.log('📊 Fetching club metadata...');
+
+    const [categories, tagStats, totalClubs] = await Promise.all([
+      // Get all unique categories
+      Club.distinct('category'),
+
+      // Get tag statistics (most popular tags)
+      Club.aggregate([
+        { $match: { isActive: true } },
+        { $unwind: '$tags' },
+        { $group: { _id: '$tags', count: { $sum: 1 } } },
+        { $sort: { count: -1 } },
+        { $limit: 20 } // Top 20 tags
+      ]),
+
+      // Get total active clubs
+      Club.countDocuments({ isActive: true })
+    ]);
+
+    res.json({
+      categories: categories.sort(),
+      popularTags: tagStats.map(tag => ({
+        name: tag._id,
+        count: tag.count
+      })),
+      totalClubs,
+      sortOptions: [
+        { value: 'members', label: 'Most Popular' },
+        { value: 'name', label: 'Alphabetical' },
+        { value: 'newest', label: 'Newest First' }
+      ]
+    });
+
+    console.log(`📊 Metadata: ${categories.length} categories, ${tagStats.length} tags, ${totalClubs} clubs`);
+
+  } catch (error) {
+    console.error('💥 Metadata error:', error);
+    res.status(500).json({ error: 'Failed to fetch metadata' });
   }
 });
 
