@@ -37,18 +37,26 @@
   <!-- Search Bar -->
 
 
+<!-- Replace your current search section with this structure -->
+
 <div class="search-wrapper">
   <input type="text" class="search-bar" id="clubSearch" placeholder="Search for your club here..." />
-  <img src="../assets/filter.png" alt="Search" class="search-icon" id="filterToggle" />
+  <!-- Updated filter button with proper ID and icon -->
+  <button class="filter-toggle" id="filterToggle" aria-label="Toggle filter options" tabindex="0">
+    <img src="../assets/filter.png" alt="Filter" class="search-icon" />
+  </button>
 </div>
 
-<div class="filter-tags hidden" id="filterTags">
-  <span class="tag">#AI</span>
-  <span class="tag">#hardware</span>
-  <span class="tag">#design</span>
-  <span class="tag">#software</span>
-  <span class="tag">#webdev</span>
-  <!-- Add more as needed -->
+<!-- Filter tags - now properly hidden by default -->
+<div class="filter-tags hidden" id="filterTags" aria-hidden="true">
+  <span class="tag" data-filter="ai" tabindex="0" role="button" aria-pressed="false">#AI</span>
+  <span class="tag" data-filter="hardware" tabindex="0" role="button" aria-pressed="false">#Hardware</span>
+  <span class="tag" data-filter="design" tabindex="0" role="button" aria-pressed="false">#Design</span>
+  <span class="tag" data-filter="software" tabindex="0" role="button" aria-pressed="false">#Software</span>
+  <span class="tag" data-filter="webdev" tabindex="0" role="button" aria-pressed="false">#WebDev</span>
+  <span class="tag" data-filter="data" tabindex="0" role="button" aria-pressed="false">#Data Science</span>
+  <span class="tag" data-filter="robotics" tabindex="0" role="button" aria-pressed="false">#Robotics</span>
+  <span class="tag" data-filter="cybersecurity" tabindex="0" role="button" aria-pressed="false">#Cybersecurity</span>
 </div>
 
 
