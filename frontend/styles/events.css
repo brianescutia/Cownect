@@ -1,0 +1,162 @@
+body {
+    margin: 0;
+    font-family: 'Helvetica', sans-serif;
+    background-color: #ffffff;
+}
+
+.backdrop-image {
+    position: absolute;
+    top: -65%;
+    left: -20%;
+    width: 120%;
+    max-width: none;
+    height: auto;
+    transform: rotate(-12deg);
+    z-index: -2;
+    box-shadow: 0px 5px 10px lightskyblue;
+}
+
+
+.events {
+    padding: 4rem 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.navbar {
+    display: flex;
+    justify-content: center;
+    border-radius: 25px;
+    margin: 1rem auto;
+    padding: 0.75rem 2rem;
+
+    max-width: 1130px;
+    /* fixed on large screens */
+    width: 90%;
+    /* responsive on small screens */
+    height: clamp(50px, 8vw, 68px);
+
+}
+
+.navbar-container {
+    display: flex;
+    align-items: center;
+    gap: 3rem;
+    /* Adds equal space between each item */
+    padding: 0 2rem;
+    background-color: rgba(183, 183, 183, 0.30);
+    border-radius: 25px;
+    width: 120%;
+    max-width: 100vw;
+    height: 6vw;
+}
+
+.navbar .logo {
+    height: 5.19vw;
+    margin-right: 0%;
+}
+
+.nav-links {
+    gap: 6rem;
+    list-style: none;
+    display: flex;
+    align-items: center;
+    margin: 0;
+
+}
+
+.nav-links a {
+    text-decoration: none;
+    font-weight: 500;
+    color: #000;
+    font-size: 1.15rem;
+    /* Height-based font sizing */
+    width: 5.79vw;
+    /* Optional: control width of each link */
+    display: inline-block;
+    /* Needed for width to take effect */
+    text-align: center;
+    /* Optional: centers the text inside */
+}
+
+.account-btn {
+    background-color: #5F96C5;
+    color: white;
+    padding: 0.4rem 0.9rem;
+    border-radius: 20px;
+    font-weight: 500;
+    text-decoration: none;
+}
+
+.logo-title {
+    display: flex;
+    align-items: center;
+    gap: 0rem;
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+.logo-text {
+    font-weight: bold;
+    color: #000;
+    font-size: 150%;
+    /* Or whatever you want */
+}
+
+.logo {
+    height: 40px;
+}
+
+.events h2 {
+    font-size: 2.8rem;
+    font-weight: 800;
+    margin-bottom: 2rem;
+    color: #000;
+    font-family: 'Rethink Sans', sans-serif;
+}
+
+.event-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    justify-content: space-between;
+    ;
+}
+
+.event-card {
+    flex: 1 1 20%;
+    background-color: #f5f5f5;
+    border-radius: 20px;
+    padding: 2rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s ease;
+    min-width: 280px;
+    max-width: 350px;
+}
+
+
+.event-card:hover {
+    transform: translateY(-4px);
+}
+
+.event-date {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #5F96C5;
+    margin-bottom: 0.5rem;
+    display: block;
+}
+
+.event-card h3 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: #222;
+}
+
+.event-card p {
+    font-size: 1rem;
+    color: #555;
+    margin: 0.5rem 0;
+    line-height: 1.6;
+}
