@@ -1,0 +1,22 @@
+:root {
+    --bg-color: #ffffff;
+    --text-color: #000000;
+    --card-bg: #f0f0f0;
+    --border-color: #9f9f9f;
+    --input-border: #ccc;
+    --primary-btn-bg: #5b9bd5;
+    --primary-btn-hover: #407ec9;
+    --btn-text-color: white;
+}
+
+body.dark-mode {
+    --bg-color: #121212;
+    --text-color: #e0e0e0;
+    --card-bg: #1e1e1e;
+    --border-color: #888888;
+    --input-border: #555;
+    --primary-btn-bg: #3366cc;
+    --primary-btn-hover: #295bb2;
+    --btn-text-color: white;
+    background-image: url("../assets/BlackWaves.png");
+}

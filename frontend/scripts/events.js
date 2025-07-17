@@ -1,6 +1,22 @@
 let eventsData = null;
 let currentUser = null;
 
+//Event Calendar Class for managing calendar
+class EventsCalendar {
+    constructor() {
+        this.currentDate = new Date();
+        this.events = {
+            //Example for now must replace with API data in future
+            '2023-10-01': [{
+                id: 1,
+                title: 'HackDavis Hackathon',
+                time: '12:00 PM - 3:00 PM',
+            }
+
+            ],
+        };
+    }
+}
 //Functions 
 async function checkAuthentication() {
     try {
