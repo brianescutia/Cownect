@@ -4,6 +4,25 @@ body {
     background-color: #ffffff;
 }
 
+.backdrop-image {
+    position: absolute;
+    top: -70%;
+    left: -20%;
+    width: 140%;
+    max-width: none;
+    height: auto;
+    transform: rotate(-15deg);
+    z-index: -2;
+    box-shadow: 0px 5px 10px lightskyblue;
+}
+
+
+.events {
+    padding: 4rem 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
 .navbar {
     display: flex;
     justify-content: center;
@@ -69,52 +88,6 @@ body {
     text-decoration: none;
 }
 
-.hero {
-    position: relative;
-    text-align: center;
-    padding: 5rem 2rem;
-}
-
-.background {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    z-index: -1;
-    opacity: 0.9;
-}
-
-.hero-text {
-    width: 100%;
-    max-width: 73.5vw;
-    /* match h1 width */
-    margin-left: 10%;
-}
-
-.hero-text h1 {
-    font-family: 'Rethink Sans', sans-serif;
-    font-size: 5.3rem;
-    font-weight: 1000;
-    line-height: 1.2;
-    text-align: left;
-    width: 73.5vw;
-    max-width: 73.5vw;
-    margin-top: -10px;
-}
-
-.hero-text p {
-    font-family: 'Rethink Sans', sans-serif;
-    font-weight: 600;
-    font-size: 1.5rem;
-    line-height: 2.5rem;
-    color: #545454;
-    width: 45vw;
-    max-width: 45vw;
-    margin-top: 2em;
-    margin-left: 0;
-    text-align: left;
-}
-
 .logo-title {
     display: flex;
     align-items: center;
@@ -134,32 +107,56 @@ body {
     height: 40px;
 }
 
-
-.wave-backgrounds {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: -1;
-    pointer-events: none;
+.events h2 {
+    font-size: 2.8rem;
+    font-weight: 800;
+    margin-bottom: 2rem;
+    color: #000;
+    font-family: 'Rethink Sans', sans-serif;
 }
 
-.wave1 {
-    position: absolute;
-    top: -220px;
-    /* pull it up a bit */
-    left: -10vw;
-    /* move it to the left a bit */
-    width: 60%;
-    /* or try 50% depending on how large you want it */
-    opacity: 0.9;
+.event-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    justify-content: space-between;
+    ;
 }
 
-.wave2 {
-    position: absolute;
-    top: -180px;
-    right: -10vw;
-    width: 55%;
-    opacity: 0.9;
+.event-card {
+    flex: 1 1 20%;
+    background-color: #f5f5f5;
+    border-radius: 20px;
+    padding: 2rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s ease;
+    min-width: 280px;
+    max-width: 350px;
+}
+
+
+.event-card:hover {
+    transform: translateY(-4px);
+}
+
+.event-date {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #5F96C5;
+    margin-bottom: 0.5rem;
+    display: block;
+}
+
+.event-card h3 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: #222;
+}
+
+.event-card p {
+    font-size: 1rem;
+    color: #555;
+    margin: 0.5rem 0;
+    line-height: 1.6;
 }
