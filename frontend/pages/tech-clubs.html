@@ -1,20 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Tech Clubs | Cownect</title>
   <link rel="stylesheet" href="/styles/tech-clubs.css" />
   <link href="https://fonts.googleapis.com/css2?family=Rethink+Sans&display=swap" rel="stylesheet" />
- 
+
   <script src="/scripts/pagination.js" defer></script>
   <script src="/scripts/bookmark.js" defer></script>
   <script src="/scripts/filterToggle.js" defer></script>
   <script src="/scripts/navbar.js" defer></script>
-<script src="/scripts/dynamicClubs.js" defer></script>
-<script src="/scripts/bookmarkSystem.js" defer></script>
+  <script src="/scripts/dynamicClubs.js" defer></script>
+  <script src="/scripts/bookmarkSystem.js" defer></script>
 
 </head>
+
 <body>
 
   <!-- Navbar -->
@@ -25,115 +27,115 @@
         <span class="logo-text">Cownect</span>
       </div>
       <ul class="nav-links">
-  <li><a href="/tech-clubs">Tech Clubs</a></li>
-  <li><a href="#">Events</a></li> <!-- Coming soon -->
-  <li><a href="#">Niche Test</a></li> <!-- Coming soon -->
-  <li><a href="#">Mentor Matching</a></li> <!-- Coming soon -->
-  <li><a class="account-btn" href="/login">Account</a></li>
-</ul>
+        <li><a href="/tech-clubs">Tech Clubs</a></li>
+        <li><a href="../pages/events.html">Events</a></li> <!-- Coming soon -->
+        <li><a href="#">Niche Test</a></li> <!-- Coming soon -->
+        <li><a href="#">Mentor Matching</a></li> <!-- Coming soon -->
+        <li><a class="account-btn" href="/login">Account</a></li>
+      </ul>
     </div>
   </nav>
 
   <!-- Search Bar -->
 
 
-<!-- Replace your current search section with this structure -->
+  <!-- Replace your current search section with this structure -->
 
-<div class="search-wrapper">
-  <input type="text" class="search-bar" id="clubSearch" placeholder="Search for your club here..." />
-  <!-- Updated filter button with proper ID and icon -->
-  <button class="filter-toggle" id="filterToggle" aria-label="Toggle filter options" tabindex="0">
-    <img src="../assets/filter.png" alt="Filter" class="search-icon" />
-  </button>
-</div>
+  <div class="search-wrapper">
+    <input type="text" class="search-bar" id="clubSearch" placeholder="Search for your club here..." />
+    <!-- Updated filter button with proper ID and icon -->
+    <button class="filter-toggle" id="filterToggle" aria-label="Toggle filter options" tabindex="0">
+      <img src="../assets/filter.png" alt="Filter" class="search-icon" />
+    </button>
+  </div>
 
-<!-- Filter tags - now properly hidden by default -->
-<div class="filter-tags hidden" id="filterTags" aria-hidden="true">
-  <span class="tag" data-filter="ai" tabindex="0" role="button" aria-pressed="false">#AI</span>
-  <span class="tag" data-filter="hardware" tabindex="0" role="button" aria-pressed="false">#Hardware</span>
-  <span class="tag" data-filter="design" tabindex="0" role="button" aria-pressed="false">#Design</span>
-  <span class="tag" data-filter="software" tabindex="0" role="button" aria-pressed="false">#Software</span>
-  <span class="tag" data-filter="webdev" tabindex="0" role="button" aria-pressed="false">#WebDev</span>
-  <span class="tag" data-filter="data" tabindex="0" role="button" aria-pressed="false">#Data Science</span>
-  <span class="tag" data-filter="robotics" tabindex="0" role="button" aria-pressed="false">#Robotics</span>
-  <span class="tag" data-filter="cybersecurity" tabindex="0" role="button" aria-pressed="false">#Cybersecurity</span>
-</div>
+  <!-- Filter tags - now properly hidden by default -->
+  <div class="filter-tags hidden" id="filterTags" aria-hidden="true">
+    <span class="tag" data-filter="ai" tabindex="0" role="button" aria-pressed="false">#AI</span>
+    <span class="tag" data-filter="hardware" tabindex="0" role="button" aria-pressed="false">#Hardware</span>
+    <span class="tag" data-filter="design" tabindex="0" role="button" aria-pressed="false">#Design</span>
+    <span class="tag" data-filter="software" tabindex="0" role="button" aria-pressed="false">#Software</span>
+    <span class="tag" data-filter="webdev" tabindex="0" role="button" aria-pressed="false">#WebDev</span>
+    <span class="tag" data-filter="data" tabindex="0" role="button" aria-pressed="false">#Data Science</span>
+    <span class="tag" data-filter="robotics" tabindex="0" role="button" aria-pressed="false">#Robotics</span>
+    <span class="tag" data-filter="cybersecurity" tabindex="0" role="button" aria-pressed="false">#Cybersecurity</span>
+  </div>
 
 
   <!-- Club Cards Grid -->
-<section class="clubs-grid">
-  <div class="club-card">
-    <div class="card-top">
-      <img src="../assets/include.png" alt="Club Logo" class="club-logo" />
-      <div class="bookmark-icon">
-  <img src="../assets/bookmark.png" alt="Bookmark icon" class="bookmark" />
-</div>
+  <section class="clubs-grid">
+    <div class="club-card">
+      <div class="card-top">
+        <img src="../assets/include.png" alt="Club Logo" class="club-logo" />
+        <div class="bookmark-icon">
+          <img src="../assets/bookmark.png" alt="Bookmark icon" class="bookmark" />
+        </div>
+      </div>
+      <h3 class="club-name">#include</h3>
+      <p class="club-description">Build real-world coding projects with fellow students.</p>
+      <p class="club-tags">#software #webdev #collaboration</p>
     </div>
-    <h3 class="club-name">#include</h3>
-    <p class="club-description">Build real-world coding projects with fellow students.</p>
-    <p class="club-tags">#software #webdev #collaboration</p>
-  </div>
 
-  <div class="club-card">
-    <div class="card-top">
-      <img src="../assets/aiStudentCollective.png" alt="Club Logo" class="club-logo" />
-      <div class="bookmark-icon">
-  <img src="../assets/bookmark.png" alt="Bookmark icon" class="bookmark" />
-</div>
+    <div class="club-card">
+      <div class="card-top">
+        <img src="../assets/aiStudentCollective.png" alt="Club Logo" class="club-logo" />
+        <div class="bookmark-icon">
+          <img src="../assets/bookmark.png" alt="Bookmark icon" class="bookmark" />
+        </div>
+      </div>
+      <h3 class="club-name">AI Student Collective</h3>
+      <p class="club-description">Dive into machine learning, NLP, and computer vision.</p>
+      <p class="club-tags">#AI #ML #Python</p>
     </div>
-    <h3 class="club-name">AI Student Collective</h3>
-    <p class="club-description">Dive into machine learning, NLP, and computer vision.</p>
-    <p class="club-tags">#AI #ML #Python</p>
-  </div>
 
-  <div class="club-card">
-    <div class="card-top">
-      <img src="../assets/aggieSportsAnalytics.png" alt="Club Logo" class="club-logo" />
-      <div class="bookmark-icon">
-  <img src="../assets/bookmark.png" alt="Bookmark icon" class="bookmark" />
-</div>
+    <div class="club-card">
+      <div class="card-top">
+        <img src="../assets/aggieSportsAnalytics.png" alt="Club Logo" class="club-logo" />
+        <div class="bookmark-icon">
+          <img src="../assets/bookmark.png" alt="Bookmark icon" class="bookmark" />
+        </div>
+      </div>
+      <h3 class="club-name">Aggie Sports Analytics</h3>
+      <p class="club-description">Create impactful UI/UX designs for tech products.</p>
+      <p class="club-tags">#design #UX #figma</p>
     </div>
-    <h3 class="club-name">Aggie Sports Analytics</h3>
-    <p class="club-description">Create impactful UI/UX designs for tech products.</p>
-    <p class="club-tags">#design #UX #figma</p>
-  </div>
 
-  <div class="club-card">
-    <div class="card-top">
-      <img src="../assets/aggieworks.png" alt="Club Logo" class="club-logo" />
-      <div class="bookmark-icon">
-  <img src="../assets/bookmark.png" alt="Bookmark icon" class="bookmark" />
-</div>
+    <div class="club-card">
+      <div class="card-top">
+        <img src="../assets/aggieworks.png" alt="Club Logo" class="club-logo" />
+        <div class="bookmark-icon">
+          <img src="../assets/bookmark.png" alt="Bookmark icon" class="bookmark" />
+        </div>
+      </div>
+      <h3 class="club-name">AggieWorks</h3>
+      <p class="club-description">Hands-on with electronics, microcontrollers, and sensors.</p>
+      <p class="club-tags">#hardware #arduino #circuits</p>
     </div>
-    <h3 class="club-name">AggieWorks</h3>
-    <p class="club-description">Hands-on with electronics, microcontrollers, and sensors.</p>
-    <p class="club-tags">#hardware #arduino #circuits</p>
-  </div>
 
-  <div class="club-card">
-    <div class="card-top">
-      <img src="../assets/bajaSae.png" alt="Club Logo" class="club-logo" />
-      <div class="bookmark-icon">
-  <img src="../assets/bookmark.png" alt="Bookmark icon" class="bookmark" />
-</div>
+    <div class="club-card">
+      <div class="card-top">
+        <img src="../assets/bajaSae.png" alt="Club Logo" class="club-logo" />
+        <div class="bookmark-icon">
+          <img src="../assets/bookmark.png" alt="Bookmark icon" class="bookmark" />
+        </div>
+      </div>
+      <h3 class="club-name">BAJA SAE</h3>
+      <p class="club-description">Learn product management by building & testing ideas.</p>
+      <p class="club-tags">#PM #startup #strategy</p>
     </div>
-    <h3 class="club-name">BAJA SAE</h3>
-    <p class="club-description">Learn product management by building & testing ideas.</p>
-    <p class="club-tags">#PM #startup #strategy</p>
-  </div>
 
-  <div class="club-card">
-    <div class="card-top">
-      <img src="../assets/clubOfFutureFemEngineers.jpeg" alt="Club Logo" class="club-logo" />
-      <div class="bookmark-icon">
-  <img src="../assets/bookmark.png" alt="Bookmark icon" class="bookmark" />
-</div>
+    <div class="club-card">
+      <div class="card-top">
+        <img src="../assets/clubOfFutureFemEngineers.jpeg" alt="Club Logo" class="club-logo" />
+        <div class="bookmark-icon">
+          <img src="../assets/bookmark.png" alt="Bookmark icon" class="bookmark" />
+        </div>
+      </div>
+      <h3 class="club-name">Club of Future Fem Engineers</h3>
+      <p class="club-description">Explore cybersecurity tools, CTFs, and ethical hacking.</p>
+      <p class="club-tags">#cybersecurity #networking #CTF</p>
     </div>
-    <h3 class="club-name">Club of Future Fem Engineers</h3>
-    <p class="club-description">Explore cybersecurity tools, CTFs, and ethical hacking.</p>
-    <p class="club-tags">#cybersecurity #networking #CTF</p>
-  </div>
-</section>
+  </section>
 
 
   <!-- Pagination -->
@@ -149,4 +151,5 @@
 
 
 </body>
+
 </html>

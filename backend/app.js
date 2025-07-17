@@ -215,6 +215,12 @@ app.get('/api/bookmarks', requireAuth, async (req, res) => {
   }
 });
 
+//Events Page Route
+app.get('/events', requireAuth, (req, res) => {
+  console.log('Events page accessed by:', req.session.userEmail);
+  res.sendFile(path.join(__dirname, '../frontend/pages/events.html'));
+});
+
 // 🔖 ADD BOOKMARK - Save a club to user's bookmarks
 app.post('/api/bookmarks', requireAuth, async (req, res) => {
   try {
