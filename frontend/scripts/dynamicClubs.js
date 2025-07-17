@@ -191,10 +191,10 @@ function renderClubs(clubs) {
     }
 
     const clubsHTML = clubs.map(club => `
-        <div class="club-card">
+        <div class="club-card clickable-card" data-club-id="${club._id}" onclick="navigateToClub('${club._id}')">
             <div class="card-top">
                 <img src="${club.logoUrl}" alt="${club.name} Logo" class="club-logo" />
-                <div class="bookmark-icon">
+                <div class="bookmark-icon" onclick="handleBookmarkClick(event)">
                     <img src="../assets/bookmark.png" alt="Bookmark" 
                          class="bookmark" data-club-id="${club._id}" />
                 </div>
@@ -202,6 +202,9 @@ function renderClubs(clubs) {
             <h3 class="club-name">${club.name}</h3>
             <p class="club-description">${club.description}</p>
             <p class="club-tags">${club.tags.map(tag => `#${tag}`).join(' ')}</p>
+            <div class="club-card-overlay">
+                <span class="view-details">View Details →</span>
+            </div>
         </div>
     `).join('');
 
@@ -245,6 +248,7 @@ function renderSearchInfo() {
         clubsGrid.parentNode.insertBefore(infoContainer, clubsGrid);
     }
 }
+
 
 // =============================================================================
 // UTILITY FUNCTIONS
@@ -296,13 +300,23 @@ function showError(message) {
         `;
     }
 }
+function navigateToClub(clubId) {
+    console.log(`🔗 Navigating to club: ${clubId}`);
+    window.location.href = `/club/${clubId}`;
+}
+
+function handleBookmarkClick(event) {
+    // Prevent card click when bookmark is clicked
+    event.stopPropagation();
+    console.log('📌 Bookmark clicked, preventing navigation');
+}
 
 // =============================================================================
 // GLOBAL FUNCTIONS
 // =============================================================================
 
-window.clearAllFilters = clearAllFilters;
-window.performSearch = performSearch;
+window.navigateToClub = navigateToClub;
+window.handleBookmarkClick = handleBookmarkClick;
 
 // Debug function
 window.debugSearch = () => {

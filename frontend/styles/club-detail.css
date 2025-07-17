@@ -1,0 +1,885 @@
+/* =============================================================================
+   CLUB DETAIL PAGE STYLING - CUSTOM LAYOUT
+   =============================================================================
+   Designed for 1748x1948 screen with exact specifications
+*/
+
+/* =============================================================================
+   MAIN CONTAINER - SMALLER FOR MACBOOK AIR
+   =============================================================================
+*/
+
+.club-detail-main {
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* =============================================================================
+   NAVBAR (Already defined in tech-clubs.css)
+   =============================================================================
+   Width: 1129px, Height: 68px
+*/
+
+/* =============================================================================
+   CLUB HERO IMAGE SECTION - SMALLER
+   =============================================================================
+   Width: 1200px, Height: 250px
+*/
+
+.club-hero-image {
+    width: 1200px;
+    height: 250px;
+    position: relative;
+    overflow: hidden;
+    border-radius: 15px;
+    margin: 2rem 0;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.club-hero-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 15px;
+}
+
+.hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, rgba(0, 0, 0, 0.3), transparent);
+    border-radius: 15px;
+}
+
+/* =============================================================================
+   CLUB NAME SECTION - SMALLER
+   =============================================================================
+   Width: 1150px, Height: 100px
+*/
+
+.club-name-section {
+    width: 1150px;
+    height: 100px;
+    margin: 1rem 0;
+}
+
+.club-name-box {
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(12px);
+    border-radius: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 1rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.club-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #2c3e50;
+    margin: 0;
+    line-height: 1.1;
+}
+
+.club-category {
+    font-size: 1.2rem;
+    color: #5F96C5;
+    font-weight: 500;
+    margin: 0.5rem 0 0 0;
+}
+
+/* =============================================================================
+   CONTENT GRID LAYOUT - SMALLER
+   =============================================================================
+*/
+
+.content-grid {
+    width: 1200px;
+    display: grid;
+    grid-template-columns: 750px 380px;
+    gap: 25px;
+    margin: 2rem 0;
+}
+
+/* =============================================================================
+   LEFT COLUMN - SMALLER
+   =============================================================================
+*/
+
+.left-column {
+    width: 750px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* =============================================================================
+   ABOUT BOX - SMALLER
+   =============================================================================
+   Width: 750px, Height: 200px
+*/
+
+.about-box {
+    width: 750px;
+    height: 200px;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(12px);
+    border-radius: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 1.5rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+}
+
+.about-box h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #2c3e50;
+    margin: 0 0 1rem 0;
+}
+
+.club-description {
+    font-size: 1rem;
+    color: #4a5568;
+    line-height: 1.6;
+    flex: 1;
+    margin: 0 0 1rem 0;
+}
+
+.club-stats {
+    display: flex;
+    gap: 1.5rem;
+    justify-content: space-around;
+    margin-top: auto;
+}
+
+.stat-item {
+    text-align: center;
+    flex: 1;
+}
+
+.stat-number {
+    display: block;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #5F96C5;
+    line-height: 1;
+}
+
+.stat-label {
+    font-size: 0.85rem;
+    color: #6c757d;
+    font-weight: 500;
+}
+
+/* =============================================================================
+   SIDE-BY-SIDE BOXES - SMALLER
+   =============================================================================
+   Each box: Width: 365px, Height: 220px
+*/
+
+.side-by-side-boxes {
+    display: flex;
+    gap: 20px;
+    width: 750px;
+}
+
+.info-box {
+    width: 365px;
+    height: 220px;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(12px);
+    border-radius: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 1.5rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    box-sizing: border-box;
+}
+
+.info-box h3 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #2c3e50;
+    margin: 0 0 1rem 0;
+}
+
+.info-box ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.info-box li {
+    color: #4a5568;
+    margin-bottom: 0.5rem;
+    padding-left: 1rem;
+    position: relative;
+}
+
+.info-box li::before {
+    content: "•";
+    color: #5F96C5;
+    position: absolute;
+    left: 0;
+    font-weight: bold;
+}
+
+.meeting-info p {
+    color: #4a5568;
+    margin: 0.5rem 0;
+    font-size: 0.95rem;
+}
+
+.meeting-info strong {
+    color: #2c3e50;
+}
+
+/* =============================================================================
+   EVENTS SECTION - SMALLER
+   =============================================================================
+   Width: 750px, Height: 400px
+*/
+
+.events-section {
+    width: 750px;
+    height: 400px;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(12px);
+    border-radius: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 1.5rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+}
+
+.events-header {
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+.events-header h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #2c3e50;
+    margin: 0 0 0.5rem 0;
+}
+
+.events-header p {
+    font-size: 0.95rem;
+    color: #6c757d;
+    margin: 0;
+}
+
+.events-carousel-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex: 1;
+}
+
+.carousel-btn {
+    background: rgba(255, 255, 255, 0.9);
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    color: #5F96C5;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    z-index: 2;
+    flex-shrink: 0;
+}
+
+.carousel-btn:hover {
+    background: #5F96C5;
+    color: white;
+    transform: scale(1.05);
+}
+
+.events-carousel {
+    display: flex;
+    gap: 1rem;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    flex: 1;
+    padding: 0.5rem 0;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.events-carousel::-webkit-scrollbar {
+    display: none;
+}
+
+/* =============================================================================
+   EVENT CARDS - NEW DESIGN WITH IMAGES
+   =============================================================================
+   Width: 319px, Height: 295px
+*/
+
+.event-card {
+    min-width: 319px;
+    width: 319px;
+    height: 295px;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(8px);
+    border-radius: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    flex-shrink: 0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+.event-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+}
+
+.event-image {
+    width: 100%;
+    height: 147px;
+    position: relative;
+    overflow: hidden;
+    border-radius: 15px 15px 0 0;
+}
+
+.event-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.event-date-overlay {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 0.5rem;
+    border-radius: 8px;
+    text-align: center;
+    min-width: 50px;
+}
+
+.event-date-overlay .day {
+    font-size: 1.2rem;
+    font-weight: 700;
+    line-height: 1;
+    display: block;
+}
+
+.event-date-overlay .month {
+    font-size: 0.7rem;
+    font-weight: 500;
+    opacity: 0.9;
+}
+
+.event-bookmark {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: rgba(255, 255, 255, 0.9);
+    border: none;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.event-bookmark:hover {
+    background: #5F96C5;
+    transform: scale(1.1);
+}
+
+.event-bookmark img {
+    width: 16px;
+    height: 16px;
+    filter: invert(0.3);
+}
+
+.event-bookmark:hover img {
+    filter: invert(1);
+}
+
+.event-details {
+    padding: 1rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    height: 148px;
+}
+
+.event-details h4 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #2c3e50;
+    margin: 0 0 0.5rem 0;
+    line-height: 1.2;
+}
+
+.event-details .event-description {
+    font-size: 0.85rem;
+    color: #4a5568;
+    line-height: 1.3;
+    margin: 0 0 0.75rem 0;
+    flex: 1;
+}
+
+.event-meta {
+    margin-top: auto;
+}
+
+.event-time,
+.event-location {
+    font-size: 0.8rem;
+    color: #5F96C5;
+    font-weight: 500;
+    margin: 0 0 0.25rem 0;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.event-time::before {
+    content: "🕐";
+    font-size: 0.7rem;
+}
+
+.event-location::before {
+    content: "📍";
+    font-size: 0.7rem;
+}
+
+/* =============================================================================
+   RIGHT COLUMN - CONTACTS BOX - SMALLER
+   =============================================================================
+   Width: 380px, Height: 285px
+*/
+
+.right-column {
+    width: 380px;
+}
+
+.contacts-box {
+    width: 380px;
+    height: 285px;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(12px);
+    border-radius: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 1.5rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+}
+
+.contacts-box h2 {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #2c3e50;
+    margin: 0 0 1rem 0;
+}
+
+.contact-info {
+    margin-bottom: 1.5rem;
+}
+
+.contact-item {
+    margin-bottom: 1rem;
+}
+
+.contact-item strong {
+    color: #2c3e50;
+    font-size: 0.9rem;
+}
+
+.contact-item p {
+    color: #4a5568;
+    margin: 0.25rem 0;
+    font-size: 0.85rem;
+}
+
+.social-links {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.social-link {
+    color: #5F96C5;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.9rem;
+    transition: color 0.3s ease;
+}
+
+.social-link:hover {
+    color: #4a8bc2;
+}
+
+.action-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-top: auto;
+}
+
+.bookmark-btn,
+.join-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    border: none;
+    border-radius: 10px;
+    font-weight: 500;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.bookmark-btn {
+    background: rgba(255, 255, 255, 0.2);
+    color: #2c3e50;
+    border: 1px solid rgba(95, 150, 197, 0.3);
+}
+
+.bookmark-btn:hover {
+    background: rgba(95, 150, 197, 0.1);
+    transform: translateY(-2px);
+}
+
+.bookmark-btn .bookmark-icon {
+    width: 16px;
+    height: 16px;
+}
+
+.join-btn {
+    background: linear-gradient(135deg, #5F96C5, #4a8bc2);
+    color: white;
+}
+
+.join-btn:hover {
+    background: linear-gradient(135deg, #4a8bc2, #3d7bb5);
+    transform: translateY(-2px);
+}
+
+/* =============================================================================
+   BACK SECTION
+   =============================================================================
+*/
+
+.back-section {
+    text-align: center;
+    margin: 2rem 0;
+}
+
+.back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(12px);
+    color: #5F96C5;
+    text-decoration: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 10px;
+    font-weight: 500;
+    border: 1px solid rgba(95, 150, 197, 0.3);
+    transition: all 0.3s ease;
+}
+
+.back-btn:hover {
+    background: rgba(95, 150, 197, 0.1);
+    transform: translateY(-2px);
+}
+
+/* =============================================================================
+   LOADING & ERROR STATES
+   =============================================================================
+*/
+
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(245, 252, 255, 0.9);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    backdrop-filter: blur(5px);
+}
+
+.loading-spinner {
+    width: 50px;
+    height: 50px;
+    border: 4px solid rgba(95, 150, 197, 0.3);
+    border-top: 4px solid #5F96C5;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 1rem;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.loading-overlay p {
+    color: #5F96C5;
+    font-weight: 500;
+    font-size: 1.1rem;
+}
+
+.error-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 60vh;
+    text-align: center;
+}
+
+.error-content h2 {
+    font-size: 2rem;
+    color: #e74c3c;
+    margin-bottom: 1rem;
+}
+
+.error-content p {
+    font-size: 1.1rem;
+    color: #6c757d;
+    margin-bottom: 2rem;
+}
+
+/* =============================================================================
+   RESPONSIVE DESIGN - UPDATED
+   =============================================================================
+*/
+
+@media (max-width: 1400px) {
+    .club-detail-main {
+        max-width: 95%;
+        padding: 0 1rem;
+    }
+
+    .club-hero-image {
+        width: 100%;
+        max-width: 1200px;
+    }
+
+    .club-name-section {
+        width: 100%;
+        max-width: 1150px;
+    }
+
+    .content-grid {
+        width: 100%;
+        max-width: 1200px;
+        grid-template-columns: 1fr 350px;
+    }
+
+    .left-column {
+        width: 100%;
+    }
+
+    .about-box,
+    .events-section {
+        width: 100%;
+    }
+
+    .side-by-side-boxes {
+        width: 100%;
+    }
+
+    .info-box {
+        width: calc(50% - 10px);
+    }
+
+    .contacts-box {
+        width: 350px;
+    }
+}
+
+@media (max-width: 1200px) {
+    .content-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .right-column {
+        width: 100%;
+    }
+
+    .contacts-box {
+        width: 100%;
+        max-width: 500px;
+        margin: 0 auto;
+    }
+}
+
+@media (max-width: 768px) {
+    .club-title {
+        font-size: 1.8rem;
+    }
+
+    .club-name-box {
+        height: auto;
+        min-height: 100px;
+    }
+
+    .side-by-side-boxes {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .info-box {
+        width: 100%;
+        height: auto;
+        min-height: 180px;
+    }
+
+    .about-box,
+    .events-section {
+        height: auto;
+        min-height: 250px;
+    }
+
+    .contacts-box {
+        height: auto;
+        min-height: 300px;
+    }
+
+    .carousel-btn {
+        width: 35px;
+        height: 35px;
+        font-size: 1rem;
+    }
+
+    .event-card {
+        min-width: 250px;
+        width: 250px;
+        height: 250px;
+    }
+
+    .event-image {
+        height: 125px;
+    }
+
+    .event-details {
+        height: 125px;
+        padding: 0.75rem;
+    }
+
+    .event-details h4 {
+        font-size: 0.9rem;
+    }
+
+    .event-details .event-description {
+        font-size: 0.8rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .club-detail-main {
+        padding: 0 0.5rem;
+    }
+
+    .club-hero-image {
+        height: 200px;
+    }
+
+    .club-title {
+        font-size: 1.5rem;
+    }
+
+    .club-category {
+        font-size: 1rem;
+    }
+
+    .about-box,
+    .info-box,
+    .events-section,
+    .contacts-box {
+        padding: 1rem;
+    }
+
+    .events-carousel-container {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .carousel-btn {
+        display: none;
+    }
+
+    .event-card {
+        min-width: 200px;
+        width: 200px;
+        height: 220px;
+    }
+
+    .event-image {
+        height: 110px;
+    }
+
+    .event-details {
+        height: 110px;
+        padding: 0.5rem;
+    }
+
+    .event-details h4 {
+        font-size: 0.85rem;
+    }
+
+    .event-details .event-description {
+        font-size: 0.75rem;
+    }
+
+    .event-time,
+    .event-location {
+        font-size: 0.75rem;
+    }
+}

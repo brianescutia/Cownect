@@ -424,3 +424,123 @@ button {
     display: none !important;
     /* Force hide when hidden class is present */
 }
+
+/* =============================================================================
+   CLICKABLE CLUB CARDS - ADD TO tech-clubs.css
+   =============================================================================
+   Enhanced styling for interactive club cards
+*/
+
+/* Make club cards clickable */
+.clickable-card {
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.clickable-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15);
+}
+
+/* Overlay that appears on hover */
+.club-card-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(95, 150, 197, 0.9);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    border-radius: 15px;
+}
+
+.clickable-card:hover .club-card-overlay {
+    opacity: 1;
+}
+
+.view-details {
+    color: white;
+    font-size: 1.1rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 1rem 2rem;
+    border: 2px solid white;
+    border-radius: 25px;
+    transition: all 0.3s ease;
+}
+
+.clickable-card:hover .view-details {
+    transform: scale(1.05);
+    box-shadow: 0 4px 15px rgba(255, 255, 255, 0.3);
+}
+
+/* Ensure bookmark icon stays on top */
+.bookmark-icon {
+    position: relative;
+    z-index: 10;
+    transition: transform 0.3s ease;
+}
+
+.bookmark-icon:hover {
+    transform: scale(1.1);
+}
+
+/* Subtle animation for card content */
+.clickable-card:hover .club-name {
+    color: #2c3e50;
+    transform: translateY(-2px);
+    transition: all 0.3s ease;
+}
+
+.clickable-card:hover .club-description {
+    color: #4a5568;
+    transform: translateY(-1px);
+    transition: all 0.3s ease;
+}
+
+.clickable-card:hover .club-tags {
+    color: #5F96C5;
+    transform: translateY(-1px);
+    transition: all 0.3s ease;
+}
+
+/* Add a subtle glow effect */
+.clickable-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 15px;
+    background: linear-gradient(45deg, transparent, rgba(95, 150, 197, 0.1), transparent);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.clickable-card:hover::before {
+    opacity: 1;
+}
+
+/* Mobile responsiveness for clickable cards */
+@media (max-width: 768px) {
+    .clickable-card:hover {
+        transform: translateY(-4px);
+    }
+
+    .club-card-overlay {
+        opacity: 0.95;
+        background: rgba(95, 150, 197, 0.95);
+    }
+
+    .clickable-card:active .club-card-overlay {
+        opacity: 1;
+    }
+}

@@ -498,6 +498,117 @@ app.get('/api/clubs/metadata', async (req, res) => {
 });
 
 // =============================================================================
+// ADD THESE ROUTES TO YOUR backend/app.js FILE
+// =============================================================================
+// Insert these routes after your existing club routes
+
+// 🏛️ CLUB DETAIL PAGE - Serve the club detail HTML
+app.get('/club/:id', requireAuth, (req, res) => {
+  console.log('Club detail page accessed for ID:', req.params.id);
+  res.sendFile(path.join(__dirname, '../frontend/pages/club-detail.html'));
+});
+
+// 🔍 GET SINGLE CLUB DETAILS - API endpoint for club data
+app.get('/api/clubs/:id', async (req, res) => {
+  try {
+    const clubId = req.params.id;
+    console.log(`📡 Fetching club details for ID: ${clubId}`);
+
+    // Validate ObjectId format
+    if (!mongoose.Types.ObjectId.isValid(clubId)) {
+      return res.status(400).json({ error: 'Invalid club ID format' });
+    }
+
+    // Find the club by ID
+    const club = await Club.findById(clubId);
+
+    if (!club) {
+      return res.status(404).json({ error: 'Club not found' });
+    }
+
+    // Check if club is active
+    if (!club.isActive) {
+      return res.status(404).json({ error: 'Club not available' });
+    }
+
+    console.log(`✅ Club found: ${club.name}`);
+
+    // Return club data
+    res.json(club);
+
+  } catch (error) {
+    console.error('💥 Error fetching club details:', error);
+    res.status(500).json({
+      error: 'Failed to fetch club details',
+      message: error.message
+    });
+  }
+});
+
+// 🔍 GET CLUB EVENTS - API endpoint for club events (placeholder for now)
+app.get('/api/clubs/:id/events', async (req, res) => {
+  try {
+    const clubId = req.params.id;
+    console.log(`📅 Fetching events for club ID: ${clubId}`);
+
+    // For now, return sample events
+    // In the future, you could create an Events model and fetch real events
+    const sampleEvents = [
+      {
+        id: 1,
+        title: "AI Workshop: Getting Started with TensorFlow",
+        date: "2025-12-15",
+        time: "6:00 PM - 8:00 PM",
+        location: "Kemper Hall 1131",
+        description: "Learn the basics of machine learning with hands-on TensorFlow exercises.",
+        registrationUrl: "#"
+      },
+      {
+        id: 2,
+        title: "Research Paper Discussion",
+        date: "2025-12-22",
+        time: "7:00 PM - 9:00 PM",
+        location: "Virtual Meeting",
+        description: "Deep dive into the latest research in computer vision and neural networks.",
+        registrationUrl: "#"
+      },
+      {
+        id: 3,
+        title: "Industry Speaker: AI in Healthcare",
+        date: "2025-12-29",
+        time: "6:30 PM - 8:00 PM",
+        location: "Sciences Lecture Hall",
+        description: "Guest speaker from UCSF discusses real-world AI applications in medicine.",
+        registrationUrl: "#"
+      },
+      {
+        id: 4,
+        title: "Project Showcase",
+        date: "2026-01-05",
+        time: "5:00 PM - 7:00 PM",
+        location: "Engineering Building",
+        description: "Members present their AI projects and get feedback from peers and faculty.",
+        registrationUrl: "#"
+      }
+    ];
+
+    res.json({
+      clubId: clubId,
+      events: sampleEvents,
+      totalEvents: sampleEvents.length
+    });
+
+  } catch (error) {
+    console.error('💥 Error fetching club events:', error);
+    res.status(500).json({
+      error: 'Failed to fetch club events',
+      message: error.message
+    });
+  }
+});
+//last route
+
+// =============================================================================
 // UPDATED DASHBOARD API - Replace your existing /api/user/profile route
 // =============================================================================
 
