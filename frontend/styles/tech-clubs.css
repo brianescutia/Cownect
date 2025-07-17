@@ -295,6 +295,18 @@ button {
     border: none;
 }
 
+/* Pagination button states */
+.pagination button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background-color: #f0f0f0;
+}
+
+.pagination button:disabled:hover {
+    background-color: #f0f0f0;
+    transform: none;
+}
+
 
 @media (max-width: 1100px) {
     .clubs-grid {
@@ -543,4 +555,21 @@ button {
     .clickable-card:active .club-card-overlay {
         opacity: 1;
     }
+}
+
+/* Ensure only 6 cards are visible at once */
+.clubs-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    /* 3 cards per row */
+    gap: 2rem;
+    padding: 1rem;
+    justify-content: center;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Hide cards beyond the 6th */
+.club-card:nth-child(n+7) {
+    display: none;
 }

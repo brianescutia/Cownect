@@ -1,7 +1,6 @@
 // =============================================================================
-// FIXED DYNAMIC CLUBS - No Gray Buttons Version
+// UPDATED DYNAMIC CLUBS WITH WORKING PAGINATION
 // =============================================================================
-// Clean search functionality without the problematic filter UI
 
 // 🎯 GLOBAL STATE MANAGEMENT
 let searchState = {
@@ -14,6 +13,9 @@ let searchState = {
 let allClubs = [];
 let filteredClubs = [];
 
+// 🎯 PAGINATION SETTINGS
+const CLUBS_PER_PAGE = 6;
+
 // 🎯 DEBOUNCING - Prevent excessive searches
 let searchTimeout;
 const DEBOUNCE_DELAY = 300;
@@ -23,14 +25,15 @@ const DEBOUNCE_DELAY = 300;
 // =============================================================================
 
 document.addEventListener('DOMContentLoaded', async () => {
-    console.log('🚀 Initializing clean search system...');
+    console.log('🚀 Initializing dynamic clubs with pagination...');
 
     try {
         await loadClubs();
         setupEventListeners();
+        setupPaginationListeners(); // New pagination setup
         performSearch(); // Initial display
 
-        console.log('✅ Clean search system ready!');
+        console.log('✅ Dynamic clubs system ready!');
     } catch (error) {
         console.error('💥 Initialization error:', error);
         showError('Failed to load clubs');
@@ -90,92 +93,24 @@ function performSearch() {
 
     filteredClubs = results;
 
-    // Render results
-    renderClubs(results);
+    // Reset to page 1 when search changes
+    if (searchState.currentPage > Math.ceil(results.length / CLUBS_PER_PAGE)) {
+        searchState.currentPage = 1;
+    }
+
+    // Render results with pagination
+    renderClubsWithPagination(results);
     renderSearchInfo();
+    updatePaginationButtons();
 
-    console.log(`✅ Search complete: ${results.length} clubs found`);
+    console.log(`✅ Search complete: ${results.length} clubs found, showing page ${searchState.currentPage}`);
 }
 
 // =============================================================================
-// DEBOUNCED SEARCH
+// RENDER CLUBS WITH PAGINATION
 // =============================================================================
 
-function debouncedSearch() {
-    clearTimeout(searchTimeout);
-    searchTimeout = setTimeout(() => {
-        performSearch();
-    }, DEBOUNCE_DELAY);
-}
-
-// =============================================================================
-// EVENT LISTENERS
-// =============================================================================
-
-function setupEventListeners() {
-    // 🔍 SEARCH INPUT
-    const searchInput = document.getElementById('clubSearch');
-    if (searchInput) {
-        searchInput.addEventListener('input', (e) => {
-            searchState.query = e.target.value;
-            debouncedSearch();
-        });
-        console.log('✅ Search input listener added');
-    }
-
-    // 🏷️ TAG FILTERS (using your existing filter tags)
-    const tagButtons = document.querySelectorAll('.filter-tags .tag');
-    tagButtons.forEach(tag => {
-        tag.addEventListener('click', () => {
-            const tagName = tag.dataset.filter || tag.textContent.replace('#', '').toLowerCase();
-            handleTagToggle(tagName);
-        });
-    });
-    console.log(`✅ ${tagButtons.length} tag listeners added`);
-
-    console.log('🔗 Event listeners set up');
-}
-
-// =============================================================================
-// TAG FILTERING
-// =============================================================================
-
-function handleTagToggle(tagName) {
-    const index = searchState.selectedTags.indexOf(tagName);
-
-    if (index === -1) {
-        // Add tag
-        searchState.selectedTags.push(tagName);
-    } else {
-        // Remove tag
-        searchState.selectedTags.splice(index, 1);
-    }
-
-    updateTagUI();
-    performSearch();
-
-    console.log('🏷️ Active tags:', searchState.selectedTags);
-}
-
-function updateTagUI() {
-    const tagButtons = document.querySelectorAll('.filter-tags .tag');
-    tagButtons.forEach(button => {
-        const tagName = button.dataset.filter || button.textContent.replace('#', '').toLowerCase();
-        const isActive = searchState.selectedTags.includes(tagName);
-
-        if (isActive) {
-            button.classList.add('active-filter');
-        } else {
-            button.classList.remove('active-filter');
-        }
-    });
-}
-
-// =============================================================================
-// RENDERING FUNCTIONS (Clean versions)
-// =============================================================================
-
-function renderClubs(clubs) {
+function renderClubsWithPagination(clubs) {
     const clubsGrid = document.querySelector('.clubs-grid');
     if (!clubsGrid) return;
 
@@ -190,11 +125,18 @@ function renderClubs(clubs) {
         return;
     }
 
-    const clubsHTML = clubs.map(club => `
-        <div class="club-card clickable-card" data-club-id="${club._id}" onclick="navigateToClub('${club._id}')">
+    // Calculate pagination
+    const startIndex = (searchState.currentPage - 1) * CLUBS_PER_PAGE;
+    const endIndex = startIndex + CLUBS_PER_PAGE;
+    const clubsToShow = clubs.slice(startIndex, endIndex);
+
+    console.log(`📄 Showing clubs ${startIndex + 1}-${Math.min(endIndex, clubs.length)} of ${clubs.length}`);
+
+    const clubsHTML = clubsToShow.map(club => `
+        <div class="club-card clickable-card" data-club-id="${club._id}">
             <div class="card-top">
                 <img src="${club.logoUrl}" alt="${club.name} Logo" class="club-logo" />
-                <div class="bookmark-icon" onclick="handleBookmarkClick(event)">
+                <div class="bookmark-icon" onclick="event.stopPropagation()">
                     <img src="../assets/bookmark.png" alt="Bookmark" 
                          class="bookmark" data-club-id="${club._id}" />
                 </div>
@@ -209,16 +151,211 @@ function renderClubs(clubs) {
     `).join('');
 
     clubsGrid.innerHTML = clubsHTML;
+
+    // Add click listeners after rendering
+    addClubCardListeners();
+}
+
+// =============================================================================
+// PAGINATION FUNCTIONS
+// =============================================================================
+
+function setupPaginationListeners() {
+    const paginationButtons = document.querySelectorAll('.pagination button');
+
+    paginationButtons.forEach((btn, idx) => {
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+
+            const totalPages = Math.ceil(filteredClubs.length / CLUBS_PER_PAGE);
+
+            if (idx === 0) {
+                // Previous button (<<)
+                if (searchState.currentPage > 1) {
+                    searchState.currentPage--;
+                    performSearch();
+                }
+            } else if (idx === paginationButtons.length - 1) {
+                // Next button (>>)
+                if (searchState.currentPage < totalPages) {
+                    searchState.currentPage++;
+                    performSearch();
+                }
+            } else {
+                // Numbered page button
+                const pageNum = parseInt(btn.textContent);
+                if (pageNum && pageNum !== searchState.currentPage) {
+                    searchState.currentPage = pageNum;
+                    performSearch();
+                }
+            }
+        });
+    });
+
+    console.log(`🔢 Set up ${paginationButtons.length} pagination buttons`);
+}
+
+function updatePaginationButtons() {
+    const totalPages = Math.ceil(filteredClubs.length / CLUBS_PER_PAGE);
+    const paginationContainer = document.querySelector('.pagination');
+
+    if (!paginationContainer) return;
+
+    if (totalPages <= 1) {
+        paginationContainer.style.display = 'none';
+        return;
+    }
+
+    paginationContainer.style.display = 'flex';
+
+    // Generate pagination HTML
+    let paginationHTML = '';
+
+    // Previous button
+    paginationHTML += `<button ${searchState.currentPage === 1 ? 'disabled' : ''}>«</button>`;
+
+    // Page numbers
+    for (let i = 1; i <= Math.min(totalPages, 5); i++) {
+        const pageNum = i;
+        paginationHTML += `<button class="${pageNum === searchState.currentPage ? 'active' : ''}">${pageNum}</button>`;
+    }
+
+    // Show ellipsis and last page if there are many pages
+    if (totalPages > 5) {
+        if (searchState.currentPage < totalPages - 2) {
+            paginationHTML += `<span>...</span>`;
+        }
+        if (searchState.currentPage !== totalPages) {
+            paginationHTML += `<button class="${totalPages === searchState.currentPage ? 'active' : ''}">${totalPages}</button>`;
+        }
+    }
+
+    // Next button
+    paginationHTML += `<button ${searchState.currentPage === totalPages ? 'disabled' : ''}>»</button>`;
+
+    paginationContainer.innerHTML = paginationHTML;
+
+    // Re-attach event listeners
+    setupPaginationListeners();
+}
+
+// =============================================================================
+// CLUB CARD CLICK LISTENERS
+// =============================================================================
+
+function addClubCardListeners() {
+    const clubCards = document.querySelectorAll('.club-card');
+
+    clubCards.forEach(card => {
+        card.addEventListener('click', (e) => {
+            // Don't navigate if bookmark was clicked
+            if (e.target.closest('.bookmark-icon')) {
+                console.log('📌 Bookmark clicked, preventing navigation');
+                return;
+            }
+
+            const clubId = card.dataset.clubId;
+            console.log(`🔗 Club card clicked! Club ID: ${clubId}`);
+
+            if (clubId) {
+                navigateToClub(clubId);
+            } else {
+                console.error('❌ No club ID found on card');
+            }
+        });
+    });
+
+    console.log(`🎧 Added click listeners to ${clubCards.length} club cards`);
+}
+
+// =============================================================================
+// EXISTING FUNCTIONS (Updated)
+// =============================================================================
+
+function debouncedSearch() {
+    clearTimeout(searchTimeout);
+    searchTimeout = setTimeout(() => {
+        searchState.currentPage = 1; // Reset to page 1 on new search
+        performSearch();
+    }, DEBOUNCE_DELAY);
+}
+
+function setupEventListeners() {
+    // 🔍 SEARCH INPUT
+    const searchInput = document.getElementById('clubSearch');
+    if (searchInput) {
+        searchInput.addEventListener('input', (e) => {
+            searchState.query = e.target.value;
+            debouncedSearch();
+        });
+        console.log('✅ Search input listener added');
+    }
+
+    // 🏷️ TAG FILTERS
+    const tagButtons = document.querySelectorAll('.filter-tags .tag');
+    tagButtons.forEach(tag => {
+        tag.addEventListener('click', () => {
+            const tagName = tag.dataset.filter || tag.textContent.replace('#', '').toLowerCase();
+            handleTagToggle(tagName);
+        });
+    });
+    console.log(`✅ ${tagButtons.length} tag listeners added`);
+}
+
+function handleTagToggle(tagName) {
+    const index = searchState.selectedTags.indexOf(tagName);
+
+    if (index === -1) {
+        searchState.selectedTags.push(tagName);
+    } else {
+        searchState.selectedTags.splice(index, 1);
+    }
+
+    searchState.currentPage = 1; // Reset to page 1 when filters change
+    updateTagUI();
+    performSearch();
+
+    console.log('🏷️ Active tags:', searchState.selectedTags);
+}
+
+function clearAllFilters() {
+    searchState = {
+        query: '',
+        selectedTags: [],
+        currentPage: 1,
+        isLoading: false
+    };
+
+    const searchInput = document.getElementById('clubSearch');
+    if (searchInput) searchInput.value = '';
+
+    updateTagUI();
+    performSearch();
+
+    console.log('🗑️ All filters cleared');
+}
+
+// Keep all your existing utility functions...
+function updateTagUI() {
+    const tagButtons = document.querySelectorAll('.filter-tags .tag');
+    tagButtons.forEach(button => {
+        const tagName = button.dataset.filter || button.textContent.replace('#', '').toLowerCase();
+        const isActive = searchState.selectedTags.includes(tagName);
+
+        if (isActive) {
+            button.classList.add('active-filter');
+        } else {
+            button.classList.remove('active-filter');
+        }
+    });
 }
 
 function renderSearchInfo() {
-    // Remove any existing search info
     const existingInfo = document.querySelector('.search-info');
     if (existingInfo) {
         existingInfo.remove();
     }
 
-    // Only show search info if there are active filters
     if (searchState.query || searchState.selectedTags.length > 0) {
         const infoContainer = document.createElement('div');
         infoContainer.className = 'search-info';
@@ -243,33 +380,9 @@ function renderSearchInfo() {
 
         infoContainer.innerHTML = infoHTML;
 
-        // Insert before clubs grid
         const clubsGrid = document.querySelector('.clubs-grid');
         clubsGrid.parentNode.insertBefore(infoContainer, clubsGrid);
     }
-}
-
-
-// =============================================================================
-// UTILITY FUNCTIONS
-// =============================================================================
-
-function clearAllFilters() {
-    searchState = {
-        query: '',
-        selectedTags: [],
-        currentPage: 1,
-        isLoading: false
-    };
-
-    // Reset UI
-    const searchInput = document.getElementById('clubSearch');
-    if (searchInput) searchInput.value = '';
-
-    updateTagUI();
-    performSearch();
-
-    console.log('🗑️ All filters cleared');
 }
 
 function showLoadingState() {
@@ -300,28 +413,24 @@ function showError(message) {
         `;
     }
 }
+
 function navigateToClub(clubId) {
     console.log(`🔗 Navigating to club: ${clubId}`);
     window.location.href = `/club/${clubId}`;
-}
-
-function handleBookmarkClick(event) {
-    // Prevent card click when bookmark is clicked
-    event.stopPropagation();
-    console.log('📌 Bookmark clicked, preventing navigation');
 }
 
 // =============================================================================
 // GLOBAL FUNCTIONS
 // =============================================================================
 
+window.clearAllFilters = clearAllFilters;
 window.navigateToClub = navigateToClub;
-window.handleBookmarkClick = handleBookmarkClick;
 
 // Debug function
-window.debugSearch = () => {
-    console.log('🐛 Search Debug:');
-    console.log('  State:', searchState);
-    console.log('  All clubs:', allClubs.length);
-    console.log('  Filtered clubs:', filteredClubs.length);
+window.debugPagination = () => {
+    console.log('🐛 Pagination Debug:');
+    console.log('  Current page:', searchState.currentPage);
+    console.log('  Clubs per page:', CLUBS_PER_PAGE);
+    console.log('  Total clubs:', filteredClubs.length);
+    console.log('  Total pages:', Math.ceil(filteredClubs.length / CLUBS_PER_PAGE));
 };
