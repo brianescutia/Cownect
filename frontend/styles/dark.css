@@ -7,6 +7,7 @@
     --primary-btn-bg: #5b9bd5;
     --primary-btn-hover: #407ec9;
     --btn-text-color: white;
+    --bg-image: url("../assets/WAVES.png");
 }
 
 body.dark-mode {
@@ -18,5 +19,5 @@ body.dark-mode {
     --primary-btn-bg: #3366cc;
     --primary-btn-hover: #295bb2;
     --btn-text-color: white;
-    background-image: url("../assets/BlackWaves.png");
+    --bg-image: url("../assets/BlackWaves.png");
 }
