@@ -163,3 +163,171 @@ body {
     width: 55%;
     opacity: 0.9;
 }
+
+/* 4K Screens */
+@media (min-width: 2560px) {
+    .navbar {
+        justify-content: space-evenly;
+        align-items: center;
+        width: 55%;
+        max-width: 1800px;
+        padding: 2rem;
+        height: 68px;
+    }
+
+    .navbar-container {
+        gap: 5rem;
+        height: 5vw;
+    }
+
+    .nav-links a {
+        font-size: 1.5rem;
+        width: 4vw;
+    }
+
+    .logo {
+        height: 80px;
+    }
+
+    .hero-text h1 {
+        font-size: 7rem;
+    }
+
+    .hero-text p {
+        font-size: 2rem;
+        line-height: 3rem;
+    }
+}
+
+/* Laptop Screens */
+@media (max-width: 1339px) {
+    .navbar {
+        height: 60px;
+    }
+
+    .navbar-container {
+        gap: 2rem;
+        height: 6vw;
+    }
+
+    .nav-links a {
+        font-size: 0.74rem;
+        width: 5.5vw;
+    }
+
+    .logo {
+        height: 40px;
+    }
+
+    .hero-text h1 {
+        font-size: 5rem;
+    }
+
+    .hero-text p {
+        font-size: 1.4rem;
+    }
+}
+
+/* Tablets */
+@media (max-width: 768px) {
+    .navbar {
+        flex-direction: row;
+        align-items: flex-start;
+        padding: 1rem;
+        height: auto;
+    }
+
+    .navbar-container {
+        flex-direction: row;
+        gap: 1rem;
+        padding: 0.75rem;
+        height: auto;
+    }
+
+    .nav-links {
+        flex-direction: row;
+        gap: 1rem;
+    }
+
+    .nav-links a {
+        font-size: 0.9rem;
+        width: auto;
+        text-align: left;
+    }
+
+    .logo {
+        height: 30px;
+    }
+
+    .hero-text h1 {
+        font-size: 3.5rem;
+        text-align: center;
+    }
+
+    .hero-text p {
+        font-size: 1rem;
+        text-align: left;
+        width: 90%;
+        margin: 1rem auto;
+    }
+
+    .wave-backgrounds {
+        position: absolute;
+        top: 6vh;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+        pointer-events: none;
+    }
+}
+
+/* Mobile L (425px) */
+@media (max-width: 425px) {
+    .navbar-container {
+        gap: 1rem;
+    }
+
+    .nav-links a {
+        font-size: 0.95rem;
+    }
+
+    .hero-text h1 {
+        font-size: 2.8rem;
+    }
+
+    .hero-text p {
+        font-size: 1rem;
+        line-height: 1.8rem;
+    }
+}
+
+/* Mobile M (375px) */
+@media (max-width: 375px) {
+    .nav-links a {
+        font-size: 0.9rem;
+    }
+
+    .hero-text h1 {
+        font-size: 2.5rem;
+    }
+
+    .hero-text p {
+        font-size: 0.95rem;
+    }
+}
+
+/* Mobile S (320px) */
+@media (max-width: 320px) {
+    .nav-links a {
+        font-size: 0.85rem;
+    }
+
+    .hero-text h1 {
+        font-size: 2.2rem;
+    }
+
+    .hero-text p {
+        font-size: 0.9rem;
+    }
+}

@@ -8,21 +8,25 @@
   <link rel="stylesheet" href="../styles/login.css">
   <link href="https://fonts.googleapis.com/css2?family=Rethink+Sans&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/styles/login.css" />
-  <script src="/scripts/login.js" defer></script>
+  <link rel="stylesheet" href="../styles/dark.css">
+  <script src="../scripts/login.js" defer></script>
+  <script src="../scripts/themeToggle.js" defer></script>
 
 
 </head>
 
 <body>
-  <main class="background">
+  <button id="themeToggle" onclick=toggleDarkMode()>Switch Theme</button>
+
+  <main role="main" class="background">
     <section class="login-box">
       <header>
         <h1>
-          <img src="../assets/COW.png" alt="Cow Logo" class="logo">
+          <img src="../assets/COW.png" alt="Cownect Logo featuring a cow" class="logo">
           Cownect
         </h1>
       </header>
-      <form method="POST" action="/login">
+      <form method="POST" action="/login" aria-describedby="login box">
         <label for="email">E-mail</label>
         <input type="email" id="email" name="email" required placeholder="user@ucdavis.edu" />
 
@@ -31,8 +35,6 @@
 
         <button type="submit">Sign In</button>
       </form>
-
-
     </section>
   </main>
   <script>
@@ -51,7 +53,6 @@
       form.prepend(errorMsg);
     }
   </script>
-
 
 </body>
 

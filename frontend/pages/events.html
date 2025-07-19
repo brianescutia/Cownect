@@ -7,9 +7,9 @@
     <title>Cownect - Events</title>
     <link rel="stylesheet" href="../styles/events.css" />
     <link href="https://fonts.googleapis.com/css2?family=Rethink+Sans:wght@800&display=swap" rel="stylesheet">
-    <script src="scripts/search.js" defer></script>
-    <script src="scripts/filterToggle.js" defer></script>
-    <script src="../scripts/events.js"></script>
+    <!-- <script src="../scripts/search.js" defer></script>
+    <script src="../scripts/filterToggle.js" defer></script>
+    <script src="../scripts/events.js"></script> -->
 </head>
 
 <body>
@@ -74,9 +74,78 @@
         <section class="calendar">
             <h2>Events Calendar</h2>
             <div id="calendar">
-                <!-- Calendar will be injected here via JS/EJS -->
+                <table class="calendar-table">
+                    <thead>
+                        <tr>
+                            <th>Mon</th>
+                            <th>Tue</th>
+                            <th>Wed</th>
+                            <th>Thu</th>
+                            <th>Fri</th>
+                            <th>Sat</th>
+                            <th>Sun</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- 🗓️ Placeholder rows; dynamic content will come from Mongo data -->
+                        <tr>
+                            <td></td>
+                            <td>1</td>
+                            <td>2</td>
+                            <td>3</td>
+                            <td>4</td>
+                            <td>5</td>
+                            <td>6</td>
+                        </tr>
+                        <tr>
+                            <td>7</td>
+                            <td>8</td>
+                            <td>9</td>
+                            <td data-date="2025-09-10" class="has-event">
+                                <span>10</span>
+                                <div class="event-popout">
+                                    HackDavis Hackathon<br>
+                                    12:00pm – 3:00pm<br>
+                                    TLC 3203
+                                </div>
+                            </td>
+                            <td>11</td>
+                            <td>12</td>
+                            <td>13</td>
+                        </tr>
+                        <tr>
+                            <td>14</td>
+                            <td>15</td>
+                            <td>16</td>
+                            <td>17</td>
+                            <td>18</td>
+                            <td>19</td>
+                            <td>20</td>
+                        </tr>
+                        <tr>
+                            <td>21</td>
+                            <td>22</td>
+                            <td>23</td>
+                            <td>24</td>
+                            <td>25</td>
+                            <td>26</td>
+                            <td>27</td>
+                        </tr>
+                        <tr>
+                            <td>28</td>
+                            <td>29</td>
+                            <td>30</td>
+                            <td>31</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <!-- More rows as needed -->
+                    </tbody>
+                </table>
             </div>
         </section>
+
     </main>
 </body>
 

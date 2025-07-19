@@ -10,6 +10,8 @@ html,
 body {
     overflow-x: hidden;
     width: 100%;
+    background-color: var(--bg-color);
+    color: var(--text-color)
 }
 
 
@@ -17,7 +19,7 @@ body {
 .background {
     width: 100vw;
     height: 100vh;
-    background-image: url('../assets/WAVES.png');
+    background-image: var(--bg-image);
     background-size: cover;
     /* or tweak with 110% if needed */
     background-repeat: no-repeat;
@@ -30,9 +32,10 @@ body {
 .login-box {
     width: 30%;
     height: 80%;
-    background-color: #fff;
+    background-color: var(--card-bg);
+
     border-radius: 4.5px;
-    border: 0.10rem solid #9F9F9F;
+    border: 0.10rem solid var(--border-color);
     box-shadow: 0 0.125rem 0.625rem rgba(0, 0, 0, 0.1);
     padding: 2rem;
     display: flex;
@@ -77,9 +80,11 @@ form label {
 form input {
     padding: 0.65rem;
     font-size: 1rem;
-    border: 0.06rem solid #ccc;
+    border: 0.06rem solid var(--input-border);
     border-radius: 0.5rem;
     width: 100%;
+    background-color: transparent;
+    color: var(--text-color);
 }
 
 /* Submit button */
@@ -88,8 +93,9 @@ form button {
     top: 4rem;
     padding: 0.75rem;
     font-size: 1rem;
-    background-color: #5b9bd5;
-    color: white;
+    background-color: var(--primary-btn-bg);
+    color: var(--btn-text-color);
+    ;
     border: none;
     border-radius: 0.5rem;
     cursor: pointer;
@@ -97,7 +103,7 @@ form button {
 }
 
 form button:hover {
-    background-color: #407ec9;
+    background-color: var(--primary-btn-hover);
 }
 
 #email,
@@ -109,6 +115,17 @@ form button:hover {
 form label {
     position: relative;
     top: 2.5rem
+}
+
+#themeToggle {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background-color: transparent;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    color: var(--text-color);
 }
 
 /* Small tablets & phones */
