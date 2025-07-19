@@ -191,14 +191,14 @@ button {
     /* ~361px on 1117px screen */
     max-width: 352px;
     max-height: 361px;
-    background-color: rgba(255, 255, 255, 0.2);
+    background-color: rgba(255, 255, 255, 0.7);
     backdrop-filter: blur(12px);
     /* the blur effect */
     -webkit-backdrop-filter: blur(12px);
 
 
 
-    border: 1px solid rgba(255, 255, 255, 0.3);
+    border: 1px solid rgbargba(255, 255, 255, 0.8);
     /* light border for definition */
     border-radius: 15px;
     padding: 1rem;

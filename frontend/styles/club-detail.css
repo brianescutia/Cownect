@@ -1,44 +1,42 @@
 /* =============================================================================
-   CLUB DETAIL PAGE STYLING - CUSTOM LAYOUT
+   CLUB DETAIL PAGE STYLING - CLEAN VERSION
    =============================================================================
-   Designed for 1748x1948 screen with exact specifications
 */
 
-/* =============================================================================
-   MAIN CONTAINER - SMALLER FOR MACBOOK AIR
-   =============================================================================
-*/
+/* Override the tech-clubs background for club detail pages */
+body {
+    background-image: url('../assets/Group23.png');
+    background-size: cover;
+    background-position: right center;
+    background-repeat: no-repeat;
+}
 
 .club-detail-main {
     width: 100%;
     max-width: 1400px;
     margin: 0 auto;
-    padding: 0;
+    padding: 0 2rem;
     display: flex;
     flex-direction: column;
     align-items: center;
+    min-height: 100vh;
 }
 
 /* =============================================================================
-   NAVBAR (Already defined in tech-clubs.css)
+   HERO IMAGE - CENTERED
    =============================================================================
-   Width: 1129px, Height: 68px
-*/
-
-/* =============================================================================
-   CLUB HERO IMAGE SECTION - SMALLER
-   =============================================================================
-   Width: 1200px, Height: 250px
 */
 
 .club-hero-image {
-    width: 1200px;
+    width: 100%;
+    max-width: 1200px;
     height: 250px;
     position: relative;
     overflow: hidden;
     border-radius: 15px;
-    margin: 2rem 0;
+    margin: 2rem auto;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    background: linear-gradient(135deg, #5F96C5, #4a8bc2);
 }
 
 .club-hero-image img {
@@ -48,35 +46,30 @@
     border-radius: 15px;
 }
 
-.hero-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(45deg, rgba(0, 0, 0, 0.3), transparent);
-    border-radius: 15px;
-}
-
 /* =============================================================================
-   CLUB NAME SECTION - SMALLER
+   CLUB NAME SECTION - SHIFTED RIGHT
    =============================================================================
-   Width: 1150px, Height: 100px
 */
 
 .club-name-section {
-    width: 1150px;
+    width: 100%;
+    max-width: 1400px;
     height: 100px;
-    margin: 1rem 0;
+    margin: 4rem 0;
+    display: flex;
+    justify-content: flex-start;
+    padding-left: 100px;
+    /* Shift right */
 }
 
 .club-name-box {
-    width: 100%;
+    width: 1150px;
     height: 100%;
-    background: rgba(255, 255, 255, 0.15);
+    background: rgba(255, 255, 255, 0.7);
+    /* Whiter background */
     backdrop-filter: blur(12px);
     border-radius: 15px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.5);
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -102,20 +95,24 @@
 }
 
 /* =============================================================================
-   CONTENT GRID LAYOUT - SMALLER
+   CONTENT GRID - SHIFTED RIGHT
    =============================================================================
 */
 
 .content-grid {
-    width: 1200px;
+    width: 100%;
+    max-width: 1400px;
     display: grid;
     grid-template-columns: 750px 380px;
     gap: 25px;
     margin: 2rem 0;
+    justify-content: flex-start;
+    padding-left: 100px;
+    /* Shift right to match name box */
 }
 
 /* =============================================================================
-   LEFT COLUMN - SMALLER
+   LEFT COLUMN
    =============================================================================
 */
 
@@ -127,18 +124,17 @@
 }
 
 /* =============================================================================
-   ABOUT BOX - SMALLER
+   ABOUT BOX
    =============================================================================
-   Width: 750px, Height: 200px
 */
 
 .about-box {
     width: 750px;
     height: 200px;
-    background: rgba(255, 255, 255, 0.15);
+    background: rgba(255, 255, 255, 0.7);
     backdrop-filter: blur(12px);
     border-radius: 15px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.5);
     padding: 1.5rem;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
     display: flex;
@@ -188,9 +184,8 @@
 }
 
 /* =============================================================================
-   SIDE-BY-SIDE BOXES - SMALLER
+   SIDE-BY-SIDE BOXES
    =============================================================================
-   Each box: Width: 365px, Height: 220px
 */
 
 .side-by-side-boxes {
@@ -202,10 +197,10 @@
 .info-box {
     width: 365px;
     height: 220px;
-    background: rgba(255, 255, 255, 0.15);
+    background: rgba(255, 255, 255, 0.7);
     backdrop-filter: blur(12px);
     border-radius: 15px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.5);
     padding: 1.5rem;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
     box-sizing: border-box;
@@ -250,18 +245,17 @@
 }
 
 /* =============================================================================
-   EVENTS SECTION - SMALLER
+   EVENTS SECTION
    =============================================================================
-   Width: 750px, Height: 400px
 */
 
 .events-section {
     width: 750px;
     height: 400px;
-    background: rgba(255, 255, 255, 0.15);
+    background: rgba(255, 255, 255, 0.7);
     backdrop-filter: blur(12px);
     border-radius: 15px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.5);
     padding: 1.5rem;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
     box-sizing: border-box;
@@ -335,9 +329,8 @@
 }
 
 /* =============================================================================
-   EVENT CARDS - NEW DESIGN WITH IMAGES
+   EVENT CARDS
    =============================================================================
-   Width: 319px, Height: 295px
 */
 
 .event-card {
@@ -482,9 +475,8 @@
 }
 
 /* =============================================================================
-   RIGHT COLUMN - CONTACTS BOX - SMALLER
+   RIGHT COLUMN - CONTACTS BOX
    =============================================================================
-   Width: 380px, Height: 285px
 */
 
 .right-column {
@@ -494,10 +486,10 @@
 .contacts-box {
     width: 380px;
     height: 285px;
-    background: rgba(255, 255, 255, 0.15);
+    background: rgba(255, 255, 255, 0.7);
     backdrop-filter: blur(12px);
     border-radius: 15px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.5);
     padding: 1.5rem;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
     box-sizing: border-box;
@@ -599,13 +591,16 @@
 }
 
 /* =============================================================================
-   BACK SECTION
+   BACK SECTION - SHIFTED RIGHT
    =============================================================================
 */
 
 .back-section {
-    text-align: center;
+    width: 100%;
+    max-width: 1400px;
     margin: 2rem 0;
+    padding-left: 100px;
+    /* Shift right to match other content */
 }
 
 .back-btn {
@@ -695,7 +690,7 @@
 }
 
 /* =============================================================================
-   RESPONSIVE DESIGN - UPDATED
+   RESPONSIVE DESIGN
    =============================================================================
 */
 
@@ -705,52 +700,46 @@
         padding: 0 1rem;
     }
 
-    .club-hero-image {
-        width: 100%;
-        max-width: 1200px;
-    }
-
-    .club-name-section {
-        width: 100%;
-        max-width: 1150px;
-    }
-
-    .content-grid {
-        width: 100%;
-        max-width: 1200px;
-        grid-template-columns: 1fr 350px;
-    }
-
-    .left-column {
-        width: 100%;
-    }
-
-    .about-box,
-    .events-section {
-        width: 100%;
-    }
-
-    .side-by-side-boxes {
-        width: 100%;
-    }
-
-    .info-box {
-        width: calc(50% - 10px);
-    }
-
-    .contacts-box {
-        width: 350px;
+    .club-name-section,
+    .content-grid,
+    .back-section {
+        padding-left: 50px;
+        /* Reduce shift on smaller screens */
     }
 }
 
 @media (max-width: 1200px) {
-    .content-grid {
-        grid-template-columns: 1fr;
-        gap: 20px;
+
+    .club-name-section,
+    .content-grid,
+    .back-section {
+        padding-left: 0;
+        /* Remove shift on mobile */
+        justify-content: center;
     }
 
+    .content-grid {
+        grid-template-columns: 1fr;
+        max-width: 800px;
+        margin: 2rem auto;
+    }
+
+    .club-name-box {
+        max-width: 100%;
+    }
+
+    .left-column,
     .right-column {
         width: 100%;
+        max-width: 750px;
+        margin: 0 auto;
+    }
+
+    .about-box,
+    .events-section,
+    .side-by-side-boxes {
+        width: 100%;
+        max-width: 750px;
     }
 
     .contacts-box {
@@ -761,15 +750,6 @@
 }
 
 @media (max-width: 768px) {
-    .club-title {
-        font-size: 1.8rem;
-    }
-
-    .club-name-box {
-        height: auto;
-        min-height: 100px;
-    }
-
     .side-by-side-boxes {
         flex-direction: column;
         gap: 15px;
@@ -777,109 +757,9 @@
 
     .info-box {
         width: 100%;
+        max-width: 400px;
         height: auto;
         min-height: 180px;
-    }
-
-    .about-box,
-    .events-section {
-        height: auto;
-        min-height: 250px;
-    }
-
-    .contacts-box {
-        height: auto;
-        min-height: 300px;
-    }
-
-    .carousel-btn {
-        width: 35px;
-        height: 35px;
-        font-size: 1rem;
-    }
-
-    .event-card {
-        min-width: 250px;
-        width: 250px;
-        height: 250px;
-    }
-
-    .event-image {
-        height: 125px;
-    }
-
-    .event-details {
-        height: 125px;
-        padding: 0.75rem;
-    }
-
-    .event-details h4 {
-        font-size: 0.9rem;
-    }
-
-    .event-details .event-description {
-        font-size: 0.8rem;
-    }
-}
-
-@media (max-width: 480px) {
-    .club-detail-main {
-        padding: 0 0.5rem;
-    }
-
-    .club-hero-image {
-        height: 200px;
-    }
-
-    .club-title {
-        font-size: 1.5rem;
-    }
-
-    .club-category {
-        font-size: 1rem;
-    }
-
-    .about-box,
-    .info-box,
-    .events-section,
-    .contacts-box {
-        padding: 1rem;
-    }
-
-    .events-carousel-container {
-        flex-direction: column;
-        gap: 0.5rem;
-    }
-
-    .carousel-btn {
-        display: none;
-    }
-
-    .event-card {
-        min-width: 200px;
-        width: 200px;
-        height: 220px;
-    }
-
-    .event-image {
-        height: 110px;
-    }
-
-    .event-details {
-        height: 110px;
-        padding: 0.5rem;
-    }
-
-    .event-details h4 {
-        font-size: 0.85rem;
-    }
-
-    .event-details .event-description {
-        font-size: 0.75rem;
-    }
-
-    .event-time,
-    .event-location {
-        font-size: 0.75rem;
+        margin: 0 auto;
     }
 }
