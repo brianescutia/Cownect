@@ -160,3 +160,86 @@ body {
     margin: 0.5rem 0;
     line-height: 1.6;
 }
+
+/* 🎨 Calendar Table Styles */
+.calendar {
+    margin: 3rem 0 auto 3rem;
+    padding: 1rem;
+    max-width: 60vw;
+    background-color: #fdfdfd;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.calendar h2 {
+    font-family: 'Rethink Sans', sans-serif;
+    font-size: 2rem;
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+.calendar-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+.calendar-table th,
+.calendar-table td {
+    text-align: center;
+    padding: 1rem 0.5rem;
+    border: 1px solid #ddd;
+    font-family: Arial, sans-serif;
+    font-size: 1rem;
+}
+
+.calendar-table th {
+    background-color: #f0f0f0;
+    font-weight: bold;
+}
+
+.calendar-table td {
+    position: relative;
+    vertical-align: top;
+    height: 100px;
+}
+
+/* 📍 Event Styling Inside Cell */
+.has-event {
+    background-color: #eaf8ff;
+    border: 2px solid #2196f3;
+    color: #0c3c68;
+    font-weight: bold;
+}
+
+.has-event span {
+    display: block;
+    font-size: 1.2rem;
+}
+
+/* 💬 Popout Info */
+.event-popout {
+    position: absolute;
+    top: 2.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #ffffff;
+    padding: 0.75rem;
+    border: 1px solid #aaa;
+    border-radius: 6px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    font-size: 0.9rem;
+    display: none;
+    z-index: 10;
+}
+
+/* Hover to Show Event Details */
+.has-event:hover .event-popout {
+    display: block;
+}
+
+/* 🧠 Accessibility Improvements */
+.has-event:focus-within .event-popout,
+.has-event:focus .event-popout {
+    display: block;
+}
