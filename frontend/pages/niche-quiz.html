@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tech Niche Quiz | Cownect</title>
+    <link rel="stylesheet" href="/styles/tech-clubs.css">
+    <link rel="stylesheet" href="/styles/niche-quiz.css">
+    <link href="https://fonts.googleapis.com/css2?family=Rethink+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Drag and Drop Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
+    
+    <script src="/scripts/navbar.js" defer></script>
+    <script src="/scripts/niche-quiz.js" defer></script>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <div class="logo-title">
+                <img src="../assets/cowLogo.png" alt="Cownect Logo" class="logo" />
+                <span class="logo-text">Cownect</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="/tech-clubs">Tech Clubs</a></li>
+                <li><a href="/events">Events</a></li>
+                <li><a href="/niche-quiz" class="active">Niche Test</a></li>
+                <li><a href="#">Mentor Matching</a></li>
+                <li><a class="account-btn" href="/login">Account</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <main class="quiz-container">
+
+        <!-- 🌟 QUIZ INTRODUCTION SCREEN -->
+        <section class="quiz-intro" id="quizIntro">
+            <div class="intro-header">
+                <h1>🎯 Find Your Tech Niche</h1>
+                <p class="intro-subtitle">Discover your ideal tech career path with our research-backed quiz</p>
+            </div>
+
+            <div class="level-selection">
+                <h2>Choose Your Experience Level</h2>
+                <div class="level-cards">
+                    
+                    <div class="level-card" data-level="beginner">
+                        <div class="level-icon">🌱</div>
+                        <h3>Tech Explorer</h3>
+                        <p class="level-description">New to tech? Discover what interests you most.</p>
+                        <div class="level-details">
+                            <span class="question-count">8 questions</span>
+                            <span class="duration">5-7 minutes</span>
+                        </div>
+                        <button class="select-level-btn">Start Quiz</button>
+                    </div>
+
+                    <div class="level-card" data-level="intermediate">
+                        <div class="level-icon">🚀</div>
+                        <h3>Tech Curious</h3>
+                        <p class="level-description">Some tech experience? Find your ideal specialization.</p>
+                        <div class="level-details">
+                            <span class="question-count">12 questions</span>
+                            <span class="duration">8-10 minutes</span>
+                        </div>
+                        <button class="select-level-btn">Start Quiz</button>
+                    </div>
+
+                    <div class="level-card" data-level="advanced">
+                        <div class="level-icon">⚡</div>
+                        <h3>Tech Insider</h3>
+                        <p class="level-description">Experienced in tech? Optimize your career path.</p>
+                        <div class="level-details">
+                            <span class="question-count">15 questions</span>
+                            <span class="duration">10-12 minutes</span>
+                        </div>
+                        <button class="select-level-btn">Start Quiz</button>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="intro-features">
+                <div class="feature">
+                    <span class="feature-icon">📊</span>
+                    <h4>Research-Backed</h4>
+                    <p>Based on industry data from BLS, Glassdoor, and LinkedIn</p>
+                </div>
+                <div class="feature">
+                    <span class="feature-icon">🎯</span>
+                    <h4>Personalized Results</h4>
+                    <p>Get specific career paths and next steps tailored to you</p>
+                </div>
+                <div class="feature">
+                    <span class="feature-icon">🏫</span>
+                    <h4>UC Davis Integration</h4>
+                    <p>Connect with relevant clubs and resources on campus</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 📝 QUIZ QUESTIONS SCREEN -->
+        <section class="quiz-questions" id="quizQuestions" style="display: none;">
+            
+            <!-- Progress Bar -->
+            <div class="quiz-progress">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <div class="progress-text">
+                    <span id="currentQuestion">1</span> of <span id="totalQuestions">12</span>
+                </div>
+            </div>
+
+            <!-- Question Container -->
+            <div class="question-container">
+                <div class="question-header">
+                    <h2 id="questionText">Loading question...</h2>
+                    <p class="question-instruction">Drag and drop to rank from most preferred (top) to least preferred (bottom)</p>
+                </div>
+
+                <!-- Drag & Drop Ranking Area -->
+                <div class="ranking-container">
+                    <div class="ranking-labels">
+                        <div class="rank-label most-preferred">
+                            <span class="rank-icon">👍</span>
+                            <span>Most Preferred</span>
+                        </div>
+                        <div class="rank-label least-preferred">
+                            <span class="rank-icon">👎</span>
+                            <span>Least Preferred</span>
+                        </div>
+                    </div>
+
+                    <div class="sortable-list" id="sortableOptions">
+                        <!-- Options will be dynamically loaded here -->
+                    </div>
+                </div>
+
+                <!-- Question Navigation -->
+                <div class="question-nav">
+                    <button class="nav-btn secondary" id="previousBtn" disabled>
+                        ← Previous
+                    </button>
+                    <div class="question-timer">
+                        <span id="questionTimer">0:30</span>
+                    </div>
+                    <button class="nav-btn primary" id="nextBtn" disabled>
+                        Next →
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 🎉 QUIZ RESULTS SCREEN -->
+        <section class="quiz-results" id="quizResults" style="display: none;">
+            
+            <div class="results-header">
+                <h1>🎯 Your Tech Niche Results</h1>
+                <p class="results-subtitle">Based on your responses, here's your personalized career analysis</p>
+            </div>
+
+            <!-- Top Match Card -->
+            <div class="top-match-card">
+                <div class="match-header">
+                    <h2>Your Top Match</h2>
+                    <div class="confidence-badge" id="confidenceBadge">High Confidence</div>
+                </div>
+                
+                <div class="match-content">
+                    <div class="match-info">
+                        <h3 id="topCareerName">Web Development</h3>
+                        <p id="topCareerDescription">Build websites and web applications...</p>
+                        <div class="match-percentage">
+                            <div class="percentage-circle">
+                                <svg class="progress-ring" width="120" height="120">
+                                    <circle class="progress-ring__circle" stroke="#5F96C5" stroke-width="8" fill="transparent" r="52" cx="60" cy="60"/>
+                                </svg>
+                                <div class="percentage-text" id="matchPercentage">85%</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Career Progression -->
+            <div class="career-progression">
+                <h3>📈 Career Progression Path</h3>
+                <div class="progression-timeline" id="progressionTimeline">
+                    <!-- Timeline will be populated dynamically -->
+                </div>
+            </div>
+
+            <!-- Market Data -->
+            <div class="market-data">
+                <h3>💼 Market Insights</h3>
+                <div class="data-grid">
+                    <div class="data-item">
+                        <span class="data-label">Average Salary</span>
+                        <span class="data-value" id="avgSalary">$95k - $140k</span>
+                    </div>
+                    <div class="data-item">
+                        <span class="data-label">Job Growth</span>
+                        <span class="data-value" id="jobGrowth">+13% (2021-2031)</span>
+                    </div>
+                    <div class="data-item">
+                        <span class="data-label">Annual Openings</span>
+                        <span class="data-value" id="annualOpenings">28,900</span>
+                    </div>
+                    <div class="data-item">
+                        <span class="data-label">Work-Life Balance</span>
+                        <span class="data-value" id="workLifeBalance">7.5/10</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- All Matches Visualization -->
+            <div class="all-matches">
+                <h3>🎯 All Career Matches</h3>
+                <div class="matches-chart" id="matchesChart">
+                    <!-- Career match bars will be populated here -->
+                </div>
+            </div>
+
+            <!-- Next Steps -->
+            <div class="next-steps">
+                <h3>🚀 Your Next Steps</h3>
+                <div class="steps-list" id="nextStepsList">
+                    <!-- Steps will be populated dynamically -->
+                </div>
+            </div>
+
+            <!-- Recommended Clubs -->
+            <div class="recommended-clubs">
+                <h3>🏛️ Recommended UC Davis Clubs</h3>
+                <div class="clubs-grid" id="recommendedClubsGrid">
+                    <!-- Club cards will be populated here -->
+                </div>
+            </div>
+
+            <!-- Result Actions -->
+            <div class="result-actions">
+                <button class="action-btn primary" id="shareResultsBtn">
+                    🔗 Share Results
+                </button>
+                <button class="action-btn secondary" id="retakeQuizBtn">
+                    🔄 Retake Quiz
+                </button>
+                <button class="action-btn secondary" id="exploreClubsBtn">
+                    🏛️ Explore Clubs
+                </button>
+                <button class="action-btn secondary" id="saveToDashboardBtn">
+                    💾 Save to Dashboard
+                </button>
+            </div>
+        </section>
+
+        <!-- 📊 LOADING SCREEN -->
+        <section class="quiz-loading" id="quizLoading" style="display: none;">
+            <div class="loading-content">
+                <div class="loading-spinner"></div>
+                <h2>Analyzing Your Responses...</h2>
+                <p class="loading-text" id="loadingText">Calculating career matches...</p>
+                <div class="loading-progress">
+                    <div class="loading-bar">
+                        <div class="loading-fill" id="loadingFill"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Hidden Templates -->
+    <template id="optionTemplate">
+        <div class="sortable-option" data-option-id="">
+            <div class="option-grip">⋮⋮</div>
+            <div class="option-content">
+                <h4 class="option-title"></h4>
+                <p class="option-description"></p>
+            </div>
+            <div class="option-rank">
+                <span class="rank-number"></span>
+            </div>
+        </div>
+    </template>
+
+    <template id="progressionStepTemplate">
+        <div class="progression-step">
+            <div class="step-level"></div>
+            <div class="step-content">
+                <h4 class="step-roles"></h4>
+                <p class="step-timeline"></p>
+                <p class="step-salary"></p>
+            </div>
+        </div>
+    </template>
+
+    <template id="matchBarTemplate">
+        <div class="match-bar">
+            <div class="match-info">
+                <span class="match-name"></span>
+                <span class="match-category"></span>
+            </div>
+            <div class="match-progress">
+                <div class="match-fill"></div>
+                <span class="match-percent"></span>
+            </div>
+        </div>
+    </template>
+
+    <template id="clubCardTemplate">
+        <div class="recommended-club-card">
+            <img class="club-logo" src="" alt="">
+            <div class="club-info">
+                <h4 class="club-name"></h4>
+                <p class="club-description"></p>
+                <button class="view-club-btn">View Club</button>
+            </div>
+        </div>
+    </template>
+
+</body>
+</html>
