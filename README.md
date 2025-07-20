@@ -182,6 +182,37 @@ npm start    # Production mode
 *Seeking Software Engineering Internship opportunities for Summer 2025*
 
 ## 📁 File Structure
-n/a
+Cownect/
+├── backend/
+│   ├── models/
+│   │   ├── Club.js              # Club database schema
+│   │   ├── User.js              # User authentication & bookmarks
+│   │   ├── nicheQuizModels.js   # Quiz & career field models
+│   │   └── eventModel.js        # Event schema (future)
+│   ├── seedClubs.js             # Real UC Davis club data
+│   ├── seedQuizData.js          # Quiz questions & career fields
+│   └── app.js                   # Main server application
+├── frontend/
+│   ├── pages/
+│   │   ├── index.html           # Landing page
+│   │   ├── tech-clubs.html      # Main club discovery page
+│   │   ├── club-detail.html     # Individual club pages
+│   │   ├── niche-quiz.html      # Career discovery quiz
+│   │   ├── dashboard.html       # User profile & bookmarks
+│   │   ├── login.html           # Authentication
+│   │   └── events.html          # Events calendar (beta)
+│   ├── scripts/
+│   │   ├── dynamicClubs.js      # Club loading & pagination
+│   │   ├── bookmark.js          # Bookmark functionality
+│   │   ├── niche-quiz.js        # Quiz engine
+│   │   └── navbar.js            # Navigation & auth status
+│   ├── styles/
+│   │   ├── tech-clubs.css       # Main page styling
+│   │   ├── niche-quiz.css       # Quiz interface
+│   │   └── dashboard.css        # User dashboard
+│   └── assets/                  # Images, logos, backgrounds
+├── .env                         # Environment variables
+├── package.json                 # Dependencies & scripts
+└── README.md                    # This file
 
 
