@@ -1,5 +1,5 @@
 // =============================================================================
-// UPDATED DYNAMIC CLUBS WITH WORKING PAGINATION
+// UPDATED DYNAMIC CLUBS WITH WORKING PAGINATION & FIXED NAVIGATION
 // =============================================================================
 
 // 🎯 GLOBAL STATE MANAGEMENT
@@ -136,7 +136,7 @@ function renderClubsWithPagination(clubs) {
         <div class="club-card clickable-card" data-club-id="${club._id}">
             <div class="card-top">
                 <img src="${club.logoUrl}" alt="${club.name} Logo" class="club-logo" />
-                <div class="bookmark-icon" onclick="event.stopPropagation()">
+                <div class="bookmark-icon">
                     <img src="../assets/bookmark.png" alt="Bookmark" 
                          class="bookmark" data-club-id="${club._id}" />
                 </div>
@@ -144,15 +144,12 @@ function renderClubsWithPagination(clubs) {
             <h3 class="club-name">${club.name}</h3>
             <p class="club-description">${club.description}</p>
             <p class="club-tags">${club.tags.map(tag => `#${tag}`).join(' ')}</p>
-            <div class="club-card-overlay">
-                <span class="view-details">View Details →</span>
-            </div>
         </div>
     `).join('');
 
     clubsGrid.innerHTML = clubsHTML;
 
-    // Add click listeners after rendering
+    // Add click listeners after rendering - FIXED VERSION
     addClubCardListeners();
 }
 
@@ -240,7 +237,7 @@ function updatePaginationButtons() {
 }
 
 // =============================================================================
-// CLUB CARD CLICK LISTENERS
+// CLUB CARD CLICK LISTENERS - FIXED VERSION
 // =============================================================================
 
 function addClubCardListeners() {
@@ -248,12 +245,16 @@ function addClubCardListeners() {
 
     clubCards.forEach(card => {
         card.addEventListener('click', (e) => {
-            // Don't navigate if bookmark was clicked
-            if (e.target.closest('.bookmark-icon')) {
-                console.log('📌 Bookmark clicked, preventing navigation');
+            // Check if the click is on the bookmark icon or its children
+            const isBookmarkClick = e.target.closest('.bookmark-icon');
+
+            if (isBookmarkClick) {
+                console.log('📌 Bookmark clicked, not navigating to club');
+                // Let the bookmark handler deal with this
                 return;
             }
 
+            // This is a card click, navigate to the club
             const clubId = card.dataset.clubId;
             console.log(`🔗 Club card clicked! Club ID: ${clubId}`);
 

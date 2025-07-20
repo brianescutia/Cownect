@@ -163,7 +163,7 @@ function updateAllBookmarkUI() {
     console.log(`🎨 Updated UI for ${allBookmarkElements.length} bookmark elements`);
 }
 
-// 🎭 FUNCTION: Handle bookmark button click
+// 🎭 FUNCTION: Handle bookmark button click - FIXED VERSION
 async function handleBookmarkClick(event) {
     // Prevent any default behavior and stop propagation
     event.preventDefault();
@@ -171,21 +171,28 @@ async function handleBookmarkClick(event) {
 
     console.log('🖱️ Bookmark click detected!', event.target);
 
-    // Find the element with data-club-id
+    // Find the element with data-club-id - ONLY look in bookmark containers
     let targetElement = event.target;
 
-    // Search up the DOM tree for the element with data-club-id
-    while (targetElement && !targetElement.dataset.clubId) {
+    // Search up the DOM tree for the bookmark icon container
+    while (targetElement && !targetElement.classList.contains('bookmark-icon')) {
         targetElement = targetElement.parentElement;
         if (!targetElement || targetElement === document.body) {
-            console.warn('⚠️ Could not find club ID in clicked element hierarchy');
+            console.warn('⚠️ Bookmark click outside of bookmark icon');
             return;
         }
     }
 
-    const clubId = targetElement.dataset.clubId;
+    // Now find the club ID from the bookmark image inside the bookmark icon
+    const bookmarkImg = targetElement.querySelector('[data-club-id]');
+    if (!bookmarkImg) {
+        console.warn('⚠️ No club ID found in bookmark element');
+        return;
+    }
+
+    const clubId = bookmarkImg.dataset.clubId;
     if (!clubId) {
-        console.warn('⚠️ No club ID found on clicked element');
+        console.warn('⚠️ No club ID found on bookmark element');
         return;
     }
 
@@ -194,7 +201,6 @@ async function handleBookmarkClick(event) {
     console.log(`🖱️ Bookmark clicked for club ${clubId}, currently bookmarked: ${isCurrentlyBookmarked}`);
 
     // Show loading state on the clicked element
-    const bookmarkImg = event.target.tagName === 'IMG' ? event.target : event.target.querySelector('img');
     if (bookmarkImg) {
         bookmarkImg.style.opacity = '0.6';
         bookmarkImg.style.pointerEvents = 'none';
@@ -264,36 +270,23 @@ function showBookmarkFeedback(message, type = 'success') {
     }, 3000);
 }
 
-// 🔗 FUNCTION: Set up bookmark event listeners - IMPROVED VERSION
+// 🔗 FUNCTION: Set up bookmark event listeners - FIXED VERSION
 function setupBookmarkListeners() {
     // Remove any existing listeners to prevent duplicates
     document.removeEventListener('click', handleBookmarkClick);
 
-    // Use event delegation for dynamic content - IMPROVED
+    // Use targeted event delegation - ONLY for bookmark icons
     document.addEventListener('click', (event) => {
-        // Check if the clicked element or its parent is a bookmark
-        let isBookmarkClick = false;
-        let currentElement = event.target;
+        // Check if the clicked element is within a bookmark icon
+        const bookmarkIcon = event.target.closest('.bookmark-icon');
 
-        // Check up to 3 levels up the DOM tree
-        for (let i = 0; i < 3 && currentElement; i++) {
-            if (currentElement.classList.contains('bookmark') ||
-                currentElement.classList.contains('bookmark-icon') ||
-                currentElement.dataset.clubId ||
-                (currentElement.tagName === 'IMG' && currentElement.alt && currentElement.alt.includes('Bookmark'))) {
-                isBookmarkClick = true;
-                break;
-            }
-            currentElement = currentElement.parentElement;
-        }
-
-        if (isBookmarkClick) {
-            console.log('🎯 Bookmark click detected via delegation');
+        if (bookmarkIcon) {
+            console.log('🎯 Bookmark icon clicked');
             handleBookmarkClick(event);
         }
     }, true); // Use capture phase to ensure we catch the event
 
-    console.log('🔗 Enhanced bookmark event listeners set up');
+    console.log('🔗 Fixed bookmark event listeners set up');
 }
 
 // 🚀 FUNCTION: Initialize bookmark system
@@ -349,14 +342,4 @@ document.addEventListener('visibilitychange', () => {
     }
 });
 
-console.log('✅ Enhanced bookmark system script loaded');
-
-// =============================================================================
-// INTEGRATION NOTES:
-// =============================================================================
-// This script works with your existing dynamicClubs.js:
-// 1. Club cards are generated with data-club-id attributes
-// 2. This script finds those buttons and adds click handlers
-// 3. When clubs load, bookmarks are fetched and UI is updated
-// 4. Everything stays in sync automatically
-// =============================================================================
+console.log('✅ Fixed bookmark system script loaded');
