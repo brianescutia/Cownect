@@ -130,7 +130,7 @@ const quizQuestionSchema = new mongoose.Schema({
     // Question metadata
     category: {
         type: String,
-        enum: ['work_style', 'interests', 'skills', 'values', 'environment', 'goals']
+        enum: ['work_style', 'interests', 'skills', 'values', 'environment', 'goals', 'leadership']
     },
 
     difficultyWeight: {
