@@ -244,55 +244,11 @@ const clubData = [
         about: "The Association of Information Technology Professionals connects students with IT industry professionals through networking events, workshops, and career development opportunities."
     },
     {
-        name: "Davis Entrepreneurs Association",
-        description: "Fosters entrepreneurial spirit among students by providing resources, mentorship, and networking opportunities for aspiring business founders and innovators.",
-        tags: ["entrepreneurship", "startup", "business", "innovation"],
-        category: "Technology",
-        logoUrl: "/assets/default-club-logo.png",
-        memberCount: 41,
-        websiteUrl: null,
-        instagramUrl: null,
-        contactEmail: "entrepreneurs@ucdavis.edu",
-        meetingInfo: {
-            frequency: "Weekly",
-            day: "Wednesday",
-            time: "7:00 PM - 8:30 PM",
-            location: "Graduate School of Management"
-        },
-        focusAreas: ["Startup Development", "Business Planning", "Pitch Practice", "Venture Capital"],
-        officers: [
-            { position: "President", name: "TBD", email: "entrepreneurs@ucdavis.edu" }
-        ],
-        about: "The Davis Entrepreneurs Association fosters entrepreneurial spirit among students by providing resources, mentorship, and networking opportunities for aspiring business founders."
-    },
-    {
-        name: "Mobile App Development Club",
-        description: "Teaches students to develop mobile applications for iOS and Android platforms through hands-on projects, workshops, and collaborative development.",
-        tags: ["mobile", "ios", "android", "development"],
-        category: "Software",
-        logoUrl: "/assets/default-club-logo.png",
-        memberCount: 39,
-        websiteUrl: null,
-        instagramUrl: null,
-        contactEmail: "mobiledev@ucdavis.edu",
-        meetingInfo: {
-            frequency: "Weekly",
-            day: "Tuesday",
-            time: "7:00 PM - 9:00 PM",
-            location: "Kemper Hall Computer Lab"
-        },
-        focusAreas: ["iOS Development", "Android Development", "App Store Deployment", "Mobile UI/UX"],
-        officers: [
-            { position: "President", name: "TBD", email: "mobiledev@ucdavis.edu" }
-        ],
-        about: "The Mobile App Development Club teaches students to develop mobile applications for iOS and Android platforms through hands-on projects and workshops."
-    },
-    {
-        name: "Quantum Computing Society",
+        name: "Quantum Computing Society at Davis",
         description: "Explores the cutting-edge field of quantum computing through theoretical study, practical experiments, and research into quantum algorithms and applications.",
         tags: ["quantum", "computing", "physics", "research"],
         category: "Technology",
-        logoUrl: "/assets/default-club-logo.png",
+        logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/quantumcomputingatdavis/logo/01JVQV37N2Y49KJG8ED57EABVX.png",
         memberCount: 26,
         websiteUrl: null,
         instagramUrl: null,
@@ -308,138 +264,6 @@ const clubData = [
             { position: "President", name: "TBD", email: "quantum@ucdavis.edu" }
         ],
         about: "The Quantum Computing Society explores the cutting-edge field of quantum computing through theoretical study, practical experiments, and research into quantum algorithms."
-    },
-    {
-        name: "Blockchain Technology Club",
-        description: "Studies blockchain technology, cryptocurrency, and decentralized applications while developing practical skills in blockchain development and fintech innovation.",
-        tags: ["blockchain", "cryptocurrency", "fintech", "development"],
-        category: "Technology",
-        logoUrl: "/assets/default-club-logo.png",
-        memberCount: 32,
-        websiteUrl: null,
-        instagramUrl: null,
-        contactEmail: "blockchain@ucdavis.edu",
-        meetingInfo: {
-            frequency: "Weekly",
-            day: "Monday",
-            time: "6:30 PM - 8:00 PM",
-            location: "Kemper Hall"
-        },
-        focusAreas: ["Blockchain Development", "Smart Contracts", "DeFi", "Cryptocurrency Analysis"],
-        officers: [
-            { position: "President", name: "TBD", email: "blockchain@ucdavis.edu" }
-        ],
-        about: "The Blockchain Technology Club studies blockchain technology, cryptocurrency, and decentralized applications while developing practical skills in blockchain development."
-    },
-    {
-        name: "Virtual Reality Development Club",
-        description: "Creates immersive virtual and augmented reality experiences using cutting-edge VR/AR technologies and explores the future of spatial computing.",
-        tags: ["vr", "ar", "immersive", "development"],
-        category: "Technology",
-        logoUrl: "/assets/default-club-logo.png",
-        memberCount: 28,
-        websiteUrl: null,
-        instagramUrl: null,
-        contactEmail: "vrdev@ucdavis.edu",
-        meetingInfo: {
-            frequency: "Weekly",
-            day: "Wednesday",
-            time: "5:00 PM - 7:00 PM",
-            location: "Engineering Building"
-        },
-        focusAreas: ["VR Development", "AR Applications", "3D Modeling", "Immersive Design"],
-        officers: [
-            { position: "President", name: "TBD", email: "vrdev@ucdavis.edu" }
-        ],
-        about: "The Virtual Reality Development Club creates immersive virtual and augmented reality experiences using cutting-edge VR/AR technologies."
-    },
-    {
-        name: "Internet of Things Club",
-        description: "Develops IoT solutions and smart device applications while exploring sensor networks, embedded systems, and connected device technologies.",
-        tags: ["iot", "sensors", "embedded", "connectivity"],
-        category: "Hardware",
-        logoUrl: "/assets/default-club-logo.png",
-        memberCount: 30,
-        websiteUrl: null,
-        instagramUrl: null,
-        contactEmail: "iot@ucdavis.edu",
-        meetingInfo: {
-            frequency: "Weekly",
-            day: "Thursday",
-            time: "6:00 PM - 8:00 PM",
-            location: "Engineering Building"
-        },
-        focusAreas: ["IoT Development", "Sensor Networks", "Embedded Programming", "Smart Devices"],
-        officers: [
-            { position: "President", name: "TBD", email: "iot@ucdavis.edu" }
-        ],
-        about: "The Internet of Things Club develops IoT solutions and smart device applications while exploring sensor networks and embedded systems."
-    },
-    {
-        name: "3D Printing and Maker Club",
-        description: "Provides hands-on experience with 3D printing, digital fabrication, and maker technologies for prototyping and creative engineering projects.",
-        tags: ["3dprinting", "maker", "fabrication", "prototyping"],
-        category: "Hardware",
-        logoUrl: "/assets/default-club-logo.png",
-        memberCount: 35,
-        websiteUrl: null,
-        instagramUrl: null,
-        contactEmail: "makers@ucdavis.edu",
-        meetingInfo: {
-            frequency: "Weekly",
-            day: "Saturday",
-            time: "2:00 PM - 5:00 PM",
-            location: "Engineering Student Startup Center"
-        },
-        focusAreas: ["3D Printing", "CAD Design", "Digital Fabrication", "Prototyping"],
-        officers: [
-            { position: "President", name: "TBD", email: "makers@ucdavis.edu" }
-        ],
-        about: "The 3D Printing and Maker Club provides hands-on experience with 3D printing, digital fabrication, and maker technologies for prototyping."
-    },
-    {
-        name: "Cloud Computing Club",
-        description: "Focuses on cloud technologies, DevOps practices, and scalable system architecture using major cloud platforms like AWS, Azure, and Google Cloud.",
-        tags: ["cloud", "devops", "aws", "scalability"],
-        category: "Technology",
-        logoUrl: "/assets/default-club-logo.png",
-        memberCount: 37,
-        websiteUrl: null,
-        instagramUrl: null,
-        contactEmail: "cloudcomputing@ucdavis.edu",
-        meetingInfo: {
-            frequency: "Weekly",
-            day: "Tuesday",
-            time: "7:00 PM - 8:30 PM",
-            location: "Kemper Hall"
-        },
-        focusAreas: ["Cloud Architecture", "DevOps", "Containerization", "Microservices"],
-        officers: [
-            { position: "President", name: "TBD", email: "cloudcomputing@ucdavis.edu" }
-        ],
-        about: "The Cloud Computing Club focuses on cloud technologies, DevOps practices, and scalable system architecture using major cloud platforms."
-    },
-    {
-        name: "Machine Learning Research Group",
-        description: "Conducts advanced machine learning research projects, collaborates with faculty on cutting-edge AI research, and publishes academic papers.",
-        tags: ["ml", "research", "ai", "academic"],
-        category: "Data Science",
-        logoUrl: "/assets/default-club-logo.png",
-        memberCount: 24,
-        websiteUrl: null,
-        instagramUrl: null,
-        contactEmail: "mlresearch@ucdavis.edu",
-        meetingInfo: {
-            frequency: "Bi-weekly",
-            day: "Friday",
-            time: "4:00 PM - 6:00 PM",
-            location: "Mathematical Sciences Building"
-        },
-        focusAreas: ["Research Projects", "Academic Publications", "Conference Presentations", "Advanced ML"],
-        officers: [
-            { position: "President", name: "TBD", email: "mlresearch@ucdavis.edu" }
-        ],
-        about: "The Machine Learning Research Group conducts advanced machine learning research projects and collaborates with faculty on cutting-edge AI research."
     },
     {
         name: "AI Student Collective",
@@ -710,6 +534,648 @@ const clubData = [
             { position: "Events Lead", name: "Milli Molinari", email: "mimolinari@ucdavis.edu" }
         ],
         about: "Davis Data Driven Change focuses on using data science and analytics to address social and community challenges through interdisciplinary projects and outreach."
+    },
+    {
+        name: "Davis Data Science Club",
+        description: "Connects students interested in data science through hands-on projects, workshops, and collaborations with industry professionals and faculty.",
+        tags: ["datascience", "social", "research", "community"],
+        category: "Data Science",
+        logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/davisdatascienceclub/logo/01JVQTWEV1HTQ0DQGY1BJVMW82.png",
+        memberCount: 28,
+        instagramUrl: "https://www.instagram.com/data.ucd/#",
+        contactEmail: "team@davisdsc.com",
+        meetingInfo: {
+            frequency: "Bi-weekly",
+            day: "Sunday",
+            time: "4:00 PM - 6:00 PM",
+            location: "Shields Library Study Rooms"
+        },
+        focusAreas: ["Social Impact Projects", "Data Analysis", "Community Research", "Interdisciplinary Collaboration"],
+        officers: [
+            { position: "President", name: "Apoorva Hooda", email: "idk" },
+            { position: "Vice President", name: "Maya Nordin", email: "mnordin@ucdavis.edu" }
+        ],
+        about: "Davis Data Science is on a mission to foster a supportive community centered around developing technical skill sets, career building through industry guest speakers, and enhancing student body engagement."
+    },
+    {
+        name: "Engineering Collaborative Council",
+        description: "A unifying body that connects engineering clubs and departments at UC Davis, promoting collaboration and organizing large-scale engineering events.",
+        tags: ["datascience", "social", "research", "community"],
+        category: "Data Science",
+        logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/engineeringcollaborativecouncil/logo/01JVQSREBNV1HEC71JE2Y0MMH1.png",
+        memberCount: 28,
+        instagramUrl: "https://www.instagram.com/data.ucd/#",
+        contactEmail: "jdpieck@ucdavis.edu",
+        meetingInfo: {
+            frequency: "Bi-weekly",
+            day: "Sunday",
+            time: "4:00 PM - 6:00 PM",
+            location: "Shields Library Study Rooms"
+        },
+        focusAreas: ["Social Impact Projects", "Data Analysis", "Community Research", "Interdisciplinary Collaboration"],
+        officers: [
+            { position: "President", name: "Jason Pieck", email: "idk" },
+            { position: "Vice President", name: "Heather Lin", email: "healin@ucdavis.edu" }
+        ],
+        about: "The Engineering Collaborative Council was established to enable communcation between student design teams and engineering clubs. We host interclub social events and the end of year engineering club design showcase. Our Discord allows team leads to commincate about needs and campus resources."
+    },
+    {
+        name: "Engineers Without Borders at UC Davis",
+        description: "Partners with international and local communities to design sustainable engineering solutions, while giving students real-world, humanitarian design experience.",
+        tags: ["datascience", "social", "research", "community"],
+        category: "Data Science",
+        logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/engineerswithoutbordersatucdavis/logo/01JVQTJTQ58FYRWR41JDSBJY9S.webp",
+        memberCount: 28,
+        websiteUrl: "https://ewbucd.weebly.com/contact.html",
+        instagramUrl: "https://www.instagram.com/ewb_atucd/?hl=en",
+        contactEmail: "ewbdavis@ucdavis.edu ",
+        meetingInfo: {
+            frequency: "Bi-weekly",
+            day: "Sunday",
+            time: "4:00 PM - 6:00 PM",
+            location: "Shields Library Study Rooms"
+        },
+        focusAreas: ["Social Impact Projects", "Data Analysis", "Community Research", "Interdisciplinary Collaboration"],
+        officers: [
+            { position: "President", name: "Jason Pieck", email: "idk" },
+            { position: "Vice President", name: "Heather Lin", email: "healin@ucdavis.edu" }
+        ],
+        about: "EWB at UC Davis currently has two ongoing projects in both Bolivia and Peru. The Bolivia Project focuses on building latrines and the Peru Project works on water collection using spring boxes. These projects each have a communications team, budget team, culture and education team, health and safety team, and construction/technical team. This gives members diverse tasks that provide different skills based on one's interests and the opportunity to interact with different disciplines of engineering and other engineers. Additionally, these help members develop skills in various areas that will be useful in their careers."
+    },
+    {
+        name: "Food Tech Club",
+        description: "Explores the intersection of food, science, and technology—focusing on innovation in food systems, agriculture, and sustainability.",
+        tags: ["datascience", "social", "research", "community"],
+        category: "Data Science",
+        logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/engineerswithoutbordersatucdavis/logo/01JVQTJTQ58FYRWR41JDSBJY9S.webp",
+        memberCount: 28,
+        websiteUrl: "https://foodtechclub.ucdavis.edu/",
+        instagramUrl: "https://www.instagram.com/foodtechclub/#",
+        contactEmail: "foodtechclubatucd@gmail.com",
+        meetingInfo: {
+            frequency: "Bi-weekly",
+            day: "Sunday",
+            time: "4:00 PM - 6:00 PM",
+            location: "Shields Library Study Rooms"
+        },
+        focusAreas: ["Social Impact Projects", "Data Analysis", "Community Research", "Interdisciplinary Collaboration"],
+        officers: [
+            { position: "President", name: "Summer Plepalakon", email: "sumplepalakon@ucdavis.edu" },
+            { position: "Vice President", name: "Jonah Messinger", email: "jmessinger@ucdavis.edu" }
+        ],
+        about: "Throughout each quarter, Food Tech Club holds bi-weekly general meetings and additional sessions to connect students to events such as guest lectures, professional workshops, food industry tours, and networking events. Taking part in these opportunities gives students a chance to gain a deeper understanding of the diversity of the food industry as well as the career opportunities and options it offers. Food Tech Club also keeps students posted on opportunities for scholarships, internships, and careers. Food Tech Club is an active participant in regional and nation-wide food competitions, in which student teams work together to compete with other schools in product development. These competitions allow students to learn practical skills using their Food Science knowledge, further preparing them for a career in the food industry."
+    },
+    {
+        name: "Green Innovation Network",
+        description: "A sustainability-focused club that supports student ventures, designs, and research aimed at addressing climate change through innovation.",
+        tags: ["datascience", "social", "research", "community"],
+        category: "Data Science",
+        logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/greeninnovationnetwork/logo/01JVQTX9J4WZT0GEW43NP65BGH.png",
+        memberCount: 28,
+        websiteUrl: "https://www.greenucd.com/",
+        instagramUrl: "https://www.instagram.com/green.ucd/#",
+        contactEmail: "greenucd@gmail.com",
+        meetingInfo: {
+            frequency: "Bi-weekly",
+            day: "Sunday",
+            time: "4:00 PM - 6:00 PM",
+            location: "Shields Library Study Rooms"
+        },
+        focusAreas: ["Social Impact Projects", "Data Analysis", "Community Research", "Interdisciplinary Collaboration"],
+        officers: [
+            { position: "President", name: "Dara Baradaran", email: "dabaradaran@ucdavis.edu" },
+            { position: "Director of External Affairs", name: "Keller Kramer", email: "kgkramer@ucdavis.edu" }
+        ],
+        about: "The Green Innovation Network is a student-led organization open to all disciplines, united by a passion for addressing environmental and agricultural challenges. We recognize our planet as an interconnected system and welcome diverse perspectives to tackle issues ranging from sustainable agriculture to climate change and beyond.\nOur dynamic environment fosters collaboration among students from fields as varied as engineering, environmental science, design, computer science, and social sciences. Through hands-on projects, expert lectures, and skill-building workshops, we empower members to develop innovative solutions that span the entire environmental spectrum.\nWe focus on cutting-edge AgTech while embracing broader environmental concerns. Our approach integrates technology, sustainability, and creative problem-solving to nurture well-rounded leaders."
+    },
+    {
+        name: "Human Resources Managment Association (HRMA)",
+        description: "Connects students interested in HR, leadership, and organizational behavior through workshops, networking, and career-building events.",
+        tags: ["datascience", "social", "research", "community"],
+        category: "Data Science",
+        logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/engineerswithoutbordersatucdavis/logo/01JVQTJTQ58FYRWR41JDSBJY9S.webp",
+        memberCount: 28,
+        websiteUrl: "https://hrmaucd.wixsite.com/human-resources-mana",
+        instagramUrl: "https://www.instagram.com/hrma.davis/",
+        contactEmail: "hrmaucd@gmail.com",
+        meetingInfo: {
+            frequency: "Bi-weekly",
+            day: "Sunday",
+            time: "4:00 PM - 6:00 PM",
+            location: "Shields Library Study Rooms"
+        },
+        focusAreas: ["Social Impact Projects", "Data Analysis", "Community Research", "Interdisciplinary Collaboration"],
+        officers: [
+            { position: "President", name: "Summer Plepalakon", email: "sumplepalakon@ucdavis.edu" },
+            { position: "Vice President", name: "Jonah Messinger", email: "jmessinger@ucdavis.edu" }
+        ],
+        about: "Throughout each quarter, Food Tech Club holds bi-weekly general meetings and additional sessions to connect students to events such as guest lectures, professional workshops, food industry tours, and networking events. Taking part in these opportunities gives students a chance to gain a deeper understanding of the diversity of the food industry as well as the career opportunities and options it offers. Food Tech Club also keeps students posted on opportunities for scholarships, internships, and careers. Food Tech Club is an active participant in regional and nation-wide food competitions, in which student teams work together to compete with other schools in product development. These competitions allow students to learn practical skills using their Food Science knowledge, further preparing them for a career in the food industry."
+    },
+    {
+        name: "Nuerotech @ UCDavis",
+        description: "A student-run organization exploring brain-computer interfaces and neurotechnology through projects, research, and speaker events.",
+        tags: ["datascience", "social", "research", "community"],
+        category: "Data Science",
+        logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/engineerswithoutbordersatucdavis/logo/01JVQTJTQ58FYRWR41JDSBJY9S.webp",
+        memberCount: 28,
+        websiteUrl: "https://neurotechdavis.com/",
+        instagramUrl: "https://www.instagram.com/neurotechdavis/?hl=en",
+        contactEmail: "davisneurotech@gmail.com",
+        meetingInfo: {
+            frequency: "Bi-weekly",
+            day: "Sunday",
+            time: "4:00 PM - 6:00 PM",
+            location: "Shields Library Study Rooms"
+        },
+        focusAreas: ["Social Impact Projects", "Data Analysis", "Community Research", "Interdisciplinary Collaboration"],
+        officers: [
+            { position: "President", name: "Summer Plepalakon", email: "sumplepalakon@ucdavis.edu" },
+            { position: "Vice President", name: "Jonah Messinger", email: "jmessinger@ucdavis.edu" }
+        ],
+        about: "Neurotech@Davis is a student-led organization at UC Davis whose mission is to facilitate the advancement and awareness of neurotechnology by providing undergraduates with the opportunity to foster skills in this industry.."
+    },
+    {
+        name: "Product Space @ UC Davis",
+        description: "Builds a community for aspiring product managers and designers to learn product thinking through case studies, mentorship, and hands-on projects.",
+        tags: ["datascience", "social", "research", "community"],
+        category: "Data Science",
+        logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/engineerswithoutbordersatucdavis/logo/01JVQTJTQ58FYRWR41JDSBJY9S.webp",
+        memberCount: 28,
+        websiteUrl: "https://www.davisproductspace.org/",
+        instagramUrl: "https://www.instagram.com/davisproductspace/",
+        contactEmail: "davisproductspace@email.com",
+        meetingInfo: {
+            frequency: "Bi-weekly",
+            day: "Sunday",
+            time: "4:00 PM - 6:00 PM",
+            location: "Shields Library Study Rooms"
+        },
+        focusAreas: ["Social Impact Projects", "Data Analysis", "Community Research", "Interdisciplinary Collaboration"],
+        officers: [
+            { position: "President", name: "Summer Plepalakon", email: "sumplepalakon@ucdavis.edu" },
+            { position: "Vice President", name: "Jonah Messinger", email: "jmessinger@ucdavis.edu" }
+        ],
+        about: "Throughout each quarter, Food Tech Club holds bi-weekly general meetings and additional sessions to connect students to events such as guest lectures, professional workshops, food industry tours, and networking events. Taking part in these opportunities gives students a chance to gain a deeper understanding of the diversity of the food industry as well as the career opportunities and options it offers. Food Tech Club also keeps students posted on opportunities for scholarships, internships, and careers. Food Tech Club is an active participant in regional and nation-wide food competitions, in which student teams work together to compete with other schools in product development. These competitions allow students to learn practical skills using their Food Science knowledge, further preparing them for a career in the food industry."
+    },
+    {
+        name: "SacHacks",
+        description: "Sacramento’s collegiate hackathon hosted at UC Davis, bringing together students from across California to innovate and build tech projects in 36 hours.",
+        tags: ["datascience", "social", "research", "community"],
+        category: "Data Science",
+        logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/sachacks/logo/01JVQV9MNH56BVJ05PJSDTWQ63.png",
+        memberCount: 28,
+        websiteUrl: "https://sachacks.io/",
+        instagramUrl: "https://www.instagram.com/sachacks/#",
+        contactEmail: "contact@sachacks.io",
+        meetingInfo: {
+            frequency: "Bi-weekly",
+            day: "Sunday",
+            time: "4:00 PM - 6:00 PM",
+            location: "Shields Library Study Rooms"
+        },
+        focusAreas: ["Social Impact Projects", "Data Analysis", "Community Research", "Interdisciplinary Collaboration"],
+        officers: [
+            { position: "President", name: "Anirudh Venkatachalam", email: "aven@ucdavis.edu" },
+            { position: "Vice President", name: "Rohan Malige", email: "rmmalige@ucdavis.edu" }
+        ],
+        about: "SacHacks is the first major intercollegiate hackathon in the Sacramento, California area. Our passion is to cultivate the untapped potential of those in Sacramento by launching their ideas into action during a 24-hour hackathon. Sachacks is set apart from the rest as we give budding designers, coders, and entrepreneurs the ability to showcase their skills and win prizes."
+    },
+    {
+        name: "The Davis Consulting Group ",
+        description: "A student-run organization providing real consulting experience by partnering with startups, nonprofits, and local businesses on strategic projects.",
+        tags: ["datascience", "social", "research", "community"],
+        category: "Data Science",
+        logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/thedavisconsultinggroup/logo/01JVQV6P3927RF799RFKZC351H.png",
+        memberCount: 28,
+        websiteUrl: "https://www.davisconsultinggroup.org/",
+        instagramUrl: "https://www.instagram.com/thedavisconsultinggroup/#",
+        contactEmail: "info@davisconsultinggroup.org",
+        meetingInfo: {
+            frequency: "Bi-weekly",
+            day: "Sunday",
+            time: "4:00 PM - 6:00 PM",
+            location: "Shields Library Study Rooms"
+        },
+        focusAreas: ["Social Impact Projects", "Data Analysis", "Community Research", "Interdisciplinary Collaboration"],
+        officers: [
+            { position: "President", name: "Shuchi Parikh", email: "shaparikh@ucdavis.edu" },
+            { position: "Vice President", name: "Neha Bagepalli", email: "nbagepalli@ucdavis.edu" }
+        ],
+        about: "We’re a student-run consulting organization at the University of California, Davis. Our mission is to provide high quality, pro-bono advisory services to help companies and organizations meet their business goals. DCG is comprised of consultants centered around crafting strategic developments, cultivating resources, and merging creative thinking with analytical processes to spearhead innovative solutions. Our expertise ranges across start-ups, app developers, and small businesses and seeks to provide each organization with a range of premier strategies to target needs—including marketing, cost analysis, and product development."
+    },
+    {
+        name: "The Hardware Club @ UC Davis ",
+        description: "Focuses on hands-on electronics, robotics, and hardware design projects, offering a collaborative space for students interested in building physical tech.",
+        tags: ["datascience", "social", "research", "community"],
+        category: "Data Science",
+        logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/thedavisconsultinggroup/logo/01JVQV6P3927RF799RFKZC351H.png",
+        memberCount: 28,
+        websiteUrl: "https://lu.ma/8q63clzo",
+        instagramUrl: "https://www.instagram.com/thc.ucd/?hl=en",
+        contactEmail: "info@davisconsultinggroup.org",
+        meetingInfo: {
+            frequency: "Bi-weekly",
+            day: "Sunday",
+            time: "4:00 PM - 6:00 PM",
+            location: "Shields Library Study Rooms"
+        },
+        focusAreas: ["Social Impact Projects", "Data Analysis", "Community Research", "Interdisciplinary Collaboration"],
+        officers: [
+            { position: "President", name: "Shuchi Parikh", email: "shaparikh@ucdavis.edu" },
+            { position: "Vice President", name: "Neha Bagepalli", email: "nbagepalli@ucdavis.edu" }
+        ],
+        about: "We are a student-run consulting organization at the University of California, Davis. Our mission is to provide high quality, pro-bono advisory services to help companies and organizations meet their business goals. DCG is comprised of consultants centered around crafting strategic developments, cultivating resources, and merging creative thinking with analytical processes to spearhead innovative solutions. Our expertise ranges across start-ups, app developers, and small businesses and seeks to provide each organization with a range of premier strategies to target needs—including marketing, cost analysis, and product development."
+    },
+    {
+        name: "Women in Gaming at UC Davis",
+        description: "Promotes inclusivity in gaming by creating a safe space for women and non-binary students to explore game design, play, and development.",
+        tags: ["datascience", "social", "research", "community"],
+        category: "Data Science",
+        logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/womeningamingatucdavis/logo/01JVQVD5W4R4CB318YPWJEZ9VQ.png",
+        memberCount: 28,
+        websiteUrl: "https://aggielife.ucdavis.edu/wig/home/#",
+        instagramUrl: "https://www.instagram.com/wigatucdavis/",
+        contactEmail: "cjvelasco@ucdavis.edu",
+        meetingInfo: {
+            frequency: "Bi-weekly",
+            day: "Sunday",
+            time: "4:00 PM - 6:00 PM",
+            location: "Shields Library Study Rooms"
+        },
+        focusAreas: ["Social Impact Projects", "Data Analysis", "Community Research", "Interdisciplinary Collaboration"],
+        officers: [
+            { position: "President", name: "Christa Velasco", email: "cjvelasco@ucdavis.edu" },
+            { position: "Vice President", name: "Dorian Simpson", email: "dksimpson@ucdavis.edu" }
+        ],
+        about: "Women in Gaming at UC Davis is a student-run organization that strives to foster a gender-inclusive community of people who enjoy gaming. Our mission is to provide education, support and acknowledgment of gender minorities in gaming culture, and to create a space where people can connect through a shared passion for gaming."
+    },
+    {
+        name: "Aggie Space initiative ",
+        description: "A student organization dedicated to space exploration and technology through interdisciplinary projects like satellites, rocketry, and aerospace research.",
+        tags: ["datascience", "social", "research", "community"],
+        category: "Data Science",
+        logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/womeningamingatucdavis/logo/01JVQVD5W4R4CB318YPWJEZ9VQ.png",
+        memberCount: 28,
+        websiteUrl: "linktr.ee/aggiespaceinitiative",
+        instagramUrl: "https://www.instagram.com/aggiespaceinitiative/",
+        contactEmail: "cjvelasco@ucdavis.edu",
+        meetingInfo: {
+            frequency: "Bi-weekly",
+            day: "Sunday",
+            time: "4:00 PM - 6:00 PM",
+            location: "Shields Library Study Rooms"
+        },
+        focusAreas: ["Social Impact Projects", "Data Analysis", "Community Research", "Interdisciplinary Collaboration"],
+        officers: [
+            { position: "President", name: "Christa Velasco", email: "cjvelasco@ucdavis.edu" },
+            { position: "Vice President", name: "Dorian Simpson", email: "dksimpson@ucdavis.edu" }
+        ],
+        about: "Women in Gaming at UC Davis is a student-run organization that strives to foster a gender-inclusive community of people who enjoy gaming. Our mission is to provide education, support and acknowledgment of gender minorities in gaming culture, and to create a space where people can connect through a shared passion for gaming."
+    },
+    {
+        name: "Biomedical Engineering Society (BES)",
+        description: "Connects students interested in biomedical engineering through research opportunities, industry talks, and academic support.",
+        tags: ["datascience", "social", "research", "community"],
+        category: "Data Science",
+        logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/womeningamingatucdavis/logo/01JVQVD5W4R4CB318YPWJEZ9VQ.png",
+        memberCount: 28,
+        websiteUrl: "https://linktr.ee/bmesatucd",
+        instagramUrl: "https://www.instagram.com/ucdbmes/?hl=en",
+        contactEmail: "cjvelasco@ucdavis.edu",
+        meetingInfo: {
+            frequency: "Bi-weekly",
+            day: "Sunday",
+            time: "4:00 PM - 6:00 PM",
+            location: "Shields Library Study Rooms"
+        },
+        focusAreas: ["Social Impact Projects", "Data Analysis", "Community Research", "Interdisciplinary Collaboration"],
+        officers: [
+            { position: "President", name: "Christa Velasco", email: "cjvelasco@ucdavis.edu" },
+            { position: "Vice President", name: "Dorian Simpson", email: "dksimpson@ucdavis.edu" }
+        ],
+        about: "Women in Gaming at UC Davis is a student-run organization that strives to foster a gender-inclusive community of people who enjoy gaming. Our mission is to provide education, support and acknowledgment of gender minorities in gaming culture, and to create a space where people can connect through a shared passion for gaming."
+    },
+    {
+        name: "IEEE (Institute of Electrical & Electronics Engineers)",
+        description: "The campus chapter of the global professional association for electrical and computer engineers, offering technical workshops, speaker events, and project teams.",
+        tags: ["datascience", "social", "research", "community"],
+        category: "Data Science",
+        logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/womeningamingatucdavis/logo/01JVQVD5W4R4CB318YPWJEZ9VQ.png",
+        memberCount: 28,
+        websiteUrl: "https://ieeeucdavis.weebly.com/",
+        instagramUrl: "https://www.instagram.com/ieee.ucd/",
+        contactEmail: "ieeeofficers@ucdavis.edu",
+        meetingInfo: {
+            frequency: "Bi-weekly",
+            day: "Sunday",
+            time: "4:00 PM - 6:00 PM",
+            location: "Shields Library Study Rooms"
+        },
+        focusAreas: ["Social Impact Projects", "Data Analysis", "Community Research", "Interdisciplinary Collaboration"],
+        officers: [
+            { position: "President", name: "Christa Velasco", email: "cjvelasco@ucdavis.edu" },
+            { position: "Vice President", name: "Dorian Simpson", email: "dksimpson@ucdavis.edu" }
+        ],
+        about: "Women in Gaming at UC Davis is a student-run organization that strives to foster a gender-inclusive community of people who enjoy gaming. Our mission is to provide education, support and acknowledgment of gender minorities in gaming culture, and to create a space where people can connect through a shared passion for gaming."
+    },
+    {
+        name: "Tau Beta Pi",
+        description: "The national engineering honor society recognizing academic excellence and integrity, and promoting leadership and service within the engineering community.",
+        tags: ["datascience", "social", "research", "community"],
+        category: "Data Science",
+        logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/womeningamingatucdavis/logo/01JVQVD5W4R4CB318YPWJEZ9VQ.png",
+        memberCount: 28,
+        websiteUrl: "https://tbp.engineering.ucdavis.edu/",
+        instagramUrl: "https://www.instagram.com/tbp.ca.lambda/",
+        contactEmail: "ucdtbp.president@gmail.com",
+        meetingInfo: {
+            frequency: "Bi-weekly",
+            day: "Sunday",
+            time: "4:00 PM - 6:00 PM",
+            location: "Shields Library Study Rooms"
+        },
+        focusAreas: ["Social Impact Projects", "Data Analysis", "Community Research", "Interdisciplinary Collaboration"],
+        officers: [
+            { position: "President", name: "Christa Velasco", email: "cjvelasco@ucdavis.edu" },
+            { position: "Vice President", name: "Dorian Simpson", email: "dksimpson@ucdavis.edu" }
+        ],
+        about: "Women in Gaming at UC Davis is a student-run organization that strives to foster a gender-inclusive community of people who enjoy gaming. Our mission is to provide education, support and acknowledgment of gender minorities in gaming culture, and to create a space where people can connect through a shared passion for gaming."
+    },
+    {
+        name: "Swift Coding Club",
+        description: "Focuses on iOS app development using Swift, offering workshops, collaborative projects, and resources for students interested in building mobile apps.",
+        tags: ["datascience", "social", "research", "community"],
+        category: "Data Science",
+        logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/womeningamingatucdavis/logo/01JVQVD5W4R4CB318YPWJEZ9VQ.png",
+        memberCount: 28,
+        websiteUrl: "https://swiftcodingucd.org/",
+        instagramUrl: "https://www.instagram.com/swiftcodingclub.davis/",
+        contactEmail: "swiftcodingucd@gmail.com",
+        meetingInfo: {
+            frequency: "Bi-weekly",
+            day: "Sunday",
+            time: "4:00 PM - 6:00 PM",
+            location: "Shields Library Study Rooms"
+        },
+        focusAreas: ["Social Impact Projects", "Data Analysis", "Community Research", "Interdisciplinary Collaboration"],
+        officers: [
+            { position: "President", name: "Christa Velasco", email: "cjvelasco@ucdavis.edu" },
+            { position: "Vice President", name: "Dorian Simpson", email: "dksimpson@ucdavis.edu" }
+        ],
+        about: "Women in Gaming at UC Davis is a student-run organization that strives to foster a gender-inclusive community of people who enjoy gaming. Our mission is to provide education, support and acknowledgment of gender minorities in gaming culture, and to create a space where people can connect through a shared passion for gaming."
+    },
+    {
+        name: "Finance and Investment Club",
+        description: "Equips students with knowledge in investing, personal finance, and financial markets through workshops, guest speakers, and portfolio simulations.",
+        tags: ["datascience", "social", "research", "community"],
+        category: "Data Science",
+        logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/financeandinvestmentclub/logo/01JVQTAFPNKYK9NDZBM3T272HC.png",
+        memberCount: 28,
+        websiteUrl: "https://www.ficucd.com/",
+        instagramUrl: "https://www.instagram.com/fic.ucd/#",
+        contactEmail: "general@ficucd.com",
+        meetingInfo: {
+            frequency: "Bi-weekly",
+            day: "Sunday",
+            time: "4:00 PM - 6:00 PM",
+            location: "Shields Library Study Rooms"
+        },
+        focusAreas: ["Social Impact Projects", "Data Analysis", "Community Research", "Interdisciplinary Collaboration"],
+        officers: [
+            { position: "President", name: "Sarah Maloney", email: "smmaloney@ucdavis.edu" },
+            { position: "Vice President", name: "Ashley Zou", email: "aszou@ucdavis.edu" }
+        ],
+        about: "FIC has operated since 2007 on a few simple beliefs: our members should be able to find a place where their passion and curiosity for finance can thrive, exceptional people drive disproportionate outcomes, and when we win—we win together.\nWe have grown exponentially over the last two decades and currently with fifty members who come from a diverse array of backgrounds. All of us share a deep-rooted passion, curiosity and love for finance.\nWe leverage our alumni community of 275+ bankers, consultants, investors, engineers, entrepreneurs and more to support us in our mission. Through advice, mentorship, and career opportunity, they provide a foundation for members to start or accelerate a meaningful career.\nOur culture is rooted in excellence, collaboration, passion, and humility. By embodying these values, we build lasting friendships, challenge each other to new heights, and embark on impactful careers—while paving a path for future FICers to follow."
+    },
+    {
+        name: "IDSA at UC Davis",
+        description: "The campus chapter of the Industrial Designers Society of America, fostering creativity and professional growth through product design projects, critiques, and speaker series.",
+        tags: ["datascience", "social", "research", "community"],
+        category: "Data Science",
+        logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/idsaatucdavis/logo/01JVQTP4FZ4C6KPE4T06B5QFS0.png",
+        memberCount: 28,
+        websiteUrl: "https://linktr.ee/idsa.atucd",
+        instagramUrl: "https://www.instagram.com/idsa.atucd/#",
+        contactEmail: "idsa.atucd@gmail.com",
+        meetingInfo: {
+            frequency: "Bi-weekly",
+            day: "Sunday",
+            time: "4:00 PM - 6:00 PM",
+            location: "Shields Library Study Rooms"
+        },
+        focusAreas: ["Social Impact Projects", "Data Analysis", "Community Research", "Interdisciplinary Collaboration"],
+        officers: [
+            { position: "President", name: "Sara Galvis", email: "svgalvis@ucdavis.edu" },
+            { position: "Vice President", name: "Becca Libby", email: "rklibby@ucdavis.edu" }
+        ],
+        about: "We are the IDSA ( Industrial Designers Society of America)Student Chapter at UC Davis. Our purpose is to create a collaborative and inclusive community for those passionate about industrial design. We offer a variety of workshops, speaker events, and networking opportunities allowing you to gain valuable experience, develop your skill set, and learn more about Industrial Design. As a part of the club you will get hands on and learn about prototyping, iterating, innovation, digital 3D modeling, and more! Our goal is to help you gain access to numerous resources and build a background in industrial design."
+    },
+    {
+        name: "IDSA at UC Davis",
+        description: "The campus chapter of the Industrial Designers Society of America, fostering creativity and professional growth through product design projects, critiques, and speaker series.",
+        tags: ["datascience", "social", "research", "community"],
+        category: "Data Science",
+        logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/idsaatucdavis/logo/01JVQTP4FZ4C6KPE4T06B5QFS0.png",
+        memberCount: 28,
+        websiteUrl: "https://linktr.ee/idsa.atucd",
+        instagramUrl: "https://www.instagram.com/idsa.atucd/#",
+        contactEmail: "idsa.atucd@gmail.com",
+        meetingInfo: {
+            frequency: "Bi-weekly",
+            day: "Sunday",
+            time: "4:00 PM - 6:00 PM",
+            location: "Shields Library Study Rooms"
+        },
+        focusAreas: ["Social Impact Projects", "Data Analysis", "Community Research", "Interdisciplinary Collaboration"],
+        officers: [
+            { position: "President", name: "Sara Galvis", email: "svgalvis@ucdavis.edu" },
+            { position: "Vice President", name: "Becca Libby", email: "rklibby@ucdavis.edu" }
+        ],
+        about: "We are the IDSA ( Industrial Designers Society of America)Student Chapter at UC Davis. Our purpose is to create a collaborative and inclusive community for those passionate about industrial design. We offer a variety of workshops, speaker events, and networking opportunities allowing you to gain valuable experience, develop your skill set, and learn more about Industrial Design. As a part of the club you will get hands on and learn about prototyping, iterating, innovation, digital 3D modeling, and more! Our goal is to help you gain access to numerous resources and build a background in industrial design."
+    },
+    {
+        name: "Project Catalyst",
+        description: "A student-run initiative that connects interdisciplinary teams to tackle real-world problems through research, design, and innovation projects.",
+        tags: ["datascience", "social", "research", "community"],
+        category: "Data Science",
+        logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/projectcatalyst/logo/01JVQT7FFX2XBBSV8B28GBD2BY.png",
+        memberCount: 28,
+        websiteUrl: "https://sites.google.com/view/projectcatalystdavis/home",
+        instagramUrl: "https://www.instagram.com/projectcatalystdavis/#",
+        contactEmail: "projectcatalystdavis@gmail.com",
+        meetingInfo: {
+            frequency: "Bi-weekly",
+            day: "Sunday",
+            time: "4:00 PM - 6:00 PM",
+            location: "Shields Library Study Rooms"
+        },
+        focusAreas: ["Social Impact Projects", "Data Analysis", "Community Research", "Interdisciplinary Collaboration"],
+        officers: [
+            { position: "President", name: "Preeshia Sundarraj", email: "svgalvis@ucdavis.edu" },
+            { position: "Vice President", name: "Andrew Matayoshi", email: "ahmatayoshi@ucdavis.edu" }
+        ],
+        about: "Project Catalyst is a UC Davis organization that allows students to directly work with local elementary schools to inspire a lifelong interest in science. By providing after-school tutoring and hands-on science experiments, we hope to give K-12 students a fun learning environment where they can foster a love for STEM and/or higher education. Club members are trained to best support students in a close-knit, supportive environment. Previous STEM knowledge is not required— a love for learning and teaching is!"
+    },
+    {
+        name: "SACNAS",
+        description: "Supports underrepresented students in STEM by providing academic resources, mentorship, and opportunities for research and community engagement.",
+        tags: ["datascience", "social", "research", "community"],
+        category: "Data Science",
+        logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/sacnas/logo/01JVQSY7WSRAXVWGTRFGESWCFZ.png",
+        memberCount: 28,
+        websiteUrl: "https://sacnasugucd.weebly.com/",
+        instagramUrl: "https://www.instagram.com/sacnasucd/#",
+        contactEmail: "sacnas-ug@ucdavis.edu",
+        meetingInfo: {
+            frequency: "Bi-weekly",
+            day: "Sunday",
+            time: "4:00 PM - 6:00 PM",
+            location: "Shields Library Study Rooms"
+        },
+        focusAreas: ["Social Impact Projects", "Data Analysis", "Community Research", "Interdisciplinary Collaboration"],
+        officers: [
+            { position: "President", name: "Kay Crosper", email: "kecosper@ucdavis.edu" },
+            { position: "Vice President", name: "Izzy Triana", email: "imtriana@ucdavis.edu" }
+        ],
+        about: "SACNAS is an inclusive group of scientists all across the country that care about diversity & inclusion in STEM. SACNAS stands for the Society for Advancing Chicano/Hispanics & Native Americans in Science. Everyone is more than welcome to join our organization. As a SACNAS chapter at UC Davis, we are a culturally expressive and inclusive group of student scientists who promote equal access to resources to help students achieve their academic and professional goals. We provide assistance and resources to our members in order to help them achieve their goals of pursuing a career in academia or industry."
+    },
+    {
+        name: "Science Says",
+        description: "A science communication group that trains students to effectively communicate scientific research to the public through blogs, outreach, and media.",
+        tags: ["datascience", "social", "research", "community"],
+        category: "Data Science",
+        logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/sciencesays/logo/01JVQV3RQ18TV15K87V0Z6JNQV.jpeg",
+        memberCount: 28,
+        websiteUrl: "https://davissciencesays.ucdavis.edu/",
+        instagramUrl: "https://www.instagram.com/davissciencesays/#",
+        contactEmail: "davissciencesays@gmail.com",
+        meetingInfo: {
+            frequency: "Bi-weekly",
+            day: "Sunday",
+            time: "4:00 PM - 6:00 PM",
+            location: "Shields Library Study Rooms"
+        },
+        focusAreas: ["Social Impact Projects", "Data Analysis", "Community Research", "Interdisciplinary Collaboration"],
+        officers: [
+            { position: "President", name: "Rachel Foster", email: "kecosper@ucdavis.edu" },
+            { position: "Vice President", name: "Sabrina Karjack", email: "skarjack@ucdavis.edu" }
+        ],
+        about: "Science Says is a graduate student run organization committed to cultivating science communication at UC Davis and in the surrounding community. We are a team of friendly neighborhood scientists passionate about making science accessible to the general public. We provide opportunities for graduate students to practice communicating their own science. We are interest-driven by current members and have in the past been in involved in outreach in the community, facilitating science communication training and workshops, publishing a research blog, hosting science policy events and running open book and journal discussion clubs."
+    },
+    {
+        name: "College Bowl",
+        description: "A competitive academic trivia team at UC Davis that competes in quiz bowl tournaments covering a wide range of subjects, from science to pop culture.",
+        tags: ["datascience", "social", "research", "community"],
+        category: "Data Science",
+        logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/collegebowl/logo/01JVQSPFJMBF3S2XGFGPCQHNGC.jpeg",
+        memberCount: 28,
+        websiteUrl: "https://collegebowlatucd.wixsite.com/collegebowlatucd",
+        instagramUrl: "https://www.instagram.com/collegebowlatucd/#",
+        contactEmail: "asumitran@ucdavis.edu",
+        meetingInfo: {
+            frequency: "Bi-weekly",
+            day: "Sunday",
+            time: "4:00 PM - 6:00 PM",
+            location: "Shields Library Study Rooms"
+        },
+        focusAreas: ["Social Impact Projects", "Data Analysis", "Community Research", "Interdisciplinary Collaboration"],
+        officers: [
+            { position: "President", name: "Adithi Sumitran", email: "asumitran@ucdavis.edu" },
+            { position: "Vice President", name: "Matthew Torre", email: "mtorre@ucdavis.edu" }
+        ],
+        about: "College Bowl is a fun social trivia club, where you can utilize all the random knowledge you've gathered and compete with your friends. We hold weekly trivia competitions, hosted by our members, which feature a variety of different games and formats. We aim to build community through our fun and entertaining trivia events."
+    },
+    {
+        name: "Construction Management Club",
+        description: "Prepares students interested in construction and civil engineering careers through networking events, site tours, and competitions like ASC Reno.",
+        tags: ["datascience", "social", "research", "community"],
+        category: "Data Science",
+        logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/constructionmanagementclub/logo/01JVQTNEGD0VDMSAVHDV6NRWY7.png",
+        memberCount: 28,
+        websiteUrl: "https://collegebowlatucd.wixsite.com/collegebowlatucd",
+        instagramUrl: "https://www.instagram.com/cm_at_ucd/#",
+        contactEmail: "cmatucd@gmail.com",
+        meetingInfo: {
+            frequency: "Bi-weekly",
+            day: "Sunday",
+            time: "4:00 PM - 6:00 PM",
+            location: "Shields Library Study Rooms"
+        },
+        focusAreas: ["Social Impact Projects", "Data Analysis", "Community Research", "Interdisciplinary Collaboration"],
+        officers: [
+            { position: "President", name: "Lesly Ramos", email: "lesramos@ucdavis.edu" },
+            { position: "Vice President", name: "Jessica Albino", email: "jalbino@ucdavis.edu" }
+        ],
+        about: "The Construction Management (CM) club is a student-run club that exposes engineering students to the principles of Construction Management and assists them in furthering their careers. Unlike the designing aspect that most engineering students are used to, construction management involves scheduling, risk assessment, quality control, and cost estimation of projects. Our goal is to have students showcase the skills mentioned above in the Associated School of Construction (ASC) competition, which occurs annually in the first week of February."
+    },
+    {
+        name: "EBSA",
+        description: "Connects students interested in economics and business through guest speaker events, case competitions, and networking opportunities with industry professionals.",
+        tags: ["datascience", "social", "research", "community"],
+        category: "Data Science",
+        logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/economicsandbusinessstudentassociation/logo/01JVQT3ZV59JZKEBE01R8ZJTAK.png",
+        memberCount: 28,
+        websiteUrl: "https://ebsadavis.com/",
+        instagramUrl: "https://www.instagram.com/ebsadavis/#",
+        contactEmail: "ebsadavis@gmail.com",
+        meetingInfo: {
+            frequency: "Bi-weekly",
+            day: "Sunday",
+            time: "4:00 PM - 6:00 PM",
+            location: "Shields Library Study Rooms"
+        },
+        focusAreas: ["Social Impact Projects", "Data Analysis", "Community Research", "Interdisciplinary Collaboration"],
+        officers: [
+            { position: "President", name: "Annie Ding", email: "ading@ucdavis.edu" },
+            { position: "Vice President", name: "Ashley Knauss", email: "amknauss@ucdavis.edu" }
+        ],
+        about: "EBSA is dedicated to bridging the gap between students' undergraduate journey and their future professional success, with a strong emphasis on fostering business acumen. Our mission is to empower students at UC Davis to excel in internships and job opportunities, all while building a vibrant network, community, and discover what passion means to them."
+    },
+    {
+        name: "Materials Advantage Student Chapter",
+        description: "Supports students in materials science and engineering through professional development, research exposure, and outreach events, often linked with national societies like TMS and ASM.",
+        tags: ["datascience", "social", "research", "community"],
+        category: "Data Science",
+        logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/materialsadvantagestudentchapter/logo/01JVQST00BNH8BR6THS1WQ5Y2J.png",
+        memberCount: 28,
+        websiteUrl: "https://mse.engineering.ucdavis.edu/undergraduate/student-resources/masc",
+        instagramUrl: "https://www.instagram.com/ebsadavis/#",
+        contactEmail: "sasidharta@ucdavis.edu",
+        meetingInfo: {
+            frequency: "Bi-weekly",
+            day: "Sunday",
+            time: "4:00 PM - 6:00 PM",
+            location: "Shields Library Study Rooms"
+        },
+        focusAreas: ["Social Impact Projects", "Data Analysis", "Community Research", "Interdisciplinary Collaboration"],
+        officers: [
+            { position: "President", name: "Shirin Sidharta", email: "sasidharta@ucdavis.edu" },
+            { position: "Vice President", name: "Benetta Macauley", email: "bemacauley@ucdavis.edu" }
+        ],
+        about: "The Material Advantage Student Chapter (MASC) is an up and coming club at UC Davis where students can learn more about the fascinating subject of Materials Science Engineering as well as interact with their peers to expand this inclusive major. The Material Advantage program is a national student organization run by some of the leading professional materials societies in the world: The American Ceramic Society (ACerS); Association for Iron & Steel Technology (AIST); The Materials Information Society (ASM); and The Minerals, Metals and Materials Society (TMS). MASC's goal is to provide academic, professional, and social opportunities to all those who are interested."
+    },
+    {
+        name: "American Institute of Chemical Engineers",
+        description: "A chapter for chemical engineering students to network, attend conferences, and gain career development support through industry talks, plant tours, and mentorship.",
+        tags: ["datascience", "social", "research", "community"],
+        category: "Data Science",
+        logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/americaninstituteofchemicalengineers/logo/01JVQTEKD0HRTAVN2W6W0R6CW5.png",
+        memberCount: 28,
+        websiteUrl: "https://aiche.ucdavis.edu/",
+        instagramUrl: "https://www.instagram.com/aiche_ucd/#",
+        contactEmail: "aatrajeco@ucdavis.edu",
+        meetingInfo: {
+            frequency: "Bi-weekly",
+            day: "Sunday",
+            time: "4:00 PM - 6:00 PM",
+            location: "Shields Library Study Rooms"
+        },
+        focusAreas: ["Social Impact Projects", "Data Analysis", "Community Research", "Interdisciplinary Collaboration"],
+        officers: [
+            { position: "President", name: "Angelo Trajeco", email: "sasidharta@ucdavis.edu" },
+            { position: "Vice President", name: "Marco Medina-Hernandez", email: "mmedinahernandez@ucdavis.edu" }
+        ],
+        about: "The American Institute of Chemical Engineers is an organization that promotes networking and the development of professionalism, especially in the Chemical and Biochemical Engineering world. We provide a wide variety of resources and expertise. You will be a part of a global network of intelligent and resourceful colleagues that will provide knowledge. We want to help you to move forward professionally and enrich the world we live in. Our student chapter represents and supports the students affiliated with the UC Davis Department of Chemical Engineering. As a member, you will have access to a variety of programs and events that we put on to ensure your success in chemical engineering here in Davis."
     },
 ];
 
