@@ -8,6 +8,8 @@ const User = require('./models/User');        // Import our User model
 const Club = require('./models/Club');
 const { CareerField, QuizQuestion, QuizResult } = require('./models/nicheQuizModels');
 const Event = require('./models/eventModel'); // Import Event model for events API
+// Add this with your other imports (around line 10)
+const { processQuizSubmission } = require('./quiz-scoring');
 
 dotenv.config();
 
@@ -905,77 +907,34 @@ app.post('/api/quiz/submit', requireAuth, async (req, res) => {
       return res.status(400).json({ error: 'Invalid submission data' });
     }
 
-    // Get questions and career fields from database
-    const { QuizQuestion, CareerField } = require('./models/nicheQuizModels');
-
+    // Get questions and clubs from database
     const questions = await QuizQuestion.find({
       questionLevel: level,
       isActive: true
     }).sort({ order: 1 });
 
-    const careerFields = await CareerField.find({ isActive: true });
+    const allClubs = await Club.find({ isActive: true });
 
-    if (questions.length === 0 || careerFields.length === 0) {
-      console.log('⚠️ No questions or career fields found, using fallback results');
+    if (questions.length === 0 || allClubs.length === 0) {
+      console.log('⚠️ Missing questions or clubs, using fallback results');
       return res.json({ results: getFallbackResults() });
     }
 
-    // Calculate user's skill profile
-    const userSkillProfile = calculateUserSkillProfile(answers, questions);
-    console.log('🧠 User skill profile:', userSkillProfile);
-
-    // Match user to career fields
-    const careerMatches = calculateCareerMatches(userSkillProfile, careerFields);
-    console.log('🎯 Career matches calculated:', careerMatches.length);
-
-    // Get top match
-    const topMatch = careerMatches[0];
-
-    // Generate personalized results
-    const results = {
-      topMatch: {
-        career: topMatch.career.name,
-        description: topMatch.career.description,
-        percentage: topMatch.percentage,
-        category: topMatch.career.category,
-        careerProgression: topMatch.career.progression || getDefaultProgression(topMatch.career.name),
-        marketData: topMatch.career.marketData || getDefaultMarketData(topMatch.career.name),
-        nextSteps: generatePersonalizedNextSteps(topMatch.career, userSkillProfile, level),
-        recommendedClubs: await getRecommendedClubs(topMatch.career.relatedClubs)
-      },
-      allMatches: careerMatches.slice(0, 8).map(match => ({
-        career: match.career.name,
-        category: match.career.category,
-        percentage: match.percentage
-      })),
-      skillBreakdown: userSkillProfile,
-      completionTime: completionTime,
-      quizLevel: level
-    };
+    // 🎯 USE REAL SCORING ALGORITHM (replacing fallback)
+    console.log('🚀 Using real scoring algorithm...');
+    const results = await processQuizSubmission(answers, questions, level, allClubs);
 
     // Save result to database
-    const QuizResult = require('./models/nicheQuizModels').QuizResult;
     const newResult = new QuizResult({
       user: userId,
       quizLevel: level,
       answers: answers,
-      skillScores: userSkillProfile,
-      careerMatches: careerMatches.map(match => ({
-        field: match.career._id,
-        matchPercentage: match.percentage,
-        confidence: getConfidenceLevel(match.percentage)
-      })),
-      topMatch: {
-        field: topMatch.career._id,
-        percentage: topMatch.percentage,
-        nextSteps: results.topMatch.nextSteps,
-        recommendedClubs: results.topMatch.recommendedClubs.map(club => club._id)
-      },
+      skillScores: results.skillBreakdown,
       completionTime: completionTime
     });
 
     await newResult.save();
-    console.log('✅ Quiz result saved to database');
+    console.log('✅ Quiz result saved with real algorithm');
 
     res.json({
       success: true,
@@ -984,9 +943,10 @@ app.post('/api/quiz/submit', requireAuth, async (req, res) => {
 
   } catch (error) {
     console.error('💥 Quiz submission error:', error);
+    // Keep fallback only for genuine errors
     res.status(500).json({
       error: 'Failed to process quiz submission',
-      results: getFallbackResults() // Provide fallback even on error
+      results: getFallbackResults()
     });
   }
 });

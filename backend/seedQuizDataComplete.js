@@ -456,8 +456,598 @@ const questionsData = [
             }
         ],
         isActive: true
+    },
+
+    // =============================================================================
+    // INTERMEDIATE LEVEL QUESTIONS (6 questions total)
+    // =============================================================================
+
+    {
+        questionText: "Rank these technical challenges by what excites you most:",
+        questionLevel: "intermediate",
+        questionType: "ranking",
+        category: "skills",
+        order: 1,
+        difficultyWeight: 1.5,
+        options: [
+            {
+                text: "Optimizing system performance and scalability",
+                description: "Making applications faster, more efficient, and able to handle millions of users",
+                weights: {
+                    technical: 9, research: 6, structure: 8, pace: 5,
+                    creative: 4, social: 3, leadership: 4, risk: 5
+                }
+            },
+            {
+                text: "Creating intuitive user experiences",
+                description: "Designing interfaces and interactions that users love and understand intuitively",
+                weights: {
+                    creative: 9, social: 7, technical: 5, research: 6,
+                    leadership: 5, pace: 6, risk: 5, structure: 5
+                }
+            },
+            {
+                text: "Building machine learning models to predict outcomes",
+                description: "Using statistical analysis and AI to forecast trends and automate decisions",
+                weights: {
+                    research: 9, technical: 8, creative: 5, structure: 7,
+                    social: 4, leadership: 4, pace: 5, risk: 6
+                }
+            },
+            {
+                text: "Architecting secure, distributed systems",
+                description: "Designing robust infrastructures that protect against threats and scale globally",
+                weights: {
+                    technical: 9, research: 7, structure: 8, risk: 3,
+                    creative: 4, social: 4, leadership: 5, pace: 5
+                }
+            }
+        ],
+        isActive: true
+    },
+
+    {
+        questionText: "In your ideal tech role, rank these responsibilities:",
+        questionLevel: "intermediate",
+        questionType: "ranking",
+        category: "goals",
+        order: 2,
+        difficultyWeight: 1.4,
+        options: [
+            {
+                text: "Writing and reviewing code daily",
+                description: "Hands-on programming, code reviews, and technical implementation work",
+                weights: {
+                    technical: 9, creative: 5, structure: 7, social: 3,
+                    leadership: 3, research: 5, pace: 6, risk: 4
+                }
+            },
+            {
+                text: "Translating business needs into technical solutions",
+                description: "Acting as a bridge between stakeholders and development teams",
+                weights: {
+                    social: 8, leadership: 7, technical: 6, creative: 6,
+                    research: 5, pace: 6, risk: 5, structure: 6
+                }
+            },
+            {
+                text: "Mentoring junior developers and sharing knowledge",
+                description: "Teaching, code reviewing, and helping others grow their technical skills",
+                weights: {
+                    social: 8, leadership: 8, technical: 7, structure: 6,
+                    creative: 5, research: 5, pace: 5, risk: 4
+                }
+            },
+            {
+                text: "Researching and implementing emerging technologies",
+                description: "Staying on the cutting edge and bringing innovation to projects",
+                weights: {
+                    research: 9, technical: 8, creative: 7, risk: 6,
+                    social: 4, leadership: 4, pace: 6, structure: 5
+                }
+            }
+        ],
+        isActive: true
+    },
+
+    {
+        questionText: "How do you prefer to measure success in your work?",
+        questionLevel: "intermediate",
+        questionType: "ranking",
+        category: "values",
+        order: 3,
+        difficultyWeight: 1.3,
+        options: [
+            {
+                text: "User adoption and satisfaction metrics",
+                description: "Number of active users, user ratings, and positive feedback on your products",
+                weights: {
+                    social: 8, creative: 6, technical: 6, pace: 6,
+                    leadership: 5, research: 5, risk: 5, structure: 5
+                }
+            },
+            {
+                text: "Technical performance improvements",
+                description: "Faster load times, higher uptime, better security, and code quality metrics",
+                weights: {
+                    technical: 9, structure: 8, research: 6, pace: 5,
+                    creative: 4, social: 3, leadership: 4, risk: 4
+                }
+            },
+            {
+                text: "Business impact and ROI",
+                description: "Revenue generated, costs saved, and measurable business value created",
+                weights: {
+                    leadership: 7, research: 7, structure: 7, social: 6,
+                    technical: 5, creative: 5, pace: 6, risk: 5
+                }
+            },
+            {
+                text: "Innovation and technological advancement",
+                description: "Patents filed, papers published, and breakthrough solutions developed",
+                weights: {
+                    research: 9, technical: 8, creative: 8, risk: 6,
+                    social: 4, leadership: 5, pace: 5, structure: 5
+                }
+            }
+        ],
+        isActive: true
+    },
+
+    {
+        questionText: "What type of technical complexity do you enjoy most?",
+        questionLevel: "intermediate",
+        questionType: "ranking",
+        category: "skills",
+        order: 4,
+        difficultyWeight: 1.6,
+        options: [
+            {
+                text: "Algorithms and data structure optimization",
+                description: "Finding the most efficient ways to process and store information",
+                weights: {
+                    technical: 9, research: 7, structure: 8, creative: 6,
+                    social: 2, leadership: 3, pace: 5, risk: 4
+                }
+            },
+            {
+                text: "Human-computer interaction design",
+                description: "Understanding how people interact with technology and improving those experiences",
+                weights: {
+                    creative: 8, social: 8, research: 7, technical: 5,
+                    leadership: 5, pace: 6, risk: 5, structure: 5
+                }
+            },
+            {
+                text: "Distributed systems and microservices",
+                description: "Building applications that work across multiple servers and services",
+                weights: {
+                    technical: 9, structure: 8, research: 6, creative: 4,
+                    social: 4, leadership: 5, pace: 5, risk: 5
+                }
+            },
+            {
+                text: "Statistical modeling and data analysis",
+                description: "Finding patterns in data and building predictive models",
+                weights: {
+                    research: 9, technical: 8, structure: 7, creative: 5,
+                    social: 4, leadership: 4, pace: 5, risk: 4
+                }
+            }
+        ],
+        isActive: true
+    },
+
+    {
+        questionText: "How do you prefer to stay current with technology trends?",
+        questionLevel: "intermediate",
+        questionType: "ranking",
+        category: "skills",
+        order: 5,
+        difficultyWeight: 1.2,
+        options: [
+            {
+                text: "Attending conferences and networking events",
+                description: "Learning from industry experts and connecting with other professionals",
+                weights: {
+                    social: 8, leadership: 6, research: 6, pace: 6,
+                    technical: 5, creative: 5, risk: 6, structure: 5
+                }
+            },
+            {
+                text: "Reading research papers and technical blogs",
+                description: "Deep-diving into academic research and expert technical analysis",
+                weights: {
+                    research: 9, technical: 7, structure: 6, creative: 4,
+                    social: 3, leadership: 3, pace: 4, risk: 4
+                }
+            },
+            {
+                text: "Building side projects with new technologies",
+                description: "Hands-on experimentation with emerging tools and frameworks",
+                weights: {
+                    technical: 8, creative: 8, pace: 7, risk: 7,
+                    research: 5, social: 4, leadership: 4, structure: 4
+                }
+            },
+            {
+                text: "Participating in online communities and forums",
+                description: "Engaging in discussions, helping others, and learning from community wisdom",
+                weights: {
+                    social: 7, research: 6, technical: 6, creative: 5,
+                    leadership: 5, pace: 6, risk: 5, structure: 5
+                }
+            }
+        ],
+        isActive: true
+    },
+
+    {
+        questionText: "What motivates you to take on challenging projects?",
+        questionLevel: "intermediate",
+        questionType: "ranking",
+        category: "goals",
+        order: 6,
+        difficultyWeight: 1.3,
+        options: [
+            {
+                text: "Opportunity to learn cutting-edge technologies",
+                description: "Gaining experience with the latest tools and methodologies",
+                weights: {
+                    research: 8, technical: 8, creative: 6, pace: 6,
+                    social: 4, leadership: 4, risk: 6, structure: 5
+                }
+            },
+            {
+                text: "Potential for high user impact and visibility",
+                description: "Building something that many people will use and benefit from",
+                weights: {
+                    social: 8, creative: 7, leadership: 6, pace: 7,
+                    technical: 6, research: 5, risk: 6, structure: 5
+                }
+            },
+            {
+                text: "Technical complexity and problem-solving challenge",
+                description: "Working on difficult problems that require innovative solutions",
+                weights: {
+                    technical: 9, research: 8, creative: 7, structure: 6,
+                    social: 3, leadership: 4, pace: 5, risk: 6
+                }
+            },
+            {
+                text: "Leadership and team coordination opportunities",
+                description: "Chance to guide project direction and mentor team members",
+                weights: {
+                    leadership: 9, social: 8, structure: 7, pace: 6,
+                    technical: 5, creative: 6, research: 5, risk: 6
+                }
+            }
+        ],
+        isActive: true
+    },
+
+    // =============================================================================
+    // ADVANCED LEVEL QUESTIONS (6 questions total)
+    // =============================================================================
+
+    {
+        questionText: "Rank these long-term career paths by appeal:",
+        questionLevel: "advanced",
+        questionType: "ranking",
+        category: "goals",
+        order: 1,
+        difficultyWeight: 2.0,
+        options: [
+            {
+                text: "Individual contributor → Principal Engineer → Distinguished Engineer",
+                description: "Deep technical expertise, architecture decisions, and technical thought leadership",
+                weights: {
+                    technical: 10, research: 8, creative: 6, structure: 7,
+                    leadership: 6, social: 5, pace: 5, risk: 5
+                }
+            },
+            {
+                text: "Team Lead → Engineering Manager → Director → VP Engineering",
+                description: "People management, strategic planning, organizational leadership, and business impact",
+                weights: {
+                    leadership: 9, social: 9, structure: 8, technical: 6,
+                    creative: 6, research: 5, pace: 6, risk: 6
+                }
+            },
+            {
+                text: "Specialist → Consultant → Independent Expert → Founder",
+                description: "Domain expertise, client relationships, entrepreneurial ventures, and market innovation",
+                weights: {
+                    technical: 8, social: 7, risk: 9, creative: 8,
+                    leadership: 8, research: 6, pace: 8, structure: 4
+                }
+            },
+            {
+                text: "Product Engineer → Product Manager → Chief Product Officer",
+                description: "User-focused product development, strategic vision, and cross-functional leadership",
+                weights: {
+                    leadership: 9, social: 9, creative: 8, research: 6,
+                    technical: 6, pace: 7, risk: 6, structure: 7
+                }
+            }
+        ],
+        isActive: true
+    },
+
+    {
+        questionText: "When making architectural decisions, rank these considerations:",
+        questionLevel: "advanced",
+        questionType: "ranking",
+        category: "values",
+        order: 2,
+        difficultyWeight: 1.8,
+        options: [
+            {
+                text: "Long-term maintainability and technical debt",
+                description: "Building systems that remain manageable and extensible over time",
+                weights: {
+                    technical: 8, structure: 9, research: 6, pace: 3,
+                    creative: 4, social: 4, leadership: 6, risk: 3
+                }
+            },
+            {
+                text: "Speed to market and competitive advantage",
+                description: "Delivering quickly to capture market opportunities and outpace competitors",
+                weights: {
+                    pace: 9, risk: 7, creative: 6, leadership: 7,
+                    structure: 4, technical: 6, social: 6, research: 4
+                }
+            },
+            {
+                text: "User experience and accessibility",
+                description: "Ensuring products work well for all users, including those with disabilities",
+                weights: {
+                    social: 8, creative: 7, research: 6, technical: 6,
+                    leadership: 5, pace: 5, risk: 5, structure: 6
+                }
+            },
+            {
+                text: "Innovation and technological differentiation",
+                description: "Using cutting-edge approaches that set your product apart technically",
+                weights: {
+                    research: 9, technical: 8, creative: 8, risk: 7,
+                    social: 4, leadership: 5, pace: 6, structure: 4
+                }
+            }
+        ],
+        isActive: true
+    },
+
+    {
+        questionText: "How do you prefer to influence technical strategy in your organization?",
+        questionLevel: "advanced",
+        questionType: "ranking",
+        category: "leadership",
+        order: 3,
+        difficultyWeight: 1.9,
+        options: [
+            {
+                text: "Through technical expertise and code contributions",
+                description: "Leading by example with high-quality implementations and technical guidance",
+                weights: {
+                    technical: 9, research: 7, creative: 6, structure: 7,
+                    leadership: 6, social: 5, pace: 5, risk: 4
+                }
+            },
+            {
+                text: "By building consensus and facilitating discussions",
+                description: "Bringing stakeholders together and helping teams reach collaborative decisions",
+                weights: {
+                    social: 9, leadership: 8, structure: 7, creative: 6,
+                    technical: 5, research: 5, pace: 6, risk: 5
+                }
+            },
+            {
+                text: "Through data-driven analysis and recommendations",
+                description: "Using metrics, research, and evidence to support strategic technology choices",
+                weights: {
+                    research: 9, technical: 7, structure: 8, leadership: 6,
+                    social: 5, creative: 5, pace: 5, risk: 4
+                }
+            },
+            {
+                text: "By prototyping and demonstrating possibilities",
+                description: "Building proof-of-concepts that show the potential of new approaches",
+                weights: {
+                    creative: 8, technical: 8, pace: 7, risk: 6,
+                    leadership: 6, research: 6, social: 5, structure: 5
+                }
+            }
+        ],
+        isActive: true
+    },
+
+    {
+        questionText: "What type of technical risk do you find most acceptable?",
+        questionLevel: "advanced",
+        questionType: "ranking",
+        category: "values",
+        order: 4,
+        difficultyWeight: 1.7,
+        options: [
+            {
+                text: "Adopting cutting-edge but unproven technologies",
+                description: "Being an early adopter of new frameworks, languages, or platforms",
+                weights: {
+                    research: 8, creative: 8, risk: 8, technical: 8,
+                    pace: 7, social: 4, leadership: 5, structure: 3
+                }
+            },
+            {
+                text: "Building custom solutions instead of using existing tools",
+                description: "Creating bespoke systems when off-the-shelf solutions don't meet specific needs",
+                weights: {
+                    technical: 9, creative: 7, risk: 7, research: 6,
+                    structure: 5, social: 4, leadership: 5, pace: 4
+                }
+            },
+            {
+                text: "Scaling systems beyond their current capacity limits",
+                description: "Pushing existing infrastructure to handle much larger loads and user bases",
+                weights: {
+                    technical: 8, structure: 8, research: 7, risk: 6,
+                    pace: 6, creative: 5, social: 4, leadership: 5
+                }
+            },
+            {
+                text: "Refactoring legacy systems while maintaining operations",
+                description: "Modernizing critical systems without disrupting ongoing business operations",
+                weights: {
+                    technical: 8, structure: 9, risk: 5, research: 6,
+                    pace: 4, creative: 5, social: 5, leadership: 6
+                }
+            }
+        ],
+        isActive: true
+    },
+
+    {
+        questionText: "How do you prefer to drive innovation in your team?",
+        questionLevel: "advanced",
+        questionType: "ranking",
+        category: "leadership",
+        order: 5,
+        difficultyWeight: 1.8,
+        options: [
+            {
+                text: "Dedicated time for exploration and experimentation",
+                description: "Formal innovation time like Google's 20% time or hackathons for breakthrough ideas",
+                weights: {
+                    creative: 8, research: 8, leadership: 7, technical: 7,
+                    pace: 6, risk: 7, social: 6, structure: 4
+                }
+            },
+            {
+                text: "Cross-functional collaboration and diverse perspectives",
+                description: "Bringing together people from different backgrounds to solve problems creatively",
+                weights: {
+                    social: 9, leadership: 8, creative: 7, pace: 6,
+                    technical: 5, research: 6, risk: 6, structure: 6
+                }
+            },
+            {
+                text: "Structured innovation processes and frameworks",
+                description: "Using design thinking, lean startup, or other systematic approaches to innovation",
+                weights: {
+                    structure: 8, leadership: 7, research: 7, creative: 6,
+                    technical: 5, social: 6, pace: 5, risk: 5
+                }
+            },
+            {
+                text: "Rapid prototyping and fail-fast iterations",
+                description: "Building quick proof-of-concepts and learning from fast feedback cycles",
+                weights: {
+                    pace: 9, creative: 8, risk: 7, technical: 7,
+                    research: 5, leadership: 6, social: 5, structure: 4
+                }
+            }
+        ],
+        isActive: true
+    },
+
+    {
+        questionText: "What drives your technology decisions in complex projects?",
+        questionLevel: "advanced",
+        questionType: "ranking",
+        category: "values",
+        order: 6,
+        difficultyWeight: 1.9,
+        options: [
+            {
+                text: "Technical elegance and architectural beauty",
+                description: "Choosing solutions that are clean, maintainable, and theoretically sound",
+                weights: {
+                    technical: 9, creative: 7, structure: 8, research: 7,
+                    social: 3, leadership: 4, pace: 4, risk: 4
+                }
+            },
+            {
+                text: "Team expertise and learning opportunities",
+                description: "Selecting technologies that leverage team strengths while enabling growth",
+                weights: {
+                    social: 8, leadership: 8, technical: 6, research: 5,
+                    creative: 6, structure: 6, pace: 5, risk: 5
+                }
+            },
+            {
+                text: "Business requirements and stakeholder needs",
+                description: "Prioritizing solutions that directly address user problems and business goals",
+                weights: {
+                    social: 7, leadership: 7, structure: 7, pace: 6,
+                    technical: 6, creative: 6, research: 5, risk: 5
+                }
+            },
+            {
+                text: "Industry trends and future-proofing",
+                description: "Choosing technologies that align with where the industry is heading",
+                weights: {
+                    research: 8, technical: 7, pace: 6, risk: 6,
+                    creative: 6, leadership: 5, social: 5, structure: 5
+                }
+            }
+        ],
+        isActive: true
     }
 ];
+
+// =============================================================================
+// CAREER WEIGHT MAPPINGS - How Questions Map to Career Results
+// =============================================================================
+
+const careerMappings = {
+    "Software Engineering": {
+        primaryWeights: ["technical", "structure", "creative"],
+        secondaryWeights: ["pace", "research", "collaboration"],
+        matchingTags: ["programming", "webdev", "technical", "projects"]
+    },
+
+    "Data Science": {
+        primaryWeights: ["research", "technical", "structure"],
+        secondaryWeights: ["creative", "pace", "social"],
+        matchingTags: ["ai", "data", "research", "analytics", "ml"]
+    },
+
+    "UX/UI Design": {
+        primaryWeights: ["creative", "social", "research"],
+        secondaryWeights: ["technical", "pace", "structure"],
+        matchingTags: ["design", "ux", "ui", "creative", "research"]
+    },
+
+    "Product Management": {
+        primaryWeights: ["social", "leadership", "creative"],
+        secondaryWeights: ["pace", "research", "technical"],
+        matchingTags: ["product", "leadership", "collaboration", "networking"]
+    },
+
+    "Cybersecurity": {
+        primaryWeights: ["technical", "research", "structure"],
+        secondaryWeights: ["risk", "pace", "social"],
+        matchingTags: ["security", "cybersecurity", "technical", "research"]
+    },
+
+    "DevOps Engineering": {
+        primaryWeights: ["technical", "structure", "pace"],
+        secondaryWeights: ["leadership", "research", "social"],
+        matchingTags: ["cloud", "technical", "engineering", "automation"]
+    },
+
+    "Hardware Engineering": {
+        primaryWeights: ["technical", "creative", "structure"],
+        secondaryWeights: ["research", "pace", "collaboration"],
+        matchingTags: ["hardware", "robotics", "engineering", "technical"]
+    },
+
+    "Game Development": {
+        primaryWeights: ["creative", "technical", "pace"],
+        secondaryWeights: ["social", "research", "structure"],
+        matchingTags: ["gamedev", "creative", "programming", "design"]
+    }
+};
 
 // =============================================================================
 // SEED FUNCTIONS
