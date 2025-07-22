@@ -11,13 +11,27 @@
 }
 
 body.dark-mode {
-    --bg-color: #121212;
+    --bg-color: #1E1E1E;
     --text-color: #e0e0e0;
-    --card-bg: #1e1e1e;
+    --card-bg: #121212;
     --border-color: #888888;
     --input-border: #555;
     --primary-btn-bg: #3366cc;
     --primary-btn-hover: #295bb2;
     --btn-text-color: white;
     --bg-image: url("../assets/BlackWaves.png");
+}
+
+#themeToggle {
+    position: fixed;
+    font-weight: bold;
+    max-width: 5vw;
+    width: 30%;
+    top: 1rem;
+    right: 1rem;
+    background-color: #5b9bd5;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    color: var(--text-color);
 }

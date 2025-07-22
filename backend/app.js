@@ -7,6 +7,7 @@ const MongoStore = require('connect-mongo');  // Store sessions in MongoDB
 const User = require('./models/User');        // Import our User model
 const Club = require('./models/Club');
 const { CareerField, QuizQuestion, QuizResult } = require('./models/nicheQuizModels');
+const Event = require('./models/eventModel'); // Import Event model for events API
 
 dotenv.config();
 
@@ -216,10 +217,103 @@ app.get('/api/bookmarks', requireAuth, async (req, res) => {
 });
 
 //Events Page Route
-app.get('/events', requireAuth, (req, res) => {
-  console.log('Events page accessed by:', req.session.userEmail);
-  res.sendFile(path.join(__dirname, '../frontend/pages/events.html'));
-});
+// const eventRoutes = require('/events'); // adjust if your folder name is different
+// app.use('/api/events', eventRoutes); // powers the fetch('/api/events') in your frontend
+
+
+// app.get('/events', requireAuth, (req, res) => {
+//   console.log('Events page accessed by:', req.session.userEmail);
+//   res.sendFile(path.join(__dirname, '../frontend/pages/events.html'));
+// });
+
+// app.get('/api/events', async (req, res) => {
+//   try {
+//     console.log('📅 Fetching all events...');
+
+//     // Import your Event model at the top of app.js
+//     const Event = require('./models/eventModel');
+
+//     // Get all active events, sorted by date
+//     const events = await Event.find({ isActive: true })
+//       .populate('createdBy', 'email')
+//       .sort({ date: 1 })
+//       .lean();
+
+//     console.log(`✅ Found ${events.length} events`);
+
+//     res.json(events);
+
+//   } catch (error) {
+//     console.error('💥 Error fetching events:', error);
+//     res.status(500).json({ error: 'Failed to fetch events' });
+//   }
+// });
+
+// // 📅 CREATE NEW EVENT - For adding events
+// app.post('/api/events', requireAuth, async (req, res) => {
+//   try {
+//     const { title, date, time, location, description } = req.body;
+
+//     // Validate required fields
+//     if (!title || !date || !time || !location || !description) {
+//       return res.status(400).json({ error: 'All fields are required' });
+//     }
+
+//     const Event = require('./models/eventModel');
+
+//     const newEvent = new Event({
+//       title,
+//       date: new Date(date),
+//       time,
+//       location,
+//       description,
+//       createdBy: req.session.userId
+//     });
+
+//     await newEvent.save();
+
+//     console.log('📅 New event created:', newEvent.title);
+//     res.status(201).json(newEvent);
+
+//   } catch (error) {
+//     console.error('💥 Error creating event:', error);
+//     res.status(500).json({ error: 'Failed to create event' });
+//   }
+// });
+
+// 📅 JOIN EVENT - User can join an event
+// app.post('/api/events/:id/join', requireAuth, async (req, res) => {
+//   try {
+//     const eventId = req.params.id;
+//     const userId = req.session.userId;
+
+//     const Event = require('./models/eventModel');
+
+//     const event = await Event.findById(eventId);
+//     if (!event) {
+//       return res.status(404).json({ error: 'Event not found' });
+//     }
+
+//     // Check if user already joined
+//     if (event.attendees.includes(userId)) {
+//       return res.status(409).json({ error: 'Already joined this event' });
+//     }
+
+//     // Add user to attendees
+//     event.attendees.push(userId);
+//     await event.save();
+
+//     res.json({
+//       message: 'Successfully joined event',
+//       attendeeCount: event.attendees.length
+//     });
+
+//   } catch (error) {
+//     console.error('💥 Error joining event:', error);
+//     res.status(500).json({ error: 'Failed to join event' });
+//   }
+// });
+
 
 // 🔖 ADD BOOKMARK - Save a club to user's bookmarks
 app.post('/api/bookmarks', requireAuth, async (req, res) => {
