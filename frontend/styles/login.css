@@ -118,10 +118,13 @@ form label {
 }
 
 #themeToggle {
-    position: absolute;
+    position: fixed;
+    font-weight: bold;
+    max-width: 5vw;
+    width: 30%;
     top: 1rem;
     right: 1rem;
-    background-color: transparent;
+    background-color: #5b9bd5;
     border: none;
     border-radius: 25px;
     cursor: pointer;

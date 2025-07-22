@@ -1,7 +1,7 @@
 body {
     margin: 0;
     font-family: 'Helvetica', sans-serif;
-    background-color: #ffffff;
+    background-color: var(--bg-color);
 }
 
 .navbar {
@@ -49,7 +49,7 @@ body {
 .nav-links a {
     text-decoration: none;
     font-weight: 500;
-    color: #000;
+    color: var(--text-color);
     font-size: 1.15rem;
     /* Height-based font sizing */
     width: 5.79vw;
@@ -61,7 +61,7 @@ body {
 }
 
 .account-btn {
-    background-color: #5F96C5;
+    background-color: var(--primary-btn-bg);
     color: white;
     padding: 0.4rem 0.9rem;
     border-radius: 20px;
@@ -93,6 +93,8 @@ body {
 
 .hero-text h1 {
     font-family: 'Rethink Sans', sans-serif;
+    color: var(--text-color);
+    text-decoration-color: var(--border-color);
     font-size: 5.3rem;
     font-weight: 1000;
     line-height: 1.2;
@@ -125,7 +127,7 @@ body {
 
 .logo-text {
     font-weight: bold;
-    color: #000;
+    color: var(--text-color);
     font-size: 150%;
     /* Or whatever you want */
 }

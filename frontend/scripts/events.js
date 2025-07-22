@@ -3,43 +3,49 @@ let currentUser = null;
 
 //Event Calendar Class for managing calendar
 class EventsCalendar {
-    constructor() {
+    constructor(eventsData) {
         this.currentDate = new Date();
-        this.events = {
-            //Example for now must replace with API data in future
-            '2025-09-10': [
-                {
-                    id: 1,
-                    title: 'HackDavis Hackathon',
-                    time: '12:00pm – 3:00pm',
-                    location: 'TLC 3203',
-                    description: 'Join UC Davis\'s premier hackathon focused on social good!'
-                }
-            ],
-            '2025-10-22': [
-                {
-                    id: 2,
-                    title: 'Tech Career Fair',
-                    time: '10:00am – 1:00pm',
-                    location: 'UC Center',
-                    description: 'Explore internships and job opportunities at UC Davis\'s Tech Career Fair.'
-                }
-            ],
-            '2025-12-07': [
-                {
-                    id: 3,
-                    title: 'UC Davis Research Expo',
-                    time: '10:00am – 3:00pm',
-                    location: 'UC Center',
-                    description: 'Showcasing insight and resources to help researchers succeed.'
-                }
-            ]
-        }
-        this.selectedDate = null;
+        this.events = eventsData || {}; //fallback to empty object if no data
+        this.selectedData = null;
     }
-    //In progress 
+
+    render() {
+        const eventContainer = document.getElementById('calendar-events');
+        eventContainer.innerHTML = ''; // Clear previous content
+
+        const monthEvents = Object.entries(this.events).filter(([date]) => {
+            const eventDate = new Date(date);
+            return eventDate.getMonth() === this.currentDate.getMonth() &&
+                eventDate.getFullYear() === this.currentDate.getFullYear();
+        });
+
+        if (monthEvents.length === 0) {
+            eventContainer.innerHTML = '<p>No events this month.</p>';
+            return;
+        }
+
+        monthEvents.forEach(([date, events]) => {
+            const daySection = document.createElement('div');
+            daySection.innerHTML = `<h3>${date}</h3>`;
+
+            events.forEach(event => {
+                const item = document.createElement('div');
+                item.innerHTML = `
+                    <strong>${event.title}</strong><br>
+                    ${event.time} — ${event.location}<br>
+                    ${event.description}<br>
+                   
+                    <hr>`;
+
+                daySection.appendChild(item);
+            });
+
+            eventContainer.appendChild(daySection);
+        });
+    }
+
 }
-//Functions 
+
 async function checkAuthentication() {
     try {
         const response = await fetch('/api/user');
@@ -64,13 +70,32 @@ async function checkAuthentication() {
 async function loadEventsData() {
     //Temporary static events from HTML (Must replace with api call later)
     try {
-        console.log('Events Succefully Loaded!')
+        const response = await fetch('/api/events');
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        eventsData = transformEvents(data);
+        console.log('Events data loaded:', eventsData);
     }
     catch (error) {
         console.error('Error loading events data:', error);
-        throw error;
+
     }
 }
+
+function transformEvents(eventArray) {
+    const result = {};
+    eventArray.forEach(event => {
+        const dateKey = new Date(event.date).toISOString().split('T')[0];
+        if (!result[dateKey]) result[dateKey] = [];
+        result[dateKey].push(event);
+    });
+    return result;
+}
+
+
+
 
 //Event Listener
 document.addEventListener('DOMContentLoaded', async () => {
