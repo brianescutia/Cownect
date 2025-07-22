@@ -154,28 +154,28 @@ class EventsCalendar {
 }
 
 // Authentication check
-async function checkAuthentication() {
-    try {
-        const response = await fetch('/api/user');
-        if (!response.ok) {
-            throw new Error('Authentication failed');
-        }
+// async function checkAuthentication() {
+//     try {
+//         const response = await fetch('/api/user');
+//         if (!response.ok) {
+//             throw new Error('Authentication failed');
+//         }
 
-        currentUser = await response.json();
-        if (!currentUser.isLoggedIn) {
-            console.log('User not logged in, redirecting...');
-            window.location.href = '/login';
-            return false;
-        }
+//         currentUser = await response.json();
+//         if (!currentUser.isLoggedIn) {
+//             console.log('User not logged in, redirecting...');
+//             window.location.href = '/login';
+//             return false;
+//         }
 
-        console.log('✅ User authenticated:', currentUser.email);
-        return true;
-    } catch (error) {
-        console.error('❌ Authentication error:', error);
-        window.location.href = '/login';
-        return false;
-    }
-}
+//         console.log('✅ User authenticated:', currentUser.email);
+//         return true;
+//     } catch (error) {
+//         console.error('❌ Authentication error:', error);
+//         window.location.href = '/login';
+//         return false;
+//     }
+// }
 
 // Load events from API
 async function loadEventsData() {
