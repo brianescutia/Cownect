@@ -1,5 +1,5 @@
 // =============================================================================
-// CLUB DETAIL PAGE FUNCTIONALITY
+// ENHANCED CLUB DETAIL PAGE FUNCTIONALITY - Now with Real UC Davis Data
 // =============================================================================
 
 // 🎯 GLOBAL STATE
@@ -8,16 +8,13 @@ let currentSlide = 0;
 const slidesToShow = window.innerWidth > 768 ? 2 : 1;
 
 // 🎯 WAIT FOR PAGE TO LOAD
-// 🎯 WAIT FOR PAGE TO LOAD - FIXED VERSION
 document.addEventListener('DOMContentLoaded', async () => {
     try {
-        // Get club ID from URL PATH (not query parameters)
+        // Get club ID from URL PATH
         const pathParts = window.location.pathname.split('/');
-        const clubId = pathParts[pathParts.length - 1]; // Gets the last part of the path
+        const clubId = pathParts[pathParts.length - 1];
 
-        console.log('🔍 URL pathname:', window.location.pathname);
-        console.log('🔍 Path parts:', pathParts);
-        console.log('🔍 Extracted club ID:', clubId);
+        console.log('🔍 Loading club details for ID:', clubId);
 
         if (!clubId || clubId === 'club') {
             showError('No club ID provided');
@@ -27,13 +24,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         // Load club details
         await loadClubDetails(clubId);
 
-        // Set up carousel
+        // Set up carousel and other features
         setupEventsCarousel();
-
-        // Set up bookmark functionality
         setupBookmarkButton();
 
-        console.log('✅ Club detail page initialized');
+        console.log('✅ Club detail page initialized with real data');
 
     } catch (error) {
         console.error('💥 Error initializing club detail page:', error);
@@ -56,9 +51,9 @@ async function loadClubDetails(clubId) {
         }
 
         currentClub = await response.json();
-        console.log('📦 Club data loaded:', currentClub);
+        console.log('📦 Real club data loaded:', currentClub);
 
-        // Update page content
+        // Update page content with real data
         updatePageContent(currentClub);
         hideLoading();
 
@@ -69,57 +64,163 @@ async function loadClubDetails(clubId) {
 }
 
 // =============================================================================
-// UPDATE PAGE CONTENT
+// UPDATE PAGE CONTENT WITH REAL DATA
 // =============================================================================
 
 function updatePageContent(club) {
     // Update page title
     document.title = `${club.name} | Cownect`;
 
-    // Update club logo
-    const clubLogo = document.getElementById('clubLogo');
-    if (clubLogo) {
-        clubLogo.src = club.logoUrl;
-        clubLogo.alt = `${club.name} Logo`;
-    }
-
-    // Update club name
-    const clubName = document.getElementById('clubName');
-    if (clubName) {
-        clubName.textContent = club.name;
-    }
-
-    // Update club category
-    const clubCategory = document.getElementById('clubCategory');
-    if (clubCategory) {
-        clubCategory.textContent = club.category;
-    }
+    // Update club name and category
+    updateElement('clubName', club.name);
+    updateElement('clubCategory', club.category);
 
     // Update club description
-    const clubDescription = document.getElementById('clubDescription');
-    if (clubDescription) {
-        clubDescription.textContent = club.description;
-    }
+    updateElement('clubDescription', club.description);
 
     // Update member count
-    const memberCount = document.getElementById('memberCount');
-    if (memberCount) {
-        memberCount.textContent = club.memberCount || '0';
-    }
+    updateElement('memberCount', club.memberCount || '0');
 
-    // Update tags
-    const clubTags = document.getElementById('clubTags');
-    if (clubTags && club.tags) {
-        clubTags.innerHTML = club.tags.map(tag =>
-            `<span class="hero-tag">#${tag}</span>`
-        ).join('');
-    }
+    // Update tags with real data
+    updateClubTags(club.tags);
 
-    console.log('✅ Page content updated');
+    // Update focus areas with real data
+    updateFocusAreas(club.focusAreas);
+
+    // Update meeting information with real data
+    updateMeetingInfo(club.meetingInfo);
+
+    // Update contact information with real data
+    updateContactInfo(club);
+
+    console.log('✅ Page content updated with real UC Davis data');
 }
 
 // =============================================================================
-// BOOKMARK FUNCTIONALITY
+// UPDATE SPECIFIC SECTIONS WITH REAL DATA
+// =============================================================================
+
+function updateClubTags(tags) {
+    const clubTags = document.getElementById('clubTags');
+    if (clubTags && tags && tags.length > 0) {
+        clubTags.innerHTML = tags.map(tag =>
+            `<span class="hero-tag">#${tag}</span>`
+        ).join('');
+    }
+}
+
+function updateFocusAreas(focusAreas) {
+    const focusAreasList = document.querySelector('.info-box ul');
+    if (focusAreasList && focusAreas && focusAreas.length > 0) {
+        focusAreasList.innerHTML = focusAreas.map(area =>
+            `<li>${area}</li>`
+        ).join('');
+    } else if (focusAreasList) {
+        // Fallback if no focus areas
+        focusAreasList.innerHTML = `
+            <li>Programming & Development</li>
+            <li>Technical Workshops</li>
+            <li>Project Collaboration</li>
+            <li>Career Development</li>
+        `;
+    }
+}
+
+function updateMeetingInfo(meetingInfo) {
+    const meetingInfoDiv = document.querySelector('.meeting-info');
+    if (meetingInfoDiv && meetingInfo) {
+        meetingInfoDiv.innerHTML = `
+            <p><strong>Frequency:</strong> ${meetingInfo.frequency || 'TBD'}</p>
+            <p><strong>Day:</strong> ${meetingInfo.day || 'TBD'}</p>
+            <p><strong>Time:</strong> ${meetingInfo.time || 'TBD'}</p>
+            <p><strong>Location:</strong> ${meetingInfo.location || 'TBD'}</p>
+        `;
+    }
+}
+
+function updateContactInfo(club) {
+    const contactsBox = document.querySelector('.contacts-box');
+    if (!contactsBox) return;
+
+    // Build contact info HTML
+    let contactHTML = '<h2>📧 Contact & Links</h2><div class="contact-info">';
+
+    // Add officers if available
+    if (club.officers && club.officers.length > 0) {
+        club.officers.forEach(officer => {
+            contactHTML += `
+                <div class="contact-item">
+                    <strong>${officer.position}:</strong>
+                    <p>${officer.name}</p>
+                    <p>${officer.email}</p>
+                </div>
+            `;
+        });
+    }
+
+    // Add general email if available
+    if (club.contactEmail) {
+        contactHTML += `
+            <div class="contact-item">
+                <strong>General Email:</strong>
+                <p>${club.contactEmail}</p>
+            </div>
+        `;
+    }
+
+    contactHTML += '</div>';
+
+    // Add social links
+    contactHTML += '<div class="social-links">';
+
+    if (club.websiteUrl) {
+        contactHTML += `<a href="${club.websiteUrl}" target="_blank" class="social-link">🌐 Website</a>`;
+    }
+
+    if (club.instagramUrl) {
+        contactHTML += `<a href="${club.instagramUrl}" target="_blank" class="social-link">📱 Instagram</a>`;
+    }
+
+    // Add default links if none available
+    if (!club.websiteUrl && !club.instagramUrl) {
+        contactHTML += `
+            <a href="#" class="social-link">🌐 Website</a>
+            <a href="#" class="social-link">💬 Discord</a>
+            <a href="#" class="social-link">📱 Instagram</a>
+        `;
+    }
+
+    contactHTML += '</div>';
+
+    // Add action buttons
+    contactHTML += `
+        <div class="action-buttons">
+            <button class="bookmark-btn" id="heroBookmarkBtn">
+                <img src="../assets/bookmark.png" alt="Bookmark" class="bookmark-icon" />
+                <span>Save Club</span>
+            </button>
+            <button class="join-btn">
+                <span>Join Club</span>
+            </button>
+        </div>
+    `;
+
+    contactsBox.innerHTML = contactHTML;
+}
+
+// =============================================================================
+// UTILITY FUNCTIONS
+// =============================================================================
+
+function updateElement(id, content) {
+    const element = document.getElementById(id);
+    if (element && content !== undefined && content !== null) {
+        element.textContent = content;
+    }
+}
+
+// =============================================================================
+// BOOKMARK FUNCTIONALITY (Enhanced)
 // =============================================================================
 
 function setupBookmarkButton() {
@@ -236,72 +337,11 @@ function hideLoading() {
     if (loadingOverlay) {
         loadingOverlay.style.display = 'none';
         console.log('✅ Loading overlay hidden');
-    } else {
-        console.warn('⚠️ Loading overlay not found');
     }
 
     if (clubContainer) {
         clubContainer.style.display = 'block';
         console.log('✅ Club container shown');
-    } else {
-        console.warn('⚠️ Club container not found');
-    }
-}
-
-// =============================================================================
-// EVENT LISTENERS FOR DYNAMIC CONTENT
-// =============================================================================
-
-// Listen for bookmark changes from the bookmark system
-document.addEventListener('bookmarkChanged', () => {
-    updateBookmarkState();
-});
-
-// Handle window resize for carousel
-window.addEventListener('resize', () => {
-    // Recalculate slides to show based on screen size
-    const newSlidesToShow = window.innerWidth > 768 ? 2 : 1;
-    if (newSlidesToShow !== slidesToShow) {
-        location.reload(); // Simple solution - could be enhanced
-    }
-});
-
-// =============================================================================
-// GLOBAL FUNCTIONS
-// =============================================================================
-
-window.slideCarousel = slideCarousel;
-
-// Debug function
-window.debugClubDetail = () => {
-    console.log('🐛 Club Detail Debug:');
-    console.log('  Current club:', currentClub);
-    console.log('  Current slide:', currentSlide);
-    console.log('  URL params:', new URLSearchParams(window.location.search).get('id'));
-};
-
-// =============================================================================
-// UTILITY FUNCTIONS
-// =============================================================================
-
-function hideLoading() {
-    console.log('🔄 Hiding loading overlay...');
-
-    const loadingOverlay = document.getElementById('loadingOverlay');
-    const clubContainer = document.getElementById('clubDetailContainer');
-
-    if (loadingOverlay) {
-        loadingOverlay.style.display = 'none';
-        console.log('✅ Loading overlay hidden');
-    } else {
-        console.warn('⚠️ Loading overlay not found');
-    }
-
-    if (clubContainer) {
-        clubContainer.style.display = 'block';
-        console.log('✅ Club container shown');
-    } else {
-        console.warn('⚠️ Club container not found');
     }
 }
 
@@ -329,7 +369,38 @@ function showError(message) {
         console.log('✅ Error container shown');
     } else {
         console.warn('⚠️ Error container not found');
-        // Fallback: show alert if error container doesn't exist
         alert(`Error: ${message}`);
     }
 }
+
+// =============================================================================
+// EVENT LISTENERS FOR DYNAMIC CONTENT
+// =============================================================================
+
+// Listen for bookmark changes
+document.addEventListener('bookmarkChanged', () => {
+    updateBookmarkState();
+});
+
+// Handle window resize for carousel
+window.addEventListener('resize', () => {
+    const newSlidesToShow = window.innerWidth > 768 ? 2 : 1;
+    if (newSlidesToShow !== slidesToShow) {
+        location.reload();
+    }
+});
+
+// =============================================================================
+// GLOBAL FUNCTIONS
+// =============================================================================
+
+window.slideCarousel = slideCarousel;
+
+// Debug function
+window.debugClubDetail = () => {
+    console.log('🐛 Club Detail Debug:');
+    console.log('  Current club:', currentClub);
+    console.log('  Officers:', currentClub?.officers);
+    console.log('  Meeting info:', currentClub?.meetingInfo);
+    console.log('  Focus areas:', currentClub?.focusAreas);
+};

@@ -191,14 +191,14 @@ button {
     /* ~361px on 1117px screen */
     max-width: 352px;
     max-height: 361px;
-    background-color: rgba(255, 255, 255, 0.2);
+    background-color: rgba(255, 255, 255, 0.7);
     backdrop-filter: blur(12px);
     /* the blur effect */
     -webkit-backdrop-filter: blur(12px);
 
 
 
-    border: 1px solid rgba(255, 255, 255, 0.3);
+    border: 1px solid rgbargba(255, 255, 255, 0.8);
     /* light border for definition */
     border-radius: 15px;
     padding: 1rem;
@@ -248,23 +248,32 @@ button {
 
 /* Bookmark Icon */
 .bookmark-icon {
-    position: absolute;
-    top: 0.5rem;
-    right: -0.5rem;
+    position: relative;
+    z-index: 10;
+    transition: transform 0.3s ease;
 }
 
 .bookmark-icon img {
     height: 5vw;
     width: 6vw;
     cursor: pointer;
+    max-height: 60px;
+    max-width: 60px;
 }
 
 .bookmark-icon:hover {
+    transform: scale(1.1);
     color: #5f96c5;
 }
 
 .bookmark.bookmarked {
-    border: 2px solid red;
+    filter: hue-rotate(120deg) brightness(1.2);
+    transform: scale(1.1);
+}
+
+.bookmark-icon:hover img {
+    transform: scale(1.15);
+    filter: brightness(1.1);
 }
 
 
@@ -457,20 +466,7 @@ button {
 }
 
 /* Overlay that appears on hover */
-.club-card-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(95, 150, 197, 0.9);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    border-radius: 15px;
-}
+
 
 .clickable-card:hover .club-card-overlay {
     opacity: 1;
@@ -535,6 +531,7 @@ button {
     background: linear-gradient(45deg, transparent, rgba(95, 150, 197, 0.1), transparent);
     opacity: 0;
     transition: opacity 0.3s ease;
+    pointer-events: none;
 }
 
 .clickable-card:hover::before {

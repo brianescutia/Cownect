@@ -6,7 +6,7 @@ const session = require('express-session');  // For user session management
 const MongoStore = require('connect-mongo');  // Store sessions in MongoDB
 const User = require('./models/User');        // Import our User model
 const Club = require('./models/Club');
-
+const { CareerField, QuizQuestion, QuizResult } = require('./models/nicheQuizModels');
 
 dotenv.config();
 
@@ -680,6 +680,113 @@ app.get('/api/user', (req, res) => {
 });
 
 // =============================================================================
+// NICHE QUIZ ROUTES - Add these AFTER app creation
+// =============================================================================
+
+// 🎯 NICHE QUIZ PAGE
+app.get('/niche-quiz', requireAuth, (req, res) => {
+  console.log('Niche quiz accessed by:', req.session.userEmail);
+  res.sendFile(path.join(__dirname, '../frontend/pages/niche-quiz.html'));
+});
+
+// 🎯 GET QUIZ INTRO - Show available levels and preview
+app.get('/api/quiz/intro', async (req, res) => {
+  try {
+    const levels = [
+      {
+        level: 'beginner',
+        title: 'Tech Explorer',
+        description: 'New to tech? Discover what interests you most.',
+        duration: '5-7 minutes',
+        questionCount: 8,
+        icon: '🌱'
+      },
+      {
+        level: 'intermediate',
+        title: 'Tech Curious',
+        description: 'Some tech experience? Find your ideal specialization.',
+        duration: '8-10 minutes',
+        questionCount: 6,
+        icon: '🚀'
+      },
+      {
+        level: 'advanced',
+        title: 'Tech Insider',
+        description: 'Experienced in tech? Optimize your career path.',
+        duration: '10-12 minutes',
+        questionCount: 6,
+        icon: '⚡'
+      }
+    ];
+
+    // Get sample career fields for preview
+    const sampleCareers = await CareerField.find({ isActive: true })
+      .select('name category')
+      .limit(6);
+
+    res.json({
+      levels,
+      sampleCareers,
+      totalCareers: await CareerField.countDocuments({ isActive: true })
+    });
+
+  } catch (error) {
+    console.error('💥 Quiz intro error:', error);
+    res.status(500).json({ error: 'Failed to load quiz introduction' });
+  }
+});
+
+// 📝 GET QUIZ QUESTIONS - Load questions for specific level
+app.get('/api/quiz/questions/:level', async (req, res) => {
+  try {
+    const { level } = req.params;
+
+    if (!['beginner', 'intermediate', 'advanced'].includes(level)) {
+      return res.status(400).json({ error: 'Invalid quiz level' });
+    }
+
+    console.log(`📋 Loading ${level} quiz questions...`);
+
+    const questions = await QuizQuestion.find({
+      questionLevel: level,
+      isActive: true
+    }).sort({ order: 1, _id: 1 });
+
+    if (questions.length === 0) {
+      return res.status(404).json({ error: 'No questions found for this level' });
+    }
+
+    // Format questions for frontend
+    const formattedQuestions = questions.map((q, index) => ({
+      id: q._id,
+      questionNumber: index + 1,
+      questionText: q.questionText,
+      questionType: q.questionType,
+      category: q.category,
+      options: q.options.map((option, optIndex) => ({
+        id: optIndex,
+        text: option.text,
+        description: option.description
+        // Don't send weights to frontend for security
+      })),
+      totalQuestions: questions.length
+    }));
+
+    res.json({
+      level,
+      questions: formattedQuestions,
+      metadata: {
+        totalQuestions: questions.length,
+        estimatedTime: `${Math.ceil(questions.length * 0.75)}-${Math.ceil(questions.length * 1)} minutes`
+      }
+    });
+
+  } catch (error) {
+    console.error('💥 Quiz questions error:', error);
+    res.status(500).json({ error: 'Failed to load quiz questions' });
+  }
+});
+// =============================================================================
 // START SERVER
 // =============================================================================
 
@@ -687,4 +794,6 @@ app.listen(port, () => {
   console.log(`🚀 Cownect server running at http://localhost:${port}`);
   console.log(`📊 Database: MongoDB Atlas`);
   console.log(`🔐 Authentication: bcrypt + sessions`);
+  console.log(`🎯 Quiz system: Ready!`);
+
 });

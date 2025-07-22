@@ -1,7 +1,6 @@
 // =============================================================================
-// FUNCTIONAL BOOKMARK SYSTEM
+// FIXED BOOKMARK SYSTEM - Proper Event Handling
 // =============================================================================
-// This replaces your old bookmark.js with real database functionality
 
 // 🎯 GLOBAL STATE: Track user's bookmarks
 let userBookmarks = []; // Array of club IDs that user has bookmarked
@@ -119,59 +118,93 @@ function isClubBookmarked(clubId) {
 
 // 🎨 FUNCTION: Update bookmark UI for specific club
 function updateBookmarkUI(clubId, isBookmarked) {
-    // Find the bookmark button for this club
-    const bookmarkButton = document.querySelector(`[data-club-id="${clubId}"]`);
+    // Find ALL bookmark buttons for this club (there might be multiple)
+    const bookmarkButtons = document.querySelectorAll(`[data-club-id="${clubId}"]`);
 
-    if (!bookmarkButton) {
-        console.warn(`⚠️ Bookmark button not found for club: ${clubId}`);
+    if (bookmarkButtons.length === 0) {
+        console.warn(`⚠️ No bookmark buttons found for club: ${clubId}`);
         return;
     }
 
-    // Update visual state
-    if (isBookmarked) {
-        bookmarkButton.classList.add('bookmarked');
-        bookmarkButton.style.filter = 'hue-rotate(120deg)'; // Make it green-ish
-        bookmarkButton.title = 'Click to remove from bookmarks';
-    } else {
-        bookmarkButton.classList.remove('bookmarked');
-        bookmarkButton.style.filter = 'none'; // Reset to original color
-        bookmarkButton.title = 'Click to add to bookmarks';
-    }
+    bookmarkButtons.forEach(button => {
+        // Find the actual img element within the bookmark button/container
+        const bookmarkImg = button.tagName === 'IMG' ? button : button.querySelector('img');
+
+        if (!bookmarkImg) {
+            console.warn(`⚠️ No bookmark image found for club: ${clubId}`);
+            return;
+        }
+
+        // Update visual state
+        if (isBookmarked) {
+            bookmarkImg.classList.add('bookmarked');
+            bookmarkImg.style.filter = 'hue-rotate(120deg) brightness(1.2)';
+            bookmarkImg.style.transform = 'scale(1.1)';
+            bookmarkImg.title = 'Click to remove from bookmarks';
+        } else {
+            bookmarkImg.classList.remove('bookmarked');
+            bookmarkImg.style.filter = 'none';
+            bookmarkImg.style.transform = 'scale(1)';
+            bookmarkImg.title = 'Click to add to bookmarks';
+        }
+    });
 }
 
 // 🎨 FUNCTION: Update all bookmark buttons on page
 function updateAllBookmarkUI() {
-    const allBookmarkButtons = document.querySelectorAll('[data-club-id]');
+    const allBookmarkElements = document.querySelectorAll('[data-club-id]');
 
-    allBookmarkButtons.forEach(button => {
-        const clubId = button.dataset.clubId;
+    allBookmarkElements.forEach(element => {
+        const clubId = element.dataset.clubId;
         const isBookmarked = isClubBookmarked(clubId);
         updateBookmarkUI(clubId, isBookmarked);
     });
 
-    console.log(`🎨 Updated UI for ${allBookmarkButtons.length} bookmark buttons`);
+    console.log(`🎨 Updated UI for ${allBookmarkElements.length} bookmark elements`);
 }
 
-// 🎭 FUNCTION: Handle bookmark button click
+// 🎭 FUNCTION: Handle bookmark button click - FIXED VERSION
 async function handleBookmarkClick(event) {
-    // Prevent any default behavior
+    // Prevent any default behavior and stop propagation
     event.preventDefault();
     event.stopPropagation();
 
-    const button = event.target.closest('[data-club-id]');
-    if (!button) {
-        console.warn('⚠️ Bookmark click but no club ID found');
+    console.log('🖱️ Bookmark click detected!', event.target);
+
+    // Find the element with data-club-id - ONLY look in bookmark containers
+    let targetElement = event.target;
+
+    // Search up the DOM tree for the bookmark icon container
+    while (targetElement && !targetElement.classList.contains('bookmark-icon')) {
+        targetElement = targetElement.parentElement;
+        if (!targetElement || targetElement === document.body) {
+            console.warn('⚠️ Bookmark click outside of bookmark icon');
+            return;
+        }
+    }
+
+    // Now find the club ID from the bookmark image inside the bookmark icon
+    const bookmarkImg = targetElement.querySelector('[data-club-id]');
+    if (!bookmarkImg) {
+        console.warn('⚠️ No club ID found in bookmark element');
         return;
     }
 
-    const clubId = button.dataset.clubId;
+    const clubId = bookmarkImg.dataset.clubId;
+    if (!clubId) {
+        console.warn('⚠️ No club ID found on bookmark element');
+        return;
+    }
+
     const isCurrentlyBookmarked = isClubBookmarked(clubId);
 
     console.log(`🖱️ Bookmark clicked for club ${clubId}, currently bookmarked: ${isCurrentlyBookmarked}`);
 
-    // Show loading state
-    button.style.opacity = '0.6';
-    button.style.pointerEvents = 'none';
+    // Show loading state on the clicked element
+    if (bookmarkImg) {
+        bookmarkImg.style.opacity = '0.6';
+        bookmarkImg.style.pointerEvents = 'none';
+    }
 
     try {
         let success;
@@ -189,8 +222,10 @@ async function handleBookmarkClick(event) {
 
     } finally {
         // Re-enable button regardless of success/failure
-        button.style.opacity = '1';
-        button.style.pointerEvents = 'auto';
+        if (bookmarkImg) {
+            bookmarkImg.style.opacity = '1';
+            bookmarkImg.style.pointerEvents = 'auto';
+        }
     }
 }
 
@@ -235,22 +270,28 @@ function showBookmarkFeedback(message, type = 'success') {
     }, 3000);
 }
 
-// 🔗 FUNCTION: Set up bookmark event listeners
+// 🔗 FUNCTION: Set up bookmark event listeners - FIXED VERSION
 function setupBookmarkListeners() {
-    // Use event delegation for dynamic content
+    // Remove any existing listeners to prevent duplicates
+    document.removeEventListener('click', handleBookmarkClick);
+
+    // Use targeted event delegation - ONLY for bookmark icons
     document.addEventListener('click', (event) => {
-        // Check if clicked element is a bookmark button
-        if (event.target.closest('.bookmark')) {
+        // Check if the clicked element is within a bookmark icon
+        const bookmarkIcon = event.target.closest('.bookmark-icon');
+
+        if (bookmarkIcon) {
+            console.log('🎯 Bookmark icon clicked');
             handleBookmarkClick(event);
         }
-    });
+    }, true); // Use capture phase to ensure we catch the event
 
-    console.log('🔗 Bookmark event listeners set up');
+    console.log('🔗 Fixed bookmark event listeners set up');
 }
 
 // 🚀 FUNCTION: Initialize bookmark system
 async function initializeBookmarkSystem() {
-    console.log('🚀 Initializing bookmark system...');
+    console.log('🚀 Initializing enhanced bookmark system...');
 
     // Set up event listeners
     setupBookmarkListeners();
@@ -258,12 +299,13 @@ async function initializeBookmarkSystem() {
     // Load user's existing bookmarks
     await loadUserBookmarks();
 
-    console.log('✅ Bookmark system initialized');
+    console.log('✅ Enhanced bookmark system initialized');
 }
 
 // 🌐 GLOBAL FUNCTIONS (for external access)
 window.loadUserBookmarks = loadUserBookmarks;
 window.isClubBookmarked = isClubBookmarked;
+window.handleBookmarkClick = handleBookmarkClick; // Export for debugging
 
 // 🧪 DEBUG FUNCTIONS
 window.debugBookmarks = function () {
@@ -271,11 +313,11 @@ window.debugBookmarks = function () {
     console.log('  User bookmarks:', userBookmarks);
     console.log('  Total bookmarks:', userBookmarks.length);
 
-    const buttons = document.querySelectorAll('[data-club-id]');
-    console.log('  Bookmark buttons on page:', buttons.length);
+    const elements = document.querySelectorAll('[data-club-id]');
+    console.log('  Bookmark elements on page:', elements.length);
 
-    buttons.forEach(button => {
-        const clubId = button.dataset.clubId;
+    elements.forEach(element => {
+        const clubId = element.dataset.clubId;
         const isBookmarked = isClubBookmarked(clubId);
         console.log(`    Club ${clubId}: ${isBookmarked ? 'BOOKMARKED' : 'not bookmarked'}`);
     });
@@ -287,15 +329,17 @@ window.debugBookmarks = function () {
 // Start bookmark system when page loads
 document.addEventListener('DOMContentLoaded', () => {
     // Small delay to ensure other scripts have loaded
-    setTimeout(initializeBookmarkSystem, 100);
+    setTimeout(initializeBookmarkSystem, 200);
 });
 
-// =============================================================================
-// INTEGRATION NOTES:
-// =============================================================================
-// This script works with your existing dynamicClubs.js:
-// 1. Club cards are generated with data-club-id attributes
-// 2. This script finds those buttons and adds click handlers
-// 3. When clubs load, bookmarks are fetched and UI is updated
-// 4. Everything stays in sync automatically
-// =============================================================================
+// Also initialize when the page becomes visible (for better reliability)
+document.addEventListener('visibilitychange', () => {
+    if (!document.hidden) {
+        // Re-initialize if page becomes visible and bookmarks aren't loaded
+        if (userBookmarks.length === 0) {
+            setTimeout(initializeBookmarkSystem, 100);
+        }
+    }
+});
+
+console.log('✅ Fixed bookmark system script loaded');
