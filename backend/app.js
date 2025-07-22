@@ -8,6 +8,8 @@ const User = require('./models/User');        // Import our User model
 const Club = require('./models/Club');
 const { CareerField, QuizQuestion, QuizResult } = require('./models/nicheQuizModels');
 const Event = require('./models/eventModel'); // Import Event model for events API
+// Add this with your other imports (around line 10)
+const { processQuizSubmission } = require('./quiz-scoring');
 
 dotenv.config();
 
@@ -432,7 +434,7 @@ app.get('/dashboard', requireAuth, (req, res) => {
 app.get('/api/clubs', async (req, res) => {
   try {
     const clubs = await Club.find({ isActive: true })
-      .sort({ createdAt: -1 })
+      .sort({ name: 1 })
       .limit(50);
 
     console.log(`📊 Serving ${clubs.length} clubs from database`);
@@ -878,6 +880,405 @@ app.get('/api/quiz/questions/:level', async (req, res) => {
   } catch (error) {
     console.error('💥 Quiz questions error:', error);
     res.status(500).json({ error: 'Failed to load quiz questions' });
+  }
+});
+
+// =============================================================================
+// ENHANCED NICHE QUIZ BACKEND ROUTES - Add to your backend/app.js
+// =============================================================================
+
+// 📝 SUBMIT QUIZ AND CALCULATE RESULTS
+// =============================================================================
+// QUIZ SCORING SYSTEM - Add to backend/app.js
+// =============================================================================
+// Replace your existing /api/quiz/submit route with this enhanced version
+
+// 📤 ENHANCED QUIZ SUBMISSION WITH REAL SCORING
+app.post('/api/quiz/submit', requireAuth, async (req, res) => {
+  try {
+    const { level, answers, completionTime } = req.body;
+    const userId = req.session.userId;
+
+    console.log(`📝 Processing quiz submission for user: ${req.session.userEmail}`);
+    console.log(`📊 Received ${answers.length} answers for ${level} level`);
+
+    // Validate input
+    if (!level || !answers || !Array.isArray(answers)) {
+      return res.status(400).json({ error: 'Invalid submission data' });
+    }
+
+    // Get questions and clubs from database
+    const questions = await QuizQuestion.find({
+      questionLevel: level,
+      isActive: true
+    }).sort({ order: 1 });
+
+    const allClubs = await Club.find({ isActive: true });
+
+    if (questions.length === 0 || allClubs.length === 0) {
+      console.log('⚠️ Missing questions or clubs, using fallback results');
+      return res.json({ results: getFallbackResults() });
+    }
+
+    // 🎯 USE REAL SCORING ALGORITHM (replacing fallback)
+    console.log('🚀 Using real scoring algorithm...');
+    const results = await processQuizSubmission(answers, questions, level, allClubs);
+
+    // Save result to database
+    const newResult = new QuizResult({
+      user: userId,
+      quizLevel: level,
+      answers: answers,
+      skillScores: results.skillBreakdown,
+      completionTime: completionTime
+    });
+
+    await newResult.save();
+    console.log('✅ Quiz result saved with real algorithm');
+
+    res.json({
+      success: true,
+      results: results
+    });
+
+  } catch (error) {
+    console.error('💥 Quiz submission error:', error);
+    // Keep fallback only for genuine errors
+    res.status(500).json({
+      error: 'Failed to process quiz submission',
+      results: getFallbackResults()
+    });
+  }
+});
+
+// =============================================================================
+// SCORING ALGORITHM FUNCTIONS
+// =============================================================================
+
+function calculateUserSkillProfile(answers, questions) {
+  console.log('🧮 Calculating user skill profile...');
+
+  // Initialize skill scores
+  const skillScores = {
+    technical: 0,
+    creative: 0,
+    social: 0,
+    leadership: 0,
+    research: 0,
+    pace: 0,
+    risk: 0,
+    structure: 0
+  };
+
+  let totalWeight = 0;
+
+  // Process each answer
+  answers.forEach((answer, answerIndex) => {
+    const question = questions[answerIndex];
+    if (!question) {
+      console.warn(`⚠️ No question found for answer index ${answerIndex}`);
+      return;
+    }
+
+    console.log(`📝 Processing answer for question: "${question.questionText}"`);
+
+    // Get the user's ranking (array of option indices in order of preference)
+    const userRanking = answer.ranking;
+
+    // Calculate weighted scores based on ranking position
+    userRanking.forEach((optionIndex, rankPosition) => {
+      const option = question.options[optionIndex];
+      if (!option || !option.weights) {
+        console.warn(`⚠️ Invalid option or weights for option index ${optionIndex}`);
+        return;
+      }
+
+      // Higher preference = higher weight (invert rank position)
+      // Rank 0 (most preferred) gets highest weight, last rank gets lowest
+      const positionWeight = (userRanking.length - rankPosition) / userRanking.length;
+
+      // Question difficulty weight (from schema)
+      const questionWeight = question.difficultyWeight || 1;
+
+      // Final weight for this option
+      const finalWeight = positionWeight * questionWeight;
+
+      // Add weighted scores to user profile
+      Object.keys(option.weights).forEach(skill => {
+        if (skillScores.hasOwnProperty(skill)) {
+          skillScores[skill] += option.weights[skill] * finalWeight;
+          totalWeight += finalWeight;
+        }
+      });
+    });
+  });
+
+  // Normalize scores to 1-10 scale
+  Object.keys(skillScores).forEach(skill => {
+    skillScores[skill] = Math.max(1, Math.min(10,
+      (skillScores[skill] / (totalWeight / Object.keys(skillScores).length)) * 5 + 5
+    ));
+    skillScores[skill] = Math.round(skillScores[skill] * 10) / 10; // Round to 1 decimal
+  });
+
+  return skillScores;
+}
+
+function calculateCareerMatches(userSkillProfile, careerFields) {
+  console.log('🎯 Calculating career matches...');
+
+  const matches = careerFields.map(career => {
+    let totalMatch = 0;
+    let totalWeight = 0;
+
+    // Calculate similarity between user profile and career requirements
+    Object.keys(userSkillProfile).forEach(skill => {
+      if (career.skillWeights && career.skillWeights[skill] !== undefined) {
+        const userScore = userSkillProfile[skill];
+        const careerRequirement = career.skillWeights[skill];
+
+        // Calculate similarity (closer scores = higher match)
+        const difference = Math.abs(userScore - careerRequirement);
+        const similarity = Math.max(0, 10 - difference); // 0-10 scale
+
+        // Weight by career requirement importance
+        const weight = careerRequirement;
+
+        totalMatch += similarity * weight;
+        totalWeight += weight;
+      }
+    });
+
+    // Calculate final percentage
+    const percentage = totalWeight > 0 ?
+      Math.round((totalMatch / totalWeight) * 10) : 50;
+
+    return {
+      career: career,
+      percentage: Math.max(30, Math.min(100, percentage)), // Ensure 30-100% range
+      confidence: getConfidenceLevel(percentage)
+    };
+  });
+
+  // Sort by percentage (highest first)
+  return matches.sort((a, b) => b.percentage - a.percentage);
+}
+
+function generatePersonalizedNextSteps(career, userSkillProfile, level) {
+  const steps = [];
+
+  // Analyze user's weakest skills relative to career requirements
+  const skillGaps = [];
+  if (career.skillWeights) {
+    Object.keys(career.skillWeights).forEach(skill => {
+      const userScore = userSkillProfile[skill];
+      const careerNeed = career.skillWeights[skill];
+      const gap = careerNeed - userScore;
+
+      if (gap > 1) { // Significant gap
+        skillGaps.push({ skill, gap, careerNeed });
+      }
+    });
+  }
+
+  // Sort by largest gaps first
+  skillGaps.sort((a, b) => b.gap - a.gap);
+
+  // Generate specific recommendations based on gaps
+  skillGaps.slice(0, 2).forEach(gap => {
+    switch (gap.skill) {
+      case 'technical':
+        steps.push(`Strengthen technical skills through coding bootcamps or online courses`);
+        break;
+      case 'creative':
+        steps.push(`Develop creative problem-solving through design thinking workshops`);
+        break;
+      case 'social':
+        steps.push(`Build communication skills through presentation practice and team projects`);
+        break;
+      case 'leadership':
+        steps.push(`Gain leadership experience through club officer positions or project management`);
+        break;
+      case 'research':
+        steps.push(`Enhance research skills by joining faculty research projects or academic clubs`);
+        break;
+    }
+  });
+
+  // Add level-specific recommendations
+  if (level === 'beginner') {
+    steps.push(`Explore ${career.name} through introductory courses and informational interviews`);
+    steps.push(`Join relevant UC Davis clubs to build experience and network`);
+  } else if (level === 'intermediate') {
+    steps.push(`Build a portfolio showcasing your ${career.name} skills`);
+    steps.push(`Seek internships or part-time opportunities in ${career.name}`);
+  } else if (level === 'advanced') {
+    steps.push(`Pursue advanced certifications or specializations in ${career.name}`);
+    steps.push(`Network with industry professionals and consider mentorship opportunities`);
+  }
+
+  // Always include UC Davis specific step
+  steps.push(`Connect with UC Davis Career Center for ${career.name} guidance`);
+
+  return steps.slice(0, 4); // Return top 4 steps
+}
+
+async function getRecommendedClubs(relatedClubIds) {
+  if (!relatedClubIds || relatedClubIds.length === 0) {
+    // Get some general tech clubs as fallback
+    return await Club.find({ isActive: true })
+      .sort({ memberCount: -1 })
+      .limit(3)
+      .lean();
+  }
+
+  try {
+    const clubs = await Club.find({
+      _id: { $in: relatedClubIds },
+      isActive: true
+    }).limit(3).lean();
+
+    return clubs;
+  } catch (error) {
+    console.error('Error fetching recommended clubs:', error);
+    return [];
+  }
+}
+
+function getConfidenceLevel(percentage) {
+  if (percentage >= 80) return 'High';
+  if (percentage >= 65) return 'Medium';
+  return 'Low';
+}
+
+// =============================================================================
+// FALLBACK DATA FUNCTIONS
+// =============================================================================
+
+function getFallbackResults() {
+  return {
+    topMatch: {
+      career: "Web Development",
+      description: "Build responsive websites and web applications using modern frameworks and technologies.",
+      percentage: 75,
+      category: "Engineering",
+      careerProgression: getDefaultProgression("Web Development"),
+      marketData: getDefaultMarketData("Web Development"),
+      nextSteps: [
+        "Master JavaScript fundamentals",
+        "Build a portfolio with 3+ projects",
+        "Join UC Davis coding clubs",
+        "Apply for frontend development internships"
+      ],
+      recommendedClubs: []
+    },
+    allMatches: [
+      { career: "Web Development", category: "Engineering", percentage: 75 },
+      { career: "Data Science", category: "Data", percentage: 68 },
+      { career: "UX/UI Design", category: "Design", percentage: 62 },
+      { career: "Product Management", category: "Product", percentage: 58 }
+    ],
+    skillBreakdown: {
+      technical: 7.2,
+      creative: 6.8,
+      social: 6.1,
+      leadership: 5.4,
+      research: 6.7,
+      pace: 7.5,
+      risk: 6.0,
+      structure: 6.3
+    }
+  };
+}
+
+function getDefaultProgression(careerName) {
+  const progressions = {
+    "Web Development": [
+      {
+        level: "Entry",
+        roles: ["Junior Frontend Developer", "Web Developer"],
+        timeline: "0-2 years",
+        salary: { min: 65, max: 85 }
+      },
+      {
+        level: "Mid",
+        roles: ["Frontend Developer", "Full-Stack Developer"],
+        timeline: "2-5 years",
+        salary: { min: 85, max: 120 }
+      },
+      {
+        level: "Senior",
+        roles: ["Senior Developer", "Lead Engineer"],
+        timeline: "5+ years",
+        salary: { min: 120, max: 160 }
+      }
+    ],
+    "Data Science": [
+      {
+        level: "Entry",
+        roles: ["Data Analyst", "Junior Data Scientist"],
+        timeline: "0-2 years",
+        salary: { min: 70, max: 95 }
+      },
+      {
+        level: "Mid",
+        roles: ["Data Scientist", "ML Engineer"],
+        timeline: "2-5 years",
+        salary: { min: 95, max: 140 }
+      },
+      {
+        level: "Senior",
+        roles: ["Senior Data Scientist", "Data Science Manager"],
+        timeline: "5+ years",
+        salary: { min: 140, max: 200 }
+      }
+    ]
+  };
+
+  return progressions[careerName] || progressions["Web Development"];
+}
+
+function getDefaultMarketData(careerName) {
+  const marketData = {
+    "Web Development": {
+      jobGrowthRate: "+13% (2021-2031)",
+      annualOpenings: 28900,
+      workLifeBalance: "7.5/10",
+      avgSalary: "$85k - $140k"
+    },
+    "Data Science": {
+      jobGrowthRate: "+22% (2021-2031)",
+      annualOpenings: 13500,
+      workLifeBalance: "7.8/10",
+      avgSalary: "$95k - $165k"
+    },
+    "UX/UI Design": {
+      jobGrowthRate: "+13% (2021-2031)",
+      annualOpenings: 5200,
+      workLifeBalance: "7.2/10",
+      avgSalary: "$80k - $130k"
+    }
+  };
+
+  return marketData[careerName] || marketData["Web Development"];
+}
+
+// =============================================================================
+// GET USER'S QUIZ HISTORY
+// =============================================================================
+
+app.get('/api/quiz/results/:userId', requireAuth, async (req, res) => {
+  try {
+    const results = await QuizResult.find({ user: req.session.userId })
+      .populate('topMatch.field')
+      .populate('topMatch.recommendedClubs')
+      .sort({ createdAt: -1 })
+      .limit(10);
+
+    res.json({ results });
+  } catch (error) {
+    console.error('Error fetching quiz results:', error);
+    res.status(500).json({ error: 'Failed to fetch quiz results' });
   }
 });
 // =============================================================================

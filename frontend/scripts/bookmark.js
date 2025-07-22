@@ -118,36 +118,25 @@ function isClubBookmarked(clubId) {
 
 // 🎨 FUNCTION: Update bookmark UI for specific club
 function updateBookmarkUI(clubId, isBookmarked) {
-    // Find ALL bookmark buttons for this club (there might be multiple)
-    const bookmarkButtons = document.querySelectorAll(`[data-club-id="${clubId}"]`);
+    const bookmarkIcons = document.querySelectorAll(`img[data-club-id="${clubId}"]`);
 
-    if (bookmarkButtons.length === 0) {
-        console.warn(`⚠️ No bookmark buttons found for club: ${clubId}`);
-        return;
-    }
-
-    bookmarkButtons.forEach(button => {
-        // Find the actual img element within the bookmark button/container
-        const bookmarkImg = button.tagName === 'IMG' ? button : button.querySelector('img');
-
-        if (!bookmarkImg) {
-            console.warn(`⚠️ No bookmark image found for club: ${clubId}`);
-            return;
-        }
-
-        // Update visual state
+    bookmarkIcons.forEach(bookmarkImg => {
         if (isBookmarked) {
+            bookmarkImg.src = '../assets/bookmarkfilled.png';
             bookmarkImg.classList.add('bookmarked');
-            bookmarkImg.style.filter = 'hue-rotate(120deg) brightness(1.2)';
-            bookmarkImg.style.transform = 'scale(1.1)';
             bookmarkImg.title = 'Click to remove from bookmarks';
         } else {
+            bookmarkImg.src = '../assets/bookmark.png';
             bookmarkImg.classList.remove('bookmarked');
-            bookmarkImg.style.filter = 'none';
-            bookmarkImg.style.transform = 'scale(1)';
             bookmarkImg.title = 'Click to add to bookmarks';
         }
+
+        // No color filters - just swap images
+        bookmarkImg.style.filter = 'none';
+        bookmarkImg.style.transform = 'none';
     });
+
+    console.log(`📌 Bookmark updated: ${isBookmarked ? 'FILLED' : 'EMPTY'}`);
 }
 
 // 🎨 FUNCTION: Update all bookmark buttons on page
