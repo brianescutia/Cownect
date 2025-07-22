@@ -786,6 +786,180 @@ app.get('/api/quiz/questions/:level', async (req, res) => {
     res.status(500).json({ error: 'Failed to load quiz questions' });
   }
 });
+
+// =============================================================================
+// ENHANCED NICHE QUIZ BACKEND ROUTES - Add to your backend/app.js
+// =============================================================================
+
+// 📝 SUBMIT QUIZ AND CALCULATE RESULTS
+// 📝 SUBMIT QUIZ AND CALCULATE RESULTS
+app.post('/api/quiz/submit', requireAuth, async (req, res) => {
+  try {
+    const { level, answers, completionTime } = req.body;
+
+    console.log(`🎯 Processing ${level} quiz submission from user: ${req.session.userEmail}`);
+
+    // Validate submission
+    if (!level || !answers || !Array.isArray(answers)) {
+      return res.status(400).json({ error: 'Invalid quiz submission' });
+    }
+
+    // For now, return mock results until you have the full career data
+    const mockResults = {
+      results: {
+        topMatch: {
+          career: "Full-Stack Web Development",
+          description: "Build complete web applications from user interface to server infrastructure, mastering both frontend and backend technologies.",
+          percentage: 85,
+          category: "Engineering",
+          careerProgression: [
+            {
+              level: "Entry",
+              roles: ["Junior Full-Stack Developer", "Web Developer"],
+              timeline: "0-2 years",
+              salary: { min: 70, max: 95 },
+              requirements: {
+                education: "Bootcamp or Bachelor's in CS",
+                skills: ["HTML/CSS", "JavaScript", "React", "Node.js"],
+                experience: "3+ portfolio projects"
+              }
+            },
+            {
+              level: "Mid",
+              roles: ["Full-Stack Developer", "Software Engineer"],
+              timeline: "2-5 years",
+              salary: { min: 95, max: 130 },
+              requirements: {
+                education: "Bachelor's preferred",
+                skills: ["Advanced JavaScript", "Database Design", "API Development"],
+                experience: "2+ years commercial development"
+              }
+            },
+            {
+              level: "Senior",
+              roles: ["Senior Full-Stack Engineer", "Tech Lead"],
+              timeline: "5+ years",
+              salary: { min: 130, max: 175 },
+              requirements: {
+                education: "Bachelor's degree",
+                skills: ["System Architecture", "Mentoring", "DevOps"],
+                experience: "Led development projects"
+              }
+            }
+          ],
+          marketData: {
+            jobGrowthRate: "+13% (2022-2032)",
+            annualOpenings: 25800,
+            workLifeBalance: "7.8/10",
+            avgSatisfaction: "8.3/10",
+            roiTimeframe: "1-3 years",
+            avgSalary: "$70k - $175k"
+          },
+          nextSteps: [
+            "Master JavaScript fundamentals and modern frameworks",
+            "Build 3-5 portfolio projects showcasing full-stack skills",
+            "Join relevant UC Davis clubs like #include or CodeLab",
+            "Apply for internships at local tech companies",
+            "Contribute to open source projects"
+          ],
+          recommendedClubs: []
+        },
+        allMatches: [
+          {
+            career: "Full-Stack Web Development",
+            category: "Engineering",
+            percentage: 85,
+            confidence: "High",
+            avgSalary: "$70k - $175k",
+            growth: "+13% (2022-2032)"
+          },
+          {
+            career: "Data Science",
+            category: "Data",
+            percentage: 72,
+            confidence: "Medium",
+            avgSalary: "$75k - $220k",
+            growth: "+22% (2022-2032)"
+          },
+          {
+            career: "UX/UI Design",
+            category: "Design",
+            percentage: 68,
+            confidence: "Medium",
+            avgSalary: "$65k - $180k",
+            growth: "+13% (2022-2032)"
+          },
+          {
+            career: "Product Management",
+            category: "Product",
+            percentage: 61,
+            confidence: "Medium",
+            avgSalary: "$80k - $280k",
+            growth: "+19% (2022-2032)"
+          }
+        ],
+        skillBreakdown: {
+          technical: 8.5,
+          creative: 7.2,
+          social: 6.8,
+          leadership: 6.1,
+          research: 5.9,
+          pace: 8.1,
+          risk: 6.7,
+          structure: 7.4
+        },
+        quizMetadata: {
+          level: level,
+          completionTime: completionTime,
+          totalQuestions: answers.length,
+          retakeNumber: 1
+        }
+      }
+    };
+
+    // Get some recommended clubs from your existing clubs
+    try {
+      const recommendedClubs = await Club.find({
+        isActive: true,
+        $or: [
+          { tags: { $in: ['webdev', 'software', 'programming'] } },
+          { name: { $regex: /(include|codelab|google)/i } }
+        ]
+      }).limit(3);
+
+      mockResults.results.topMatch.recommendedClubs = recommendedClubs;
+    } catch (clubError) {
+      console.log('Could not fetch recommended clubs:', clubError);
+    }
+
+    console.log(`✅ Quiz results calculated for ${req.session.userEmail}`);
+
+    res.json(mockResults);
+
+  } catch (error) {
+    console.error('💥 Error processing quiz submission:', error);
+    res.status(500).json({ error: 'Failed to process quiz results' });
+  }
+});
+
+// =============================================================================
+// GET USER'S QUIZ HISTORY
+// =============================================================================
+
+app.get('/api/quiz/results/:userId', requireAuth, async (req, res) => {
+  try {
+    const results = await QuizResult.find({ user: req.session.userId })
+      .populate('topMatch.field')
+      .populate('topMatch.recommendedClubs')
+      .sort({ createdAt: -1 })
+      .limit(10);
+
+    res.json({ results });
+  } catch (error) {
+    console.error('Error fetching quiz results:', error);
+    res.status(500).json({ error: 'Failed to fetch quiz results' });
+  }
+});
 // =============================================================================
 // START SERVER
 // =============================================================================
