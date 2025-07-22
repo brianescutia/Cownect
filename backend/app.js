@@ -434,7 +434,7 @@ app.get('/dashboard', requireAuth, (req, res) => {
 app.get('/api/clubs', async (req, res) => {
   try {
     const clubs = await Club.find({ isActive: true })
-      .sort({ createdAt: -1 })
+      .sort({ name: 1 })
       .limit(50);
 
     console.log(`📊 Serving ${clubs.length} clubs from database`);
