@@ -11,15 +11,14 @@
   <link rel="stylesheet" href="../styles/dark.css">
   <script src="../scripts/login.js" defer></script>
   <script src="../scripts/themeToggle.js" defer></script>
-
-
 </head>
 
 <body>
-  <button id="themeToggle" onclick=toggleDarkMode()>Switch Theme</button>
+  <button id="themeToggle" onclick="toggleDarkMode()">Switch Theme</button>
 
   <main role="main" class="background">
-    <section class="login-box">
+    <!-- Regular Login Form -->
+    <section class="login-box" id="loginSection">
       <header>
         <h1>
           <img src="../assets/COW.png" alt="Cownect Logo featuring a cow" class="logo">
@@ -36,20 +35,200 @@
         <button type="submit">Sign In</button>
       </form>
     </section>
+
+    <!-- Email Verification Prompt Section (Hidden by default) -->
+    <section class="login-box" id="verificationSection" style="display: none;">
+      <header>
+        <h1>
+          <img src="../assets/COW.png" alt="Cownect Logo featuring a cow" class="logo">
+          Check Your Email! 📧
+        </h1>
+      </header>
+
+      <div class="verification-content">
+        <div class="email-icon" style="text-align: center; margin-bottom: 20px; font-size: 3em;">
+          📧
+        </div>
+
+        <p style="text-align: center; margin-bottom: 20px; color: var(--text-color, #333);">
+          We've sent a verification link to:
+        </p>
+
+        <p id="userEmail"
+          style="text-align: center; font-weight: bold; margin-bottom: 30px; color: var(--primary-color, #0066cc);">
+          your-email@ucdavis.edu
+        </p>
+
+        <div class="next-steps"
+          style="margin-bottom: 30px; padding: 20px; background: var(--bg-color, #f5f5f5); border-radius: 8px;">
+          <h3 style="margin-top: 0; color: var(--text-color, #333);">Next Steps:</h3>
+          <ol style="color: var(--text-color, #666); line-height: 1.6;">
+            <li>Check your email inbox (and spam folder)</li>
+            <li>Click the "Verify My Email" button in the email</li>
+            <li>You'll be automatically logged in to Cownect</li>
+          </ol>
+        </div>
+
+        <div style="margin-bottom: 20px;">
+          <p style="text-align: center; margin-bottom: 15px; color: var(--text-color, #666);">
+            Didn't receive the email?
+          </p>
+          <button id="resendBtn" type="button"
+            style="width: 100%; padding: 12px; background: var(--primary-color, #0066cc); color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 16px;">
+            📧 Resend Verification Email
+          </button>
+        </div>
+
+        <div style="text-align: center;">
+          <button id="backToLogin" type="button"
+            style="background: none; border: none; color: var(--primary-color, #0066cc); cursor: pointer; text-decoration: underline;">
+            ← Back to Login
+          </button>
+        </div>
+
+        <!-- Status Messages -->
+        <div id="statusMessage" style="display: none; margin-top: 15px; padding: 10px; border-radius: 5px;"></div>
+      </div>
+    </section>
   </main>
+
   <script>
+    // Existing error handling
     const urlParams = new URLSearchParams(window.location.search);
     const showError = urlParams.get('error');
+    const email = urlParams.get('email');
+    const verified = urlParams.get('verified');
 
-    if (showError) {
+    // Show success message if just verified
+    if (verified === 'true') {
+      const form = document.querySelector('form');
+      const successMsg = document.createElement('p');
+      successMsg.textContent = "✅ Email verified successfully! You can now log in.";
+      successMsg.style.color = "green";
+      successMsg.style.position = "relative";
+      successMsg.style.top = "40px";
+      successMsg.style.left = "15px";
+      form.prepend(successMsg);
+    }
+
+    // Show login error
+    if (showError && showError !== 'verification_required') {
       const form = document.querySelector('form');
       const errorMsg = document.createElement('p');
-      errorMsg.textContent = "Incorrect email or password. Please try again.";
+
+      switch (showError) {
+        case 'unverified':
+          errorMsg.textContent = "Please verify your email before logging in.";
+          break;
+        default:
+          errorMsg.textContent = "Incorrect email or password. Please try again.";
+      }
+
       errorMsg.style.color = "red";
       errorMsg.style.position = "relative";
       errorMsg.style.top = "40px";
       errorMsg.style.left = "15px";
+      form.prepend(errorMsg);
+    }
 
+    // Email verification functionality
+    const loginSection = document.getElementById('loginSection');
+    const verificationSection = document.getElementById('verificationSection');
+    const userEmailElement = document.getElementById('userEmail');
+    const resendBtn = document.getElementById('resendBtn');
+    const backToLoginBtn = document.getElementById('backToLogin');
+    const statusMessage = document.getElementById('statusMessage');
+
+    // Check if we need to show verification prompt
+    if (email && showError === 'verification_required') {
+      showVerificationPrompt(email);
+    }
+
+    // Show verification prompt
+    function showVerificationPrompt(emailAddress) {
+      loginSection.style.display = 'none';
+      verificationSection.style.display = 'block';
+      userEmailElement.textContent = emailAddress;
+    }
+
+    // Back to login
+    backToLoginBtn.addEventListener('click', () => {
+      verificationSection.style.display = 'none';
+      loginSection.style.display = 'block';
+      // Clear URL parameters
+      window.history.replaceState({}, document.title, '/login');
+    });
+
+    // Resend verification email
+    resendBtn.addEventListener('click', async () => {
+      const targetEmail = userEmailElement.textContent;
+
+      if (!targetEmail || targetEmail === 'your-email@ucdavis.edu') {
+        showStatus('Please provide your email address.', 'error');
+        return;
+      }
+
+      // Disable button and show loading
+      resendBtn.disabled = true;
+      resendBtn.innerHTML = '⏳ Sending...';
+
+      try {
+        const response = await fetch('/api/resend-verification', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ email: targetEmail }),
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          showStatus('✅ Verification email sent successfully! Check your inbox.', 'success');
+        } else {
+          showStatus(`❌ ${data.error || 'Failed to send email. Please try again.'}`, 'error');
+        }
+
+      } catch (error) {
+        console.error('Resend error:', error);
+        showStatus('❌ Network error. Please check your connection.', 'error');
+      }
+
+      // Re-enable button
+      resendBtn.disabled = false;
+      resendBtn.innerHTML = '📧 Resend Verification Email';
+    });
+
+    // Show status message
+    function showStatus(message, type) {
+      statusMessage.textContent = message;
+      statusMessage.style.display = 'block';
+      statusMessage.style.backgroundColor = type === 'success' ? '#d4edda' : '#f8d7da';
+      statusMessage.style.color = type === 'success' ? '#155724' : '#721c24';
+      statusMessage.style.border = type === 'success' ? '1px solid #c3e6cb' : '1px solid #f5c6cb';
+    }
+
+    // Handle verification errors from URL
+    const verificationError = urlParams.get('verification_error');
+    if (verificationError) {
+      const form = document.querySelector('form');
+      const errorMsg = document.createElement('p');
+
+      switch (verificationError) {
+        case 'missing_token':
+          errorMsg.textContent = "❌ Invalid verification link. Please request a new one.";
+          break;
+        case 'invalid_token':
+          errorMsg.textContent = "❌ Verification link has expired. Please request a new one.";
+          break;
+        default:
+          errorMsg.textContent = "❌ Verification error. Please try again.";
+      }
+
+      errorMsg.style.color = "red";
+      errorMsg.style.position = "relative";
+      errorMsg.style.top = "40px";
+      errorMsg.style.left = "15px";
       form.prepend(errorMsg);
     }
   </script>

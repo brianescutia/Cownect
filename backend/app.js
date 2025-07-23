@@ -1282,6 +1282,143 @@ app.get('/api/quiz/results/:userId', requireAuth, async (req, res) => {
   }
 });
 // =============================================================================
+//Email Verification
+// =============================================================================
+const { sendVerificationEmail, sendPasswordResetEmail } = require('../backend/emailService');
+const { requireAuth: requireAuthentication, requireVerification } = require('../backend/authMiddleware');
+
+// Replace your existing signup route
+app.post('/signup', async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    // Step 1: Check if user already exists
+    const existingUser = await User.findOne({ email: email.toLowerCase() });
+
+    if (existingUser) {
+      return res.redirect('/signup?error=exists');
+    }
+
+    // Step 2: Validate UC Davis email domain
+    if (!email.toLowerCase().endsWith('@ucdavis.edu')) {
+      return res.redirect('/signup?error=email');
+    }
+
+    // Step 3: Create new user (NOT VERIFIED initially)
+    const newUser = new User({
+      email: email.toLowerCase(),
+      password: password,
+      isVerified: false  // ✅ Start unverified
+    });
+
+    // Step 4: Generate verification token
+    const verificationToken = newUser.generateVerificationToken();
+    await newUser.save();
+
+    // Step 5: Send verification email
+    const emailResult = await sendVerificationEmail(newUser.email, verificationToken);
+
+    if (!emailResult.success) {
+      console.error('Failed to send verification email:', emailResult.error);
+      // Continue anyway - user can request resend later
+    }
+
+    // Step 6: DON'T auto-login - redirect to verification prompt
+    console.log('New user created, verification email sent:', newUser.email);
+    res.redirect('/verify-email-prompt?email=' + encodeURIComponent(newUser.email));
+
+  } catch (err) {
+    console.error('Signup error:', err);
+    if (err.code === 11000) {
+      return res.redirect('/signup?error=exists');
+    }
+    res.redirect('/signup?error=server');
+  }
+});
+
+// ✅ EMAIL VERIFICATION ROUTES
+
+// Show verification prompt page
+app.get('/verify-email-prompt', (req, res) => {
+  // Allow both logged-in and non-logged-in users
+  res.sendFile(path.join(__dirname, '../frontend/pages/verify-email-prompt.html'));
+});
+
+// Verify email token
+app.get('/verify-email', async (req, res) => {
+  try {
+    const { token } = req.query;
+
+    if (!token) {
+      return res.redirect('/verify-email-prompt?error=missing_token');
+    }
+
+    // Find user with this verification token
+    const user = await User.findOne({
+      verificationToken: token,
+      verificationTokenExpires: { $gt: Date.now() }
+    });
+
+    if (!user) {
+      return res.redirect('/verify-email-prompt?error=invalid_token');
+    }
+
+    // Mark user as verified
+    user.isVerified = true;
+    user.verificationToken = null;
+    user.verificationTokenExpires = null;
+    await user.save();
+
+    // Auto-login the verified user
+    req.session.userId = user._id;
+    req.session.userEmail = user.email;
+
+    console.log('✅ Email verified and user logged in:', user.email);
+    res.redirect('/?verified=true');
+
+  } catch (error) {
+    console.error('Email verification error:', error);
+    res.redirect('/verify-email-prompt?error=server');
+  }
+});
+
+// Resend verification email
+app.post('/api/resend-verification', async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    if (!email) {
+      return res.status(400).json({ error: 'Email is required' });
+    }
+
+    const user = await User.findOne({
+      email: email.toLowerCase(),
+      isVerified: false
+    });
+
+    if (!user) {
+      return res.status(404).json({ error: 'User not found or already verified' });
+    }
+
+    // Generate new verification token
+    const verificationToken = user.generateVerificationToken();
+    await user.save();
+
+    // Send new verification email
+    const emailResult = await sendVerificationEmail(user.email, verificationToken);
+
+    if (emailResult.success) {
+      res.json({ message: 'Verification email sent successfully' });
+    } else {
+      res.status(500).json({ error: 'Failed to send verification email' });
+    }
+
+  } catch (error) {
+    console.error('Resend verification error:', error);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+// =============================================================================
 // START SERVER
 // =============================================================================
 

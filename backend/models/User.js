@@ -4,6 +4,7 @@
 
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
+const crypto = require('crypto');
 
 const userSchema = new mongoose.Schema({
     // 📧 EMAIL FIELD - User's login identifier
@@ -33,7 +34,29 @@ const userSchema = new mongoose.Schema({
     createdAt: {
         type: Date,
         default: Date.now
-    }
+    },
+
+    //New Email Verification Fields
+    isVerified: {
+        type: Boolean,
+        default: false
+    },
+    verificationToken: {
+        type: String,
+        default: null
+    },
+    verificationTokenExpires: {
+        type: Date,
+        default: null
+    },
+    passwordResetToken: {
+        type: String,
+        default: null
+    },
+    passwordResetExpires: {
+        type: Date,
+        default: null
+    },
 });
 
 // =============================================================================
@@ -119,7 +142,7 @@ module.exports = mongoose.model('User', userSchema);
 // Add bookmark:
 // await user.addBookmark(clubId);
 //
-// Remove bookmark:  
+// Remove bookmark:
 // await user.removeBookmark(clubId);
 //
 // Check if bookmarked:
@@ -129,3 +152,21 @@ module.exports = mongoose.model('User', userSchema);
 // const userWithBookmarks = await User.findWithBookmarks(userId);
 //
 // =============================================================================
+
+// =============================================================================
+//User Email Verification System
+// =============================================================================
+userSchema.methods.generateVerificationToken = function () {
+    const token = crypto.randomBytes(32).toString('hex');
+    this.verificationToken = token;
+    this.verificationTokenExpires = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours
+    return token;
+};
+
+// Generate password reset token
+userSchema.methods.generatePasswordResetToken = function () {
+    const token = crypto.randomBytes(32).toString('hex');
+    this.passwordResetToken = token;
+    this.passwordResetExpires = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
+    return token;
+};
