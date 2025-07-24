@@ -117,19 +117,56 @@ form label {
     top: 2.5rem
 }
 
-#themeToggle {
+.loading-overlay {
+    display: none;
     position: fixed;
-    font-weight: bold;
-    max-width: 5vw;
-    width: 30%;
-    top: 1rem;
-    right: 1rem;
-    background-color: #5b9bd5;
-    border: none;
-    border-radius: 25px;
-    cursor: pointer;
-    color: var(--text-color);
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
 }
+
+.loading-content {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    text-align: center;
+    max-width: 300px;
+}
+
+.loading-spinner {
+    border: 4px solid #f3f4f6;
+    border-top: 4px solid #3b82f6;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 1rem;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.error-message {
+    background: #fee2e2;
+    color: #991b1b;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    border: 1px solid #fecaca;
+}
+
 
 /* Small tablets & phones */
 @media (max-width: 768px) {

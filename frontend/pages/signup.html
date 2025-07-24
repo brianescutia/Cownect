@@ -18,18 +18,89 @@
           Cownect
         </h1>
       </header>
-      <form method="POST" action="/signup">
+      <div id="errorMessage" class="error-message" style="display: none;"></div>
+      <form method="POST" action="/signup" id="signupForm">
         <label for="email">E-mail</label>
         <input type="email" id="email" name="email" required placeholder="user@ucdavis.edu" />
 
         <label for="password">Password</label>
         <input type="password" id="password" name="password" required placeholder="••••••••" />
 
-        <button type="submit">Sign Up</button>
+        <button type="submit" id="signupBtn">Sign Up</button>
       </form>
-      <p>Already have an account? <a href="/login">Log in</a></p>
+      <p>Already have an account? <a href="../pages/login.html">Log in</a></p>
     </section>
   </main>
+
+  <!-- Loading Overlay -->
+  <div id="loadingOverlay" class="loading-overlay">
+    <div class="loading-content">
+      <div class="loading-spinner"></div>
+      <h3>Creating Your Account...</h3>
+      <p>We're setting up your Cownect profile and sending a verification email.</p>
+    </div>
+  </div>
+
+  <script>
+    // Show error messages from URL parameters
+    const urlParams = new URLSearchParams(window.location.search);
+    const error = urlParams.get('error');
+
+    if (error) {
+      const errorDiv = document.getElementById('errorMessage');
+      errorDiv.style.display = 'block';
+      errorDiv.textContent = getErrorMessage(error);
+    }
+
+    // Handle form submission
+    document.getElementById('signupForm').addEventListener('submit', function (e) {
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+
+      // Basic validation
+      if (!email.toLowerCase().endsWith('@ucdavis.edu')) {
+        e.preventDefault();
+        showError('Please use your UC Davis email address (@ucdavis.edu)');
+        return;
+      }
+
+      if (password.length < 6) {
+        e.preventDefault();
+        showError('Password must be at least 6 characters long');
+        return;
+      }
+
+      // Show loading overlay
+      document.getElementById('loadingOverlay').style.display = 'flex';
+      document.getElementById('signupBtn').disabled = true;
+    });
+
+    function getErrorMessage(error) {
+      const messages = {
+        'exists': '❌ An account with this email already exists. Please log in instead.',
+        'email': '❌ Please use your UC Davis email address (@ucdavis.edu).',
+        'server': '❌ Server error occurred. Please try again later.'
+      };
+      return messages[error] || '❌ An unknown error occurred.';
+    }
+
+    function showError(message) {
+      const errorDiv = document.getElementById('errorMessage');
+      errorDiv.style.display = 'block';
+      errorDiv.textContent = message;
+
+      // Scroll to top to show error
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Hide loading overlay if page loads again (in case of error)
+    window.addEventListener('load', function () {
+      setTimeout(() => {
+        document.getElementById('loadingOverlay').style.display = 'none';
+        document.getElementById('signupBtn').disabled = false;
+      }, 500);
+    });
+  </script>
 </body>
 
 </html>

@@ -59,6 +59,21 @@ const userSchema = new mongoose.Schema({
     },
 });
 
+userSchema.methods.generateVerificationToken = function () {
+    const token = crypto.randomBytes(32).toString('hex');
+    this.verificationToken = token;
+    this.verificationTokenExpires = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours
+    return token;
+};
+
+// Generate password reset token
+userSchema.methods.generatePasswordResetToken = function () {
+    const token = crypto.randomBytes(32).toString('hex');
+    this.passwordResetToken = token;
+    this.passwordResetExpires = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
+    return token;
+};
+
 // =============================================================================
 // PASSWORD HASHING MIDDLEWARE - Same as before
 // =============================================================================
@@ -156,17 +171,7 @@ module.exports = mongoose.model('User', userSchema);
 // =============================================================================
 //User Email Verification System
 // =============================================================================
-userSchema.methods.generateVerificationToken = function () {
-    const token = crypto.randomBytes(32).toString('hex');
-    this.verificationToken = token;
-    this.verificationTokenExpires = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours
-    return token;
-};
 
-// Generate password reset token
-userSchema.methods.generatePasswordResetToken = function () {
-    const token = crypto.randomBytes(32).toString('hex');
-    this.passwordResetToken = token;
-    this.passwordResetExpires = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
-    return token;
-};
+
+module.exports = mongoose.model('User', userSchema);
+// =============================================================================
