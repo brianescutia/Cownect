@@ -4,12 +4,13 @@ const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const session = require('express-session');  // For user session management
 const MongoStore = require('connect-mongo');  // Store sessions in MongoDB
-const User = require('./models/User');        // Import our User model
+const User = require('../backend/models/User');        // Import our User model
 const Club = require('./models/Club');
 const { CareerField, QuizQuestion, QuizResult } = require('./models/nicheQuizModels');
 const Event = require('./models/eventModel'); // Import Event model for events API
 // Add this with your other imports (around line 10)
 const { processQuizSubmission } = require('./quiz-scoring');
+const { sendVerificationEmail, sendPasswordResetEmail } = require('./emailService');
 
 dotenv.config();
 
@@ -108,6 +109,12 @@ app.post('/login', async (req, res) => {
       return res.redirect('/login?error=invalid');
     }
 
+    //Check EMAIL Verification
+    if (!user.isVerified) {
+      console.log(`🔍 User ${user.email} is not verified. Redirecting to verification page.`);
+      return res.redirect(`/verify-email-prompt?email=${encodeURIComponent(user.email)}&error=not_verified`);
+    }
+
     // Step 3: 🎟️ ISSUE THE WRISTBAND! Store user info in session
     req.session.userId = user._id;
     req.session.userEmail = user.email;
@@ -122,6 +129,29 @@ app.post('/login', async (req, res) => {
 });
 
 // 📝 SIGNUP ROUTES
+app.use((err, req, res, next) => {
+  console.error('💥 Unhandled error:', err);
+
+  // Check if response was already sent
+  if (res.headersSent) {
+    console.error('⚠️ Headers already sent, cannot send error response');
+    return next(err);
+  }
+
+  // Send error response
+  res.status(500).json({ error: 'Something went wrong!' });
+});
+
+app.use((req, res, next) => {
+  console.log(`🔍 ${req.method} ${req.path} - ${new Date().toISOString()}`);
+
+  // Log when response is finished
+  res.on('finish', () => {
+    console.log(`✅ Response sent: ${res.statusCode} for ${req.method} ${req.path}`);
+  });
+
+  next();
+});
 app.get('/signup', (req, res) => {
   // If user already has a wristband (logged in), send them home
   if (req.session.userId) {
@@ -130,44 +160,125 @@ app.get('/signup', (req, res) => {
   res.sendFile(path.join(__dirname, '../frontend/pages/signup.html'));
 });
 
+app.get('/verify-email-prompt', (req, res) => {
+  console.log('📧 Verify email prompt accessed');
+  res.sendFile(path.join(__dirname, '../frontend/pages/verify-email-prompt.html'));
+});
+
 app.post('/signup', async (req, res) => {
   const { email, password } = req.body;
 
+  console.log('📝 JSON Signup attempt for:', email);
+
   try {
-    // Step 1: Check if user already exists
+    // Step 1: Basic validation
+    if (!email || !password) {
+      return res.status(400).json({
+        success: false,
+        error: 'Email and password are required'
+      });
+    }
+
+    // Step 2: Check if user already exists
     const existingUser = await User.findOne({ email: email.toLowerCase() });
-
     if (existingUser) {
-      return res.redirect('/signup?error=exists');
+      console.log('❌ User already exists:', email);
+      return res.status(409).json({
+        success: false,
+        error: 'An account with this email already exists',
+        redirectTo: '/login'
+      });
     }
 
-    // Step 2: Validate UC Davis email domain (customize for your school!)
+    // Step 3: Validate UC Davis email domain
     if (!email.toLowerCase().endsWith('@ucdavis.edu')) {
-      return res.redirect('/signup?error=email');
+      console.log('❌ Invalid email domain:', email);
+      return res.status(400).json({
+        success: false,
+        error: 'Please use your UC Davis email address (@ucdavis.edu)'
+      });
     }
 
-    // Step 3: Create new user (password gets hashed automatically by our User model!)
+    // Step 4: Validate password
+    if (password.length < 6) {
+      return res.status(400).json({
+        success: false,
+        error: 'Password must be at least 6 characters long'
+      });
+    }
+
+    // Step 5: Create new user
+    console.log('🔨 Creating new user...');
     const newUser = new User({
       email: email.toLowerCase(),
-      password: password  // This gets transformed into a hash by bcrypt
+      password: password,
+      isVerified: false
     });
 
+    // Step 6: Generate verification token
+    console.log('🎟️ Generating verification token...');
+    const verificationToken = newUser.generateVerificationToken();
+
+    // Step 7: Save user to database  
     await newUser.save();
+    console.log('✅ User saved to database');
 
-    // Step 4: 🎟️ AUTO-LOGIN: Give them a wristband immediately after signup
-    req.session.userId = newUser._id;
-    req.session.userEmail = newUser.email;
+    // Step 8: Send verification email
+    console.log('📧 Attempting to send verification email...');
+    let emailSent = false;
 
-    console.log('New user created and logged in:', newUser.email);
-    res.redirect('/');
+    try {
+      const { sendVerificationEmail } = require('./emailService');
+      const emailResult = await sendVerificationEmail(newUser.email, verificationToken);
+      emailSent = emailResult.success;
+
+      if (emailSent) {
+        console.log('✅ Verification email sent successfully');
+      } else {
+        console.error('⚠️ Failed to send verification email:', emailResult.error);
+      }
+    } catch (emailError) {
+      console.error('💥 Email service error:', emailError);
+    }
+
+    // Step 9: Return success response with redirect info
+    console.log('✅ Signup successful, sending JSON response');
+    return res.status(201).json({
+      success: true,
+      message: 'Account created successfully! Please check your email.',
+      user: {
+        email: newUser.email,
+        isVerified: newUser.isVerified
+      },
+      emailSent: emailSent,
+      redirectTo: `/verify-email-prompt?email=${encodeURIComponent(newUser.email)}`
+    });
 
   } catch (err) {
-    console.error('Signup error:', err);
+    console.error('💥 Signup error:', err);
+
+    // Handle MongoDB duplicate key error
     if (err.code === 11000) {
-      // MongoDB duplicate key error (shouldn't happen due to our check above)
-      return res.redirect('/signup?error=exists');
+      return res.status(409).json({
+        success: false,
+        error: 'An account with this email already exists',
+        redirectTo: '/login'
+      });
     }
-    res.redirect('/signup?error=server');
+
+    // Handle validation errors
+    if (err.name === 'ValidationError') {
+      return res.status(400).json({
+        success: false,
+        error: 'Invalid user data: ' + err.message
+      });
+    }
+
+    // Handle other errors
+    return res.status(500).json({
+      success: false,
+      error: 'Server error occurred. Please try again later.'
+    });
   }
 });
 
@@ -1463,6 +1574,142 @@ app.get('/api/quiz/results/:userId', requireAuth, async (req, res) => {
   } catch (error) {
     console.error('Error fetching quiz results:', error);
     res.status(500).json({ error: 'Failed to fetch quiz results' });
+  }
+});
+// =============================================================================
+//Email Verification
+// =============================================================================
+const { requireAuth: requireAuthentication, requireVerification } = require('../backend/authMiddleware');
+
+// Replace your existing signup route
+app.post('/signup', async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    // Step 1: Check if user already exists
+    const existingUser = await User.findOne({ email: email.toLowerCase() });
+
+    if (existingUser) {
+      return res.redirect('/signup?error=exists');
+    }
+
+    // Step 2: Validate UC Davis email domain
+    if (!email.toLowerCase().endsWith('@ucdavis.edu')) {
+      return res.redirect('/signup?error=email');
+    }
+
+    // Step 3: Create new user (NOT VERIFIED initially)
+    const newUser = new User({
+      email: email.toLowerCase(),
+      password: password,
+      isVerified: false  // ✅ Start unverified
+    });
+
+    // Step 4: Generate verification token
+    const verificationToken = newUser.generateVerificationToken();
+    await newUser.save();
+
+    // Step 5: Send verification email
+    const emailResult = await sendVerificationEmail(newUser.email, verificationToken);
+
+    if (!emailResult.success) {
+      console.error('Failed to send verification email:', emailResult.error);
+      // Continue anyway - user can request resend later
+    }
+
+    // Step 6: DON'T auto-login - redirect to verification prompt
+    console.log('New user created, verification email sent:', newUser.email);
+    res.redirect('/verify-email-prompt?email=' + encodeURIComponent(newUser.email));
+
+  } catch (err) {
+    console.error('Signup error:', err);
+    if (err.code === 11000) {
+      return res.redirect('/signup?error=exists');
+    }
+    res.redirect('/signup?error=server');
+  }
+});
+
+// ✅ EMAIL VERIFICATION ROUTES
+
+// Show verification prompt page
+app.get('/verify-email-prompt', (req, res) => {
+  // Allow both logged-in and non-logged-in users
+  res.sendFile(path.join(__dirname, '../frontend/pages/verify-email-prompt.html'));
+});
+
+// Verify email token
+app.get('/verify-email', async (req, res) => {
+  try {
+    const { token } = req.query;
+
+    if (!token) {
+      return res.redirect('/verify-email-prompt?error=missing_token');
+    }
+
+    // Find user with this verification token
+    const user = await User.findOne({
+      verificationToken: token,
+      verificationTokenExpires: { $gt: Date.now() }
+    });
+
+    if (!user) {
+      return res.redirect('/verify-email-prompt?error=invalid_token');
+    }
+
+    // Mark user as verified
+    user.isVerified = true;
+    user.verificationToken = null;
+    user.verificationTokenExpires = null;
+    await user.save();
+
+    // Auto-login the verified user
+    req.session.userId = user._id;
+    req.session.userEmail = user.email;
+
+    console.log('✅ Email verified and user logged in:', user.email);
+    res.redirect('/?verified=true');
+
+  } catch (error) {
+    console.error('Email verification error:', error);
+    res.redirect('/verify-email-prompt?error=server');
+  }
+});
+
+// Resend verification email
+app.post('/api/resend-verification', async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    if (!email) {
+      return res.status(400).json({ error: 'Email is required' });
+    }
+
+    const user = await User.findOne({
+      email: email.toLowerCase(),
+      isVerified: false
+    });
+
+    if (!user) {
+      return res.status(404).json({ error: 'User not found or already verified' });
+    }
+
+    // Generate new verification token
+    const verificationToken = user.generateVerificationToken();
+    await user.save();
+
+    // Send new verification email
+    const emailResult = await sendVerificationEmail(user.email, verificationToken);
+
+    if (emailResult.success) {
+      res.json({ message: 'Verification email sent successfully' });
+    } else {
+      res.status(500).json({ error: 'Failed to send verification email' });
+    }
+
+  } catch (error) {
+    console.error('Resend verification error:', error);
+    res.status(500).json({ error: 'Server error' });
   }
 });
 // =============================================================================
