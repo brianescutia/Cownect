@@ -218,103 +218,287 @@ app.get('/api/bookmarks', requireAuth, async (req, res) => {
   }
 });
 
-//Events Page Route
-// const eventRoutes = require('/events'); // adjust if your folder name is different
-// app.use('/api/events', eventRoutes); // powers the fetch('/api/events') in your frontend
+// =============================================================================
+// EVENTS PAGE ROUTES - Add these to your backend/app.js
+// Replace the commented out event routes with these enhanced versions
+// =============================================================================
 
+// 📅 EVENTS PAGE ROUTE - Serve the events HTML page
+app.get('/events', requireAuth, (req, res) => {
+  console.log('Events page accessed by:', req.session.userEmail);
+  res.sendFile(path.join(__dirname, '../frontend/pages/events.html'));
+});
 
-// app.get('/events', requireAuth, (req, res) => {
-//   console.log('Events page accessed by:', req.session.userEmail);
-//   res.sendFile(path.join(__dirname, '../frontend/pages/events.html'));
-// });
+// 🔍 GET ALL EVENTS - Enhanced version with filtering
+app.get('/api/events', requireAuth, async (req, res) => {
+  try {
+    console.log('📅 Fetching events...');
 
-// app.get('/api/events', async (req, res) => {
-//   try {
-//     console.log('📅 Fetching all events...');
+    const {
+      limit = 50,
+      featured = false,
+      upcoming = true,
+      month,
+      year
+    } = req.query;
 
-//     // Import your Event model at the top of app.js
-//     const Event = require('./models/eventModel');
+    let query = { isActive: true };
 
-//     // Get all active events, sorted by date
-//     const events = await Event.find({ isActive: true })
-//       .populate('createdBy', 'email')
-//       .sort({ date: 1 })
-//       .lean();
+    // Filter for upcoming events only
+    if (upcoming === 'true') {
+      query.date = { $gte: new Date() };
+    }
 
-//     console.log(`✅ Found ${events.length} events`);
+    // Filter by specific month/year for calendar
+    if (month && year) {
+      const startDate = new Date(year, month - 1, 1);
+      const endDate = new Date(year, month, 0, 23, 59, 59);
+      query.date = { $gte: startDate, $lte: endDate };
+    }
 
-//     res.json(events);
+    let eventsQuery = Event.find(query)
+      .populate('createdBy', 'email')
+      .sort({ date: 1 });
 
-//   } catch (error) {
-//     console.error('💥 Error fetching events:', error);
-//     res.status(500).json({ error: 'Failed to fetch events' });
-//   }
-// });
+    // Limit results if specified
+    if (limit) {
+      eventsQuery = eventsQuery.limit(parseInt(limit));
+    }
 
-// // 📅 CREATE NEW EVENT - For adding events
-// app.post('/api/events', requireAuth, async (req, res) => {
-//   try {
-//     const { title, date, time, location, description } = req.body;
+    const events = await eventsQuery.lean();
 
-//     // Validate required fields
-//     if (!title || !date || !time || !location || !description) {
-//       return res.status(400).json({ error: 'All fields are required' });
-//     }
+    console.log(`✅ Found ${events.length} events`);
 
-//     const Event = require('./models/eventModel');
+    // Add additional computed fields
+    const enhancedEvents = events.map(event => ({
+      ...event,
+      isPast: new Date(event.date) < new Date(),
+      isToday: new Date(event.date).toDateString() === new Date().toDateString(),
+      formattedDate: new Date(event.date).toLocaleDateString('en-US', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      }),
+      formattedTime: event.time || 'Time TBD'
+    }));
 
-//     const newEvent = new Event({
-//       title,
-//       date: new Date(date),
-//       time,
-//       location,
-//       description,
-//       createdBy: req.session.userId
-//     });
+    res.json(enhancedEvents);
 
-//     await newEvent.save();
+  } catch (error) {
+    console.error('💥 Error fetching events:', error);
+    res.status(500).json({ error: 'Failed to fetch events' });
+  }
+});
 
-//     console.log('📅 New event created:', newEvent.title);
-//     res.status(201).json(newEvent);
+// 🌟 GET FEATURED EVENTS - Top 3 events for the main display
+app.get('/api/events/featured', requireAuth, async (req, res) => {
+  try {
+    console.log('🌟 Fetching featured events...');
 
-//   } catch (error) {
-//     console.error('💥 Error creating event:', error);
-//     res.status(500).json({ error: 'Failed to create event' });
-//   }
-// });
+    const featuredEvents = await Event.find({
+      isActive: true,
+      date: { $gte: new Date() } // Only upcoming events
+    })
+      .populate('createdBy', 'email')
+      .sort({
+        date: 1,           // Soonest first
+        createdAt: -1      // Then newest first
+      })
+      .limit(3)
+      .lean();
 
-// 📅 JOIN EVENT - User can join an event
-// app.post('/api/events/:id/join', requireAuth, async (req, res) => {
-//   try {
-//     const eventId = req.params.id;
-//     const userId = req.session.userId;
+    // Add enhanced data for featured events
+    const enhancedFeaturedEvents = featuredEvents.map(event => ({
+      ...event,
+      formattedDate: new Date(event.date).toLocaleDateString('en-US', {
+        weekday: 'short',
+        month: 'short',
+        day: 'numeric'
+      }),
+      formattedTime: event.time || 'Time TBD',
+      daysUntil: Math.ceil((new Date(event.date) - new Date()) / (1000 * 60 * 60 * 24)),
+      imageUrl: event.imageUrl || '/assets/default-event-image.jpg'
+    }));
 
-//     const Event = require('./models/eventModel');
+    console.log(`✅ Found ${enhancedFeaturedEvents.length} featured events`);
+    res.json(enhancedFeaturedEvents);
 
-//     const event = await Event.findById(eventId);
-//     if (!event) {
-//       return res.status(404).json({ error: 'Event not found' });
-//     }
+  } catch (error) {
+    console.error('💥 Error fetching featured events:', error);
+    res.status(500).json({ error: 'Failed to fetch featured events' });
+  }
+});
 
-//     // Check if user already joined
-//     if (event.attendees.includes(userId)) {
-//       return res.status(409).json({ error: 'Already joined this event' });
-//     }
+// 📅 GET EVENTS BY DATE - For calendar functionality
+app.get('/api/events/date/:date', requireAuth, async (req, res) => {
+  try {
+    const { date } = req.params;
+    console.log(`📅 Fetching events for date: ${date}`);
 
-//     // Add user to attendees
-//     event.attendees.push(userId);
-//     await event.save();
+    // Parse the date and get events for that day
+    const targetDate = new Date(date);
+    const startOfDay = new Date(targetDate.setHours(0, 0, 0, 0));
+    const endOfDay = new Date(targetDate.setHours(23, 59, 59, 999));
 
-//     res.json({
-//       message: 'Successfully joined event',
-//       attendeeCount: event.attendees.length
-//     });
+    const events = await Event.find({
+      isActive: true,
+      date: {
+        $gte: startOfDay,
+        $lte: endOfDay
+      }
+    })
+      .populate('createdBy', 'email')
+      .sort({ time: 1 })
+      .lean();
 
-//   } catch (error) {
-//     console.error('💥 Error joining event:', error);
-//     res.status(500).json({ error: 'Failed to join event' });
-//   }
-// });
+    const enhancedEvents = events.map(event => ({
+      ...event,
+      formattedDate: new Date(event.date).toLocaleDateString(),
+      formattedTime: event.time || 'Time TBD'
+    }));
+
+    console.log(`✅ Found ${events.length} events for ${date}`);
+    res.json(enhancedEvents);
+
+  } catch (error) {
+    console.error('💥 Error fetching events by date:', error);
+    res.status(500).json({ error: 'Failed to fetch events for date' });
+  }
+});
+
+// 📊 GET CALENDAR DATA - Event counts by date for calendar visualization
+app.get('/api/events/calendar/:year/:month', requireAuth, async (req, res) => {
+  try {
+    const { year, month } = req.params;
+    console.log(`📊 Fetching calendar data for ${year}-${month}`);
+
+    const startDate = new Date(year, month - 1, 1);
+    const endDate = new Date(year, month, 0, 23, 59, 59);
+
+    const events = await Event.aggregate([
+      {
+        $match: {
+          isActive: true,
+          date: { $gte: startDate, $lte: endDate }
+        }
+      },
+      {
+        $group: {
+          _id: { $dateToString: { format: "%Y-%m-%d", date: "$date" } },
+          count: { $sum: 1 },
+          events: { $push: "$$ROOT" }
+        }
+      },
+      {
+        $sort: { "_id": 1 }
+      }
+    ]);
+
+    console.log(`✅ Found events for ${events.length} days in ${year}-${month}`);
+    res.json(events);
+
+  } catch (error) {
+    console.error('💥 Error fetching calendar data:', error);
+    res.status(500).json({ error: 'Failed to fetch calendar data' });
+  }
+});
+
+// 📝 CREATE NEW EVENT - Enhanced version
+app.post('/api/events', requireAuth, async (req, res) => {
+  try {
+    const { title, date, time, location, description, imageUrl } = req.body;
+
+    // Validate required fields
+    if (!title || !date || !location || !description) {
+      return res.status(400).json({
+        error: 'Title, date, location, and description are required'
+      });
+    }
+
+    const newEvent = new Event({
+      title,
+      date: new Date(date),
+      time: time || 'Time TBD',
+      location,
+      description,
+      imageUrl: imageUrl || '/assets/default-event-image.jpg',
+      createdBy: req.session.userId
+    });
+
+    await newEvent.save();
+
+    console.log('📅 New event created:', newEvent.title);
+    res.status(201).json(newEvent);
+
+  } catch (error) {
+    console.error('💥 Error creating event:', error);
+    res.status(500).json({ error: 'Failed to create event' });
+  }
+});
+
+// 🎟️ JOIN EVENT - Enhanced version
+app.post('/api/events/:id/join', requireAuth, async (req, res) => {
+  try {
+    const eventId = req.params.id;
+    const userId = req.session.userId;
+
+    const event = await Event.findById(eventId);
+    if (!event) {
+      return res.status(404).json({ error: 'Event not found' });
+    }
+
+    // Check if user already joined
+    if (event.attendees.includes(userId)) {
+      return res.status(409).json({ error: 'Already joined this event' });
+    }
+
+    // Add user to attendees
+    event.attendees.push(userId);
+    await event.save();
+
+    console.log(`🎟️ User ${req.session.userEmail} joined event: ${event.title}`);
+
+    res.json({
+      message: 'Successfully joined event',
+      attendeeCount: event.attendees.length,
+      eventId: eventId
+    });
+
+  } catch (error) {
+    console.error('💥 Error joining event:', error);
+    res.status(500).json({ error: 'Failed to join event' });
+  }
+});
+
+// 🗑️ LEAVE EVENT
+app.delete('/api/events/:id/join', requireAuth, async (req, res) => {
+  try {
+    const eventId = req.params.id;
+    const userId = req.session.userId;
+
+    const event = await Event.findById(eventId);
+    if (!event) {
+      return res.status(404).json({ error: 'Event not found' });
+    }
+
+    // Remove user from attendees
+    event.attendees = event.attendees.filter(id => !id.equals(userId));
+    await event.save();
+
+    console.log(`🚪 User ${req.session.userEmail} left event: ${event.title}`);
+
+    res.json({
+      message: 'Successfully left event',
+      attendeeCount: event.attendees.length,
+      eventId: eventId
+    });
+
+  } catch (error) {
+    console.error('💥 Error leaving event:', error);
+    res.status(500).json({ error: 'Failed to leave event' });
+  }
+});
 
 
 // 🔖 ADD BOOKMARK - Save a club to user's bookmarks
