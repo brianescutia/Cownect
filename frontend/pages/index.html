@@ -7,6 +7,7 @@
   <title>Cownect</title>
   <link rel="stylesheet" href="../styles/styles.css" />
   <link href="https://fonts.googleapis.com/css2?family=Rethink+Sans:wght@800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Playfair+Display:ital@1&display=swap" rel="stylesheet">
   <script src="scripts/search.js" defer></script>
   <script src="scripts/filterToggle.js" defer></script>
   <link rel="stylesheet" href="../styles/dark.css">
@@ -14,39 +15,34 @@
 </head>
 
 <body>
-
-  <nav class="navbar">
-    <div class="navbar-container">
-      <div class="logo-title">
-        <img src="../assets/cowLogo.png" alt="Cownect Logo" class="logo" />
-        <span class="logo-text">Cownect</span>
-      </div>
-      <ul class="nav-links">
-        <li><a href="/tech-clubs">Tech Clubs</a></li>
-        <li><a href="/events" class="nav-link">Events</a> <!-- Coming soon -->
-        <li><a href="/niche-quiz">Niche Test</a></li> <!-- Coming soon -->
-        <li><a href="#">Mentor Matching</a></li> <!-- Coming soon -->
-        <li><a class="account-btn" href="/login">Account</a></li>
-        <li> <button id="themeToggle" onclick=toggleDarkMode()>Switch Theme</button>
-        </li>
-      </ul>
+  <!-- Logo in top left -->
+  <div class="top-logo">
+    <div class="logo-title">
+      <img src="../assets/cowLogo.png" alt="Cownect Logo" class="logo" />
+      <span class="logo-text">Cownect</span>
     </div>
-  </nav>
+  </div>
+
+  <!-- Separator line -->
+  <div class="separator-line"></div>
 
   <section class="hero">
-    <div class="wave-backgrounds">
-      <img src="../assets/homeWave.png" alt="Cool blue wave" class="wave1" />
-      <img src="../assets/homeWaveUpward.png" alt="Cool blue wave upside down " class="wave2" />
-    </div>
+    <div class="hero-container">
+      <!-- Left side image -->
+      <div class="hero-image">
+        <img src="../assets/homepage.png" alt="Tech Community" class="main-image" />
+      </div>
 
-    <div class="hero-text">
-      <h1>Find your tech community.<br>Build your skills.<br>Thrive at UC Davis.</h1>
+      <!-- Right side content -->
+      <div class="hero-content">
+        <h1><span class="gradient-text">Find</span> <span class = "solid-text">your tech community.</span><br>
+          <span class="gradient-text">Build</span> your skills.<br>
+          <span class="gradient-text">Thrive</span> at UC Davis.</h1>
 
-      <p>Cownect helps UC Davis students find the
-        <br> right clubs, mentors, and events—so you
-        <br>can spend less time hunting and more time
-        <br>building your place in tech.
-      </p>
+        <p>Cownect helps UC Davis students find the right clubs, mentors, and events—so you can spend less time hunting and more time building your place in tech.</p>
+
+        <button class="join-btn">Join Now</button>
+      </div>
     </div>
   </section>
 

@@ -205,16 +205,16 @@ const quizResultSchema = new mongoose.Schema({
 
     // Top recommendation
     topMatch: {
-        field: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'CareerField'
+        careerName: {
+            type: String,
+            required: true
         },
-        percentage: Number,
+        percentage: {
+            type: Number,
+            required: true
+        },
         nextSteps: [String], // Personalized action items
-        recommendedClubs: [{
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'Club'
-        }]
+        // Remove complex references for now to avoid ObjectId issues
     },
 
     // Quiz metadata

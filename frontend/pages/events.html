@@ -5,288 +5,104 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Tech Events | Cownect</title>
-    <link rel="stylesheet" href="../styles/events.css" />
-<<<<<<< Updated upstream
+    <link rel="stylesheet" href="../styles/events-redesigned.css" />
     <link rel="stylesheet" href="../styles/events-calendar.css" />
+    <script src="/scripts/calendar-utils.js" defer></script>
     <link href="https://fonts.googleapis.com/css2?family=Rethink+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-=======
-    <link href="https://fonts.googleapis.com/css2?family=Rethink+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        /* Basic page styling */
-        body {
-            font-family: 'Rethink Sans', sans-serif;
-            margin: 0;
-            padding: 0;
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            min-height: 100vh;
-        }
-
-        .background {
-            position: relative;
-            min-height: 100vh;
-        }
-
-        .backdrop {
-            position: relative;
-            margin-bottom: 2rem;
-        }
-
-        .backdrop-image {
-            width: 100%;
-            height: 300px;
-            object-fit: cover;
-            border-radius: 0 0 20px 20px;
-        }
-
-        /* Events Section */
-        .events {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 2rem;
-        }
-
-        .events h2 {
-            text-align: center;
-            font-size: 2.5rem;
-            color: #2c3e50;
-            margin-bottom: 2rem;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
-        }
-
-        .event-row {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 2rem;
-            margin-bottom: 3rem;
-        }
-
-        .event-card {
-            background: white;
-            border-radius: 15px;
-            padding: 1.5rem;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .event-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 4px;
-            background: linear-gradient(135deg, #5F96C5, #4a8bc2);
-        }
-
-        .event-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
-        }
-
-        .event-date {
-            display: inline-block;
-            background: linear-gradient(135deg, #5F96C5, #4a8bc2);
-            color: white;
-            padding: 0.5rem 1rem;
-            border-radius: 20px;
-            font-weight: 600;
-            font-size: 0.9rem;
-            margin-bottom: 1rem;
-        }
-
-        .event-card h3 {
-            color: #2c3e50;
-            font-size: 1.4rem;
-            margin-bottom: 1rem;
-            font-weight: 600;
-        }
-
-        .event-card p {
-            color: #666;
-            line-height: 1.6;
-            margin-bottom: 0.75rem;
-        }
-
-        .event-card p strong {
-            color: #5F96C5;
-        }
-
-        .join-event-btn {
-            background: linear-gradient(135deg, #5F96C5, #4a8bc2);
-            color: white;
-            border: none;
-            padding: 0.75rem 1.5rem;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            width: 100%;
-            margin-top: 1rem;
-        }
-
-        .join-event-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(95, 150, 197, 0.4);
-        }
-
-        /* Calendar Section */
-        .calendar {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 2rem;
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-        }
-
-        .calendar h2 {
-            text-align: center;
-            color: #2c3e50;
-            font-size: 2rem;
-            margin-bottom: 2rem;
-        }
-
-        #calendar {
-            min-height: 400px;
-        }
-
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .events {
-                padding: 1rem;
-            }
-
-            .events h2 {
-                font-size: 2rem;
-            }
-
-            .event-row {
-                grid-template-columns: 1fr;
-            }
-
-            .calendar {
-                margin: 1rem;
-                padding: 1rem;
-            }
-        }
-    </style>
->>>>>>> Stashed changes
 </head>
 
 <body>
-    <main class="background">
-        <!-- Background Image -->
-        <div class="backdrop">
-            <img src="../assets/Eventsbackdrop.jpg" alt="Events backdrop" class="backdrop-image" />
-
-            <!-- Fixed Navbar -->
-            <nav class="navbar">
-                <div class="navbar-container">
-                    <div class="logo-title">
-                        <img src="../assets/cowLogo.png" alt="Cownect Logo" class="logo" />
-                        <span class="logo-text">Cownect</span>
-                    </div>
-                    <ul class="nav-links">
-                        <li><a href="/tech-clubs">Tech Clubs</a></li>
-                        <li><a href="/events" class="active">Events</a></li>
-                        <li><a href="/niche-quiz">Niche Test</a></li>
-                        <li><a href="#" onclick="alert('Coming soon!')">Mentor Matching</a></li>
-                        <li><a class="account-btn" href="/dashboard" id="accountBtn">Account</a></li>
-                    </ul>
-                </div>
-            </nav>
-        </div>
-
-        <!-- Events Section -->
-        <section class="events">
-            <h2>Tech Events You Can't Miss:</h2>
-
-            <div class="event-row" id="events-container">
-                <!-- Event Card 1 -->
-                <div class="event-card">
-                    <span class="event-date">Sep 10</span>
-                    <h3>HackDavis Hackathon</h3>
-                    <p>Join UC Davis's premier hackathon focused on social good! Build innovative projects, collaborate with peers, and have fun learning.</p>
-                    <p><strong>Time:</strong> 12:00pm – 3:00pm</p>
-                    <p><strong>Location:</strong> TLC 3203</p>
-                    <button class="join-event-btn" data-event-id="hackdavis2025">Join Event</button>
-                </div>
-
-                <!-- Event Card 2 -->
-                <div class="event-card">
-                    <span class="event-date">Oct 22</span>
-                    <h3>Tech Career Fair</h3>
-                    <p>Explore internships and job opportunities at UC Davis's Tech Career Fair. Network with employers, attend workshops, and learn about various tech industry roles.</p>
-                    <p><strong>Time:</strong> 10:00am – 1:00pm</p>
-                    <p><strong>Location:</strong> UC Center</p>
-                    <button class="join-event-btn" data-event-id="techcareerfair">Join Event</button>
-                </div>
-
-                <!-- Event Card 3 -->
-                <div class="event-card">
-                    <span class="event-date">Dec 7</span>
-                    <h3>UC Davis Research Expo</h3>
-                    <p>Showcasing insight and resources to help researchers succeed, this expo highlights student research, faculty innovations, and industry partnerships.</p>
-                    <p><strong>Time:</strong> 10:00am – 3:00pm</p>
-                    <p><strong>Location:</strong> UC Center</p>
-                    <button class="join-event-btn" data-event-id="researchexpo">Join Event</button>
-                </div>
+    <!-- Fixed Navbar (no backdrop image) -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <div class="logo-title">
+                <img src="../assets/cowLogo.png" alt="Cownect Logo" class="logo" />
+                <span class="logo-text">Cownect</span>
             </div>
-        </section>
+            <ul class="nav-links">
+                <li><a href="/tech-clubs">Tech Clubs</a></li>
+                <li><a href="/events" class="active">Events</a></li>
+                <li><a href="/niche-quiz">Niche Test</a></li>
+                <li><a href="#" onclick="alert('Coming soon!')">Mentor Matching</a></li>
+                <li><a class="account-btn" href="/dashboard" id="accountBtn">Account</a></li>
+            </ul>
+        </div>
+    </nav>
 
-<<<<<<< Updated upstream
-        <!-- Interactive Calendar Section -->
-        <section class="calendar-section">
-            <div class="calendar-container">
-                <!-- Calendar Header -->
-                <div class="calendar-header">
-                    <div class="calendar-title">
-                        <h2>📅 Events Calendar</h2>
-                        <p>Click on any date to see events for that day</p>
-                    </div>
-                    
-                    <!-- View Toggle -->
-                    <div class="view-toggle">
-                        <button class="view-btn active" id="monthViewBtn">Month</button>
-                        <button class="view-btn" id="weekViewBtn">Week</button>
+    <main class="events-main">
+        <!-- Events Container -->
+        <div id="eventsContainer" class="events-container">
+            
+            <!-- Page Header -->
+            <div class="events-header">
+                <h1>🎉 UC Davis Tech Events</h1>
+                <p>Discover amazing tech events, workshops, and networking opportunities</p>
+            </div>
+
+            <!-- Featured Events Section - Upper Half -->
+            <section class="featured-events-section">
+                <h2>Featured Events</h2>
+                <div class="featured-events-grid" id="featuredEventsGrid">
+                    <!-- Loading state with 3 cards -->
+                    <div class="loading-cards">
+                        <div class="loading-card">Loading featured events...</div>
+                        <div class="loading-card">Loading featured events...</div>
+                        <div class="loading-card">Loading featured events...</div>
                     </div>
                 </div>
+            </section>
 
-                <!-- Calendar Navigation -->
-                <div class="calendar-nav">
-                    <button class="nav-btn" id="prevPeriod">‹</button>
-                    <h3 id="currentPeriod">January 2025</h3>
-                    <button class="nav-btn" id="nextPeriod">›</button>
-                </div>
-
-                <!-- Calendar Content -->
-                <div class="calendar-content">
-                    <!-- Calendar Grid -->
-                    <div class="calendar-main">
-                        <div class="calendar-grid" id="calendarGrid">
-                            <!-- Calendar will be generated here -->
-                        </div>
-                    </div>
-
-                    <!-- Event Details Sidebar -->
-                    <div class="event-sidebar" id="eventSidebar">
-                        <div class="sidebar-header">
-                            <h3 id="selectedDateTitle">Select a date</h3>
-                            <button class="close-sidebar" id="closeSidebar">×</button>
+            <!-- Calendar Section - Lower Half -->
+            <section class="calendar-section">
+                <div class="calendar-container">
+                    <!-- Calendar Header -->
+                    <div class="calendar-header">
+                        <div class="calendar-title">
+                            <h2>📅 Events Calendar</h2>
+                            <p>Click on any date to see events for that day</p>
                         </div>
                         
-                        <div class="sidebar-content" id="sidebarContent">
-                            <div class="no-date-selected">
-                                <div class="calendar-icon">📅</div>
-                                <p>Click on a calendar date to view events for that day</p>
+                        <!-- View Toggle -->
+                        <div class="view-toggle">
+                            <button class="view-btn active" id="monthViewBtn">Month</button>
+                            <button class="view-btn" id="weekViewBtn">Week</button>
+                        </div>
+                    </div>
+
+                    <!-- Calendar Navigation -->
+                    <div class="calendar-nav">
+                        <button class="nav-btn" id="prevPeriod">‹</button>
+                        <h3 id="currentPeriod">January 2025</h3>
+                        <button class="nav-btn" id="nextPeriod">›</button>
+                    </div>
+
+                    <!-- Calendar Content -->
+                    <div class="calendar-content">
+                        <!-- Calendar Grid -->
+                        <div class="calendar-main">
+                            <div class="calendar-grid" id="calendarGrid">
+                                <!-- Calendar will be generated here -->
+                            </div>
+                        </div>
+
+                        <!-- Event Details Sidebar -->
+                        <div class="event-sidebar" id="eventSidebar">
+                            <div class="sidebar-header">
+                                <h3 id="selectedDateTitle">Select a date</h3>
+                                <button class="close-sidebar" id="closeSidebar">×</button>
+                            </div>
+                            
+                            <div class="sidebar-content" id="sidebarContent">
+                                <div class="no-date-selected">
+                                    <div class="calendar-icon">📅</div>
+                                    <p>Click on a calendar date to view events for that day</p>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </section>
+            </section>
+        </div>
 
         <!-- Loading Overlay -->
         <div class="loading-overlay" id="loadingOverlay" style="display: none;">
@@ -297,65 +113,93 @@
         <!-- Error Container -->
         <div class="error-container" id="errorContainer" style="display: none;">
             <div class="error-content">
-                <h3>⚠️ Unable to Load Calendar</h3>
-                <p id="errorMessage">There was an error loading the events calendar.</p>
+                <h3>⚠️ Unable to Load Events</h3>
+                <p id="errorMessage">There was an error loading the events.</p>
                 <button onclick="location.reload()" class="retry-btn">Try Again</button>
             </div>
         </div>
+
+        <!-- Event Card Template -->
+        <template id="eventCardTemplate">
+            <div class="event-card">
+                <!-- Date Badge - Top Left -->
+                <div class="event-date-badge">
+                    <span class="date-day">15</span>
+                    <span class="date-month">JAN</span>
+                </div>
+                
+                <!-- Bookmark Button - Top Right -->
+                <button class="event-bookmark">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/>
+                    </svg>
+                </button>
+
+                <!-- Event Image - Upper Half -->
+                <div class="event-image-container">
+                    <img class="event-image" src="" alt="Event Image" />
+                </div>
+
+                <!-- Event Content - Lower Half -->
+                <div class="event-content">
+                    <h3 class="event-title">Event Title</h3>
+                    <p class="event-description">Short event description goes here...</p>
+                    
+                    <div class="event-details">
+                        <div class="event-location">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                                <circle cx="12" cy="10" r="3"/>
+                            </svg>
+                            <span class="location-text">Location</span>
+                        </div>
+                        <div class="event-time">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"/>
+                                <polyline points="12,6 12,12 16,14"/>
+                            </svg>
+                            <span class="time-text">6:00 PM</span>
+                        </div>
+                    </div>
+
+                    <div class="event-actions">
+                        <button class="join-event-btn">Join Event</button>
+                        <button class="add-calendar-btn" title="Add to Calendar">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                                <line x1="16" y1="2" x2="16" y2="6"/>
+                                <line x1="8" y1="2" x2="8" y2="6"/>
+                                <line x1="3" y1="10" x2="21" y2="10"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </template>
+
+        <!-- Carousel Event Template -->
+        <template id="carouselEventTemplate">
+            <div class="carousel-event-card">
+                <div class="carousel-event-header">
+                    <h4 class="carousel-event-title">Event Title</h4>
+                    <span class="carousel-event-time">6:00 PM</span>
+                </div>
+                <p class="carousel-event-description">Event description...</p>
+                <div class="carousel-event-location">
+                    <span class="location-text">Location</span>
+                </div>
+                <div class="carousel-event-actions">
+                    <button class="join-event-btn">Join Event</button>
+                    <button class="add-calendar-btn">📅</button>
+                </div>
+            </div>
+        </template>
+
     </main>
 
     <!-- Scripts -->
     <script src="../scripts/navbar.js" defer></script>
     <script src="../scripts/events-calendar.js" defer></script>
-=======
-        <!-- Calendar Section -->
-        <section class="calendar">
-            <h2>Events Calendar</h2>
-            <div id="calendar">
-                <p style="text-align: center; color: #666;">Loading calendar...</p>
-            </div>
-        </section>
-
-    </main>
-
-    <!-- Scripts - Load only the fixed events script -->
-    <script src="../scripts/navbar.js" defer></script>
-    <script>
-        // Replace the existing events.js with our fixed version
-        // This is a simple inline version that works immediately
-        document.addEventListener('DOMContentLoaded', () => {
-            // Replace loading text
-            const calendar = document.getElementById('calendar');
-            if (calendar) {
-                calendar.innerHTML = `
-                    <div style="text-align: center; padding: 2rem; color: #666; background: #f8f9fa; border-radius: 10px;">
-                        <h3>📅 Events Calendar</h3>
-                        <p>Interactive calendar coming soon!</p>
-                        <p>For now, check the event cards above for upcoming tech events.</p>
-                    </div>
-                `;
-            }
-
-            // Set up join event buttons
-            document.querySelectorAll('.join-event-btn').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    const eventTitle = btn.closest('.event-card').querySelector('h3').textContent;
-                    
-                    // Simple join functionality
-                    alert(`🎉 You've joined "${eventTitle}"!\n\nYou'll receive more details via email soon.`);
-                    
-                    // Update button
-                    btn.textContent = 'Joined ✓';
-                    btn.style.background = '#27ae60';
-                    btn.disabled = true;
-                });
-            });
-
-            console.log('✅ Events page loaded successfully!');
-        });
-    </script>
->>>>>>> Stashed changes
 </body>
 
 </html>

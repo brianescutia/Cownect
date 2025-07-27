@@ -4,123 +4,18 @@ body {
     background-color: var(--bg-color);
 }
 
-.navbar {
-    display: flex;
-    justify-content: center;
-    border-radius: 25px;
-    margin: 1rem auto;
-    padding: 0.75rem 2rem;
-
-    max-width: 1130px;
-    /* fixed on large screens */
-    width: 90%;
-    /* responsive on small screens */
-    height: clamp(50px, 8vw, 68px);
-
-}
-
-.navbar-container {
-    display: flex;
-    align-items: center;
-    gap: 3rem;
-    /* Adds equal space between each item */
-    padding: 0 2rem;
-    background-color: rgba(183, 183, 183, 0.30);
-    border-radius: 25px;
-    width: 120%;
-    max-width: 100vw;
-    height: 6vw;
-}
-
-.navbar .logo {
-    height: 5.19vw;
-    margin-right: 0%;
-}
-
-.nav-links {
-    gap: 6rem;
-    list-style: none;
-    display: flex;
-    align-items: center;
-    margin: 0;
-
-}
-
-.nav-links a {
-    text-decoration: none;
-    font-weight: 500;
-    color: var(--text-color);
-    font-size: 1.15rem;
-    /* Height-based font sizing */
-    width: 5.79vw;
-    /* Optional: control width of each link */
-    display: inline-block;
-    /* Needed for width to take effect */
-    text-align: center;
-    /* Optional: centers the text inside */
-}
-
-.account-btn {
-    background-color: var(--primary-btn-bg);
-    color: white;
-    padding: 0.4rem 0.9rem;
-    border-radius: 20px;
-    font-weight: 500;
-    text-decoration: none;
-}
-
-.hero {
-    position: relative;
-    text-align: center;
-    padding: 5rem 2rem;
-}
-
-.background {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    z-index: -1;
-    opacity: 0.9;
-}
-
-.hero-text {
-    width: 100%;
-    max-width: 73.5vw;
-    /* match h1 width */
-    margin-left: 10%;
-}
-
-.hero-text h1 {
-    font-family: 'Rethink Sans', sans-serif;
-    color: var(--text-color);
-    text-decoration-color: var(--border-color);
-    font-size: 5.3rem;
-    font-weight: 1000;
-    line-height: 1.2;
-    text-align: left;
-    width: 73.5vw;
-    max-width: 73.5vw;
-    margin-top: -10px;
-}
-
-.hero-text p {
-    font-family: 'Rethink Sans', sans-serif;
-    font-weight: 600;
-    font-size: 1.5rem;
-    line-height: 2.5rem;
-    color: #545454;
-    width: 45vw;
-    max-width: 45vw;
-    margin-top: 2em;
-    margin-left: 0;
-    text-align: left;
+/* Top logo styling */
+.top-logo {
+    position: fixed;
+    top: 2rem;
+    left: 2rem;
+    z-index: 1000;
 }
 
 .logo-title {
     display: flex;
     align-items: center;
-    gap: 0rem;
+    gap: 0.5rem;
     font-weight: bold;
     font-size: 1.2rem;
 }
@@ -129,207 +24,271 @@ body {
     font-weight: bold;
     color: var(--text-color);
     font-size: 150%;
-    /* Or whatever you want */
 }
 
 .logo {
     height: 40px;
 }
 
-
-.wave-backgrounds {
-    position: absolute;
-    top: 0;
+/* Separator line */
+.separator-line {
+    position: fixed;
+    top: 6rem;
     left: 0;
     width: 100%;
-    height: 100%;
-    z-index: -1;
-    pointer-events: none;
+    height: 1px;
+    background-color: #e0e0e0;
+    z-index: 999;
 }
 
-.wave1 {
-    position: absolute;
-    top: -220px;
-    /* pull it up a bit */
-    left: -10vw;
-    /* move it to the left a bit */
-    width: 60%;
-    /* or try 50% depending on how large you want it */
-    opacity: 0.9;
+/* Hero section */
+.hero {
+    padding: 4.2rem 2rem 2rem;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.wave2 {
-    position: absolute;
-    top: -180px;
-    right: -10vw;
-    width: 55%;
-    opacity: 0.9;
+.hero-container {
+    display: flex;
+    align-items: center;
+    gap: 4rem;
+    max-width: 1400px;
+    width: 100%;
+}
+
+/* Left side image */
+.hero-image {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.main-image {
+    width: 38vw;
+    max-width: 650px;
+    min-width: 300px;
+    height: auto;
+    border-radius: 20px;
+}
+
+/* Right side content */
+.hero-content {
+    flex: 1;
+}
+
+.hero-content h1 {
+    font-family: 'Inter', sans-serif;
+    color: #1e3a8a;
+    font-size: 4rem;
+    font-weight: 600;
+    line-height: 1.2;
+    margin-bottom: 2rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.gradient-text {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    background: linear-gradient(135deg, #90cdf4, #3182ce, #2b6cb0);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    color: transparent;
+
+}
+
+.hero-content p {
+    font-family: 'Rethink Sans', sans-serif;
+    font-weight: 600;
+    font-size: 1.3rem;
+    line-height: 2rem;
+    color: #2563EB;
+    margin-bottom: 3rem;
+    max-width: 500px;
+}
+
+.join-btn {
+    background: linear-gradient(135deg, #1E3A8A, #1E293B);
+    color: white;
+    border: none;
+    padding: 1rem 2.5rem;
+    border-radius: 30px;
+    font-size: 1.2rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
+}
+
+.join-btn:hover {
+    background: linear-gradient(135deg, #1d4ed8, #1e40af);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(37, 99, 235, 0.4);
 }
 
 /* 4K Screens */
 @media (min-width: 2560px) {
-    .navbar {
-        justify-content: space-evenly;
-        align-items: center;
-        width: 55%;
-        max-width: 1800px;
-        padding: 2rem;
-        height: 68px;
-    }
-
-    .navbar-container {
-        gap: 5rem;
-        height: 5vw;
-    }
-
-    .nav-links a {
-        font-size: 1.5rem;
-        width: 4vw;
+    .top-logo {
+        top: 3rem;
+        left: 3rem;
     }
 
     .logo {
-        height: 80px;
+        height: 60px;
     }
 
-    .hero-text h1 {
-        font-size: 7rem;
-    }
-
-    .hero-text p {
+    .logo-text {
         font-size: 2rem;
-        line-height: 3rem;
+    }
+
+    .separator-line {
+        top: 8rem;
+    }
+
+    .hero {
+        padding: 10rem 4rem 4rem;
+    }
+
+    .hero-container {
+        gap: 6rem;
+    }
+
+    .hero-content h1 {
+        font-size: 6.5rem;
+    }
+
+    .hero-content p {
+        font-size: 1.8rem;
+        line-height: 2.8rem;
+    }
+
+    .join-btn {
+        padding: 1.5rem 3rem;
+        font-size: 1.5rem;
     }
 }
 
 /* Laptop Screens */
 @media (max-width: 1339px) {
-    .navbar {
-        height: 60px;
+    .hero-content h1 {
+        font-size: 3rem;
     }
 
-    .navbar-container {
-        gap: 2rem;
-        height: 6vw;
+    .hero-content p {
+        font-size: 1.2rem;
+        line-height: 1.8rem;
     }
 
-    .nav-links a {
-        font-size: 0.74rem;
-        width: 5.5vw;
-    }
-
-    .logo {
-        height: 40px;
-    }
-
-    .hero-text h1 {
-        font-size: 5rem;
-    }
-
-    .hero-text p {
-        font-size: 1.4rem;
+    .main-image {
+        width: 35vw;
     }
 }
 
 /* Tablets */
 @media (max-width: 768px) {
-    .navbar {
-        flex-direction: row;
-        align-items: flex-start;
-        padding: 1rem;
-        height: auto;
-    }
-
-    .navbar-container {
-        flex-direction: row;
-        gap: 1rem;
-        padding: 0.75rem;
-        height: auto;
-    }
-
-    .nav-links {
-        flex-direction: row;
-        gap: 1rem;
-    }
-
-    .nav-links a {
-        font-size: 0.9rem;
-        width: auto;
-        text-align: left;
+    .top-logo {
+        top: 1.5rem;
+        left: 1.5rem;
     }
 
     .logo {
         height: 30px;
     }
 
-    .hero-text h1 {
-        font-size: 3.5rem;
+    .logo-text {
+        font-size: 1.2rem;
+    }
+
+    .separator-line {
+        top: 4.5rem;
+    }
+
+    .hero {
+        padding: 6rem 1rem 2rem;
+    }
+
+    .hero-container {
+        flex-direction: column;
+        gap: 3rem;
         text-align: center;
     }
 
-    .hero-text p {
-        font-size: 1rem;
-        text-align: left;
-        width: 90%;
-        margin: 1rem auto;
+    .hero-content {
+        padding-left: 0;
     }
 
-    .wave-backgrounds {
-        position: absolute;
-        top: 6vh;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        z-index: -1;
-        pointer-events: none;
+    .hero-content h1 {
+        font-size: 3rem;
+        text-align: center;
+    }
+
+    .hero-content p {
+        font-size: 1.1rem;
+        text-align: center;
+        margin: 0 auto 2rem;
+    }
+
+    .main-image {
+        width: 70vw;
+        max-width: 400px;
     }
 }
 
 /* Mobile L (425px) */
 @media (max-width: 425px) {
-    .navbar-container {
-        gap: 1rem;
+    .top-logo {
+        top: 1rem;
+        left: 1rem;
     }
 
-    .nav-links a {
-        font-size: 0.95rem;
+    .hero-content h1 {
+        font-size: 2.5rem;
     }
 
-    .hero-text h1 {
-        font-size: 2.8rem;
-    }
-
-    .hero-text p {
+    .hero-content p {
         font-size: 1rem;
-        line-height: 1.8rem;
+        line-height: 1.6rem;
+    }
+
+    .join-btn {
+        padding: 0.8rem 2rem;
+        font-size: 1rem;
+    }
+
+    .main-image {
+        width: 85vw;
+        max-width: 350px;
     }
 }
 
 /* Mobile M (375px) */
 @media (max-width: 375px) {
-    .nav-links a {
-        font-size: 0.9rem;
+    .hero-content h1 {
+        font-size: 2.2rem;
     }
 
-    .hero-text h1 {
-        font-size: 2.5rem;
-    }
-
-    .hero-text p {
+    .hero-content p {
         font-size: 0.95rem;
     }
 }
 
 /* Mobile S (320px) */
 @media (max-width: 320px) {
-    .nav-links a {
-        font-size: 0.85rem;
+    .hero-content h1 {
+        font-size: 2rem;
     }
 
-    .hero-text h1 {
-        font-size: 2.2rem;
+    .hero-content p {
+        font-size: 0.9rem;
     }
 
-    .hero-text p {
+    .join-btn {
+        padding: 0.7rem 1.5rem;
         font-size: 0.9rem;
     }
 }
