@@ -52,20 +52,20 @@
       errorDiv.textContent = getErrorMessage(error);
     }
 
-    // Handle form submission
-    document.getElementById('signupForm').addEventListener('submit', function (e) {
+    // Handle form submission with JSON
+    document.getElementById('signupForm').addEventListener('submit', async function (e) {
+      e.preventDefault(); // Always prevent default form submission
+
       const email = document.getElementById('email').value;
       const password = document.getElementById('password').value;
 
       // Basic validation
       if (!email.toLowerCase().endsWith('@ucdavis.edu')) {
-        e.preventDefault();
         showError('Please use your UC Davis email address (@ucdavis.edu)');
         return;
       }
 
       if (password.length < 6) {
-        e.preventDefault();
         showError('Password must be at least 6 characters long');
         return;
       }
@@ -73,6 +73,51 @@
       // Show loading overlay
       document.getElementById('loadingOverlay').style.display = 'flex';
       document.getElementById('signupBtn').disabled = true;
+
+      try {
+        console.log('🚀 Sending signup request...');
+
+        const response = await fetch('/signup', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ email, password })
+        });
+
+        const data = await response.json();
+        console.log('📨 Server response:', data);
+
+        // Hide loading overlay
+        document.getElementById('loadingOverlay').style.display = 'none';
+        document.getElementById('signupBtn').disabled = false;
+
+        if (data.success) {
+          // Success! Redirect to verification page
+          console.log('✅ Signup successful, redirecting...');
+          window.location.href = data.redirectTo;
+        } else {
+          // Show error message
+          console.log('❌ Signup failed:', data.error);
+          showError(data.error);
+
+          // Redirect if specified (e.g., to login page)
+          if (data.redirectTo) {
+            setTimeout(() => {
+              window.location.href = data.redirectTo;
+            }, 3000);
+          }
+        }
+
+      } catch (error) {
+        console.error('💥 Network error:', error);
+
+        // Hide loading overlay
+        document.getElementById('loadingOverlay').style.display = 'none';
+        document.getElementById('signupBtn').disabled = false;
+
+        showError('Network error. Please check your connection and try again.');
+      }
     });
 
     function getErrorMessage(error) {

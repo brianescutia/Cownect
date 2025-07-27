@@ -1,29 +1,46 @@
 const nodemailer = require('nodemailer');
 
 // Create transporter
+
+
 const createTransporter = () => {
-    return nodemailer.createTransporter({
-        host: process.env.SMTP_HOST,
-        port: process.env.SMTP_PORT,
-        secure: false, // true for 465, false for other ports
-        auth: {
-            user: process.env.SMTP_USER,
-            pass: process.env.SMTP_PASS,
-        },
+  // Check if we have SMTP config
+  if (process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS) {
+    console.log('📧 Using real SMTP configuration');
+    return nodemailer.createTransport({ // ✅ Fixed: createTransport
+      host: process.env.SMTP_HOST,
+      port: process.env.SMTP_PORT || 587,
+      secure: false, // true for 465, false for other ports
+      auth: {
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASS,
+      },
     });
+  } else {
+    console.log('📧 Using test transporter (emails will be logged, not sent)');
+    // Create test transporter for development
+    return nodemailer.createTransport({ // ✅ Fixed: createTransport
+      host: 'smtp.ethereal.email',
+      port: 587,
+      auth: {
+        user: 'ethereal.user@ethereal.email',
+        pass: 'ethereal.pass'
+      }
+    });
+  }
 };
 
 // 📧 Send verification email
 const sendVerificationEmail = async (email, verificationToken) => {
-    const transporter = createTransporter();
+  const transporter = createTransporter();
 
-    const verificationUrl = `${process.env.FRONTEND_URL}/verify-email?token=${verificationToken}`;
+  const verificationUrl = `${process.env.FRONTEND_URL}/verify-email?token=${verificationToken}`;
 
-    const mailOptions = {
-        from: `"${process.env.FROM_NAME}" <${process.env.FROM_EMAIL}>`,
-        to: email,
-        subject: '🎓 Verify Your Cownect Account',
-        html: `
+  const mailOptions = {
+    from: `"${process.env.FROM_NAME}" <${process.env.FROM_EMAIL}>`,
+    to: email,
+    subject: '🎓 Verify Your Cownect Account',
+    html: `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
         <div style="background: linear-gradient(135deg, #1e3a8a, #3b82f6); padding: 30px; text-align: center; color: white;">
           <h1 style="margin: 0; font-size: 28px;">Welcome to Cownect! 🐄</h1>
@@ -79,29 +96,29 @@ const sendVerificationEmail = async (email, verificationToken) => {
         </div>
       </div>
     `,
-    };
+  };
 
-    try {
-        await transporter.sendMail(mailOptions);
-        console.log('📧 Verification email sent to:', email);
-        return { success: true };
-    } catch (error) {
-        console.error('📧 Email sending error:', error);
-        return { success: false, error: error.message };
-    }
+  try {
+    await transporter.sendMail(mailOptions);
+    console.log('📧 Verification email sent to:', email);
+    return { success: true };
+  } catch (error) {
+    console.error('📧 Email sending error:', error);
+    return { success: false, error: error.message };
+  }
 };
 
 // 🔄 Send password reset email
 const sendPasswordResetEmail = async (email, resetToken) => {
-    const transporter = createTransporter();
+  const transporter = createTransporter();
 
-    const resetUrl = `${process.env.FRONTEND_URL}/reset-password?token=${resetToken}`;
+  const resetUrl = `${process.env.FRONTEND_URL}/reset-password?token=${resetToken}`;
 
-    const mailOptions = {
-        from: `"${process.env.FROM_NAME}" <${process.env.FROM_EMAIL}>`,
-        to: email,
-        subject: '🔒 Reset Your Cownect Password',
-        html: `
+  const mailOptions = {
+    from: `"${process.env.FROM_NAME}" <${process.env.FROM_EMAIL}>`,
+    to: email,
+    subject: '🔒 Reset Your Cownect Password',
+    html: `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
         <div style="background: linear-gradient(135deg, #dc2626, #ef4444); padding: 30px; text-align: center; color: white;">
           <h1 style="margin: 0; font-size: 28px;">Password Reset Request 🔒</h1>
@@ -138,19 +155,19 @@ const sendPasswordResetEmail = async (email, resetToken) => {
         </div>
       </div>
     `,
-    };
+  };
 
-    try {
-        await transporter.sendMail(mailOptions);
-        console.log('🔄 Password reset email sent to:', email);
-        return { success: true };
-    } catch (error) {
-        console.error('🔄 Password reset email error:', error);
-        return { success: false, error: error.message };
-    }
+  try {
+    await transporter.sendMail(mailOptions);
+    console.log('🔄 Password reset email sent to:', email);
+    return { success: true };
+  } catch (error) {
+    console.error('🔄 Password reset email error:', error);
+    return { success: false, error: error.message };
+  }
 };
 
 module.exports = {
-    sendVerificationEmail,
-    sendPasswordResetEmail
+  sendVerificationEmail,
+  sendPasswordResetEmail
 };
