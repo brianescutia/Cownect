@@ -21,7 +21,7 @@ const eventsData = [
     // =============================================================================
     {
         title: "HackDavis 2025: Code for Good",
-        date: new Date('2025-02-15T09:00:00.000Z'),
+        date: new Date('2025-08-15T09:00:00.000Z'),
         time: "9:00 AM - 11:59 PM",
         location: "Activities & Recreation Center (ARC)",
         description: "UC Davis's premier hackathon focused on social good and environmental sustainability. Build solutions that make a positive impact on our community and planet. All skill levels welcome!",
@@ -30,7 +30,7 @@ const eventsData = [
     },
     {
         title: "AI Challenge: Smart Campus Solutions",
-        date: new Date('2025-03-08T10:00:00.000Z'),
+        date: new Date('2025-08-08T10:00:00.000Z'),
         time: "10:00 AM - 6:00 PM",
         location: "Kemper Hall",
         description: "Design AI-powered solutions to improve campus life. Categories include energy efficiency, transportation, and student services. Prizes up to $5,000!",
@@ -39,7 +39,7 @@ const eventsData = [
     },
     {
         title: "Cybersecurity CTF Competition",
-        date: new Date('2025-02-28T06:00:00.000Z'),
+        date: new Date('2025-08-28T06:00:00.000Z'),
         time: "6:00 PM - 11:59 PM",
         location: "Giedt Hall Computer Labs",
         description: "Test your hacking skills in our Capture the Flag competition. Teams will solve cybersecurity challenges in web security, cryptography, and forensics.",
@@ -52,7 +52,7 @@ const eventsData = [
     // =============================================================================
     {
         title: "Tech Career Fair 2025",
-        date: new Date('2025-02-20T10:00:00.000Z'),
+        date: new Date('2025-08-20T10:00:00.000Z'),
         time: "10:00 AM - 4:00 PM",
         location: "UC Center Ballroom",
         description: "Meet with representatives from Google, Apple, Microsoft, Meta, and 50+ other tech companies. Bring your resume and be ready to interview on the spot!",
@@ -61,7 +61,7 @@ const eventsData = [
     },
     {
         title: "Startup Pitch Night",
-        date: new Date('2025-03-15T06:30:00.000Z'),
+        date: new Date('2025-08-15T06:30:00.000Z'),
         time: "6:30 PM - 9:00 PM",
         location: "Mondavi Center",
         description: "Watch UC Davis students pitch their startup ideas to real investors. Network with entrepreneurs and learn about the startup ecosystem in California.",
@@ -70,7 +70,7 @@ const eventsData = [
     },
     {
         title: "Women in Tech Networking Event",
-        date: new Date('2025-03-22T05:00:00.000Z'),
+        date: new Date('2025-08-22T05:00:00.000Z'),
         time: "5:00 PM - 8:00 PM",
         location: "Engineering Student Startup Center",
         description: "Connect with female leaders in tech from UC Davis alumni working at major tech companies. Food, networking, and career advice included!",
@@ -83,7 +83,7 @@ const eventsData = [
     // =============================================================================
     {
         title: "Introduction to Machine Learning",
-        date: new Date('2025-02-10T02:00:00.000Z'),
+        date: new Date('2025-08-10T02:00:00.000Z'),
         time: "2:00 PM - 5:00 PM",
         location: "Shields Library Tech Hub",
         description: "Hands-on workshop covering ML fundamentals with Python and scikit-learn. No prior experience required. Laptops provided or bring your own.",
@@ -92,7 +92,7 @@ const eventsData = [
     },
     {
         title: "React.js Bootcamp",
-        date: new Date('2025-02-25T06:00:00.000Z'),
+        date: new Date('2025-08-25T06:00:00.000Z'),
         time: "6:00 PM - 9:00 PM",
         location: "Kemper Hall 1131",
         description: "Build your first React application from scratch. Learn components, hooks, and state management while creating a real project you can add to your portfolio.",
@@ -101,7 +101,7 @@ const eventsData = [
     },
     {
         title: "Cloud Computing with AWS",
-        date: new Date('2025-03-01T01:00:00.000Z'),
+        date: new Date('2025-08-01T01:00:00.000Z'),
         time: "1:00 PM - 4:00 PM",
         location: "Giedt Hall 1001",
         description: "Learn to deploy applications on Amazon Web Services. Covers EC2, S3, Lambda, and basic DevOps practices. AWS credits provided for hands-on practice.",
@@ -114,7 +114,7 @@ const eventsData = [
     // =============================================================================
     {
         title: "AI Research Expo 2025",
-        date: new Date('2025-03-10T01:00:00.000Z'),
+        date: new Date('2025-08-10T01:00:00.000Z'),
         time: "1:00 PM - 6:00 PM",
         location: "Engineering Building III Atrium",
         description: "Showcase of cutting-edge AI research from UC Davis faculty and graduate students. Poster sessions, demos, and opportunities to join research labs.",
@@ -123,7 +123,7 @@ const eventsData = [
     },
     {
         title: "Quantum Computing Seminar",
-        date: new Date('2025-02-18T03:00:00.000Z'),
+        date: new Date('2025-08-18T03:00:00.000Z'),
         time: "3:00 PM - 5:00 PM",
         location: "Physics Building Lecture Hall",
         description: "Learn about the future of computing with quantum systems. Featuring speakers from IBM Quantum and UC Davis Physics Department.",
@@ -132,7 +132,7 @@ const eventsData = [
     },
     {
         title: "Biotech Innovation Showcase",
-        date: new Date('2025-03-25T11:00:00.000Z'),
+        date: new Date('2025-08-25T11:00:00.000Z'),
         time: "11:00 AM - 3:00 PM",
         location: "Genome Center",
         description: "Discover how technology is revolutionizing healthcare and agriculture. See demos of CRISPR, bioinformatics tools, and biomedical devices.",
@@ -145,7 +145,7 @@ const eventsData = [
     // =============================================================================
     {
         title: "Game Dev Showcase",
-        date: new Date('2025-02-12T07:00:00.000Z'),
+        date: new Date('2025-08-12T07:00:00.000Z'),
         time: "7:00 PM - 9:00 PM",
         location: "Memorial Union Game Room",
         description: "Play games created by UC Davis students! Vote for your favorites and meet the developers. Pizza and prizes included.",
@@ -154,7 +154,7 @@ const eventsData = [
     },
     {
         title: "Tech Talk: The Future of VR",
-        date: new Date('2025-02-22T04:00:00.000Z'),
+        date: new Date('2025-08-22T04:00:00.000Z'),
         time: "4:00 PM - 6:00 PM",
         location: "Hart Hall 1150",
         description: "Special guest speaker from Meta Reality Labs discusses the latest in virtual and augmented reality technology. VR demos available after the talk.",
@@ -163,7 +163,7 @@ const eventsData = [
     },
     {
         title: "Open Source Contribution Day",
-        date: new Date('2025-03-05T10:00:00.000Z'),
+        date: new Date('2025-08-05T10:00:00.000Z'),
         time: "10:00 AM - 4:00 PM",
         location: "Shields Library Collaboration Rooms",
         description: "Make your first open source contribution! Mentors will help you find projects, set up development environments, and submit your first pull request.",
@@ -176,7 +176,7 @@ const eventsData = [
     // =============================================================================
     {
         title: "Industry Panel: Life at Big Tech",
-        date: new Date('2025-02-14T06:00:00.000Z'),
+        date: new Date('2025-08-14T06:00:00.000Z'),
         time: "6:00 PM - 8:00 PM",
         location: "Wellman Hall 202",
         description: "UC Davis alumni from Google, Apple, Microsoft, and Amazon share their experiences and advice for landing your first tech job.",
@@ -185,7 +185,7 @@ const eventsData = [
     },
     {
         title: "Entrepreneur Spotlight: From Dorm to IPO",
-        date: new Date('2025-03-12T07:00:00.000Z'),
+        date: new Date('2025-08-12T07:00:00.000Z'),
         time: "7:00 PM - 8:30 PM",
         location: "Mondavi Center Studio Theatre",
         description: "Hear from UC Davis alum who founded a successful tech startup. Learn about the journey from student project to public company.",
@@ -198,7 +198,7 @@ const eventsData = [
     // =============================================================================
     {
         title: "Weekly Coding Meetup",
-        date: new Date('2025-02-07T07:00:00.000Z'),
+        date: new Date('2025-08-07T07:00:00.000Z'),
         time: "7:00 PM - 9:00 PM",
         location: "Kemper Hall Study Lounge",
         description: "Casual coding session where students work on personal projects, share knowledge, and help each other debug. All programming languages welcome!",
@@ -207,7 +207,7 @@ const eventsData = [
     },
     {
         title: "Tech Resume Review Workshop",
-        date: new Date('2025-02-13T05:00:00.000Z'),
+        date: new Date('2025-08-13T05:00:00.000Z'),
         time: "5:00 PM - 7:00 PM",
         location: "Career Center",
         description: "Get your tech resume reviewed by industry professionals and UC Davis career counselors. Bring printed copies and be ready for constructive feedback.",
@@ -216,7 +216,7 @@ const eventsData = [
     },
     {
         title: "Algorithm Study Group",
-        date: new Date('2025-02-11T06:30:00.000Z'),
+        date: new Date('2025-08-11T06:30:00.000Z'),
         time: "6:30 PM - 8:30 PM",
         location: "Shields Library Group Study Room",
         description: "Prepare for technical interviews by solving algorithm problems together. We'll cover data structures, dynamic programming, and system design.",

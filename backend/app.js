@@ -454,29 +454,42 @@ app.get('/api/events/date/:date', requireAuth, async (req, res) => {
 
     const events = await Event.find({
       isActive: true,
+      status: 'published',
       date: {
         $gte: startOfDay,
         $lte: endOfDay
       }
     })
       .populate('createdBy', 'email')
-      .sort({ time: 1 })
+      .sort({ date: 1 })
       .lean();
 
-    const enhancedEvents = events.map(event => ({
-      ...event,
-      formattedDate: new Date(event.date).toLocaleDateString(),
+    // Format events for frontend
+    const formattedEvents = events.map(event => ({
+      id: event._id.toString(),
+      title: event.title,
+      time: event.time || 'Time TBD',
+      location: event.location,
+      description: event.description,
+      category: event.category || 'Event',
+      imageUrl: event.imageUrl || '/assets/default-event-image.jpg',
+      attendeeCount: event.attendees ? event.attendees.length : 0,
+      maxAttendees: event.maxAttendees,
+      registrationRequired: event.registrationRequired || false,
+      registrationUrl: event.registrationUrl,
+      formattedDate: event.date.toLocaleDateString(),
       formattedTime: event.time || 'Time TBD'
     }));
 
     console.log(`✅ Found ${events.length} events for ${date}`);
-    res.json(enhancedEvents);
+    res.json(formattedEvents);
 
   } catch (error) {
     console.error('💥 Error fetching events by date:', error);
     res.status(500).json({ error: 'Failed to fetch events for date' });
   }
 });
+
 
 // 📊 GET CALENDAR DATA - Event counts by date for calendar visualization
 app.get('/api/events/calendar/:year/:month', requireAuth, async (req, res) => {
@@ -487,27 +500,51 @@ app.get('/api/events/calendar/:year/:month', requireAuth, async (req, res) => {
     const startDate = new Date(year, month - 1, 1);
     const endDate = new Date(year, month, 0, 23, 59, 59);
 
-    const events = await Event.aggregate([
-      {
-        $match: {
-          isActive: true,
-          date: { $gte: startDate, $lte: endDate }
-        }
-      },
-      {
-        $group: {
-          _id: { $dateToString: { format: "%Y-%m-%d", date: "$date" } },
-          count: { $sum: 1 },
-          events: { $push: "$$ROOT" }
-        }
-      },
-      {
-        $sort: { "_id": 1 }
-      }
-    ]);
+    // Get events for the month
+    const events = await Event.find({
+      isActive: true,
+      status: 'published',
+      date: { $gte: startDate, $lte: endDate }
+    })
+      .populate('createdBy', 'email')
+      .sort({ date: 1 })
+      .lean();
 
-    console.log(`✅ Found events for ${events.length} days in ${year}-${month}`);
-    res.json(events);
+    // Group events by date
+    const eventsByDate = {};
+
+    events.forEach(event => {
+      const dateKey = event.date.toISOString().split('T')[0]; // YYYY-MM-DD format
+
+      if (!eventsByDate[dateKey]) {
+        eventsByDate[dateKey] = [];
+      }
+
+      // Format event for frontend
+      eventsByDate[dateKey].push({
+        id: event._id.toString(),
+        title: event.title,
+        time: event.time || 'Time TBD',
+        location: event.location,
+        description: event.description,
+        category: event.category || 'Event',
+        imageUrl: event.imageUrl || '/assets/default-event-image.jpg',
+        attendeeCount: event.attendees ? event.attendees.length : 0,
+        maxAttendees: event.maxAttendees,
+        registrationRequired: event.registrationRequired || false,
+        registrationUrl: event.registrationUrl
+      });
+    });
+
+    // Convert to array format for frontend
+    const calendarData = Object.keys(eventsByDate).map(dateKey => ({
+      _id: dateKey,
+      count: eventsByDate[dateKey].length,
+      events: eventsByDate[dateKey]
+    }));
+
+    console.log(`✅ Found events for ${calendarData.length} days in ${year}-${month}`);
+    res.json(calendarData);
 
   } catch (error) {
     console.error('💥 Error fetching calendar data:', error);
@@ -554,26 +591,48 @@ app.post('/api/events/:id/join', requireAuth, async (req, res) => {
     const eventId = req.params.id;
     const userId = req.session.userId;
 
+    console.log(`🎟️ User ${req.session.userEmail} attempting to join event ${eventId}`);
+
     const event = await Event.findById(eventId);
     if (!event) {
       return res.status(404).json({ error: 'Event not found' });
     }
 
+    if (!event.isActive || event.status !== 'published') {
+      return res.status(400).json({ error: 'Event is not available for registration' });
+    }
+
     // Check if user already joined
     if (event.attendees.includes(userId)) {
-      return res.status(409).json({ error: 'Already joined this event' });
+      return res.status(409).json({
+        error: 'You have already joined this event',
+        isJoined: true
+      });
+    }
+
+    // Check if event is full
+    if (event.maxAttendees && event.attendees.length >= event.maxAttendees) {
+      return res.status(400).json({
+        error: 'Event is full',
+        isFull: true,
+        maxAttendees: event.maxAttendees,
+        currentAttendees: event.attendees.length
+      });
     }
 
     // Add user to attendees
     event.attendees.push(userId);
     await event.save();
 
-    console.log(`🎟️ User ${req.session.userEmail} joined event: ${event.title}`);
+    console.log(`✅ User ${req.session.userEmail} successfully joined event: ${event.title}`);
 
     res.json({
+      success: true,
       message: 'Successfully joined event',
+      eventTitle: event.title,
       attendeeCount: event.attendees.length,
-      eventId: eventId
+      eventId: eventId,
+      isJoined: true
     });
 
   } catch (error) {
@@ -582,27 +641,41 @@ app.post('/api/events/:id/join', requireAuth, async (req, res) => {
   }
 });
 
+
 // 🗑️ LEAVE EVENT
 app.delete('/api/events/:id/join', requireAuth, async (req, res) => {
   try {
     const eventId = req.params.id;
     const userId = req.session.userId;
 
+    console.log(`🚪 User ${req.session.userEmail} attempting to leave event ${eventId}`);
+
     const event = await Event.findById(eventId);
     if (!event) {
       return res.status(404).json({ error: 'Event not found' });
+    }
+
+    // Check if user is actually attending
+    if (!event.attendees.includes(userId)) {
+      return res.status(400).json({
+        error: 'You are not registered for this event',
+        isJoined: false
+      });
     }
 
     // Remove user from attendees
     event.attendees = event.attendees.filter(id => !id.equals(userId));
     await event.save();
 
-    console.log(`🚪 User ${req.session.userEmail} left event: ${event.title}`);
+    console.log(`✅ User ${req.session.userEmail} successfully left event: ${event.title}`);
 
     res.json({
+      success: true,
       message: 'Successfully left event',
+      eventTitle: event.title,
       attendeeCount: event.attendees.length,
-      eventId: eventId
+      eventId: eventId,
+      isJoined: false
     });
 
   } catch (error) {
@@ -715,6 +788,91 @@ app.get('/api/bookmarks/check/:clubId', requireAuth, async (req, res) => {
   } catch (error) {
     console.error('💥 Error checking bookmark:', error);
     res.status(500).json({ error: 'Failed to check bookmark status' });
+  }
+});
+
+app.get('/api/events/:id/status', requireAuth, async (req, res) => {
+  try {
+    const eventId = req.params.id;
+    const userId = req.session.userId;
+
+    const event = await Event.findById(eventId);
+    if (!event) {
+      return res.status(404).json({ error: 'Event not found' });
+    }
+
+    const isJoined = event.attendees.includes(userId);
+    const isFull = event.maxAttendees && event.attendees.length >= event.maxAttendees;
+
+    res.json({
+      eventId: eventId,
+      isJoined: isJoined,
+      isFull: isFull,
+      attendeeCount: event.attendees.length,
+      maxAttendees: event.maxAttendees,
+      registrationRequired: event.registrationRequired || false,
+      isActive: event.isActive,
+      status: event.status
+    });
+
+  } catch (error) {
+    console.error('💥 Error checking event status:', error);
+    res.status(500).json({ error: 'Failed to check event status' });
+  }
+});
+
+app.get('/api/events/stats', requireAuth, async (req, res) => {
+  try {
+    const now = new Date();
+
+    // Get various statistics
+    const [
+      totalEvents,
+      upcomingEvents,
+      todayEvents,
+      thisWeekEvents,
+      totalAttendees
+    ] = await Promise.all([
+      Event.countDocuments({ isActive: true, status: 'published' }),
+      Event.countDocuments({
+        isActive: true,
+        status: 'published',
+        date: { $gte: now }
+      }),
+      Event.countDocuments({
+        isActive: true,
+        status: 'published',
+        date: {
+          $gte: new Date(now.getFullYear(), now.getMonth(), now.getDate()),
+          $lt: new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1)
+        }
+      }),
+      Event.countDocuments({
+        isActive: true,
+        status: 'published',
+        date: {
+          $gte: new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000),
+          $lt: new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000)
+        }
+      }),
+      Event.aggregate([
+        { $match: { isActive: true, status: 'published' } },
+        { $group: { _id: null, total: { $sum: { $size: '$attendees' } } } }
+      ])
+    ]);
+
+    res.json({
+      totalEvents,
+      upcomingEvents,
+      todayEvents,
+      thisWeekEvents,
+      totalAttendees: totalAttendees[0]?.total || 0,
+      generatedAt: new Date()
+    });
+
+  } catch (error) {
+    console.error('💥 Error fetching event statistics:', error);
+    res.status(500).json({ error: 'Failed to fetch event statistics' });
   }
 });
 
