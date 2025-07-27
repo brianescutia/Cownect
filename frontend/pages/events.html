@@ -4,19 +4,19 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Cownect - Events</title>
+    <title>Tech Events | Cownect</title>
     <link rel="stylesheet" href="../styles/events.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Rethink+Sans:wght@800&display=swap" rel="stylesheet">
-    <!-- ✅ Include the fixed events script -->
-    <script src="../scripts/events.js" defer></script>
+    <link rel="stylesheet" href="../styles/events-calendar.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Rethink+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 
 <body>
     <main class="background">
+        <!-- Background Image -->
         <div class="backdrop">
-            <img src="../assets/Eventsbackdrop.jpg" alt="slanted rectangle" class="backdrop-image" />
+            <img src="../assets/Eventsbackdrop.jpg" alt="Events backdrop" class="backdrop-image" />
 
-            <!-- ✅ Fixed navbar - account button should link to dashboard -->
+            <!-- Fixed Navbar -->
             <nav class="navbar">
                 <div class="navbar-container">
                     <div class="logo-title">
@@ -24,68 +24,123 @@
                         <span class="logo-text">Cownect</span>
                     </div>
                     <ul class="nav-links">
-                        <li><a href="../pages/tech-clubs.html">Tech Clubs</a></li>
-                        <li><a href="../pages/events.html">Events</a></li>
-                        <li><a href="../pages/niche-quiz.html">Niche Test</a></li>
-                        <li><a href="../pages/">Mentor Matching</a></li>
-                        <li><a class="account-btn" href="../pages/login.html">Account</a></li>
+                        <li><a href="/tech-clubs">Tech Clubs</a></li>
+                        <li><a href="/events" class="active">Events</a></li>
+                        <li><a href="/niche-quiz">Niche Test</a></li>
+                        <li><a href="#" onclick="alert('Coming soon!')">Mentor Matching</a></li>
+                        <li><a class="account-btn" href="/dashboard" id="accountBtn">Account</a></li>
                     </ul>
                 </div>
             </nav>
         </div>
 
-        <!-- ✅ Events Section -->
+        <!-- Events Section -->
         <section class="events">
             <h2>Tech Events You Can't Miss:</h2>
 
             <div class="event-row" id="events-container">
-                <!-- These cards will be populated dynamically by JavaScript -->
+                <!-- Event Card 1 -->
                 <div class="event-card">
                     <span class="event-date">Sep 10</span>
                     <h3>HackDavis Hackathon</h3>
-                    <p>Join UC Davis's premier hackathon focused on social good! Build innovative projects, collaborate
-                        with peers, and have fun learning.</p>
+                    <p>Join UC Davis's premier hackathon focused on social good! Build innovative projects, collaborate with peers, and have fun learning.</p>
                     <p><strong>Time:</strong> 12:00pm – 3:00pm</p>
                     <p><strong>Location:</strong> TLC 3203</p>
-                    <button class="join-event-btn" data-event-id="sample1">Join Event</button>
+                    <button class="join-event-btn" data-event-id="hackdavis2025">Join Event</button>
                 </div>
 
+                <!-- Event Card 2 -->
                 <div class="event-card">
                     <span class="event-date">Oct 22</span>
                     <h3>Tech Career Fair</h3>
-                    <p>Explore internships and job opportunities at UC Davis's Tech Career Fair. Network with employers,
-                        attend workshops, and learn about various tech industry roles.</p>
+                    <p>Explore internships and job opportunities at UC Davis's Tech Career Fair. Network with employers, attend workshops, and learn about various tech industry roles.</p>
                     <p><strong>Time:</strong> 10:00am – 1:00pm</p>
                     <p><strong>Location:</strong> UC Center</p>
-                    <button class="join-event-btn" data-event-id="sample2">Join Event</button>
+                    <button class="join-event-btn" data-event-id="techcareerfair">Join Event</button>
                 </div>
 
+                <!-- Event Card 3 -->
                 <div class="event-card">
                     <span class="event-date">Dec 7</span>
                     <h3>UC Davis Research Expo</h3>
-                    <p>Showcasing insight and resources to help researchers succeed, this expo highlights student
-                        research, faculty innovations, and industry partnerships.</p>
+                    <p>Showcasing insight and resources to help researchers succeed, this expo highlights student research, faculty innovations, and industry partnerships.</p>
                     <p><strong>Time:</strong> 10:00am – 3:00pm</p>
                     <p><strong>Location:</strong> UC Center</p>
-                    <button class="join-event-btn" data-event-id="sample3">Join Event</button>
+                    <button class="join-event-btn" data-event-id="researchexpo">Join Event</button>
                 </div>
             </div>
         </section>
 
-        <!-- ✅ Updated Calendar Section -->
-        <section class="calendar">
-            <h2>Events Calendar</h2>
-            <!-- The calendar will be dynamically generated here -->
-            <div id="calendar">
-                <p>Loading calendar...</p>
+        <!-- Interactive Calendar Section -->
+        <section class="calendar-section">
+            <div class="calendar-container">
+                <!-- Calendar Header -->
+                <div class="calendar-header">
+                    <div class="calendar-title">
+                        <h2>📅 Events Calendar</h2>
+                        <p>Click on any date to see events for that day</p>
+                    </div>
+                    
+                    <!-- View Toggle -->
+                    <div class="view-toggle">
+                        <button class="view-btn active" id="monthViewBtn">Month</button>
+                        <button class="view-btn" id="weekViewBtn">Week</button>
+                    </div>
+                </div>
+
+                <!-- Calendar Navigation -->
+                <div class="calendar-nav">
+                    <button class="nav-btn" id="prevPeriod">‹</button>
+                    <h3 id="currentPeriod">January 2025</h3>
+                    <button class="nav-btn" id="nextPeriod">›</button>
+                </div>
+
+                <!-- Calendar Content -->
+                <div class="calendar-content">
+                    <!-- Calendar Grid -->
+                    <div class="calendar-main">
+                        <div class="calendar-grid" id="calendarGrid">
+                            <!-- Calendar will be generated here -->
+                        </div>
+                    </div>
+
+                    <!-- Event Details Sidebar -->
+                    <div class="event-sidebar" id="eventSidebar">
+                        <div class="sidebar-header">
+                            <h3 id="selectedDateTitle">Select a date</h3>
+                            <button class="close-sidebar" id="closeSidebar">×</button>
+                        </div>
+                        
+                        <div class="sidebar-content" id="sidebarContent">
+                            <div class="no-date-selected">
+                                <div class="calendar-icon">📅</div>
+                                <p>Click on a calendar date to view events for that day</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </section>
 
-        <!-- Optional: Error message container -->
-        <div id="error-container" style="display: none;"></div>
+        <!-- Loading Overlay -->
+        <div class="loading-overlay" id="loadingOverlay" style="display: none;">
+            <div class="loading-spinner"></div>
+            <p>Loading events...</p>
+        </div>
 
+        <!-- Error Container -->
+        <div class="error-container" id="errorContainer" style="display: none;">
+            <div class="error-content">
+                <h3>⚠️ Unable to Load Calendar</h3>
+                <p id="errorMessage">There was an error loading the events calendar.</p>
+                <button onclick="location.reload()" class="retry-btn">Try Again</button>
+            </div>
+        </div>
     </main>
 
+    <!-- Scripts -->
+    <script src="../scripts/navbar.js" defer></script>
+    <script src="../scripts/events-calendar.js" defer></script>
 </body>
 
 </html>
