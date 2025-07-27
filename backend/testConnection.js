@@ -1,9 +1,11 @@
 // Save this as backend/testConnection.js
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
+const path = require('path');
 
-// Load environment variables
-dotenv.config();
+// Load environment variables from the parent directory
+// This fixes the path issue when running from backend directory
+dotenv.config({ path: path.join(__dirname, '..', '.env') });
 
 async function testConnection() {
     try {
@@ -12,6 +14,22 @@ async function testConnection() {
 
         if (!process.env.MONGO_URI) {
             console.error('❌ MONGO_URI not found in .env file');
+            console.log('📁 Current working directory:', process.cwd());
+            console.log('📁 Script directory:', __dirname);
+            console.log('📁 Looking for .env at:', path.join(__dirname, '..', '.env'));
+
+            // Try to read the .env file directly to debug
+            const fs = require('fs');
+            const envPath = path.join(__dirname, '..', '.env');
+            try {
+                const envContent = fs.readFileSync(envPath, 'utf8');
+                console.log('📄 .env file found with content length:', envContent.length);
+                console.log('📄 First few lines of .env:');
+                console.log(envContent.split('\n').slice(0, 3).join('\n'));
+            } catch (readError) {
+                console.error('📄 Cannot read .env file:', readError.message);
+            }
+
             process.exit(1);
         }
 
@@ -45,4 +63,4 @@ async function testConnection() {
 }
 
 // Run the test
-testConnection();
+testConnection()
