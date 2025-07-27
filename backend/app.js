@@ -69,12 +69,20 @@ const requireAuth = (req, res, next) => {
   }
 };
 
+function redirectLoggedInUsers(req, res, next) {
+  if (req.session && req.session.userId) {
+    console.log(`🔀 Redirecting logged-in user ${req.session.userEmail} to tech-clubs`);
+    return res.redirect('/tech-clubs');
+  }
+  next();
+}
+
 // =============================================================================
 // ROUTES
 // =============================================================================
 
 // 🏠 HOME ROUTE
-app.get('/', (req, res) => {
+app.get('/', redirectLoggedInUsers, (req, res) => {
   res.sendFile(path.join(__dirname, '../frontend/pages/index.html'));
 });
 
@@ -83,11 +91,7 @@ app.get('/', (req, res) => {
 // =============================================================================
 
 // 🚪 LOGIN ROUTES
-app.get('/login', (req, res) => {
-  // If user already has a wristband (logged in), send them home
-  if (req.session.userId) {
-    return res.redirect('/');
-  }
+app.get('/login', redirectLoggedInUsers, (req, res) => {
   res.sendFile(path.join(__dirname, '../frontend/pages/login.html'));
 });
 
@@ -120,7 +124,7 @@ app.post('/login', async (req, res) => {
     req.session.userEmail = user.email;
 
     console.log('Login successful, session created for:', user.email);
-    res.redirect('/');
+    res.redirect('/tech-clubs');
 
   } catch (err) {
     console.error('Login error:', err);
@@ -152,11 +156,7 @@ app.use((req, res, next) => {
 
   next();
 });
-app.get('/signup', (req, res) => {
-  // If user already has a wristband (logged in), send them home
-  if (req.session.userId) {
-    return res.redirect('/');
-  }
+app.get('/signup', redirectLoggedInUsers, (req, res) => {
   res.sendFile(path.join(__dirname, '../frontend/pages/signup.html'));
 });
 
@@ -683,7 +683,9 @@ app.delete('/api/events/:id/join', requireAuth, async (req, res) => {
     res.status(500).json({ error: 'Failed to leave event' });
   }
 });
-
+app.get('/niche-landing', (req, res) => {
+  res.sendFile(path.join(__dirname, '../frontend/pages/niche-landing.html'));
+});
 
 // 🔖 ADD BOOKMARK - Save a club to user's bookmarks
 app.post('/api/bookmarks', requireAuth, async (req, res) => {
@@ -1904,7 +1906,7 @@ app.get('/verify-email', async (req, res) => {
     req.session.userEmail = user.email;
 
     console.log('✅ Email verified and user logged in:', user.email);
-    res.redirect('/?verified=true');
+    res.redirect('/tech-clubs?verified=true');
 
   } catch (error) {
     console.error('Email verification error:', error);

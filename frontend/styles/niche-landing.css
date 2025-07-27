@@ -1,0 +1,360 @@
+/* Niche Landing Page Styles */
+
+body {
+    margin: 0;
+    font-family: 'Helvetica', sans-serif;
+    background-color: var(--bg-color);
+    min-height: 100vh;
+    background-image: none !important;
+
+}
+
+.niche-main {
+    padding: 1rem 2rem 2rem;
+    min-height: calc(100vh - 120px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    /* Ensure no background images */
+    background: none !important;
+    background-image: none !important;
+}
+
+/* Trust Badge - Closer to navbar */
+.trust-badge {
+    background: rgba(107, 114, 128, 0.1);
+    border: 1px solid rgba(107, 114, 128, 0.2);
+    border-radius: 25px;
+    padding: 0.75rem 1.5rem;
+    margin-top: 0.5rem;
+    text-align: center;
+    align-self: center;
+}
+
+.trust-badge span {
+    font-family: 'Rethink Sans', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #0077B6;
+}
+
+/* Hero Content - Reduced spacing, centered */
+.niche-hero {
+    text-align: center;
+    max-width: 600px;
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.hero-content h1 {
+    font-family: 'Inter', sans-serif;
+    color: #1e3a8a;
+    font-size: 3.5rem;
+    font-weight: 600;
+    line-height: 1.2;
+    margin-bottom: 1rem;
+}
+
+.gradient-text {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    background: linear-gradient(135deg, #90cdf4, #3182ce, #2b6cb0);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    color: transparent;
+}
+
+.hero-content p {
+    font-family: 'Rethink Sans', sans-serif;
+    font-weight: 500;
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: #475569;
+    margin-bottom: 2rem;
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.start-quiz-btn {
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+    color: white;
+    border: none;
+    padding: 1rem 2.5rem;
+    border-radius: 50px;
+    font-size: 1.2rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+    text-decoration: none;
+    display: inline-block;
+    margin-bottom: 0.8rem;
+}
+
+.start-quiz-btn:hover {
+    background: linear-gradient(135deg, #1d4ed8, #1e40af);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+}
+
+.quiz-details {
+    font-family: 'Rethink Sans', sans-serif;
+    font-size: 0.9rem;
+    color: #6b7280;
+    font-weight: 500;
+}
+
+/* Feature Cards Section at Bottom */
+.feature-cards-section {
+    width: 70%;
+    max-width: 1000px;
+    margin-top: auto;
+}
+
+.feature-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    padding: 0 1rem;
+}
+
+.feature-card {
+    background: white;
+    border-radius: 20px;
+    padding: 2rem 1.5rem;
+    text-align: center;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    animation: float 6s ease-in-out infinite;
+    transition: all 0.3s ease;
+}
+
+.feature-card:nth-child(1) {
+    animation-delay: 0s;
+}
+
+.feature-card:nth-child(2) {
+    animation-delay: 2s;
+}
+
+.feature-card:nth-child(3) {
+    animation-delay: 4s;
+}
+
+.feature-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15);
+}
+
+.feature-card .feature-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    display: block;
+}
+
+.feature-card h4 {
+    font-family: 'Inter', sans-serif;
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 0.8rem;
+}
+
+.feature-card p {
+    font-family: 'Rethink Sans', sans-serif;
+    font-size: 1rem;
+    color: #64748b;
+    line-height: 1.5;
+    margin: 0;
+}
+
+@keyframes float {
+
+    0%,
+    100% {
+        transform: translateY(0px) rotate(0deg);
+    }
+
+    33% {
+        transform: translateY(-10px) rotate(0.5deg);
+    }
+
+    66% {
+        transform: translateY(-3px) rotate(-0.3deg);
+    }
+}
+
+/* Responsive Design */
+
+/* Large Screens */
+@media (min-width: 2560px) {
+    .hero-content h1 {
+        font-size: 5rem;
+    }
+
+    .hero-content p {
+        font-size: 1.4rem;
+    }
+
+    .start-quiz-btn {
+        padding: 1.2rem 3rem;
+        font-size: 1.4rem;
+    }
+
+    .feature-cards {
+        gap: 3rem;
+    }
+
+    .feature-card {
+        padding: 2.5rem 2rem;
+    }
+
+    .feature-card .feature-icon {
+        font-size: 3.5rem;
+    }
+
+    .feature-card h4 {
+        font-size: 1.5rem;
+    }
+
+    .feature-card p {
+        font-size: 1.2rem;
+    }
+}
+
+/* Laptop Screens */
+@media (max-width: 1339px) {
+    .hero-content h1 {
+        font-size: 3rem;
+    }
+
+    .hero-content p {
+        font-size: 1rem;
+    }
+
+    .feature-cards {
+        gap: 1.5rem;
+    }
+
+    .feature-card {
+        padding: 1.5rem;
+    }
+}
+
+/* Tablets */
+@media (max-width: 768px) {
+    .niche-main {
+        padding: 0.5rem 1rem 1.5rem;
+    }
+
+    .hero-content h1 {
+        font-size: 2.5rem;
+        margin-bottom: 0.8rem;
+    }
+
+    .hero-content p {
+        font-size: 0.95rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .start-quiz-btn {
+        padding: 0.8rem 2rem;
+        font-size: 1.1rem;
+    }
+
+    .trust-badge {
+        margin-bottom: 0.8rem;
+        margin-top: 0.3rem;
+    }
+
+    .feature-cards {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+        padding: 0;
+    }
+
+    .feature-card {
+        padding: 1.5rem;
+        animation: none;
+        /* Remove floating animation on mobile */
+    }
+}
+
+/* Mobile L (425px) */
+@media (max-width: 425px) {
+    .hero-content h1 {
+        font-size: 2.2rem;
+    }
+
+    .hero-content p {
+        font-size: 0.9rem;
+    }
+
+    .start-quiz-btn {
+        padding: 0.7rem 1.8rem;
+        font-size: 1rem;
+    }
+
+    .trust-badge {
+        padding: 0.5rem 1rem;
+    }
+
+    .trust-badge span {
+        font-size: 0.8rem;
+    }
+
+    .quiz-details {
+        font-size: 0.8rem;
+    }
+
+    .feature-card {
+        padding: 1.2rem;
+    }
+
+    .feature-card .feature-icon {
+        font-size: 2.5rem;
+    }
+
+    .feature-card h4 {
+        font-size: 1.1rem;
+    }
+
+    .feature-card p {
+        font-size: 0.9rem;
+    }
+}
+
+/* Mobile M (375px) */
+@media (max-width: 375px) {
+    .hero-content h1 {
+        font-size: 2rem;
+    }
+
+    .feature-card h4 {
+        font-size: 1rem;
+    }
+
+    .feature-card p {
+        font-size: 0.85rem;
+    }
+}
+
+/* Mobile S (320px) */
+@media (max-width: 320px) {
+    .hero-content h1 {
+        font-size: 1.8rem;
+    }
+
+    .niche-main {
+        padding: 0.3rem 0.5rem 1rem;
+    }
+
+    .feature-card {
+        padding: 1rem;
+    }
+}
