@@ -1,0 +1,33 @@
+{
+    "name": "Cownect Development Environment",
+    "image": "mcr.microsoft.com/vscode/devcontainers/javascript-node:18",
+    "features": {
+        "ghcr.io/devcontainers/features/node:1": {
+            "version": "18"
+        }
+    },
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "ms-vscode.vscode-json",
+                "formulahendry.auto-rename-tag",
+                "bradlc.vscode-tailwindcss"
+            ],
+            "settings": {
+                "terminal.integrated.defaultProfile.linux": "bash",
+                "explorer.compactFolders": false
+            }
+        }
+    },
+    "forwardPorts": [
+        3000
+    ],
+    "portsAttributes": {
+        "3000": {
+            "label": "Cownect App",
+            "onAutoForward": "openBrowser"
+        }
+    },
+    "postCreateCommand": "npm install && echo '🎉 Setup complete! Run: npm start'",
+    "remoteUser": "node"
+}

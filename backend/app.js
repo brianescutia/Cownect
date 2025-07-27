@@ -26,22 +26,6 @@ app.use(express.static(path.join(__dirname, '../frontend')));  // Serve static f
 app.use(express.urlencoded({ extended: true }));               // Parse form data
 app.use(express.json());                                       // Parse JSON data
 
-
-const DEMO_MODE = true; // Set to true for demos without database
-
-// Then wrap your mongoose.connect in a conditional:
-if (!DEMO_MODE) {
-  mongoose.connect(process.env.MONGO_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
-    .then(() => console.log('Connected to MongoDB Atlas'))
-    .catch(err => console.error('MongoDB connection error:', err));
-} else {
-  console.log('🎭 Running in DEMO MODE - using mock data');
-}
-
-
 // 🎟️ SESSION CONFIGURATION - Like setting up a wristband system at a concert
 app.use(session({
   // This is the "ink" used to create secure wristbands - keep it secret!
