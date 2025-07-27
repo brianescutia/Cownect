@@ -1,68 +1,19 @@
 // =============================================================================
-// EVENTS CALENDAR FUNCTIONALITY
+// FIXED EVENTS CALENDAR FUNCTIONALITY
+// Replace your frontend/scripts/events-calendar.js with this
 // =============================================================================
-// Save as frontend/scripts/events-calendar.js
 
 // 🎯 GLOBAL STATE MANAGEMENT
 const CalendarState = {
-    currentView: 'month', // 'month' or 'week'
+    currentView: 'month',
     currentDate: new Date(),
     selectedDate: null,
     eventsData: {},
+    featuredEvents: [],
     selectedDateEvents: [],
-    isLoading: false
-};
-
-// Sample events data (replace with real data later)
-const SAMPLE_EVENTS = {
-    '2025-01-15': [
-        {
-            id: '1',
-            title: 'React Workshop',
-            time: '6:00 PM - 8:00 PM',
-            location: 'Kemper Hall 1131',
-            description: 'Learn React fundamentals with hands-on coding exercises.',
-            category: 'Workshop'
-        }
-    ],
-    '2025-01-22': [
-        {
-            id: '2',
-            title: 'AI Student Collective Meeting',
-            time: '7:00 PM - 9:00 PM',
-            location: 'Engineering Building',
-            description: 'Weekly meeting to discuss latest AI research and projects.',
-            category: 'Meeting'
-        },
-        {
-            id: '3',
-            title: 'Coding Bootcamp',
-            time: '2:00 PM - 5:00 PM',
-            location: 'Computer Science Building',
-            description: 'Intensive coding session for beginners.',
-            category: 'Workshop'
-        }
-    ],
-    '2025-01-28': [
-        {
-            id: '4',
-            title: 'Tech Career Fair',
-            time: '10:00 AM - 4:00 PM',
-            location: 'UC Center',
-            description: 'Meet with top tech companies and explore career opportunities.',
-            category: 'Career'
-        }
-    ],
-    '2025-02-05': [
-        {
-            id: '5',
-            title: 'HackDavis 2025',
-            time: '9:00 AM - 9:00 PM',
-            location: 'Multiple Locations',
-            description: 'UC Davis\'s premier hackathon focused on social good.',
-            category: 'Hackathon'
-        }
-    ]
+    isLoading: false,
+    isAuthenticated: false,
+    currentUser: null
 };
 
 // 🎯 WAIT FOR PAGE TO LOAD
@@ -70,8 +21,17 @@ document.addEventListener('DOMContentLoaded', async () => {
     console.log('🚀 Initializing Events Calendar...');
 
     try {
+        // Check authentication
+        await checkAuthentication();
+
+        // Initialize calendar
         await initializeCalendar();
         setupEventListeners();
+
+        // Load featured events
+        await loadFeaturedEvents();
+
+        // Render calendar
         renderCalendar();
 
         console.log('✅ Events calendar initialized successfully');
@@ -82,6 +42,34 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 // =============================================================================
+// AUTHENTICATION
+// =============================================================================
+
+async function checkAuthentication() {
+    try {
+        const response = await fetch('/api/user');
+        if (response.ok) {
+            const userData = await response.json();
+            CalendarState.isAuthenticated = userData.isLoggedIn;
+            CalendarState.currentUser = userData;
+
+            if (!userData.isLoggedIn) {
+                console.log('❌ User not authenticated');
+                window.location.href = '/login';
+                return;
+            }
+
+            console.log('✅ User authenticated:', userData.email);
+        } else {
+            throw new Error('Authentication failed');
+        }
+    } catch (error) {
+        console.error('❌ Auth check failed:', error);
+        window.location.href = '/login';
+    }
+}
+
+// =============================================================================
 // INITIALIZATION FUNCTIONS
 // =============================================================================
 
@@ -89,42 +77,118 @@ async function initializeCalendar() {
     try {
         showLoading(true);
 
-        // Load events data (using sample data for now)
-        CalendarState.eventsData = SAMPLE_EVENTS;
-
-        // In the future, replace with actual API call:
-        // await loadEventsData();
+        // Load calendar events for current month
+        await loadCalendarData();
 
         showLoading(false);
+        console.log('✅ Calendar initialized with events data');
     } catch (error) {
-        console.error('💥 Error loading events data:', error);
+        console.error('💥 Error loading calendar data:', error);
         showLoading(false);
-        // Continue with sample data even if API fails
-        CalendarState.eventsData = SAMPLE_EVENTS;
+
+        // Use fallback data if API fails
+        CalendarState.eventsData = getFallbackEventsData();
+        console.log('⚠️ Using fallback events data');
     }
 }
 
-async function loadEventsData() {
+async function loadCalendarData() {
     try {
         const year = CalendarState.currentDate.getFullYear();
         const month = CalendarState.currentDate.getMonth() + 1;
 
+        console.log(`📊 Loading calendar data for ${year}-${month}`);
+
         const response = await fetch(`/api/events/calendar/${year}/${month}`);
-        if (!response.ok) throw new Error('Failed to load events');
 
-        const eventsData = await response.json();
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
 
-        // Process the data into our format
+        const calendarData = await response.json();
+        console.log('📊 Raw calendar data:', calendarData);
+
+        // Process the calendar data
         CalendarState.eventsData = {};
-        eventsData.forEach(dayData => {
-            CalendarState.eventsData[dayData._id] = dayData.events;
+
+        if (Array.isArray(calendarData)) {
+            calendarData.forEach(dayData => {
+                if (dayData._id && dayData.events) {
+                    CalendarState.eventsData[dayData._id] = dayData.events;
+                }
+            });
+        }
+
+        console.log(`✅ Processed calendar data for ${Object.keys(CalendarState.eventsData).length} days`);
+        console.log('📅 Events data:', CalendarState.eventsData);
+
+    } catch (error) {
+        console.error('💥 Error loading calendar data:', error);
+
+        // If calendar API fails, try to load all events and group them by date
+        await loadAllEventsAsFallback();
+    }
+}
+
+async function loadAllEventsAsFallback() {
+    try {
+        console.log('🔄 Attempting to load all events as fallback...');
+
+        const response = await fetch('/api/events?upcoming=false&limit=100');
+        if (!response.ok) throw new Error('Events API failed');
+
+        const events = await response.json();
+        console.log('📅 Loaded events for fallback:', events);
+
+        // Group events by date
+        CalendarState.eventsData = {};
+        events.forEach(event => {
+            const eventDate = new Date(event.date);
+            const dateKey = eventDate.toISOString().split('T')[0];
+
+            if (!CalendarState.eventsData[dateKey]) {
+                CalendarState.eventsData[dateKey] = [];
+            }
+
+            CalendarState.eventsData[dateKey].push({
+                id: event._id || event.id,
+                title: event.title,
+                time: event.time || event.formattedTime || 'Time TBD',
+                location: event.location,
+                description: event.description,
+                category: event.category || 'Event'
+            });
         });
 
-        console.log(`✅ Loaded events for ${Object.keys(CalendarState.eventsData).length} days`);
+        console.log('✅ Fallback events grouped by date:', Object.keys(CalendarState.eventsData).length, 'days');
+
     } catch (error) {
-        console.error('💥 Error loading events:', error);
-        // Fallback to sample data
-        CalendarState.eventsData = SAMPLE_EVENTS;
+        console.error('💥 Fallback events loading failed:', error);
+        CalendarState.eventsData = getFallbackEventsData();
+    }
+}
+
+async function loadFeaturedEvents() {
+    try {
+        console.log('🌟 Loading featured events...');
+
+        const response = await fetch('/api/events/featured');
+
+        if (response.ok) {
+            CalendarState.featuredEvents = await response.json();
+            console.log(`✅ Loaded ${CalendarState.featuredEvents.length} featured events`);
+        } else {
+            throw new Error('Featured events API failed');
+        }
+
+        renderFeaturedEvents();
+
+    } catch (error) {
+        console.error('💥 Error loading featured events:', error);
+
+        // Use fallback featured events
+        CalendarState.featuredEvents = getFallbackFeaturedEvents();
+        renderFeaturedEvents();
     }
 }
 
@@ -148,6 +212,8 @@ function setupEventListeners() {
 // =============================================================================
 
 function renderCalendar() {
+    console.log('🎨 Rendering calendar...');
+
     if (CalendarState.currentView === 'month') {
         renderMonthView();
     } else {
@@ -156,11 +222,16 @@ function renderCalendar() {
 
     updatePeriodTitle();
     updateViewButtons();
+
+    console.log('✅ Calendar rendered');
 }
 
 function renderMonthView() {
     const grid = document.getElementById('calendarGrid');
-    if (!grid) return;
+    if (!grid) {
+        console.error('❌ Calendar grid element not found');
+        return;
+    }
 
     grid.innerHTML = '';
     grid.className = 'calendar-grid';
@@ -217,6 +288,8 @@ function renderMonthView() {
         nextMonthDay.innerHTML = createDayContent(nextDate, true);
         grid.appendChild(nextMonthDay);
     }
+
+    console.log('📅 Month view rendered with events');
 }
 
 function renderWeekView() {
@@ -262,16 +335,95 @@ function createDayContent(date, isOtherMonth) {
 
     let content = `<span class="day-number">${dayNumber}</span>`;
 
+    // Add event indicators (blue dots) if there are events
     if (events.length > 0 && !isOtherMonth) {
         content += '<div class="event-indicators">';
+
         // Show up to 4 dots, representing events
         for (let i = 0; i < Math.min(events.length, 4); i++) {
             content += '<div class="event-dot"></div>';
         }
+
+        // If more than 4 events, show a count
+        if (events.length > 4) {
+            content += `<div class="event-count">+${events.length - 4}</div>`;
+        }
+
         content += '</div>';
+
+        console.log(`📍 Day ${dayNumber} has ${events.length} events`);
     }
 
     return content;
+}
+
+// =============================================================================
+// FEATURED EVENTS RENDERING
+// =============================================================================
+
+function renderFeaturedEvents() {
+    const grid = document.getElementById('featuredEventsGrid');
+    const template = document.getElementById('eventCardTemplate');
+
+    if (!grid) {
+        console.error('❌ Featured events grid not found');
+        return;
+    }
+
+    if (!template) {
+        console.error('❌ Event card template not found');
+        return;
+    }
+
+    grid.innerHTML = '';
+
+    if (CalendarState.featuredEvents.length === 0) {
+        grid.innerHTML = '<div class="no-events">No featured events available</div>';
+        return;
+    }
+
+    CalendarState.featuredEvents.forEach(event => {
+        const eventCard = template.content.cloneNode(true);
+
+        // Update card content
+        const img = eventCard.querySelector('.event-image');
+        img.src = event.imageUrl || '/assets/default-event-image.jpg';
+        img.alt = event.title;
+
+        const bookmark = eventCard.querySelector('.event-bookmark');
+        bookmark.addEventListener('click', (e) => {
+            e.stopPropagation();
+            handleEventBookmark(event._id || event.id);
+        });
+
+        const dateMonth = eventCard.querySelector('.date-month');
+        const dateDay = eventCard.querySelector('.date-day');
+        const eventDate = new Date(event.date);
+        dateMonth.textContent = eventDate.toLocaleDateString('en-US', { month: 'short' }).toUpperCase();
+        dateDay.textContent = eventDate.getDate();
+
+        eventCard.querySelector('.event-title').textContent = event.title;
+        eventCard.querySelector('.event-description').textContent = event.description;
+        eventCard.querySelector('.time-text').textContent = event.formattedTime || event.time;
+        eventCard.querySelector('.location-text').textContent = event.location;
+
+        // Event actions
+        const joinBtn = eventCard.querySelector('.join-event-btn');
+        joinBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            handleEventJoin(event._id || event.id);
+        });
+
+        const calendarBtn = eventCard.querySelector('.add-calendar-btn');
+        calendarBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            addToGoogleCalendar(event);
+        });
+
+        grid.appendChild(eventCard);
+    });
+
+    console.log(`📅 Rendered ${CalendarState.featuredEvents.length} featured event cards`);
 }
 
 // =============================================================================
@@ -309,14 +461,27 @@ async function selectDate(date) {
 async function loadEventsForDate(date) {
     try {
         const dateKey = formatDateKey(date);
+        console.log(`📡 Loading events for ${dateKey}`);
+
+        // First try to get from our loaded data
         CalendarState.selectedDateEvents = CalendarState.eventsData[dateKey] || [];
 
-        // In the future, you could load from API:
-        // const response = await fetch(`/api/events/date/${dateKey}`);
-        // const events = await response.json();
-        // CalendarState.selectedDateEvents = events;
+        // If no events in loaded data, try API
+        if (CalendarState.selectedDateEvents.length === 0) {
+            try {
+                const response = await fetch(`/api/events/date/${dateKey}`);
+                if (response.ok) {
+                    const apiEvents = await response.json();
+                    CalendarState.selectedDateEvents = apiEvents;
+                    console.log(`📡 Loaded ${apiEvents.length} events from API for ${dateKey}`);
+                }
+            } catch (apiError) {
+                console.log('📡 API call failed, using loaded data');
+            }
+        }
 
-        console.log(`✅ Loaded ${CalendarState.selectedDateEvents.length} events for ${dateKey}`);
+        console.log(`✅ Final events for ${dateKey}:`, CalendarState.selectedDateEvents.length);
+
     } catch (error) {
         console.error('💥 Error loading events for date:', error);
         CalendarState.selectedDateEvents = [];
@@ -355,12 +520,10 @@ function updateSidebar() {
         ).join('');
 
         contentElement.innerHTML = eventsHTML;
-
-        // Add event listeners to action buttons
         setupSidebarEventListeners();
     }
 
-    // Show sidebar (it might be hidden on mobile)
+    // Show sidebar
     sidebar.style.display = 'flex';
 }
 
@@ -384,13 +547,10 @@ function createSidebarEventCard(event) {
 }
 
 function setupSidebarEventListeners() {
-    // Add any additional event listeners for sidebar interactions
     const eventCards = document.querySelectorAll('.sidebar-event-card');
-
     eventCards.forEach(card => {
         card.addEventListener('click', (e) => {
             if (!e.target.classList.contains('event-action-btn')) {
-                // Handle card click (maybe show more details)
                 console.log('Event card clicked:', card.dataset.eventId);
             }
         });
@@ -423,57 +583,63 @@ function closeSidebar() {
 // EVENT ACTIONS
 // =============================================================================
 
-function joinEvent(eventId) {
-    console.log(`🎟️ Joining event: ${eventId}`);
+async function handleEventJoin(eventId) {
+    try {
+        console.log(`🎟️ Joining event: ${eventId}`);
 
-    // Find the event
-    const event = findEventById(eventId);
-    if (!event) {
-        alert('Event not found');
-        return;
+        const response = await fetch(`/api/events/${eventId}/join`, {
+            method: 'POST'
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error || 'Failed to join event');
+        }
+
+        const result = await response.json();
+        console.log('✅ Successfully joined event:', result);
+
+        alert(`✅ Successfully joined the event!\n\nYou'll receive more details via email.`);
+
+    } catch (error) {
+        console.error('💥 Error joining event:', error);
+        alert(`❌ Failed to join event: ${error.message}`);
     }
-
-    // In the future, make API call:
-    // await fetch(`/api/events/${eventId}/join`, { method: 'POST' });
-
-    alert(`✅ Successfully joined "${event.title}"!\n\nYou'll receive more details via email soon.`);
 }
 
-function addToCalendar(eventId) {
-    console.log(`📅 Adding to calendar: ${eventId}`);
-
-    const event = findEventById(eventId);
-    if (!event) {
-        alert('Event not found');
-        return;
+async function handleEventBookmark(eventId) {
+    try {
+        console.log(`🔖 Bookmarking event: ${eventId}`);
+        alert('Event bookmarked! (Feature coming soon)');
+    } catch (error) {
+        console.error('💥 Error bookmarking event:', error);
+        alert('Failed to bookmark event');
     }
-
-    // Create Google Calendar link
-    const startDate = CalendarState.selectedDate;
-    const endDate = new Date(startDate.getTime() + (2 * 60 * 60 * 1000)); // 2 hours later
-
-    const calendarUrl = new URL('https://calendar.google.com/calendar/render');
-    calendarUrl.searchParams.set('action', 'TEMPLATE');
-    calendarUrl.searchParams.set('text', event.title);
-    calendarUrl.searchParams.set('dates',
-        `${formatDateForCalendar(startDate)}/${formatDateForCalendar(endDate)}`
-    );
-    calendarUrl.searchParams.set('details', event.description);
-    calendarUrl.searchParams.set('location', event.location);
-
-    // Open Google Calendar
-    window.open(calendarUrl.toString(), '_blank');
-
-    console.log('✅ Opened Google Calendar');
 }
 
-function findEventById(eventId) {
-    for (const dateKey in CalendarState.eventsData) {
-        const events = CalendarState.eventsData[dateKey];
-        const event = events.find(e => e.id === eventId);
-        if (event) return event;
+function addToGoogleCalendar(event) {
+    try {
+        console.log(`📅 Adding to Google Calendar: ${event.title}`);
+
+        const startDate = new Date(event.date);
+        const endDate = new Date(startDate.getTime() + (2 * 60 * 60 * 1000)); // 2 hours later
+
+        const calendarUrl = new URL('https://calendar.google.com/calendar/render');
+        calendarUrl.searchParams.set('action', 'TEMPLATE');
+        calendarUrl.searchParams.set('text', event.title);
+        calendarUrl.searchParams.set('dates',
+            `${formatDateForCalendar(startDate)}/${formatDateForCalendar(endDate)}`
+        );
+        calendarUrl.searchParams.set('details', event.description);
+        calendarUrl.searchParams.set('location', event.location);
+
+        window.open(calendarUrl.toString(), '_blank');
+        console.log('✅ Opened Google Calendar');
+
+    } catch (error) {
+        console.error('💥 Error adding to Google Calendar:', error);
+        alert('Failed to open Google Calendar');
     }
-    return null;
 }
 
 // =============================================================================
@@ -484,7 +650,6 @@ function switchView(view) {
     CalendarState.currentView = view;
     renderCalendar();
     updateViewButtons();
-
     console.log(`🔄 Switched to ${view} view`);
 }
 
@@ -495,8 +660,8 @@ function navigatePeriod(direction) {
         CalendarState.currentDate.setDate(CalendarState.currentDate.getDate() + (direction * 7));
     }
 
-    // Load new events data if needed
-    loadEventsData().then(() => {
+    // Load new events data
+    loadCalendarData().then(() => {
         renderCalendar();
 
         // Clear selection if moving to different period
@@ -605,17 +770,434 @@ function showLoading(show) {
 function showError(message) {
     const errorContainer = document.getElementById('errorContainer');
     const errorMessage = document.getElementById('errorMessage');
+    const eventsContainer = document.getElementById('eventsContainer');
 
     if (errorContainer && errorMessage) {
         errorMessage.textContent = message;
         errorContainer.style.display = 'flex';
     }
 
+    if (eventsContainer) {
+        eventsContainer.style.display = 'none';
+    }
+
     console.error('💥 Calendar Error:', message);
 }
 
 // =============================================================================
-// GLOBAL FUNCTIONS (for debugging and external access)
+// FALLBACK DATA
+// =============================================================================
+
+function getFallbackEventsData() {
+    console.log('🔄 Using fallback events data');
+
+    const today = new Date();
+    const nextWeek = new Date(today.getTime() + 7 * 24 * 60 * 60 * 1000);
+    const nextMonth = new Date(today.getTime() + 30 * 24 * 60 * 60 * 1000);
+
+    return {
+        [formatDateKey(nextWeek)]: [
+            {
+                id: 'fallback1',
+                title: 'React Workshop',
+                time: '6:00 PM - 8:00 PM',
+                location: 'Kemper Hall 1131',
+                description: 'Learn React fundamentals with hands-on coding exercises.',
+                category: 'Workshop'
+            }
+        ],
+        [formatDateKey(nextMonth)]: [
+            {
+                id: 'fallback2',
+                title: 'Tech Career Fair',
+                time: '10:00 AM - 4:00 PM',
+                location: 'UC Center',
+                description: 'Meet with top tech companies and explore career opportunities.',
+                category: 'Career'
+            }
+        ]
+    };
+}
+
+function getFallbackFeaturedEvents() {
+    const nextWeek = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+    const nextMonth = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
+
+    return [
+        {
+            _id: 'fallback1',
+            title: 'HackDavis 2025',
+            description: 'UC Davis\'s premier hackathon focused on social good and environmental sustainability.',
+            date: nextWeek,
+            time: '9:00 AM - 11:59 PM',
+            location: 'UC Davis Campus',
+            imageUrl: '/assets/hackdavis-placeholder.jpg',
+            formattedTime: '9:00 AM - 11:59 PM'
+        },
+        {
+            _id: 'fallback2',
+            title: 'Tech Career Fair',
+            description: 'Meet with top tech companies and explore internship and full-time opportunities.',
+            date: nextMonth,
+            time: '10:00 AM - 4:00 PM',
+            location: 'UC Center Ballroom',
+            imageUrl: '/assets/career-fair-placeholder.jpg',
+            formattedTime: '10:00 AM - 4:00 PM'
+        }
+    ];
+}
+// =============================================================================
+// UPDATED EVENTS CALENDAR FOR NEW DESIGN
+// Replace the renderFeaturedEvents function in your events-calendar.js
+// =============================================================================
+
+// =============================================================================
+// UPDATED EVENTS CALENDAR FOR NEW DESIGN
+// Replace the renderFeaturedEvents function in your events-calendar.js
+// =============================================================================
+
+function renderFeaturedEvents() {
+    const grid = document.getElementById('featuredEventsGrid');
+    const template = document.getElementById('eventCardTemplate');
+
+    if (!grid) {
+        console.error('❌ Featured events grid not found');
+        return;
+    }
+
+    if (!template) {
+        console.error('❌ Event card template not found');
+        return;
+    }
+
+    // Clear all existing content including loading cards
+    grid.innerHTML = '';
+
+    if (CalendarState.featuredEvents.length === 0) {
+        grid.innerHTML = '<div class="no-events" style="grid-column: 1 / -1; text-align: center; padding: 2rem; color: #666;">No featured events available</div>';
+        return;
+    }
+
+    CalendarState.featuredEvents.forEach((event, index) => {
+        const eventCard = template.content.cloneNode(true);
+
+        // Update event image
+        const img = eventCard.querySelector('.event-image');
+        img.src = event.imageUrl || generatePlaceholderImage(event.title);
+        img.alt = event.title;
+
+        // Handle image loading errors
+        img.addEventListener('error', () => {
+            img.style.background = getEventCategoryGradient(event.category);
+            img.style.position = 'relative';
+            img.style.display = 'flex';
+            img.style.alignItems = 'center';
+            img.style.justifyContent = 'center';
+            img.style.color = 'white';
+            img.style.fontWeight = '600';
+            img.setAttribute('data-error', 'true');
+
+            // Create fallback content
+            const fallback = document.createElement('div');
+            fallback.style.position = 'absolute';
+            fallback.style.top = '50%';
+            fallback.style.left = '50%';
+            fallback.style.transform = 'translate(-50%, -50%)';
+            fallback.style.textAlign = 'center';
+            fallback.innerHTML = `
+                <div style="font-size: 2rem; margin-bottom: 0.5rem;">${getEventIcon(event.category)}</div>
+                <div style="font-size: 0.9rem;">Tech Event</div>
+            `;
+            img.parentElement.appendChild(fallback);
+        });
+
+        // Update date badge
+        const eventDate = new Date(event.date);
+        const dateDay = eventCard.querySelector('.date-day');
+        const dateMonth = eventCard.querySelector('.date-month');
+
+        dateDay.textContent = eventDate.getDate();
+        dateMonth.textContent = eventDate.toLocaleDateString('en-US', { month: 'short' }).toUpperCase();
+
+        // Update bookmark button
+        const bookmark = eventCard.querySelector('.event-bookmark');
+        bookmark.addEventListener('click', (e) => {
+            e.stopPropagation();
+            handleEventBookmark(event._id || event.id, bookmark);
+        });
+
+        // Update event content
+        eventCard.querySelector('.event-title').textContent = event.title;
+        eventCard.querySelector('.event-description').textContent = truncateText(event.description, 80);
+        eventCard.querySelector('.time-text').textContent = event.formattedTime || event.time;
+        eventCard.querySelector('.location-text').textContent = truncateText(event.location, 25);
+
+        // Update action buttons
+        const joinBtn = eventCard.querySelector('.join-event-btn');
+        joinBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            handleEventJoin(event._id || event.id, joinBtn);
+        });
+
+        const calendarBtn = eventCard.querySelector('.add-calendar-btn');
+        calendarBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            addToGoogleCalendar(event);
+        });
+
+        // Add click handler for entire card
+        const card = eventCard.querySelector('.event-card');
+        card.addEventListener('click', () => {
+            selectEventDate(event);
+        });
+
+        grid.appendChild(eventCard);
+    });
+
+    console.log(`📅 Rendered ${CalendarState.featuredEvents.length} featured event cards with responsive design`);
+}
+
+// =============================================================================
+// ENHANCED EVENT ACTIONS FOR NEW DESIGN
+// =============================================================================
+
+async function handleEventJoin(eventId, buttonElement) {
+    try {
+        console.log(`🎟️ Joining event: ${eventId}`);
+
+        // Update button to loading state
+        const originalText = buttonElement.textContent;
+        buttonElement.textContent = 'Joining...';
+        buttonElement.disabled = true;
+
+        const response = await fetch(`/api/events/${eventId}/join`, {
+            method: 'POST'
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error || 'Failed to join event');
+        }
+
+        const result = await response.json();
+        console.log('✅ Successfully joined event:', result);
+
+        // Update button to success state
+        buttonElement.textContent = 'Joined ✓';
+        buttonElement.style.background = '#27ae60';
+
+        // Show success notification
+        showNotification('Successfully joined event! 🎉', 'success');
+
+    } catch (error) {
+        console.error('💥 Error joining event:', error);
+
+        // Reset button
+        buttonElement.textContent = originalText;
+        buttonElement.disabled = false;
+
+        showNotification(`Failed to join event: ${error.message}`, 'error');
+    }
+}
+
+async function handleEventBookmark(eventId, bookmarkElement) {
+    try {
+        console.log(`🔖 Toggling bookmark for event: ${eventId}`);
+
+        const isBookmarked = bookmarkElement.classList.contains('bookmarked');
+
+        // Optimistic update
+        if (isBookmarked) {
+            bookmarkElement.classList.remove('bookmarked');
+            bookmarkElement.style.background = 'rgba(255, 255, 255, 0.95)';
+            bookmarkElement.style.color = '#666';
+        } else {
+            bookmarkElement.classList.add('bookmarked');
+            bookmarkElement.style.background = '#5F96C5';
+            bookmarkElement.style.color = 'white';
+        }
+
+        // In the future, make actual API call here:
+        // const response = await fetch(`/api/events/${eventId}/bookmark`, { method: 'POST' });
+
+        const message = isBookmarked ? 'Event removed from bookmarks' : 'Event bookmarked!';
+        showNotification(message, 'info');
+
+    } catch (error) {
+        console.error('💥 Error bookmarking event:', error);
+
+        // Revert optimistic update
+        if (bookmarkElement.classList.contains('bookmarked')) {
+            bookmarkElement.classList.remove('bookmarked');
+        } else {
+            bookmarkElement.classList.add('bookmarked');
+        }
+
+        showNotification('Failed to bookmark event', 'error');
+    }
+}
+
+function selectEventDate(event) {
+    const eventDate = new Date(event.date);
+    console.log(`📅 Selecting date from featured event: ${eventDate.toDateString()}`);
+
+    // Update the calendar to show this date
+    CalendarState.currentDate = new Date(eventDate.getFullYear(), eventDate.getMonth(), 1);
+
+    // Re-render calendar and select the date
+    loadCalendarData().then(() => {
+        renderCalendar();
+        selectDate(eventDate);
+
+        // Scroll to calendar section
+        document.querySelector('.calendar-section').scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+        });
+    });
+}
+
+// =============================================================================
+// UTILITY FUNCTIONS FOR NEW DESIGN
+// =============================================================================
+
+function truncateText(text, maxLength) {
+    if (!text) return '';
+    if (text.length <= maxLength) return text;
+    return text.substring(0, maxLength - 3) + '...';
+}
+
+function generatePlaceholderImage(title) {
+    const width = 450;
+    const height = 180; // 60% of 300px card height
+    const bgColor = '5F96C5';
+    const textColor = 'FFFFFF';
+    const encodedTitle = encodeURIComponent(title || 'Tech Event');
+
+    return `https://via.placeholder.com/${width}x${height}/${bgColor}/${textColor}?text=${encodedTitle}`;
+}
+
+function getEventCategoryGradient(category) {
+    const gradients = {
+        'hackathon': 'linear-gradient(135deg, #e74c3c, #f39c12)',
+        'workshop': 'linear-gradient(135deg, #27ae60, #2ecc71)',
+        'career': 'linear-gradient(135deg, #8e44ad, #9b59b6)',
+        'tech-talk': 'linear-gradient(135deg, #34495e, #2c3e50)',
+        'networking': 'linear-gradient(135deg, #f39c12, #f1c40f)',
+        'research': 'linear-gradient(135deg, #3498db, #2980b9)',
+        'social': 'linear-gradient(135deg, #e67e22, #d35400)',
+        'default': 'linear-gradient(135deg, #5F96C5, #4a8bc2)'
+    };
+
+    return gradients[category] || gradients.default;
+}
+
+function getEventIcon(category) {
+    const icons = {
+        'hackathon': '💻',
+        'workshop': '🛠️',
+        'career': '💼',
+        'tech-talk': '🎤',
+        'networking': '🤝',
+        'research': '🔬',
+        'social': '🎉',
+        'default': '🎉'
+    };
+
+    return icons[category] || icons.default;
+}
+
+function showNotification(message, type = 'info') {
+    const notification = document.createElement('div');
+    notification.className = `notification ${type}`;
+
+    const bgColors = {
+        'success': '#27ae60',
+        'error': '#e74c3c',
+        'info': '#5F96C5'
+    };
+
+    notification.style.cssText = `
+        position: fixed;
+        top: 100px;
+        right: 20px;
+        background: ${bgColors[type]};
+        color: white;
+        padding: 1rem 1.5rem;
+        border-radius: 12px;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+        z-index: 1001;
+        font-weight: 500;
+        font-size: 0.9rem;
+        max-width: 300px;
+        opacity: 0;
+        transform: translateX(100%);
+        transition: all 0.3s ease;
+    `;
+
+    notification.innerHTML = `
+        <div style="display: flex; align-items: center; gap: 0.5rem;">
+            <span>${message}</span>
+            <button onclick="this.parentElement.parentElement.remove()" 
+                    style="background: none; border: none; color: white; cursor: pointer; font-size: 1.2rem; padding: 0; margin-left: auto;">×</button>
+        </div>
+    `;
+
+    document.body.appendChild(notification);
+
+    // Animate in
+    setTimeout(() => {
+        notification.style.opacity = '1';
+        notification.style.transform = 'translateX(0)';
+    }, 100);
+
+    // Auto remove after 4 seconds
+    setTimeout(() => {
+        if (notification.parentElement) {
+            notification.style.opacity = '0';
+            notification.style.transform = 'translateX(100%)';
+            setTimeout(() => notification.remove(), 300);
+        }
+    }, 4000);
+}
+
+// =============================================================================
+// ADD TO EXISTING CALENDAR SCRIPT
+// =============================================================================
+
+// Add this to your existing events-calendar.js file after the existing functions
+// or replace the renderFeaturedEvents function with the one above
+
+console.log('✅ Updated Events Calendar script for new design loaded');
+// =============================================================================
+// GLOBAL FUNCTIONS (for window scope)
+// =============================================================================
+
+window.joinEvent = function (eventId) {
+    const event = findEventById(eventId);
+    if (event) {
+        handleEventJoin(eventId);
+    }
+};
+
+window.addToCalendar = function (eventId) {
+    const event = findEventById(eventId);
+    if (event) {
+        addToGoogleCalendar(event);
+    }
+};
+
+function findEventById(eventId) {
+    for (const dateKey in CalendarState.eventsData) {
+        const events = CalendarState.eventsData[dateKey];
+        const event = events.find(e => e.id === eventId);
+        if (event) return event;
+    }
+    return null;
+}
+
+// =============================================================================
+// DEBUG FUNCTIONS
 // =============================================================================
 
 window.debugCalendar = function () {
@@ -623,27 +1205,12 @@ window.debugCalendar = function () {
     console.log('  Current view:', CalendarState.currentView);
     console.log('  Current date:', CalendarState.currentDate);
     console.log('  Selected date:', CalendarState.selectedDate);
-    console.log('  Events data:', Object.keys(CalendarState.eventsData).length, 'days');
+    console.log('  Events data keys:', Object.keys(CalendarState.eventsData));
+    console.log('  Events data:', CalendarState.eventsData);
+    console.log('  Featured events:', CalendarState.featuredEvents.length);
     console.log('  Selected date events:', CalendarState.selectedDateEvents.length);
     console.log('  Full state:', CalendarState);
 };
 
-// Add sample events function for testing
-window.addSampleEvent = function (dateStr, eventData) {
-    if (!CalendarState.eventsData[dateStr]) {
-        CalendarState.eventsData[dateStr] = [];
-    }
-    CalendarState.eventsData[dateStr].push({
-        id: Date.now().toString(),
-        ...eventData
-    });
-    renderCalendar();
-    console.log(`✅ Added sample event for ${dateStr}`);
-};
+console.log('✅ Fixed Events Calendar script loaded successfully');
 
-// Export for external use
-window.CalendarState = CalendarState;
-window.renderCalendar = renderCalendar;
-window.selectDate = selectDate;
-
-console.log('✅ Events Calendar script loaded successfully');

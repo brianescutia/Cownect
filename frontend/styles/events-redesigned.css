@@ -1,0 +1,659 @@
+/* =============================================================================
+   REDESIGNED EVENTS PAGE STYLES
+   Save as: frontend/styles/events-redesigned.css
+   ============================================================================= */
+
+/* Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Rethink Sans', sans-serif;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    min-height: 100vh;
+    color: #2c3e50;
+}
+
+/* =============================================================================
+   NAVBAR STYLES (No backdrop image)
+   ============================================================================= */
+
+.navbar {
+    background: linear-gradient(135deg, #5F96C5, #4a8bc2);
+    padding: 1rem 0;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    width: 100%;
+}
+
+.navbar-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 2rem;
+}
+
+.logo-title {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.logo {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+}
+
+.logo-text {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: white;
+    text-decoration: none;
+}
+
+.nav-links {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    gap: 2rem;
+    align-items: center;
+}
+
+.nav-links li {
+    margin: 0;
+}
+
+.nav-links a {
+    color: white;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 1rem;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+}
+
+.nav-links a:hover,
+.nav-links a.active {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-1px);
+}
+
+.account-btn {
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    color: white !important;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.account-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.5);
+}
+
+/* =============================================================================
+   MAIN LAYOUT
+   ============================================================================= */
+
+.events-main {
+    width: 100%;
+    min-height: calc(100vh - 80px);
+}
+
+.events-container {
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+/* =============================================================================
+   PAGE HEADER
+   ============================================================================= */
+
+.events-header {
+    text-align: center;
+    margin-bottom: 3rem;
+    padding: 2rem 0;
+}
+
+.events-header h1 {
+    font-size: 2.5rem;
+    color: #2c3e50;
+    margin-bottom: 0.5rem;
+    font-weight: 700;
+}
+
+.events-header p {
+    font-size: 1.1rem;
+    color: #7f8c8d;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* =============================================================================
+   FEATURED EVENTS SECTION (Upper Half)
+   ============================================================================= */
+
+.featured-events-section {
+    margin-bottom: 4rem;
+    min-height: 500px;
+}
+
+.featured-events-section h2 {
+    font-size: 2rem;
+    color: #2c3e50;
+    margin-bottom: 2rem;
+    text-align: center;
+    font-weight: 600;
+}
+
+.featured-events-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 2rem;
+    max-width: 1500px;
+    margin: 0 auto;
+    padding: 0 1rem;
+    justify-items: center;
+}
+
+/* Force 3 columns on larger screens */
+@media (min-width: 1200px) {
+    .featured-events-grid {
+        grid-template-columns: repeat(3, 1fr);
+        max-width: 1400px;
+    }
+}
+
+/* Force 2 columns on medium screens */
+@media (min-width: 768px) and (max-width: 1199px) {
+    .featured-events-grid {
+        grid-template-columns: repeat(2, 1fr);
+        max-width: 900px;
+    }
+}
+
+/* Force 1 column only on very small screens */
+@media (max-width: 767px) {
+    .featured-events-grid {
+        grid-template-columns: 1fr;
+        max-width: 400px;
+    }
+}
+
+/* =============================================================================
+   EVENT CARDS (Responsive sizing)
+   ============================================================================= */
+
+.event-card {
+    width: 100%;
+    max-width: 450px;
+    min-width: 320px;
+    height: 300px;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    position: relative;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+}
+
+.event-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+}
+
+/* Date Badge - Top Left */
+.event-date-badge {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    background: rgba(95, 150, 197, 0.95);
+    color: white;
+    padding: 8px 10px;
+    border-radius: 8px;
+    text-align: center;
+    font-weight: 600;
+    z-index: 10;
+    backdrop-filter: blur(10px);
+    min-width: 50px;
+}
+
+.date-day {
+    display: block;
+    font-size: 1.2rem;
+    line-height: 1;
+    font-weight: 700;
+}
+
+.date-month {
+    display: block;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-top: 2px;
+    opacity: 0.9;
+}
+
+/* Bookmark Button - Top Right */
+.event-bookmark {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 36px;
+    height: 36px;
+    background: rgba(255, 255, 255, 0.95);
+    border: none;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 10;
+    color: #666;
+    backdrop-filter: blur(10px);
+}
+
+.event-bookmark:hover {
+    background: white;
+    transform: scale(1.1);
+    color: #5F96C5;
+}
+
+.event-bookmark.bookmarked {
+    background: #5F96C5;
+    color: white;
+}
+
+/* Event Image - Upper Half */
+.event-image-container {
+    height: 60%;
+    overflow: hidden;
+    position: relative;
+}
+
+.event-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.event-card:hover .event-image {
+    transform: scale(1.05);
+}
+
+/* Event Content - Lower Half */
+.event-content {
+    height: 40%;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.event-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 0.5rem;
+    line-height: 1.3;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+
+.event-description {
+    font-size: 0.85rem;
+    color: #666;
+    line-height: 1.4;
+    margin-bottom: 0.75rem;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    flex-grow: 1;
+}
+
+/* Event Details (Location and Time) */
+.event-details {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 0.75rem;
+    font-size: 0.8rem;
+    color: #666;
+}
+
+.event-location,
+.event-time {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.event-location svg,
+.event-time svg {
+    color: #5F96C5;
+    flex-shrink: 0;
+}
+
+/* Event Actions */
+.event-actions {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.join-event-btn {
+    background: linear-gradient(135deg, #5F96C5, #4a8bc2);
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    flex: 1;
+}
+
+.join-event-btn:hover {
+    background: linear-gradient(135deg, #4a8bc2, #3d7bb5);
+    transform: translateY(-1px);
+}
+
+.add-calendar-btn {
+    background: rgba(40, 167, 69, 0.1);
+    color: #28a745;
+    border: 1px solid rgba(40, 167, 69, 0.3);
+    padding: 0.5rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.add-calendar-btn:hover {
+    background: rgba(40, 167, 69, 0.2);
+    transform: translateY(-1px);
+}
+
+/* Loading Cards */
+.loading-cards {
+    display: contents;
+    /* This makes the loading cards participate in the grid */
+}
+
+.loading-card {
+    width: 100%;
+    max-width: 450px;
+    min-width: 320px;
+    height: 300px;
+    background: white;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #666;
+    font-size: 1.1rem;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.7;
+    }
+}
+
+/* =============================================================================
+   CALENDAR SECTION (Lower Half)
+   ============================================================================= */
+
+.calendar-section {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 20px;
+    padding: 2rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
+    margin-top: 2rem;
+}
+
+/* =============================================================================
+   LOADING AND ERROR STATES
+   ============================================================================= */
+
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.95);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    backdrop-filter: blur(5px);
+}
+
+.loading-spinner {
+    width: 50px;
+    height: 50px;
+    border: 4px solid rgba(95, 150, 197, 0.3);
+    border-top: 4px solid #5F96C5;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 1rem;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.loading-overlay p {
+    color: #5F96C5;
+    font-weight: 500;
+    font-size: 1.1rem;
+}
+
+.error-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 60vh;
+    text-align: center;
+}
+
+.error-content h3 {
+    color: #e74c3c;
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+}
+
+.retry-btn {
+    background: #e74c3c;
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    margin-top: 1rem;
+    transition: background 0.3s ease;
+}
+
+.retry-btn:hover {
+    background: #c0392b;
+}
+
+/* =============================================================================
+   RESPONSIVE DESIGN
+   ============================================================================= */
+
+@media (max-width: 1500px) {
+    .events-container {
+        max-width: 1200px;
+        padding: 1.5rem;
+    }
+}
+
+@media (max-width: 1199px) {
+    .events-container {
+        padding: 1.5rem;
+    }
+
+    .featured-events-grid {
+        gap: 1.5rem;
+    }
+
+    .event-card {
+        height: 280px;
+    }
+}
+
+@media (max-width: 767px) {
+    .events-container {
+        padding: 1rem;
+    }
+
+    .events-header h1 {
+        font-size: 2rem;
+    }
+
+    .featured-events-grid {
+        gap: 1.5rem;
+        padding: 0 0.5rem;
+    }
+
+    .event-card {
+        height: 280px;
+        min-width: 280px;
+    }
+
+    .navbar-container {
+        padding: 0 1rem;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .nav-links {
+        gap: 1rem;
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .events-container {
+        padding: 0.5rem;
+    }
+
+    .event-card {
+        height: 260px;
+        min-width: 260px;
+    }
+
+    .event-content {
+        padding: 0.75rem;
+    }
+
+    .event-title {
+        font-size: 1rem;
+    }
+
+    .event-description {
+        font-size: 0.8rem;
+    }
+
+    .nav-links {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 0.5rem;
+    }
+
+    .featured-events-grid {
+        padding: 0;
+    }
+}
+
+/* =============================================================================
+   EVENT IMAGE FALLBACK SYSTEM
+   ============================================================================= */
+
+.event-image {
+    background: linear-gradient(135deg, #5F96C5, #4a8bc2);
+}
+
+.event-image::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #5F96C5, #4a8bc2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.2rem;
+    font-weight: 600;
+    z-index: 1;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.event-image[data-error="true"]::before {
+    opacity: 1;
+    content: '🎉 Event';
+}
+
+.event-image-loading {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+    0% {
+        background-position: 200% 0;
+    }
+
+    100% {
+        background-position: -200% 0;
+    }
+}
