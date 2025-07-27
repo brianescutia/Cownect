@@ -621,27 +621,164 @@ function addToGoogleCalendar(event) {
     try {
         console.log(`📅 Adding to Google Calendar: ${event.title}`);
 
-        const startDate = new Date(event.date);
-        const endDate = new Date(startDate.getTime() + (2 * 60 * 60 * 1000)); // 2 hours later
+        // Validate event object
+        if (!event || !event.title) {
+            console.error('❌ Invalid event object:', event);
+            showNotification('Invalid event data', 'error');
+            return;
+        }
 
-        const calendarUrl = new URL('https://calendar.google.com/calendar/render');
-        calendarUrl.searchParams.set('action', 'TEMPLATE');
-        calendarUrl.searchParams.set('text', event.title);
-        calendarUrl.searchParams.set('dates',
-            `${formatDateForCalendar(startDate)}/${formatDateForCalendar(endDate)}`
-        );
-        calendarUrl.searchParams.set('details', event.description);
-        calendarUrl.searchParams.set('location', event.location);
+        // Parse event date with better error handling
+        let eventDate;
+        try {
+            if (event.date) {
+                eventDate = new Date(event.date);
+                // Check if date is valid
+                if (isNaN(eventDate.getTime())) {
+                    throw new Error('Invalid date');
+                }
+            } else {
+                // Default to today if no date
+                eventDate = new Date();
+            }
+        } catch (dateError) {
+            console.error('❌ Date parsing error:', dateError);
+            eventDate = new Date(); // Fallback to today
+        }
 
-        window.open(calendarUrl.toString(), '_blank');
-        console.log('✅ Opened Google Calendar');
+        console.log('📅 Parsed event date:', eventDate);
+
+        // Parse time with fallback
+        let startTime, endTime;
+        try {
+            if (event.time && event.time !== 'Time TBD') {
+                const timeResult = parseEventTimeCalendar(event.time, eventDate);
+                startTime = timeResult.start;
+                endTime = timeResult.end;
+            } else {
+                // Default times
+                startTime = new Date(eventDate);
+                startTime.setHours(18, 0, 0, 0); // 6 PM
+                endTime = new Date(startTime);
+                endTime.setHours(20, 0, 0, 0); // 8 PM
+            }
+        } catch (timeError) {
+            console.error('❌ Time parsing error:', timeError);
+            // Fallback times
+            startTime = new Date(eventDate);
+            startTime.setHours(18, 0, 0, 0);
+            endTime = new Date(startTime);
+            endTime.setHours(20, 0, 0, 0);
+        }
+
+        console.log('🕐 Start time:', startTime, 'End time:', endTime);
+
+        // Validate times before proceeding
+        if (isNaN(startTime.getTime()) || isNaN(endTime.getTime())) {
+            console.error('❌ Invalid times generated');
+            showNotification('Failed to parse event time', 'error');
+            return;
+        }
+
+        // Build Google Calendar URL
+        const calendarUrl = buildCalendarUrl({
+            title: event.title,
+            description: event.description || 'UC Davis Tech Event',
+            location: event.location || 'UC Davis Campus',
+            startTime: startTime,
+            endTime: endTime
+        });
+
+        console.log('🔗 Calendar URL:', calendarUrl);
+
+        // Open Google Calendar
+        const newWindow = window.open(calendarUrl, '_blank', 'noopener,noreferrer');
+
+        if (newWindow) {
+            console.log('✅ Opened Google Calendar');
+            showNotification('Event added to Google Calendar! 📅', 'success');
+        } else {
+            console.error('❌ Failed to open new window');
+            showNotification('Please allow popups to add events', 'error');
+        }
 
     } catch (error) {
         console.error('💥 Error adding to Google Calendar:', error);
-        alert('Failed to open Google Calendar');
+        showNotification(`Calendar error: ${error.message}`, 'error');
     }
 }
 
+function parseEventTimeCalendar(timeString, eventDate) {
+    const baseDate = new Date(eventDate);
+
+    // Handle "6:00 PM - 8:00 PM" format
+    if (timeString.includes('-')) {
+        const parts = timeString.split('-').map(t => t.trim());
+        const startTime = parseTimeString(parts[0], baseDate);
+        const endTime = parts[1] ? parseTimeString(parts[1], baseDate) : new Date(startTime.getTime() + 2 * 60 * 60 * 1000);
+        return { start: startTime, end: endTime };
+    } else {
+        // Single time like "6:00 PM"
+        const startTime = parseTimeString(timeString, baseDate);
+        const endTime = new Date(startTime.getTime() + 2 * 60 * 60 * 1000);
+        return { start: startTime, end: endTime };
+    }
+}
+
+function parseTimeString(timeStr, baseDate) {
+    const date = new Date(baseDate);
+    const cleanTime = timeStr.trim().toLowerCase();
+
+    // Match "6:00 pm" or "6 pm" or "18:00"
+    const match = cleanTime.match(/(\d{1,2})(?::(\d{2}))?\s*(am|pm)?/);
+    if (!match) {
+        throw new Error(`Cannot parse time: ${timeStr}`);
+    }
+
+    let hours = parseInt(match[1]);
+    const minutes = parseInt(match[2] || '0');
+    const period = match[3];
+
+    // Convert to 24-hour format
+    if (period === 'pm' && hours !== 12) {
+        hours += 12;
+    } else if (period === 'am' && hours === 12) {
+        hours = 0;
+    }
+
+    date.setHours(hours, minutes, 0, 0);
+    return date;
+}
+
+function buildCalendarUrl({ title, description, location, startTime, endTime }) {
+    const baseUrl = 'https://calendar.google.com/calendar/render';
+    const params = new URLSearchParams();
+
+    params.set('action', 'TEMPLATE');
+    params.set('text', title);
+
+    // Format dates safely
+    try {
+        const startUTC = startTime.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
+        const endUTC = endTime.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
+        params.set('dates', `${startUTC}/${endUTC}`);
+    } catch (error) {
+        console.error('❌ Error formatting dates:', error);
+        throw new Error('Failed to format dates for calendar');
+    }
+
+    if (description) {
+        params.set('details', description);
+    }
+
+    if (location) {
+        params.set('location', location);
+    }
+
+    params.set('ctz', 'America/Los_Angeles');
+
+    return `${baseUrl}?${params.toString()}`;
+}
 // =============================================================================
 // NAVIGATION FUNCTIONS
 // =============================================================================
