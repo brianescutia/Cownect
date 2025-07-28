@@ -38,11 +38,6 @@
 
         <!-- 🌟 QUIZ INTRODUCTION SCREEN -->
         <section class="quiz-intro" id="quizIntro">
-            <div class="intro-header">
-                <h1>🎯 Find Your Tech Niche</h1>
-                <p class="intro-subtitle">Discover your ideal tech career path with our research-backed quiz</p>
-            </div>
-
             <div class="level-selection">
                 <h2>Choose Your Experience Level</h2>
                 <div class="level-cards">
@@ -80,24 +75,6 @@
                         <button class="select-level-btn">Start Quiz</button>
                     </div>
 
-                </div>
-            </div>
-
-            <div class="intro-features">
-                <div class="feature">
-                    <span class="feature-icon">📊</span>
-                    <h4>Research-Backed</h4>
-                    <p>Based on industry data from BLS, Glassdoor, and LinkedIn</p>
-                </div>
-                <div class="feature">
-                    <span class="feature-icon">🎯</span>
-                    <h4>Personalized Results</h4>
-                    <p>Get specific career paths and next steps tailored to you</p>
-                </div>
-                <div class="feature">
-                    <span class="feature-icon">🏫</span>
-                    <h4>UC Davis Integration</h4>
-                    <p>Connect with relevant clubs and resources on campus</p>
                 </div>
             </div>
         </section>
@@ -156,114 +133,107 @@
         </section>
 
         <!-- 🎉 QUIZ RESULTS SCREEN -->
-        <<!-- =============================================================================
-   UPDATED QUIZ RESULTS SECTION - Add missing IDs to your existing HTML
-   =============================================================================
-   Replace your existing quiz-results section with this updated version:
--->
-
-<!-- 🎉 QUIZ RESULTS SCREEN -->
-<section class="quiz-results" id="quizResults" style="display: none;">
-    
-    <div class="results-header">
-        <h1>🎯 Your Tech Niche Results</h1>
-        <p class="results-subtitle">Based on your responses, here's your personalized career analysis</p>
-    </div>
-
-    <!-- Top Match Card -->
-    <div class="top-match-card">
-        <div class="match-header">
-            <h2>Your Top Match</h2>
-            <div class="confidence-badge" id="confidenceBadge">High Confidence</div>
-        </div>
-        
-        <div class="match-content">
-            <div class="match-info">
-                <h3 id="topCareerName">Web Development</h3>
-                <p id="topCareerDescription">Build websites and web applications...</p>
+        <section class="quiz-results" id="quizResults" style="display: none;">
+            
+            <div class="results-header">
+                <h1>🎯 Your Tech Niche Results</h1>
+                <p class="results-subtitle">Based on your responses, here's your personalized career analysis</p>
             </div>
-            <div class="match-percentage">
-                <div class="percentage-circle">
-                    <svg class="progress-ring" width="120" height="120">
-                        <circle class="progress-ring__circle" stroke="#5F96C5" stroke-width="8" fill="transparent" r="52" cx="60" cy="60"/>
-                    </svg>
-                    <div class="percentage-text" id="matchPercentage">85%</div>
+
+            <!-- Top Match Card -->
+            <div class="top-match-card">
+                <div class="match-header">
+                    <h2>Your Top Match</h2>
+                    <div class="confidence-badge" id="confidenceBadge">High Confidence</div>
+                </div>
+                
+                <div class="match-content">
+                    <div class="match-info">
+                        <h3 id="topCareerName">Web Development</h3>
+                        <p id="topCareerDescription">Build websites and web applications...</p>
+                    </div>
+                    <div class="match-percentage">
+                        <div class="percentage-circle">
+                            <svg class="progress-ring" width="120" height="120">
+                                <circle class="progress-ring__circle" stroke="#5F96C5" stroke-width="8" fill="transparent" r="52" cx="60" cy="60"/>
+                            </svg>
+                            <div class="percentage-text" id="matchPercentage">85%</div>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-    </div>
 
-    <!-- Career Progression -->
-    <div class="career-progression">
-        <h3>📈 Career Progression Path</h3>
-        <div class="progression-timeline" id="progressionTimeline">
-            <!-- Timeline will be populated dynamically -->
-        </div>
-    </div>
-
-    <!-- Market Data -->
-    <div class="market-data">
-        <h3>💼 Market Insights</h3>
-        <div class="data-grid">
-            <div class="data-item">
-                <span class="data-label">Average Salary</span>
-                <span class="data-value" id="avgSalary">$95k - $140k</span>
+            <!-- Career Progression -->
+            <div class="career-progression">
+                <h3>📈 Career Progression Path</h3>
+                <div class="progression-timeline" id="progressionTimeline">
+                    <!-- Timeline will be populated dynamically -->
+                </div>
             </div>
-            <div class="data-item">
-                <span class="data-label">Job Growth</span>
-                <span class="data-value" id="jobGrowth">+13% (2021-2031)</span>
+
+            <!-- Market Data -->
+            <div class="market-data">
+                <h3>💼 Market Insights</h3>
+                <div class="data-grid">
+                    <div class="data-item">
+                        <span class="data-label">Average Salary</span>
+                        <span class="data-value" id="avgSalary">$95k - $140k</span>
+                    </div>
+                    <div class="data-item">
+                        <span class="data-label">Job Growth</span>
+                        <span class="data-value" id="jobGrowth">+13% (2021-2031)</span>
+                    </div>
+                    <div class="data-item">
+                        <span class="data-label">Annual Openings</span>
+                        <span class="data-value" id="annualOpenings">28,900</span>
+                    </div>
+                    <div class="data-item">
+                        <span class="data-label">Work-Life Balance</span>
+                        <span class="data-value" id="workLifeBalance">7.5/10</span>
+                    </div>
+                </div>
             </div>
-            <div class="data-item">
-                <span class="data-label">Annual Openings</span>
-                <span class="data-value" id="annualOpenings">28,900</span>
+
+            <!-- All Matches Visualization -->
+            <div class="all-matches">
+                <h3>🎯 All Career Matches</h3>
+                <div class="matches-chart" id="matchesChart">
+                    <!-- Career match bars will be populated here -->
+                </div>
             </div>
-            <div class="data-item">
-                <span class="data-label">Work-Life Balance</span>
-                <span class="data-value" id="workLifeBalance">7.5/10</span>
+
+            <!-- Next Steps -->
+            <div class="next-steps">
+                <h3>🚀 Your Next Steps</h3>
+                <div class="steps-list" id="nextStepsList">
+                    <!-- Steps will be populated dynamically -->
+                </div>
             </div>
-        </div>
-    </div>
 
-    <!-- All Matches Visualization -->
-    <div class="all-matches">
-        <h3>🎯 All Career Matches</h3>
-        <div class="matches-chart" id="matchesChart">
-            <!-- Career match bars will be populated here -->
-        </div>
-    </div>
+            <!-- Recommended Clubs -->
+            <div class="recommended-clubs">
+                <h3>🏛️ Recommended UC Davis Clubs</h3>
+                <div class="clubs-grid" id="recommendedClubsGrid">
+                    <!-- Club cards will be populated here -->
+                </div>
+            </div>
 
-    <!-- Next Steps -->
-    <div class="next-steps">
-        <h3>🚀 Your Next Steps</h3>
-        <div class="steps-list" id="nextStepsList">
-            <!-- Steps will be populated dynamically -->
-        </div>
-    </div>
-
-    <!-- Recommended Clubs -->
-    <div class="recommended-clubs">
-        <h3>🏛️ Recommended UC Davis Clubs</h3>
-        <div class="clubs-grid" id="recommendedClubsGrid">
-            <!-- Club cards will be populated here -->
-        </div>
-    </div>
-
-    <!-- Result Actions -->
-    <div class="result-actions">
-        <button class="action-btn primary" id="shareResultsBtn">
-            🔗 Share Results
-        </button>
-        <button class="action-btn secondary" id="retakeQuizBtn">
-            🔄 Retake Quiz
-        </button>
-        <button class="action-btn secondary" id="exploreClubsBtn">
-            🏛️ Explore Clubs
-        </button>
-        <button class="action-btn secondary" id="saveToDashboardBtn">
-            💾 Save to Dashboard
-        </button>
-    </div>
-</section>
+            <!-- Result Actions -->
+            <div class="result-actions">
+                <button class="action-btn primary" id="shareResultsBtn">
+                    🔗 Share Results
+                </button>
+                <button class="action-btn secondary" id="retakeQuizBtn">
+                    🔄 Retake Quiz
+                </button>
+                <button class="action-btn secondary" id="exploreClubsBtn">
+                    🏛️ Explore Clubs
+                </button>
+                <button class="action-btn secondary" id="saveToDashboardBtn">
+                    💾 Save to Dashboard
+                </button>
+            </div>
+        </section>
 
         <!-- 📊 LOADING SCREEN -->
         <section class="quiz-loading" id="quizLoading" style="display: none;">
@@ -282,54 +252,52 @@
     </main>
 
     <!-- Hidden Templates -->
-    <!-- Add these templates at the bottom of your niche-quiz.html, just before closing </body> -->
+    <template id="optionTemplate">
+        <div class="sortable-option" data-option-id="">
+            <div class="option-grip">⋮⋮</div>
+            <div class="option-content">
+                <h4 class="option-title"></h4>
+                <p class="option-description"></p>
+            </div>
+            <div class="option-rank">
+                <span class="rank-number"></span>
+            </div>
+        </div>
+    </template>
 
-<template id="optionTemplate">
-    <div class="sortable-option" data-option-id="">
-        <div class="option-grip">⋮⋮</div>
-        <div class="option-content">
-            <h4 class="option-title"></h4>
-            <p class="option-description"></p>
+    <template id="progressionStepTemplate">
+        <div class="progression-step">
+            <div class="step-level"></div>
+            <div class="step-content">
+                <h4 class="step-roles"></h4>
+                <p class="step-timeline"></p>
+                <p class="step-salary"></p>
+            </div>
         </div>
-        <div class="option-rank">
-            <span class="rank-number"></span>
-        </div>
-    </div>
-</template>
+    </template>
 
-<template id="progressionStepTemplate">
-    <div class="progression-step">
-        <div class="step-level"></div>
-        <div class="step-content">
-            <h4 class="step-roles"></h4>
-            <p class="step-timeline"></p>
-            <p class="step-salary"></p>
+    <template id="matchBarTemplate">
+        <div class="match-bar">
+            <div class="match-info">
+                <span class="match-name"></span>
+                <span class="match-category"></span>
+            </div>
+            <div class="match-progress">
+                <div class="match-fill"></div>
+                <span class="match-percent"></span>
+            </div>
         </div>
-    </div>
-</template>
+    </template>
 
-<template id="matchBarTemplate">
-    <div class="match-bar">
-        <div class="match-info">
-            <span class="match-name"></span>
-            <span class="match-category"></span>
+    <template id="clubCardTemplate">
+        <div class="recommended-club-card">
+            <img class="club-logo" src="" alt="">
+            <div class="club-info">
+                <h4 class="club-name"></h4>
+                <p class="club-description"></p>
+                <button class="view-club-btn">View Club</button>
+            </div>
         </div>
-        <div class="match-progress">
-            <div class="match-fill"></div>
-            <span class="match-percent"></span>
-        </div>
-    </div>
-</template>
-
-<template id="clubCardTemplate">
-    <div class="recommended-club-card">
-        <img class="club-logo" src="" alt="">
-        <div class="club-info">
-            <h4 class="club-name"></h4>
-            <p class="club-description"></p>
-            <button class="view-club-btn">View Club</button>
-        </div>
-    </div>
-</template>
+    </template>
 </body>
 </html>

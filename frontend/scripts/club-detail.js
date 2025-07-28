@@ -93,6 +93,9 @@ function updatePageContent(club) {
     // Update contact information with real data
     updateContactInfo(club);
 
+    updateHeroImage(club);
+
+
     console.log('✅ Page content updated with real UC Davis data');
 }
 
@@ -370,6 +373,25 @@ function showError(message) {
     } else {
         console.warn('⚠️ Error container not found');
         alert(`Error: ${message}`);
+    }
+}
+// =============================================================================
+// UPDATE THE BIG HERO IMAGE AT TOP OF PAGE
+// =============================================================================
+
+function updateHeroImage(club) {
+    const heroImage = document.getElementById('clubHeroImage');
+    if (heroImage) {
+        // Use heroImageUrl if available, otherwise use logoUrl, otherwise default
+        const imageUrl = club.heroImageUrl || club.logoUrl || '../assets/default-club-hero.jpg';
+
+        heroImage.src = imageUrl;
+        heroImage.onerror = function () {
+            // If image fails to load, use default
+            this.src = '../assets/default-club-hero.jpg';
+        };
+
+        console.log('✅ Updated big hero image for:', club.name);
     }
 }
 

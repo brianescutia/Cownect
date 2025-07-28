@@ -1,5 +1,5 @@
 /* =============================================================================
-   NICHE QUIZ STYLING - Modern Interactive Design
+   NICHE QUIZ STYLING - Simplified Design
    =============================================================================
    Save as frontend/styles/niche-quiz.css
 */
@@ -12,7 +12,8 @@
 .quiz-container {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 2rem;
+    padding: 1rem 2rem 2rem 2rem;
+    /* Reduced top padding */
     min-height: calc(100vh - 200px);
     font-family: 'Rethink Sans', sans-serif;
 }
@@ -24,47 +25,35 @@
 }
 
 /* =============================================================================
-   QUIZ INTRODUCTION SECTION
+   QUIZ INTRODUCTION SECTION (SIMPLIFIED)
    =============================================================================
 */
 
 .quiz-intro {
     text-align: center;
-    padding: 3rem 0;
+    padding: 1rem 0;
+    /* Reduced padding to move closer to navbar */
 }
 
-.intro-header h1 {
-    font-size: 3rem;
-    font-weight: 700;
+/* Level Selection Cards */
+.level-selection h2 {
+    font-size: 2.2rem;
+    /* Slightly larger since it's now the main heading */
     color: #2c3e50;
-    margin-bottom: 1rem;
+    margin-bottom: 2rem;
+    font-weight: 700;
     background: linear-gradient(135deg, #5F96C5, #4a8bc2);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
 }
 
-.intro-subtitle {
-    font-size: 1.2rem;
-    color: #7f8c8d;
-    margin-bottom: 3rem;
-    max-width: 600px;
-    margin-left: auto;
-    margin-right: auto;
-}
-
-/* Level Selection Cards */
-.level-selection h2 {
-    font-size: 2rem;
-    color: #2c3e50;
-    margin-bottom: 2rem;
-}
-
 .level-cards {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 2rem;
-    margin-bottom: 3rem;
+    margin-bottom: 1rem;
+    /* Reduced bottom margin */
 }
 
 .level-card {
@@ -143,38 +132,6 @@
     background: linear-gradient(135deg, #4a8bc2, #3d7bb5);
     transform: translateY(-2px);
     box-shadow: 0 8px 20px rgba(95, 150, 197, 0.3);
-}
-
-/* Introduction Features */
-.intro-features {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 2rem;
-    margin-top: 3rem;
-}
-
-.feature {
-    text-align: center;
-    padding: 1.5rem;
-}
-
-.feature-icon {
-    font-size: 2.5rem;
-    display: block;
-    margin-bottom: 1rem;
-}
-
-.feature h4 {
-    font-size: 1.2rem;
-    font-weight: 600;
-    color: #2c3e50;
-    margin-bottom: 0.5rem;
-}
-
-.feature p {
-    color: #7f8c8d;
-    font-size: 0.95rem;
-    line-height: 1.4;
 }
 
 /* =============================================================================
@@ -515,7 +472,6 @@
 
 .progress-ring__circle {
     stroke-dasharray: 326.56;
-    /* 2 * π * r */
     stroke-dashoffset: 326.56;
     transition: stroke-dashoffset 1s ease-in-out;
 }
@@ -984,19 +940,15 @@
 
 @media (max-width: 768px) {
     .quiz-container {
-        padding: 1rem;
+        padding: 0.5rem 1rem 2rem 1rem;
+        /* Further reduced padding on mobile */
     }
 
-    .intro-header h1 {
-        font-size: 2.5rem;
+    .level-selection h2 {
+        font-size: 1.8rem;
     }
 
     .level-cards {
-        grid-template-columns: 1fr;
-        gap: 1.5rem;
-    }
-
-    .intro-features {
         grid-template-columns: 1fr;
         gap: 1.5rem;
     }
@@ -1045,8 +997,8 @@
 }
 
 @media (max-width: 480px) {
-    .intro-header h1 {
-        font-size: 2rem;
+    .level-selection h2 {
+        font-size: 1.6rem;
     }
 
     .level-card {
@@ -1156,631 +1108,4 @@
 /* Hide templates */
 template {
     display: none;
-}
-
-/* =============================================================================
-   ENHANCED QUIZ RESULTS STYLING - Add to your niche-quiz.css
-   =============================================================================
-*/
-
-/* =============================================================================
-   BLOB CHART VISUALIZATION
-   =============================================================================
-*/
-
-.blob-chart-container {
-    background: rgba(255, 255, 255, 0.25);
-    backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    border-radius: 20px;
-    padding: 2rem;
-    margin-bottom: 2rem;
-}
-
-.chart-header {
-    text-align: center;
-    margin-bottom: 2rem;
-}
-
-.chart-header h3 {
-    font-size: 1.3rem;
-    color: #2c3e50;
-    margin-bottom: 0.5rem;
-}
-
-.chart-header p {
-    color: #7f8c8d;
-    font-size: 0.9rem;
-    font-style: italic;
-}
-
-.career-blob {
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.career-blob:hover {
-    transform: scale(1.1);
-}
-
-.career-blob-shape {
-    transition: all 0.3s ease;
-}
-
-.career-blob:hover .career-blob-shape {
-    opacity: 0.9 !important;
-    stroke-width: 3 !important;
-}
-
-.blob-percentage {
-    font-size: 14px;
-    font-weight: 700;
-    fill: white;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
-}
-
-.blob-name {
-    font-size: 12px;
-    font-weight: 600;
-    fill: #2c3e50;
-}
-
-.axis-label {
-    font-size: 12px;
-    font-weight: 500;
-    fill: #7f8c8d;
-}
-
-.blob-tooltip {
-    position: absolute;
-    background: rgba(0, 0, 0, 0.9);
-    color: white;
-    padding: 0.5rem;
-    border-radius: 8px;
-    font-size: 0.8rem;
-    pointer-events: none;
-    z-index: 1000;
-    display: none;
-    transform: translate(-50%, -100%);
-    margin-top: -10px;
-}
-
-/* =============================================================================
-   ENHANCED CONFIDENCE BADGES
-   =============================================================================
-*/
-
-.confidence-badge {
-    padding: 0.5rem 1rem;
-    border-radius: 20px;
-    font-size: 0.9rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-.confidence-badge.confidence-high {
-    background: linear-gradient(135deg, #27ae60, #2ecc71);
-    color: white;
-    box-shadow: 0 4px 15px rgba(39, 174, 96, 0.3);
-}
-
-.confidence-badge.confidence-medium {
-    background: linear-gradient(135deg, #f39c12, #e67e22);
-    color: white;
-    box-shadow: 0 4px 15px rgba(243, 156, 18, 0.3);
-}
-
-.confidence-badge.confidence-low {
-    background: linear-gradient(135deg, #e74c3c, #c0392b);
-    color: white;
-    box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3);
-}
-
-/* =============================================================================
-   ENHANCED CAREER PROGRESSION
-   =============================================================================
-*/
-
-.progression-step {
-    position: relative;
-    background: rgba(255, 255, 255, 0.5);
-    border-radius: 12px;
-    padding: 1.5rem;
-    margin-bottom: 1rem;
-    border-left: 4px solid #5F96C5;
-    transition: all 0.3s ease;
-}
-
-.progression-step:hover {
-    background: rgba(255, 255, 255, 0.7);
-    transform: translateX(5px);
-    box-shadow: 0 4px 15px rgba(95, 150, 197, 0.2);
-}
-
-.progression-step.level-entry {
-    border-left-color: #27ae60;
-}
-
-.progression-step.level-mid {
-    border-left-color: #f39c12;
-}
-
-.progression-step.level-senior {
-    border-left-color: #e74c3c;
-}
-
-.progression-step.level-lead {
-    border-left-color: #9b59b6;
-}
-
-.step-requirements {
-    margin-top: 1rem;
-    padding: 1rem;
-    background: rgba(95, 150, 197, 0.1);
-    border-radius: 8px;
-    font-size: 0.9rem;
-}
-
-.step-requirements ul {
-    margin: 0.5rem 0;
-    padding-left: 1rem;
-}
-
-.step-requirements li {
-    margin: 0.25rem 0;
-    color: #4a5568;
-}
-
-.progression-arrow {
-    position: absolute;
-    right: -15px;
-    top: 50%;
-    transform: translateY(-50%);
-    background: linear-gradient(135deg, #5F96C5, #4a8bc2);
-    color: white;
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 700;
-    font-size: 1.2rem;
-    z-index: 2;
-}
-
-/* =============================================================================
-   MARKET INSIGHTS WITH CREDIBILITY
-   =============================================================================
-*/
-
-.market-sources {
-    margin-top: 2rem;
-    padding-top: 2rem;
-    border-top: 2px solid rgba(95, 150, 197, 0.2);
-}
-
-.sources-header h4 {
-    font-size: 1.1rem;
-    color: #2c3e50;
-    margin-bottom: 0.5rem;
-}
-
-.sources-note {
-    color: #7f8c8d;
-    font-size: 0.85rem;
-    font-style: italic;
-    margin-bottom: 1rem;
-}
-
-.sources-list {
-    display: grid;
-    gap: 0.75rem;
-    margin-bottom: 1rem;
-}
-
-.source-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0.75rem;
-    background: rgba(255, 255, 255, 0.3);
-    border-radius: 8px;
-}
-
-.source-name {
-    font-weight: 500;
-    color: #2c3e50;
-}
-
-.source-badge {
-    background: #5F96C5;
-    color: white;
-    padding: 0.25rem 0.75rem;
-    border-radius: 12px;
-    font-size: 0.8rem;
-    font-weight: 600;
-}
-
-.source-badge.official {
-    background: #27ae60;
-}
-
-.source-badge.community {
-    background: #9b59b6;
-}
-
-.data-freshness {
-    text-align: center;
-    padding-top: 1rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.3);
-}
-
-.freshness-indicator {
-    color: #7f8c8d;
-    font-size: 0.8rem;
-    font-style: italic;
-}
-
-/* =============================================================================
-   SKILL BREAKDOWN VISUALIZATION
-   =============================================================================
-*/
-
-.skill-breakdown-section {
-    background: rgba(255, 255, 255, 0.25);
-    backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    border-radius: 20px;
-    padding: 2rem;
-    margin-bottom: 2rem;
-}
-
-.skill-breakdown-section h3 {
-    font-size: 1.3rem;
-    color: #2c3e50;
-    margin-bottom: 1.5rem;
-    text-align: center;
-}
-
-.skill-radar-container {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 2rem;
-}
-
-.skill-descriptions {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 1rem;
-}
-
-.skill-item {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-}
-
-.skill-name {
-    font-weight: 600;
-    color: #2c3e50;
-    font-size: 0.9rem;
-}
-
-.skill-bar {
-    position: relative;
-    height: 8px;
-    background: rgba(95, 150, 197, 0.2);
-    border-radius: 4px;
-    overflow: hidden;
-}
-
-.skill-fill {
-    height: 100%;
-    background: linear-gradient(90deg, #5F96C5, #4a8bc2);
-    border-radius: 4px;
-    transition: width 1s ease-out;
-    animation: skillFillAnimation 1.5s ease-out;
-}
-
-.skill-score {
-    position: absolute;
-    right: 0;
-    top: -20px;
-    font-size: 0.8rem;
-    font-weight: 600;
-    color: #5F96C5;
-}
-
-@keyframes skillFillAnimation {
-    from {
-        width: 0%;
-    }
-
-    to {
-        width: var(--skill-width, 0%);
-    }
-}
-
-/* =============================================================================
-   CAREER DETAILS MODAL
-   =============================================================================
-*/
-
-.career-details-modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.7);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 2000;
-    animation: modalFadeIn 0.3s ease-out;
-}
-
-.modal-content {
-    background: white;
-    border-radius: 20px;
-    padding: 2rem;
-    max-width: 500px;
-    width: 90%;
-    max-height: 80vh;
-    overflow-y: auto;
-    position: relative;
-    animation: modalSlideIn 0.3s ease-out;
-}
-
-.modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1.5rem;
-    padding-bottom: 1rem;
-    border-bottom: 2px solid rgba(95, 150, 197, 0.2);
-}
-
-.modal-header h3 {
-    font-size: 1.5rem;
-    color: #2c3e50;
-    margin: 0;
-}
-
-.modal-close {
-    background: none;
-    border: none;
-    font-size: 1.5rem;
-    cursor: pointer;
-    color: #7f8c8d;
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.3s ease;
-}
-
-.modal-close:hover {
-    background: rgba(231, 76, 60, 0.1);
-    color: #e74c3c;
-}
-
-.match-percentage-large {
-    text-align: center;
-    font-size: 2.5rem;
-    font-weight: 700;
-    color: #5F96C5;
-    margin-bottom: 1rem;
-    padding: 1rem;
-    background: linear-gradient(135deg, rgba(95, 150, 197, 0.1), rgba(95, 150, 197, 0.05));
-    border-radius: 15px;
-}
-
-.modal-body p {
-    margin: 0.75rem 0;
-    color: #4a5568;
-    line-height: 1.5;
-}
-
-.modal-actions {
-    display: flex;
-    gap: 1rem;
-    margin-top: 2rem;
-    justify-content: center;
-}
-
-.btn-primary,
-.btn-secondary {
-    padding: 0.75rem 1.5rem;
-    border: none;
-    border-radius: 25px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.btn-primary {
-    background: linear-gradient(135deg, #5F96C5, #4a8bc2);
-    color: white;
-}
-
-.btn-primary:hover {
-    background: linear-gradient(135deg, #4a8bc2, #3d7bb5);
-    transform: translateY(-2px);
-}
-
-.btn-secondary {
-    background: rgba(95, 150, 197, 0.1);
-    color: #5F96C5;
-    border: 1px solid rgba(95, 150, 197, 0.3);
-}
-
-.btn-secondary:hover {
-    background: rgba(95, 150, 197, 0.2);
-    transform: translateY(-2px);
-}
-
-/* =============================================================================
-   ENHANCED ANIMATIONS
-   =============================================================================
-*/
-
-@keyframes modalFadeIn {
-    from {
-        opacity: 0;
-    }
-
-    to {
-        opacity: 1;
-    }
-}
-
-@keyframes modalSlideIn {
-    from {
-        opacity: 0;
-        transform: translateY(-50px) scale(0.9);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-    }
-}
-
-@keyframes blobPulse {
-
-    0%,
-    100% {
-        transform: scale(1);
-    }
-
-    50% {
-        transform: scale(1.05);
-    }
-}
-
-.career-blob-shape {
-    animation: blobPulse 3s ease-in-out infinite;
-}
-
-/* =============================================================================
-   ENHANCED RESPONSIVE DESIGN
-   =============================================================================
-*/
-
-@media (max-width: 768px) {
-    .blob-chart-container svg {
-        height: 300px;
-    }
-
-    .skill-descriptions {
-        grid-template-columns: 1fr;
-    }
-
-    .modal-content {
-        margin: 1rem;
-        padding: 1.5rem;
-    }
-
-    .match-percentage-large {
-        font-size: 2rem;
-    }
-
-    .modal-actions {
-        flex-direction: column;
-    }
-
-    .progression-step {
-        padding: 1rem;
-    }
-
-    .step-requirements {
-        font-size: 0.8rem;
-    }
-}
-
-@media (max-width: 480px) {
-    .blob-chart-container {
-        padding: 1rem;
-    }
-
-    .skill-radar-container canvas {
-        width: 250px;
-        height: 250px;
-    }
-
-    .sources-list {
-        grid-template-columns: 1fr;
-    }
-
-    .source-item {
-        flex-direction: column;
-        gap: 0.5rem;
-        text-align: center;
-    }
-}
-
-/* =============================================================================
-   ACCESSIBILITY IMPROVEMENTS
-   =============================================================================
-*/
-
-.career-blob {
-    outline: none;
-}
-
-.career-blob:focus {
-    filter: drop-shadow(0 0 8px rgba(95, 150, 197, 0.6));
-}
-
-.skill-bar {
-    position: relative;
-}
-
-.skill-bar::after {
-    content: attr(aria-label);
-    position: absolute;
-    top: -25px;
-    right: 0;
-    font-size: 0.7rem;
-    color: #7f8c8d;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-}
-
-.skill-item:hover .skill-bar::after {
-    opacity: 1;
-}
-
-/* =============================================================================
-   PRINT STYLES FOR RESULTS
-   =============================================================================
-*/
-
-@media print {
-    .quiz-results {
-        background: white;
-        color: black;
-    }
-
-    .career-details-modal,
-    .blob-tooltip,
-    .modal-actions {
-        display: none;
-    }
-
-    .blob-chart-container,
-    .skill-breakdown-section,
-    .market-data {
-        break-inside: avoid;
-    }
-
-    .progression-step {
-        background: #f8f9fa;
-        border: 1px solid #dee2e6;
-    }
 }
