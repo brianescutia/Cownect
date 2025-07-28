@@ -99,6 +99,11 @@ const clubSchema = new mongoose.Schema({
         default: '/assets/default-club-logo.png',
         trim: true
     },
+    heroImageUrl: {
+        type: String,
+        default: '/assets/default-club-hero.jpg',  // Fallback hero image
+        trim: true
+    },
 
     // 🌐 WEB PRESENCE
     websiteUrl: {

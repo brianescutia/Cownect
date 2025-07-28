@@ -585,6 +585,85 @@ app.post('/api/events', requireAuth, async (req, res) => {
   }
 });
 
+// 🖼️ UPDATE CLUB IMAGES - Add this route
+app.put('/api/clubs/:id/images', requireAuth, async (req, res) => {
+  try {
+    const clubId = req.params.id;
+    const { logoUrl, heroImageUrl } = req.body;
+
+    const updateData = {};
+    if (logoUrl) updateData.logoUrl = logoUrl;
+    if (heroImageUrl) updateData.heroImageUrl = heroImageUrl;
+
+    const club = await Club.findByIdAndUpdate(
+      clubId,
+      updateData,
+      { new: true }
+    );
+
+    if (!club) {
+      return res.status(404).json({ error: 'Club not found' });
+    }
+
+    console.log(`✅ Updated images for club: ${club.name}`);
+    res.json({ message: 'Club images updated successfully', club });
+
+  } catch (error) {
+    console.error('💥 Error updating club images:', error);
+    res.status(500).json({ error: 'Failed to update club images' });
+  }
+});
+// 🖼️ GIVE EACH CLUB A UNIQUE HERO IMAGE
+app.get('/api/set-hero-images', requireAuth, async (req, res) => {
+  try {
+    console.log('🎨 Setting unique hero images for all clubs...');
+
+    // Unique hero images for each club
+    const heroImages = {
+      "#include": "https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=1200&h=600&fit=crop&crop=center",
+      "Davis Filmmaking Society": "https://images.unsplash.com/photo-1478720568477-152d9b164e26?w=1200&h=600&fit=crop&crop=center",
+      "Davis Robotics Club": "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=1200&h=600&fit=crop&crop=center",
+      "Game Development and Arts Club": "https://images.unsplash.com/photo-1493711662062-fa541adb3fc8?w=1200&h=600&fit=crop&crop=center",
+      "Girls Who Code at UC Davis": "https://images.unsplash.com/photo-1573164713714-d95e436ab8d6?w=1200&h=600&fit=crop&crop=center",
+      "Google Developer Student Club": "https://images.unsplash.com/photo-1517077304055-6e89abbf09b0?w=1200&h=600&fit=crop&crop=center",
+      "HackDavis": "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=1200&h=600&fit=crop&crop=center",
+      "Women in Computer Science": "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=1200&h=600&fit=crop&crop=center",
+      "Design Interactive": "https://images.unsplash.com/photo-1561070791-2526d30994b5?w=1200&h=600&fit=crop&crop=center",
+      "AI Student Collective": "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=1200&h=600&fit=crop&crop=center",
+      "Cyber Security Club at UC Davis": "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=1200&h=600&fit=crop&crop=center",
+      "CodeLab": "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=1200&h=600&fit=crop&crop=center",
+      "AggieWorks": "https://images.unsplash.com/photo-1552664730-d307ca884978?w=1200&h=600&fit=crop&crop=center",
+      "Computer Science Tutoring Club": "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=1200&h=600&fit=crop&crop=center",
+      "Davis Data Science Club": "https://images.unsplash.com/photo-1509228468518-180dd4864904?w=1200&h=600&fit=crop&crop=center"
+    };
+
+    let updated = 0;
+
+    for (const [clubName, heroUrl] of Object.entries(heroImages)) {
+      const club = await Club.findOneAndUpdate(
+        { name: clubName },
+        { heroImageUrl: heroUrl },
+        { new: true }
+      );
+
+      if (club) {
+        updated++;
+        console.log(`✅ Updated hero image for: ${clubName}`);
+      }
+    }
+
+    res.json({
+      message: `Updated ${updated} club hero images`,
+      updated: updated,
+      total: Object.keys(heroImages).length
+    });
+
+  } catch (error) {
+    console.error('💥 Error updating hero images:', error);
+    res.status(500).json({ error: 'Failed to update hero images' });
+  }
+});
+
 // 🎟️ JOIN EVENT - Enhanced version
 app.post('/api/events/:id/join', requireAuth, async (req, res) => {
   try {
