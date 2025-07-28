@@ -238,6 +238,59 @@ function showNotification(message, type = 'info') {
     }, 5000);
 }
 
+// User Profile Component for Dashboard
+class UserProfile {
+    constructor() {
+        this.settings = null;
+        this.init();
+    }
+
+    async init() {
+        await this.loadUserSettings();
+        this.renderProfileWidget();
+        this.setupEventListeners();
+    }
+
+    async loadUserSettings() {
+        try {
+            const response = await fetch('/api/settings');
+            const data = await response.json();
+
+            if (data.success) {
+                this.settings = data.settings;
+            }
+        } catch (error) {
+            console.error('Error loading user settings:', error);
+        }
+    }
+
+    renderProfileWidget() {
+        const profileWidget = document.getElementById('profileWidget');
+        if (!profileWidget || !this.settings) return;
+
+        const { profile } = this.settings;
+
+        profileWidget.innerHTML = `
+      <div class="profile-widget">
+        <div class="profile-header">
+          <div class="profile-avatar">
+            ${profile?.profilePicture
+                ? `<img src="${profile.profilePicture}" alt="Profile Picture">`
+                : '<div class="avatar-placeholder">👤</div>'
+            }
+          </div>
+          <div class="profile-info">
+            <h3>${profile?.displayName || 'User'}</h3>
+            <p class="profile-major">${profile?.major || 'Undeclared'}</p>
+            <p class="profile-year">Class of ${profile?.graduationYear || 'TBD'}</p>
+          </div>
+        </div>
+        
+        ${profile?.bio ? `
+          <div class="profile-bio">
+            <p>${profile.bio}</p>
+
+
 // 🌐 GLOBAL FUNCTIONS (for external access)
 window.refreshBookmarkData = refreshBookmarkData;
 window.goToClub = goToClub;
