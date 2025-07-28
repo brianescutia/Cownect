@@ -591,9 +591,22 @@ app.put('/api/clubs/:id/images', requireAuth, async (req, res) => {
     const clubId = req.params.id;
     const { logoUrl, heroImageUrl } = req.body;
 
+    // Validate input
+    if (!logoUrl && !heroImageUrl) {
+      return res.status(400).json({
+        error: 'At least one image URL (logoUrl or heroImageUrl) is required'
+      });
+    }
+
+    console.log(`🖼️ Updating images for club ID: ${clubId}`);
+
     const updateData = {};
     if (logoUrl) updateData.logoUrl = logoUrl;
-    if (heroImageUrl) updateData.heroImageUrl = heroImageUrl;
+    if (heroImageUrl) {
+      updateData.heroImageUrl = heroImageUrl;
+      updateData.hasCustomHeroImage = true; // 🔑 Mark as manually set
+    }
+    updateData.updatedAt = new Date();
 
     const club = await Club.findByIdAndUpdate(
       clubId,
@@ -605,21 +618,90 @@ app.put('/api/clubs/:id/images', requireAuth, async (req, res) => {
       return res.status(404).json({ error: 'Club not found' });
     }
 
-    console.log(`✅ Updated images for club: ${club.name}`);
-    res.json({ message: 'Club images updated successfully', club });
+    console.log(`✅ Updated images for: ${club.name}`);
+    if (heroImageUrl) console.log(`   New hero image: ${heroImageUrl}`);
+
+    res.json({
+      success: true,
+      message: 'Club images updated successfully',
+      club: {
+        id: club._id,
+        name: club.name,
+        logoUrl: club.logoUrl,
+        heroImageUrl: club.heroImageUrl,
+        hasCustomHeroImage: club.hasCustomHeroImage
+      }
+    });
 
   } catch (error) {
     console.error('💥 Error updating club images:', error);
     res.status(500).json({ error: 'Failed to update club images' });
   }
 });
-// 🖼️ GIVE EACH CLUB A UNIQUE HERO IMAGE
-app.get('/api/set-hero-images', requireAuth, async (req, res) => {
-  try {
-    console.log('🎨 Setting unique hero images for all clubs...');
 
-    // Unique hero images for each club
-    const heroImages = {
+app.put('/api/clubs/update-by-name', requireAuth, async (req, res) => {
+  try {
+    const { clubName, logoUrl, heroImageUrl } = req.body;
+
+    if (!clubName) {
+      return res.status(400).json({ error: 'clubName is required' });
+    }
+
+    if (!logoUrl && !heroImageUrl) {
+      return res.status(400).json({
+        error: 'At least one image URL (logoUrl or heroImageUrl) is required'
+      });
+    }
+
+    console.log(`🖼️ Updating images for club: ${clubName}`);
+
+    const updateData = {};
+    if (logoUrl) updateData.logoUrl = logoUrl;
+    if (heroImageUrl) {
+      updateData.heroImageUrl = heroImageUrl;
+      updateData.hasCustomHeroImage = true; // 🔑 Mark as manually set
+    }
+    updateData.updatedAt = new Date();
+
+    const club = await Club.findOneAndUpdate(
+      { name: { $regex: new RegExp(`^${clubName}$`, 'i') } }, // Exact match, case-insensitive
+      updateData,
+      { new: true }
+    );
+
+    if (!club) {
+      return res.status(404).json({
+        error: `Club "${clubName}" not found`,
+        suggestion: 'Check the exact club name spelling'
+      });
+    }
+
+    console.log(`✅ Successfully updated: ${club.name}`);
+    if (heroImageUrl) console.log(`   New hero image: ${heroImageUrl}`);
+
+    res.json({
+      success: true,
+      message: `Successfully updated ${club.name}`,
+      club: {
+        id: club._id,
+        name: club.name,
+        logoUrl: club.logoUrl,
+        heroImageUrl: club.heroImageUrl,
+        hasCustomHeroImage: club.hasCustomHeroImage
+      }
+    });
+
+  } catch (error) {
+    console.error('💥 Error updating club by name:', error);
+    res.status(500).json({ error: 'Failed to update club' });
+  }
+});
+// 🖼️ GIVE EACH CLUB A UNIQUE HERO IMAGE
+app.post('/api/clubs/set-default-images', requireAuth, async (req, res) => {
+  try {
+    console.log('🎨 Setting default images only for clubs that need them...');
+
+    const defaultImages = {
       "#include": "https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=1200&h=600&fit=crop&crop=center",
       "Davis Filmmaking Society": "https://images.unsplash.com/photo-1478720568477-152d9b164e26?w=1200&h=600&fit=crop&crop=center",
       "Davis Robotics Club": "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=1200&h=600&fit=crop&crop=center",
@@ -629,7 +711,6 @@ app.get('/api/set-hero-images', requireAuth, async (req, res) => {
       "HackDavis": "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=1200&h=600&fit=crop&crop=center",
       "Women in Computer Science": "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=1200&h=600&fit=crop&crop=center",
       "Design Interactive": "https://images.unsplash.com/photo-1561070791-2526d30994b5?w=1200&h=600&fit=crop&crop=center",
-      "AI Student Collective": "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=1200&h=600&fit=crop&crop=center",
       "Cyber Security Club at UC Davis": "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=1200&h=600&fit=crop&crop=center",
       "CodeLab": "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=1200&h=600&fit=crop&crop=center",
       "AggieWorks": "https://images.unsplash.com/photo-1552664730-d307ca884978?w=1200&h=600&fit=crop&crop=center",
@@ -638,32 +719,273 @@ app.get('/api/set-hero-images', requireAuth, async (req, res) => {
     };
 
     let updated = 0;
+    let skipped = 0;
 
-    for (const [clubName, heroUrl] of Object.entries(heroImages)) {
-      const club = await Club.findOneAndUpdate(
-        { name: clubName },
-        { heroImageUrl: heroUrl },
-        { new: true }
-      );
+    for (const [clubName, defaultHeroUrl] of Object.entries(defaultImages)) {
+      const club = await Club.findOne({ name: clubName });
 
-      if (club) {
+      if (!club) {
+        console.log(`⚠️ Club not found: ${clubName}`);
+        continue;
+      }
+
+      // 🔑 ONLY update if club doesn't have a custom hero image
+      if (!club.hasCustomHeroImage && (!club.heroImageUrl || club.heroImageUrl.includes('default-club-hero'))) {
+        await Club.findOneAndUpdate(
+          { name: clubName },
+          {
+            heroImageUrl: defaultHeroUrl,
+            hasCustomHeroImage: false // Mark as default, not custom
+          }
+        );
         updated++;
-        console.log(`✅ Updated hero image for: ${clubName}`);
+        console.log(`✅ Set default image for: ${clubName}`);
+      } else {
+        skipped++;
+        console.log(`⏭️ Skipped (has custom image): ${clubName}`);
       }
     }
 
     res.json({
-      message: `Updated ${updated} club hero images`,
-      updated: updated,
-      total: Object.keys(heroImages).length
+      success: true,
+      message: `Set defaults for ${updated} clubs, protected ${skipped} custom images`,
+      updated,
+      skipped,
+      total: Object.keys(defaultImages).length
     });
 
   } catch (error) {
-    console.error('💥 Error updating hero images:', error);
-    res.status(500).json({ error: 'Failed to update hero images' });
+    console.error('💥 Error setting default images:', error);
+    res.status(500).json({ error: 'Failed to set default images' });
+  }
+});
+app.get('/api/clubs/image-management', requireAuth, async (req, res) => {
+  try {
+    const clubs = await Club.find({ isActive: true })
+      .select('name logoUrl heroImageUrl hasCustomHeroImage')
+      .sort({ name: 1 });
+
+    const imageData = clubs.map(club => ({
+      id: club._id,
+      name: club.name,
+      logoUrl: club.logoUrl,
+      heroImageUrl: club.heroImageUrl,
+      hasCustomHeroImage: club.hasCustomHeroImage || false,
+      imageStatus: getImageStatus(club)
+    }));
+
+    res.json({
+      clubs: imageData,
+      summary: {
+        total: clubs.length,
+        withCustomHero: clubs.filter(c => c.hasCustomHeroImage).length,
+        withDefaultHero: clubs.filter(c => c.heroImageUrl && !c.hasCustomHeroImage).length,
+        withoutHero: clubs.filter(c => !c.heroImageUrl).length
+      }
+    });
+
+  } catch (error) {
+    console.error('💥 Error fetching image management data:', error);
+    res.status(500).json({ error: 'Failed to fetch image management data' });
   }
 });
 
+function getImageStatus(club) {
+  if (club.hasCustomHeroImage) return 'custom';
+  if (club.heroImageUrl) return 'default';
+  return 'none';
+}
+app.post('/api/clubs/migrate', requireAuth, async (req, res) => {
+  try {
+    const result = await Club.updateMany(
+      { hasCustomHeroImage: { $exists: false } },
+      { hasCustomHeroImage: false }
+    );
+
+    res.json({
+      success: true,
+      message: `Updated ${result.modifiedCount} clubs`,
+      modifiedCount: result.modifiedCount
+    });
+
+  } catch (error) {
+    console.error('💥 Migration error:', error);
+    res.status(500).json({ error: 'Migration failed' });
+  }
+});
+
+app.put('/api/clubs/bulk-update', requireAuth, async (req, res) => {
+  try {
+    const { updates } = req.body;
+
+    if (!updates || !Array.isArray(updates)) {
+      return res.status(400).json({
+        error: 'updates array is required',
+        example: {
+          updates: [
+            { clubName: "Club Name 1", heroImageUrl: "https://..." },
+            { clubName: "Club Name 2", heroImageUrl: "https://..." }
+          ]
+        }
+      });
+    }
+
+    console.log(`🚀 Bulk updating ${updates.length} clubs...`);
+
+    const results = [];
+
+    for (const update of updates) {
+      try {
+        const { clubName, heroImageUrl } = update;
+
+        if (!clubName || !heroImageUrl) {
+          results.push({
+            clubName: clubName || 'Unknown',
+            success: false,
+            error: 'Missing clubName or heroImageUrl'
+          });
+          continue;
+        }
+
+        const club = await Club.findOneAndUpdate(
+          { name: { $regex: new RegExp(`^${clubName}$`, 'i') } },
+          {
+            heroImageUrl: heroImageUrl,
+            hasCustomHeroImage: true,
+            updatedAt: new Date()
+          },
+          { new: true }
+        );
+
+        if (club) {
+          results.push({
+            clubName: club.name,
+            success: true,
+            heroImageUrl: club.heroImageUrl
+          });
+          console.log(`✅ Updated: ${club.name}`);
+        } else {
+          results.push({
+            clubName,
+            success: false,
+            error: 'Club not found'
+          });
+        }
+
+      } catch (error) {
+        results.push({
+          clubName: update.clubName || 'Unknown',
+          success: false,
+          error: error.message
+        });
+      }
+    }
+
+    const successCount = results.filter(r => r.success).length;
+    const failCount = results.filter(r => !r.success).length;
+
+    console.log(`🎯 Bulk update complete: ${successCount} success, ${failCount} failed`);
+
+    res.json({
+      success: true,
+      message: `Updated ${successCount}/${updates.length} clubs`,
+      successCount,
+      failCount,
+      results
+    });
+
+  } catch (error) {
+    console.error('💥 Bulk update error:', error);
+    res.status(500).json({ error: 'Bulk update failed: ' + error.message });
+  }
+});
+app.put('/api/test/bulk-update', async (req, res) => {
+  try {
+    const { updates } = req.body;
+
+    if (!updates || !Array.isArray(updates)) {
+      return res.status(400).json({
+        error: 'updates array is required',
+        example: {
+          updates: [
+            { clubName: "Club Name 1", heroImageUrl: "https://..." },
+            { clubName: "Club Name 2", heroImageUrl: "https://..." }
+          ]
+        }
+      });
+    }
+
+    console.log(`🧪 TEST: Bulk updating ${updates.length} clubs...`);
+
+    const results = [];
+
+    for (const update of updates) {
+      try {
+        const { clubName, heroImageUrl } = update;
+
+        if (!clubName || !heroImageUrl) {
+          results.push({
+            clubName: clubName || 'Unknown',
+            success: false,
+            error: 'Missing clubName or heroImageUrl'
+          });
+          continue;
+        }
+
+        const club = await Club.findOneAndUpdate(
+          { name: { $regex: new RegExp(`^${clubName}$`, 'i') } },
+          {
+            heroImageUrl: heroImageUrl,
+            hasCustomHeroImage: true,
+            updatedAt: new Date()
+          },
+          { new: true }
+        );
+
+        if (club) {
+          results.push({
+            clubName: club.name,
+            success: true,
+            heroImageUrl: club.heroImageUrl
+          });
+          console.log(`✅ TEST: Updated ${club.name}`);
+        } else {
+          results.push({
+            clubName,
+            success: false,
+            error: 'Club not found'
+          });
+          console.log(`❌ TEST: Club not found: ${clubName}`);
+        }
+
+      } catch (error) {
+        results.push({
+          clubName: update.clubName || 'Unknown',
+          success: false,
+          error: error.message
+        });
+        console.error(`💥 TEST: Error updating ${update.clubName}:`, error);
+      }
+    }
+
+    const successCount = results.filter(r => r.success).length;
+    const failCount = results.filter(r => !r.success).length;
+
+    console.log(`🎯 TEST: Bulk update complete - ${successCount} success, ${failCount} failed`);
+
+    res.json({
+      success: true,
+      message: `TEST: Updated ${successCount}/${updates.length} clubs`,
+      successCount,
+      failCount,
+      results
+    });
+
+  } catch (error) {
+    console.error('💥 TEST: Bulk update error:', error);
+    res.status(500).json({ error: 'Test bulk update failed: ' + error.message });
+  }
+});
 // 🎟️ JOIN EVENT - Enhanced version
 app.post('/api/events/:id/join', requireAuth, async (req, res) => {
   try {
@@ -2039,4 +2361,26 @@ app.listen(port, () => {
   console.log(`🔐 Authentication: bcrypt + sessions`);
   console.log(`🎯 Quiz system: Ready!`);
 
+});
+
+// 🧪 SIMPLE TEST ROUTE - Add this right before app.listen
+app.get('/api/test/hello', (req, res) => {
+  res.json({ message: 'Hello! Routes are working!' });
+});
+
+app.get('/api/test/bulk-update', (req, res) => {
+  res.json({
+    message: 'Bulk update route exists!',
+    note: 'Use PUT method with updates array to actually update clubs'
+  });
+});
+
+// =============================================================================
+// START SERVER
+// =============================================================================
+app.listen(port, () => {
+  console.log(`🚀 Cownect server running at http://localhost:${port}`);
+  console.log(`📊 Database: MongoDB Atlas`);
+  console.log(`🔐 Authentication: bcrypt + sessions`);
+  console.log(`🎯 Quiz system: Ready!`);
 });

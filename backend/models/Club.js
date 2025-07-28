@@ -104,6 +104,10 @@ const clubSchema = new mongoose.Schema({
         default: '/assets/default-club-hero.jpg',  // Fallback hero image
         trim: true
     },
+    hasCustomHeroImage: {
+        type: Boolean,
+        default: false
+    },
 
     // 🌐 WEB PRESENCE
     websiteUrl: {
