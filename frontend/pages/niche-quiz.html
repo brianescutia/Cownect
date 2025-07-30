@@ -79,35 +79,39 @@
             </div>
         </section>
 
-        <!-- 📝 QUIZ QUESTIONS SCREEN -->
+        <!-- 📝 REDESIGNED QUIZ QUESTIONS SCREEN -->
         <section class="quiz-questions" id="quizQuestions" style="display: none;">
             
-            <!-- Progress Bar -->
-            <div class="quiz-progress">
-                <div class="progress-bar">
-                    <div class="progress-fill" id="progressFill"></div>
-                </div>
-                <div class="progress-text">
-                    <span id="currentQuestion">1</span> of <span id="totalQuestions">12</span>
+            <!-- Header with Title and Progress -->
+            <div class="quiz-header">
+                <h1 class="quiz-title">Tech Niche Test</h1>
+                <div class="progress-container">
+                    <div class="progress-percentage" id="progressPercentage">
+                        <span id="currentQuestion">1</span> of <span id="totalQuestions">12</span> (8%)
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill"></div>
+                    </div>
                 </div>
             </div>
 
-            <!-- Question Container -->
+            <!-- White Question Container -->
             <div class="question-container">
                 <div class="question-header">
-                    <h2 id="questionText">Loading question...</h2>
-                    <p class="question-instruction">Drag and drop to rank from most preferred (top) to least preferred (bottom)</p>
+                    <h2>Drag and drop to rank your preferences</h2>
+                    <h3 id="questionText">Loading question...</h3>
+                    <p class="question-instruction">Rank from most preferred (top) to least preferred (bottom)</p>
                 </div>
 
                 <!-- Drag & Drop Ranking Area -->
                 <div class="ranking-container">
                     <div class="ranking-labels">
                         <div class="rank-label most-preferred">
-                            <span class="rank-icon">👍</span>
+                            <img src="../assets/blue-arrow-up.png" alt="Most preferred" class="rank-icon">
                             <span>Most Preferred</span>
                         </div>
                         <div class="rank-label least-preferred">
-                            <span class="rank-icon">👎</span>
+                            <img src="../assets/blue-arrow-down.png" alt="Least preferred" class="rank-icon">
                             <span>Least Preferred</span>
                         </div>
                     </div>
@@ -254,14 +258,14 @@
     <!-- Hidden Templates -->
     <template id="optionTemplate">
         <div class="sortable-option" data-option-id="">
-            <div class="option-grip">⋮⋮</div>
+            <div class="option-rank">
+                <span class="rank-number"></span>
+            </div>
             <div class="option-content">
                 <h4 class="option-title"></h4>
                 <p class="option-description"></p>
             </div>
-            <div class="option-rank">
-                <span class="rank-number"></span>
-            </div>
+            <div class="option-grip">⋮⋮</div>
         </div>
     </template>
 
