@@ -666,10 +666,31 @@ function displayNextSteps() {
 }
 
 function displayRecommendedClubs() {
-    const clubs = QuizState.results.topMatch.recommendedClubs;
+    // For testing, let's add some default clubs if none are provided
+    let clubs = QuizState.results.topMatch.recommendedClubs;
+
     if (!clubs || clubs.length === 0) {
-        console.log('No recommended clubs to display');
-        return;
+        // Add default UC Davis tech clubs for testing
+        clubs = [
+            {
+                name: "#include",
+                description: "Build real-world coding projects with fellow students.",
+                logoUrl: "../assets/include.png",
+                _id: "include"
+            },
+            {
+                name: "AI Student Collective",
+                description: "Dive into machine learning, NLP, and computer vision.",
+                logoUrl: "../assets/aiStudentCollective.png",
+                _id: "ai-collective"
+            },
+            {
+                name: "AggieWorks",
+                description: "Hands-on with electronics, microcontrollers, and sensors.",
+                logoUrl: "../assets/aggieworks.png",
+                _id: "aggieworks"
+            }
+        ];
     }
 
     const clubsGrid = document.getElementById('recommendedClubsGrid');
@@ -688,7 +709,7 @@ function displayRecommendedClubs() {
             <div class="club-info">
                 <h4 class="club-name">${club.name}</h4>
                 <p class="club-description">${club.description || 'Explore this club to advance your career goals'}</p>
-                <button class="view-club-btn" onclick="window.location.href='/club/${club._id}'">View Club</button>
+                <button class="view-club-btn" onclick="window.location.href='/tech-clubs'">View Club</button>
             </div>
         `;
         clubsGrid.appendChild(clubDiv);
