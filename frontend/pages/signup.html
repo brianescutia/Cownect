@@ -2,148 +2,125 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Sign Up | Cownect</title>
-  <link rel="stylesheet" href="../styles/login.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Rethink+Sans&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cownect - Sign Up</title>
+  <link rel="stylesheet" href="../styles/signup.css">
+  <link href="https://fonts.googleapis.com/css2?family=Rethink+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <script src="../scripts/login.js" defer></script>
+  <script src="../scripts/themeToggle.js" defer></script>
 </head>
 
 <body>
-  <main class="background">
-    <section class="login-box">
-      <header>
-        <h1>
-          <img src="../assets/COW.png" alt="Cow Logo" class="logo" />
-          Cownect
-        </h1>
-      </header>
-      <div id="errorMessage" class="error-message" style="display: none;"></div>
-      <form method="POST" action="/signup" id="signupForm">
-        <label for="email">E-mail</label>
-        <input type="email" id="email" name="email" required placeholder="user@ucdavis.edu" />
+  <!-- Header Logo -->
+  <div class="header-logo">
+    <img src="../assets/COW.png" alt="Cownect Logo featuring a cow">
+  </div>
 
-        <label for="password">Password</label>
-        <input type="password" id="password" name="password" required placeholder="••••••••" />
+  <div class="main-container">
+    <!-- Left Side - Login Form -->
+    <div class="left-side">
+      <div class="login-form-container">
+        <!-- Welcome Text -->
+        <div class="welcome-text">
+          <h2>Get Started </h2>
+          <p>Welcome to Cownect, Let’s create your account!</p>
+        </div>
 
-        <button type="submit" id="signupBtn">Sign Up</button>
-      </form>
-      <p>Already have an account? <a href="../pages/login.html">Log in</a></p>
-    </section>
-  </main>
+        <!-- Separator Line -->
+        <div class="separator"></div>
 
-  <!-- Loading Overlay -->
-  <div id="loadingOverlay" class="loading-overlay">
-    <div class="loading-content">
-      <div class="loading-spinner"></div>
-      <h3>Creating Your Account...</h3>
-      <p>We're setting up your Cownect profile and sending a verification email.</p>
+        <!-- Error/Success Messages -->
+        <div id="messageContainer"></div>
+
+        <!-- Login Form -->
+        <form method="POST" action="/login" id="loginForm">
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" required placeholder="user@ucdavis.edu">
+          </div>
+
+          <div class="form-group">
+            <div class="password-header">
+              <label for="password">Password</label>
+            </div>
+            <input type="password" id="password" name="password" required placeholder="••••••••">
+          </div>
+
+          <button type="submit" class="sign-in-btn">Sign up</button>
+        </form>
+
+        <!-- Sign up link -->
+        <div class="signup-link">
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Side - Blue Border with Laptop Image -->
+    <div class="right-side">
+      <div class="border-container">
+        <img src="../assets/clay.png" alt="Laptop design" class="clay-image">
+      </div>
     </div>
   </div>
 
   <script>
-    // Show error messages from URL parameters
+    // Handle URL parameters for error/success messages
     const urlParams = new URLSearchParams(window.location.search);
-    const error = urlParams.get('error');
+    const showError = urlParams.get('error');
+    const email = urlParams.get('email');
+    const verified = urlParams.get('verified');
+    const messageContainer = document.getElementById('messageContainer');
 
-    if (error) {
-      const errorDiv = document.getElementById('errorMessage');
-      errorDiv.style.display = 'block';
-      errorDiv.textContent = getErrorMessage(error);
+    // Show success message if just verified
+    if (verified === 'true') {
+      showMessage("✅ Email verified successfully! You can now log in.", 'success');
     }
 
-    // Handle form submission with JSON
-    document.getElementById('signupForm').addEventListener('submit', async function (e) {
-      e.preventDefault(); // Always prevent default form submission
-
-      const email = document.getElementById('email').value;
-      const password = document.getElementById('password').value;
-
-      // Basic validation
-      if (!email.toLowerCase().endsWith('@ucdavis.edu')) {
-        showError('Please use your UC Davis email address (@ucdavis.edu)');
-        return;
+    // Show various error messages
+    if (showError) {
+      let errorMessage = "";
+      switch (showError) {
+        case 'unverified':
+          errorMessage = "Please verify your email before logging in.";
+          break;
+        case 'verification_required':
+          errorMessage = "Please check your email for verification link.";
+          break;
+        default:
+          errorMessage = "Incorrect email or password. Please try again.";
       }
-
-      if (password.length < 6) {
-        showError('Password must be at least 6 characters long');
-        return;
-      }
-
-      // Show loading overlay
-      document.getElementById('loadingOverlay').style.display = 'flex';
-      document.getElementById('signupBtn').disabled = true;
-
-      try {
-        console.log('🚀 Sending signup request...');
-
-        const response = await fetch('/signup', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ email, password })
-        });
-
-        const data = await response.json();
-        console.log('📨 Server response:', data);
-
-        // Hide loading overlay
-        document.getElementById('loadingOverlay').style.display = 'none';
-        document.getElementById('signupBtn').disabled = false;
-
-        if (data.success) {
-          // Success! Redirect to verification page
-          console.log('✅ Signup successful, redirecting...');
-          window.location.href = data.redirectTo;
-        } else {
-          // Show error message
-          console.log('❌ Signup failed:', data.error);
-          showError(data.error);
-
-          // Redirect if specified (e.g., to login page)
-          if (data.redirectTo) {
-            setTimeout(() => {
-              window.location.href = data.redirectTo;
-            }, 3000);
-          }
-        }
-
-      } catch (error) {
-        console.error('💥 Network error:', error);
-
-        // Hide loading overlay
-        document.getElementById('loadingOverlay').style.display = 'none';
-        document.getElementById('signupBtn').disabled = false;
-
-        showError('Network error. Please check your connection and try again.');
-      }
-    });
-
-    function getErrorMessage(error) {
-      const messages = {
-        'exists': '❌ An account with this email already exists. Please log in instead.',
-        'email': '❌ Please use your UC Davis email address (@ucdavis.edu).',
-        'server': '❌ Server error occurred. Please try again later.'
-      };
-      return messages[error] || '❌ An unknown error occurred.';
+      showMessage("❌ " + errorMessage, 'error');
     }
 
-    function showError(message) {
-      const errorDiv = document.getElementById('errorMessage');
-      errorDiv.style.display = 'block';
-      errorDiv.textContent = message;
-
-      // Scroll to top to show error
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+    // Handle verification errors
+    const verificationError = urlParams.get('verification_error');
+    if (verificationError) {
+      let errorMessage = "";
+      switch (verificationError) {
+        case 'missing_token':
+          errorMessage = "Invalid verification link. Please request a new one.";
+          break;
+        case 'invalid_token':
+          errorMessage = "Verification link has expired. Please request a new one.";
+          break;
+        default:
+          errorMessage = "Verification error. Please try again.";
+      }
+      showMessage("❌ " + errorMessage, 'error');
     }
 
-    // Hide loading overlay if page loads again (in case of error)
-    window.addEventListener('load', function () {
-      setTimeout(() => {
-        document.getElementById('loadingOverlay').style.display = 'none';
-        document.getElementById('signupBtn').disabled = false;
-      }, 500);
+    function showMessage(message, type) {
+      const messageDiv = document.createElement('div');
+      messageDiv.className = type === 'success' ? 'success-message' : 'error-message';
+      messageDiv.textContent = message;
+      messageContainer.appendChild(messageDiv);
+    }
+
+    // Handle form submission (keep existing login functionality)
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
+      // Your existing login submission logic can go here
+      // For now, let the form submit normally
     });
   </script>
 </body>
