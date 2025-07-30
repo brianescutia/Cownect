@@ -3,7 +3,7 @@
 // Save as: frontend/scripts/events-page.js
 // =============================================================================
 
-// 🎯 GLOBAL STATE MANAGEMENT
+//  GLOBAL STATE MANAGEMENT
 const EventsState = {
     currentView: 'month', // 'month' or 'week'
     currentDate: new Date(),
@@ -14,7 +14,7 @@ const EventsState = {
     carouselIndex: 0
 };
 
-// 🎯 WAIT FOR PAGE TO LOAD
+//  WAIT FOR PAGE TO LOAD
 document.addEventListener('DOMContentLoaded', async () => {
     console.log('🚀 Initializing Events Page...');
 
@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         await initializeEventsPage();
         setupEventListeners();
 
-        console.log('✅ Events page initialized successfully');
+        console.log(' Events page initialized successfully');
     } catch (error) {
         console.error('💥 Error initializing events page:', error);
         showError('Failed to load events page');
@@ -50,10 +50,10 @@ async function checkAuthentication() {
             return false;
         }
 
-        console.log('✅ User authenticated:', userData.email);
+        console.log(' User authenticated:', userData.email);
         return true;
     } catch (error) {
-        console.error('❌ Authentication error:', error);
+        console.error(' Authentication error:', error);
         window.location.href = '/login';
         return false;
     }
@@ -89,18 +89,18 @@ async function initializeEventsPage() {
 
 async function loadFeaturedEvents() {
     try {
-        console.log('🌟 Loading featured events...');
+        console.log(' Loading featured events...');
 
         const response = await fetch('/api/events/featured');
         if (!response.ok) throw new Error('Failed to load featured events');
 
         EventsState.featuredEvents = await response.json();
 
-        console.log(`✅ Loaded ${EventsState.featuredEvents.length} featured events`);
+        console.log(` Loaded ${EventsState.featuredEvents.length} featured events`);
         renderFeaturedEvents();
 
     } catch (error) {
-        console.error('💥 Error loading featured events:', error);
+        console.error(' Error loading featured events:', error);
 
         // Use fallback data
         EventsState.featuredEvents = getFallbackFeaturedEvents();
@@ -113,7 +113,7 @@ function renderFeaturedEvents() {
     const template = document.getElementById('eventCardTemplate');
 
     if (!grid || !template) {
-        console.error('❌ Featured events elements not found');
+        console.error(' Featured events elements not found');
         return;
     }
 
@@ -166,7 +166,7 @@ function renderFeaturedEvents() {
         grid.appendChild(eventCard);
     });
 
-    console.log(`📅 Rendered ${EventsState.featuredEvents.length} featured event cards`);
+    console.log(` Rendered ${EventsState.featuredEvents.length} featured event cards`);
 }
 
 // =============================================================================
@@ -178,7 +178,7 @@ async function loadCalendarData() {
         const year = EventsState.currentDate.getFullYear();
         const month = EventsState.currentDate.getMonth() + 1;
 
-        console.log(`📊 Loading calendar data for ${year}-${month}`);
+        console.log(` Loading calendar data for ${year}-${month}`);
 
         const response = await fetch(`/api/events/calendar/${year}/${month}`);
         if (!response.ok) throw new Error('Failed to load calendar data');
@@ -191,10 +191,10 @@ async function loadCalendarData() {
             EventsState.calendarEvents[dayData._id] = dayData.count;
         });
 
-        console.log(`✅ Loaded calendar data for ${Object.keys(EventsState.calendarEvents).length} days`);
+        console.log(` Loaded calendar data for ${Object.keys(EventsState.calendarEvents).length} days`);
 
     } catch (error) {
-        console.error('💥 Error loading calendar data:', error);
+        console.error(' Error loading calendar data:', error);
         EventsState.calendarEvents = {};
     }
 }
@@ -365,17 +365,17 @@ async function selectDate(date) {
 async function loadEventsForDate(date) {
     try {
         const dateString = date.toISOString().split('T')[0];
-        console.log(`📡 Loading events for ${dateString}`);
+        console.log(` Loading events for ${dateString}`);
 
         const response = await fetch(`/api/events/date/${dateString}`);
         if (!response.ok) throw new Error('Failed to load events for date');
 
         EventsState.selectedDateEvents = await response.json();
 
-        console.log(`✅ Loaded ${EventsState.selectedDateEvents.length} events for ${dateString}`);
+        console.log(` Loaded ${EventsState.selectedDateEvents.length} events for ${dateString}`);
 
     } catch (error) {
-        console.error('💥 Error loading events for date:', error);
+        console.error(' Error loading events for date:', error);
         EventsState.selectedDateEvents = [];
     }
 }
@@ -407,7 +407,7 @@ function updateEventsDisplay() {
     if (EventsState.selectedDateEvents.length === 0) {
         carouselElement.innerHTML = `
             <div class="no-events-message">
-                <p>📅 No events scheduled for this date</p>
+                <p> No events scheduled for this date</p>
             </div>
         `;
     } else {
@@ -444,7 +444,7 @@ function renderEventCarousel() {
         carousel.appendChild(eventCard);
     });
 
-    console.log(`📱 Rendered ${EventsState.selectedDateEvents.length} events in carousel`);
+    console.log(` Rendered ${EventsState.selectedDateEvents.length} events in carousel`);
 }
 
 // =============================================================================
@@ -487,7 +487,7 @@ function switchView(view) {
 
 async function handleEventJoin(eventId) {
     try {
-        console.log(`🎟️ Joining event: ${eventId}`);
+        console.log(` Joining event: ${eventId}`);
 
         const response = await fetch(`/api/events/${eventId}/join`, {
             method: 'POST'
@@ -499,7 +499,7 @@ async function handleEventJoin(eventId) {
         }
 
         const result = await response.json();
-        console.log('✅ Successfully joined event:', result);
+        console.log(' Successfully joined event:', result);
 
         // Show success feedback
         showNotification('Successfully joined event!', 'success');
