@@ -3,20 +3,20 @@
 // =============================================================================
 // Save as frontend/scripts/dashboard.js
 
-// 🎯 GLOBAL STATE
+//  GLOBAL STATE
 let userProfile = null;
 
-// 🎯 WAIT FOR PAGE TO LOAD
+//  WAIT FOR PAGE TO LOAD
 document.addEventListener('DOMContentLoaded', async () => {
     try {
-        console.log('🚀 Dashboard initializing...');
+        console.log(' Dashboard initializing...');
 
         await loadUserProfile();
         updateDashboard();
 
-        console.log('✅ Dashboard loaded successfully');
+        console.log(' Dashboard loaded successfully');
     } catch (error) {
-        console.error('💥 Dashboard initialization error:', error);
+        console.error(' Dashboard initialization error:', error);
         showError('Failed to load dashboard');
     }
 });
@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 async function loadUserProfile() {
     try {
-        console.log('📡 Loading user profile...');
+        console.log(' Loading user profile...');
 
         const response = await fetch('/api/user/profile');
 
@@ -36,11 +36,11 @@ async function loadUserProfile() {
         }
 
         userProfile = await response.json();
-        console.log('📦 User profile loaded:', userProfile);
+        console.log(' User profile loaded:', userProfile);
 
         return userProfile;
     } catch (error) {
-        console.error('💥 Error loading user profile:', error);
+        console.error(' Error loading user profile:', error);
         throw error;
     }
 }
@@ -51,11 +51,11 @@ async function loadUserProfile() {
 
 function updateDashboard() {
     if (!userProfile) {
-        console.error('❌ No user profile data');
+        console.error(' No user profile data');
         return;
     }
 
-    console.log('🔄 Updating dashboard content...');
+    console.log(' Updating dashboard content...');
 
     // Update user info
     updateUserInfo();
@@ -69,7 +69,7 @@ function updateDashboard() {
     // Hide loading spinner
     hideLoading();
 
-    console.log('✅ Dashboard content updated');
+    console.log(' Dashboard content updated');
 }
 
 function updateUserInfo() {
@@ -96,7 +96,7 @@ function updateUserInfo() {
         daysActiveElement.textContent = userProfile.daysActive;
     }
 
-    console.log('✅ User info updated');
+    console.log(' User info updated');
 }
 
 function updateStatistics() {
@@ -124,14 +124,14 @@ function updateStatistics() {
         searchesElement.textContent = userProfile.searchesPerformed || '8';
     }
 
-    console.log('✅ Statistics updated');
+    console.log(' Statistics updated');
 }
 
 function updateBookmarkedClubs() {
     const bookmarkedClubsContainer = document.getElementById('bookmarkedClubsContainer');
 
     if (!bookmarkedClubsContainer) {
-        console.warn('⚠️ Bookmarked clubs container not found');
+        console.warn(' Bookmarked clubs container not found');
         return;
     }
 
@@ -169,7 +169,7 @@ function updateBookmarkedClubs() {
 
     bookmarkedClubsContainer.innerHTML = clubsHTML;
 
-    console.log(`✅ Displayed ${userProfile.bookmarkedClubs.length} bookmarked clubs`);
+    console.log(` Displayed ${userProfile.bookmarkedClubs.length} bookmarked clubs`);
 }
 
 // =============================================================================
@@ -178,7 +178,7 @@ function updateBookmarkedClubs() {
 
 async function removeBookmark(clubId, buttonElement) {
     try {
-        console.log(`🗑️ Removing bookmark for club: ${clubId}`);
+        console.log(` Removing bookmark for club: ${clubId}`);
 
         buttonElement.disabled = true;
         buttonElement.textContent = 'Removing...';
@@ -192,7 +192,7 @@ async function removeBookmark(clubId, buttonElement) {
         }
 
         const result = await response.json();
-        console.log('✅ Bookmark removed:', result);
+        console.log(' Bookmark removed:', result);
 
         // Remove the card from UI
         const bookmarkCard = buttonElement.closest('.bookmark-card');
@@ -223,7 +223,7 @@ async function removeBookmark(clubId, buttonElement) {
         showMessage('Bookmark removed successfully', 'success');
 
     } catch (error) {
-        console.error('💥 Error removing bookmark:', error);
+        console.error(' Error removing bookmark:', error);
         buttonElement.disabled = false;
         buttonElement.textContent = 'Remove';
         showMessage('Failed to remove bookmark', 'error');
@@ -246,11 +246,11 @@ function hideLoading() {
         dashboardContent.style.display = 'block';
     }
 
-    console.log('✅ Loading overlay hidden');
+    console.log(' Loading overlay hidden');
 }
 
 function showError(message) {
-    console.error('❌ Dashboard error:', message);
+    console.error(' Dashboard error:', message);
 
     const loadingOverlay = document.getElementById('loadingOverlay');
     const dashboardContent = document.getElementById('dashboardContent');
@@ -322,7 +322,7 @@ async function refreshDashboard() {
         showMessage('Dashboard refreshed successfully', 'success');
 
     } catch (error) {
-        console.error('💥 Error refreshing dashboard:', error);
+        console.error(' Error refreshing dashboard:', error);
         showMessage('Failed to refresh dashboard', 'error');
 
         // Reset refresh button
@@ -344,10 +344,10 @@ window.refreshDashboard = refreshDashboard;
 
 // Debug function
 window.debugDashboard = () => {
-    console.log('🐛 Dashboard Debug Info:');
+    console.log(' Dashboard Debug Info:');
     console.log('  User Profile:', userProfile);
     console.log('  Bookmarks:', userProfile?.bookmarkedClubs?.length || 0);
     console.log('  Total Bookmarks:', userProfile?.totalBookmarks || 0);
 };
 
-console.log('✅ Dashboard script loaded successfully!');
+console.log(' Dashboard script loaded successfully!');

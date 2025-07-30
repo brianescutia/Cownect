@@ -6,8 +6,8 @@ const nodemailer = require('nodemailer');
 const createTransporter = () => {
   // Check if we have SMTP config
   if (process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS) {
-    console.log('📧 Using real SMTP configuration');
-    return nodemailer.createTransport({ // ✅ Fixed: createTransport
+    console.log(' Using real SMTP configuration');
+    return nodemailer.createTransport({ //  Fixed: createTransport
       host: process.env.SMTP_HOST,
       port: process.env.SMTP_PORT || 587,
       secure: false, // true for 465, false for other ports
@@ -17,9 +17,9 @@ const createTransporter = () => {
       },
     });
   } else {
-    console.log('📧 Using test transporter (emails will be logged, not sent)');
+    console.log(' Using test transporter (emails will be logged, not sent)');
     // Create test transporter for development
-    return nodemailer.createTransport({ // ✅ Fixed: createTransport
+    return nodemailer.createTransport({ //  Fixed: createTransport
       host: 'smtp.ethereal.email',
       port: 587,
       auth: {
@@ -30,7 +30,7 @@ const createTransporter = () => {
   }
 };
 
-// 📧 Send verification email
+//  Send verification email
 const sendVerificationEmail = async (email, verificationToken) => {
   const transporter = createTransporter();
 
@@ -100,15 +100,15 @@ const sendVerificationEmail = async (email, verificationToken) => {
 
   try {
     await transporter.sendMail(mailOptions);
-    console.log('📧 Verification email sent to:', email);
+    console.log(' Verification email sent to:', email);
     return { success: true };
   } catch (error) {
-    console.error('📧 Email sending error:', error);
+    console.error(' Email sending error:', error);
     return { success: false, error: error.message };
   }
 };
 
-// 🔄 Send password reset email
+//  Send password reset email
 const sendPasswordResetEmail = async (email, resetToken) => {
   const transporter = createTransporter();
 
@@ -159,10 +159,10 @@ const sendPasswordResetEmail = async (email, resetToken) => {
 
   try {
     await transporter.sendMail(mailOptions);
-    console.log('🔄 Password reset email sent to:', email);
+    console.log(' Password reset email sent to:', email);
     return { success: true };
   } catch (error) {
-    console.error('🔄 Password reset email error:', error);
+    console.error(' Password reset email error:', error);
     return { success: false, error: error.message };
   }
 };

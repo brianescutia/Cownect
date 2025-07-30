@@ -3,14 +3,14 @@
 // Replace your calendar-utils.js with this version
 // =============================================================================
 
-// 📅 SIMPLIFIED AND ROBUST GOOGLE CALENDAR FUNCTION
+//  SIMPLIFIED AND ROBUST GOOGLE CALENDAR FUNCTION
 function addToGoogleCalendar(event) {
     try {
-        console.log('🐛 DEBUG: Starting addToGoogleCalendar with event:', event);
+        console.log(' DEBUG: Starting addToGoogleCalendar with event:', event);
 
         // Validate event object
         if (!event) {
-            console.error('❌ No event object provided');
+            console.error(' No event object provided');
             showCalendarNotification('No event data available', 'error');
             return;
         }
@@ -24,7 +24,7 @@ function addToGoogleCalendar(event) {
             time: event.time || event.formattedTime || '6:00 PM - 8:00 PM'
         };
 
-        console.log('🐛 DEBUG: Processed event data:', eventData);
+        console.log(' DEBUG: Processed event data:', eventData);
 
         // Parse the date
         let eventDate;
@@ -34,11 +34,11 @@ function addToGoogleCalendar(event) {
                 throw new Error('Invalid date');
             }
         } catch (dateError) {
-            console.error('❌ Invalid event date:', eventData.date, dateError);
+            console.error(' Invalid event date:', eventData.date, dateError);
             eventDate = new Date(); // Fallback to today
         }
 
-        console.log('🐛 DEBUG: Parsed event date:', eventDate);
+        console.log(' DEBUG: Parsed event date:', eventDate);
 
         // Parse time with robust error handling
         let startTime, endTime;
@@ -47,7 +47,7 @@ function addToGoogleCalendar(event) {
             startTime = timeResult.start;
             endTime = timeResult.end;
         } catch (timeError) {
-            console.error('⚠️ Time parsing failed:', eventData.time, timeError);
+            console.error(' Time parsing failed:', eventData.time, timeError);
             // Fallback to default times
             startTime = new Date(eventDate);
             startTime.setHours(18, 0, 0, 0); // 6 PM
@@ -66,43 +66,43 @@ function addToGoogleCalendar(event) {
             endTime: endTime
         });
 
-        console.log('🐛 DEBUG: Generated calendar URL:', calendarUrl);
+        console.log(' DEBUG: Generated calendar URL:', calendarUrl);
 
         // Test URL validity
         try {
             new URL(calendarUrl);
         } catch (urlError) {
-            console.error('❌ Invalid URL generated:', calendarUrl, urlError);
+            console.error(' Invalid URL generated:', calendarUrl, urlError);
             showCalendarNotification('Failed to generate calendar link', 'error');
             return;
         }
 
         // Open Google Calendar
-        console.log('🐛 DEBUG: Attempting to open calendar...');
+        console.log(' DEBUG: Attempting to open calendar...');
         const newWindow = window.open(calendarUrl, '_blank', 'noopener,noreferrer');
 
         if (!newWindow) {
-            console.error('❌ Failed to open new window - likely popup blocked');
+            console.error(' Failed to open new window - likely popup blocked');
             showCalendarNotification('Please allow popups to add events to calendar', 'error');
             return;
         }
 
-        console.log('✅ Google Calendar opened successfully');
+        console.log(' Google Calendar opened successfully');
         showCalendarNotification('Event added to Google Calendar! 📅', 'success');
 
     } catch (error) {
-        console.error('💥 Error in addToGoogleCalendar:', error);
-        console.error('💥 Error stack:', error.stack);
+        console.error(' Error in addToGoogleCalendar:', error);
+        console.error(' Error stack:', error.stack);
         showCalendarNotification(`Failed to add to calendar: ${error.message}`, 'error');
     }
 }
 
-// 🕒 ROBUST TIME PARSING WITH BETTER ERROR HANDLING
+//  ROBUST TIME PARSING WITH BETTER ERROR HANDLING
 function parseEventTimeRobust(timeString, eventDate) {
-    console.log('🐛 DEBUG: Parsing time string:', timeString);
+    console.log(' DEBUG: Parsing time string:', timeString);
 
     if (!timeString || timeString === 'Time TBD' || timeString === 'TBD') {
-        console.log('🐛 DEBUG: No valid time provided, using defaults');
+        console.log(' DEBUG: No valid time provided, using defaults');
         const defaultStart = new Date(eventDate);
         defaultStart.setHours(18, 0, 0, 0);
         const defaultEnd = new Date(defaultStart);
@@ -113,7 +113,7 @@ function parseEventTimeRobust(timeString, eventDate) {
     try {
         // Clean the time string
         const cleanTime = timeString.trim().toLowerCase();
-        console.log('🐛 DEBUG: Cleaned time string:', cleanTime);
+        console.log(' DEBUG: Cleaned time string:', cleanTime);
 
         // Handle range times (e.g., "6:00 PM - 8:00 PM")
         if (cleanTime.includes('-') || cleanTime.includes('to')) {
@@ -123,7 +123,7 @@ function parseEventTimeRobust(timeString, eventDate) {
             if (timeParts.length >= 2) {
                 const startTime = parseIndividualTime(timeParts[0], eventDate);
                 const endTime = parseIndividualTime(timeParts[1], eventDate);
-                console.log('🐛 DEBUG: Parsed range times - Start:', startTime, 'End:', endTime);
+                console.log(' DEBUG: Parsed range times - Start:', startTime, 'End:', endTime);
                 return { start: startTime, end: endTime };
             }
         }
@@ -133,18 +133,18 @@ function parseEventTimeRobust(timeString, eventDate) {
         const endTime = new Date(startTime);
         endTime.setHours(startTime.getHours() + 2); // Default 2-hour duration
 
-        console.log('🐛 DEBUG: Parsed single time - Start:', startTime, 'End:', endTime);
+        console.log(' DEBUG: Parsed single time - Start:', startTime, 'End:', endTime);
         return { start: startTime, end: endTime };
 
     } catch (error) {
-        console.error('❌ Time parsing error:', error);
+        console.error(' Time parsing error:', error);
         throw error;
     }
 }
 
-// 🕐 PARSE INDIVIDUAL TIME WITH MULTIPLE FORMAT SUPPORT
+//  PARSE INDIVIDUAL TIME WITH MULTIPLE FORMAT SUPPORT
 function parseIndividualTime(timeStr, baseDate) {
-    console.log('🐛 DEBUG: Parsing individual time:', timeStr);
+    console.log(' DEBUG: Parsing individual time:', timeStr);
 
     const date = new Date(baseDate);
     const cleanTimeStr = timeStr.trim().toLowerCase();
@@ -161,7 +161,7 @@ function parseIndividualTime(timeStr, baseDate) {
     for (const pattern of timePatterns) {
         const match = cleanTimeStr.match(pattern);
         if (match) {
-            console.log('🐛 DEBUG: Time pattern matched:', match);
+            console.log(' DEBUG: Time pattern matched:', match);
 
             let hours = parseInt(match[1]);
             const minutes = parseInt(match[2] || '0');
@@ -178,7 +178,7 @@ function parseIndividualTime(timeStr, baseDate) {
             // Validate hours and minutes
             if (hours >= 0 && hours <= 23 && minutes >= 0 && minutes <= 59) {
                 date.setHours(hours, minutes, 0, 0);
-                console.log('🐛 DEBUG: Successfully parsed time:', date);
+                console.log(' DEBUG: Successfully parsed time:', date);
                 return date;
             }
         }
@@ -187,10 +187,10 @@ function parseIndividualTime(timeStr, baseDate) {
     throw new Error(`Unable to parse time: ${timeStr}`);
 }
 
-// 🔗 SIMPLIFIED GOOGLE CALENDAR URL BUILDER
+//  SIMPLIFIED GOOGLE CALENDAR URL BUILDER
 function buildGoogleCalendarUrlSimple({ title, description, location, startTime, endTime }) {
     try {
-        console.log('🐛 DEBUG: Building calendar URL with params:', { title, location, startTime, endTime });
+        console.log(' DEBUG: Building calendar URL with params:', { title, location, startTime, endTime });
 
         const baseUrl = 'https://calendar.google.com/calendar/render';
         const params = new URLSearchParams();
@@ -204,7 +204,7 @@ function buildGoogleCalendarUrlSimple({ title, description, location, startTime,
         const endUTC = formatDateForCalendarUTC(endTime);
         params.set('dates', `${startUTC}/${endUTC}`);
 
-        console.log('🐛 DEBUG: Formatted dates:', `${startUTC}/${endUTC}`);
+        console.log(' DEBUG: Formatted dates:', `${startUTC}/${endUTC}`);
 
         // Optional parameters
         if (description) {
@@ -220,12 +220,12 @@ function buildGoogleCalendarUrlSimple({ title, description, location, startTime,
         params.set('ctz', 'America/Los_Angeles');
 
         const finalUrl = `${baseUrl}?${params.toString()}`;
-        console.log('🐛 DEBUG: Final calendar URL:', finalUrl);
+        console.log(' DEBUG: Final calendar URL:', finalUrl);
 
         return finalUrl;
 
     } catch (error) {
-        console.error('❌ Error building calendar URL:', error);
+        console.error(' Error building calendar URL:', error);
         throw error;
     }
 }
@@ -235,17 +235,17 @@ function formatDateForCalendarUTC(date) {
     try {
         // Convert to UTC and format as YYYYMMDDTHHMMSSZ
         const utcString = date.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
-        console.log('🐛 DEBUG: Formatted date for calendar:', date, '->', utcString);
+        console.log(' DEBUG: Formatted date for calendar:', date, '->', utcString);
         return utcString;
     } catch (error) {
-        console.error('❌ Error formatting date:', date, error);
+        console.error(' Error formatting date:', date, error);
         throw error;
     }
 }
 
-// 🔔 ENHANCED NOTIFICATION SYSTEM
+//  ENHANCED NOTIFICATION SYSTEM
 function showCalendarNotification(message, type = 'info') {
-    console.log(`🔔 Notification: ${message} (${type})`);
+    console.log(` Notification: ${message} (${type})`);
 
     // Remove existing notifications
     const existingNotifications = document.querySelectorAll('.calendar-notification');
@@ -318,7 +318,7 @@ function showCalendarNotification(message, type = 'info') {
 
 // 🧪 SIMPLE TEST FUNCTION - Call this from browser console to test
 window.testCalendar = function () {
-    console.log('🧪 Testing calendar integration...');
+    console.log(' Testing calendar integration...');
 
     const testEvent = {
         title: 'Test Event',
@@ -332,9 +332,9 @@ window.testCalendar = function () {
     addToGoogleCalendar(testEvent);
 };
 
-// 🎯 ENHANCED EVENT CARD INTEGRATION
+//  ENHANCED EVENT CARD INTEGRATION
 function setupCalendarButtons() {
-    console.log('🔧 Setting up calendar button handlers...');
+    console.log(' Setting up calendar button handlers...');
 
     // Remove existing handlers to prevent duplicates
     document.removeEventListener('click', handleCalendarClick);
@@ -342,7 +342,7 @@ function setupCalendarButtons() {
     // Add new handler
     document.addEventListener('click', handleCalendarClick);
 
-    console.log('✅ Calendar button handlers ready');
+    console.log(' Calendar button handlers ready');
 }
 
 function handleCalendarClick(e) {
@@ -354,44 +354,44 @@ function handleCalendarClick(e) {
     e.preventDefault();
     e.stopPropagation();
 
-    console.log('🖱️ Calendar button clicked');
+    console.log(' Calendar button clicked');
 
     // Find the parent event card
     const eventCard = calendarBtn.closest('.event-card, .carousel-event-card, .sidebar-event-card, .featured-event-card');
 
     if (!eventCard) {
-        console.error('❌ No event card found for calendar button');
+        console.error(' No event card found for calendar button');
         showCalendarNotification('Unable to find event information', 'error');
         return;
     }
 
-    console.log('🎴 Found event card:', eventCard);
+    console.log(' Found event card:', eventCard);
 
     // Extract event data
     const eventData = extractEventDataFromCard(eventCard);
 
     if (!eventData) {
-        console.error('❌ Failed to extract event data');
+        console.error(' Failed to extract event data');
         showCalendarNotification('Unable to extract event information', 'error');
         return;
     }
 
-    console.log('📊 Extracted event data:', eventData);
+    console.log(' Extracted event data:', eventData);
 
     // Add to Google Calendar
     addToGoogleCalendar(eventData);
 }
 
-// 📊 ROBUST EVENT DATA EXTRACTION
+//  ROBUST EVENT DATA EXTRACTION
 function extractEventDataFromCard(eventCard) {
     try {
-        console.log('📊 Extracting event data from card...');
+        console.log(' Extracting event data from card...');
 
         // Helper function to safely get text content
         const getTextContent = (selector, fallback = '') => {
             const element = eventCard.querySelector(selector);
             const text = element ? element.textContent.trim() : fallback;
-            console.log(`🔍 ${selector}: "${text}"`);
+            console.log(` ${selector}: "${text}"`);
             return text;
         };
 
@@ -405,34 +405,34 @@ function extractEventDataFromCard(eventCard) {
             id: eventCard.dataset.eventId || eventCard.dataset.id || Date.now()
         };
 
-        console.log('📊 Successfully extracted event data:', eventData);
+        console.log(' Successfully extracted event data:', eventData);
         return eventData;
 
     } catch (error) {
-        console.error('❌ Error extracting event data:', error);
+        console.error(' Error extracting event data:', error);
         return null;
     }
 }
 
-// 🚀 INITIALIZE EVERYTHING
+//  INITIALIZE EVERYTHING
 function initializeCalendarIntegration() {
-    console.log('🚀 Initializing enhanced calendar integration...');
+    console.log(' Initializing enhanced calendar integration...');
 
     try {
         setupCalendarButtons();
 
         // Add test function to window for debugging
         window.debugCalendar = () => {
-            console.log('🐛 Calendar Debug Info:');
+            console.log(' Calendar Debug Info:');
             console.log('- Calendar buttons found:', document.querySelectorAll('.add-calendar-btn, .add-to-calendar').length);
             console.log('- Event cards found:', document.querySelectorAll('.event-card, .carousel-event-card, .sidebar-event-card').length);
         };
 
-        console.log('✅ Calendar integration ready!');
-        console.log('💡 Test with: window.testCalendar() or window.debugCalendar()');
+        console.log(' Calendar integration ready!');
+        console.log(' Test with: window.testCalendar() or window.debugCalendar()');
 
     } catch (error) {
-        console.error('💥 Failed to initialize calendar integration:', error);
+        console.error(' Failed to initialize calendar integration:', error);
     }
 }
 
@@ -443,4 +443,4 @@ if (document.readyState === 'loading') {
     initializeCalendarIntegration();
 }
 
-console.log('✅ Fixed Google Calendar integration loaded');
+console.log(' Fixed Google Calendar integration loaded');

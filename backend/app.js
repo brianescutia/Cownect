@@ -26,7 +26,7 @@ app.use(express.static(path.join(__dirname, '../frontend')));  // Serve static f
 app.use(express.urlencoded({ extended: true }));               // Parse form data
 app.use(express.json());                                       // Parse JSON data
 
-// 🎟️ SESSION CONFIGURATION - Like setting up a wristband system at a concert
+// SESSION CONFIGURATION - Like setting up a wristband system at a concert
 app.use(session({
   // This is the "ink" used to create secure wristbands - keep it secret!
   secret: process.env.SESSION_SECRET || 'change-this-in-production',
@@ -57,7 +57,7 @@ mongoose.connect(process.env.MONGO_URI, {
   .then(() => console.log('Connected to MongoDB Atlas'))
   .catch(err => console.error('MongoDB connection error:', err));
 
-// 🎟️ AUTHENTICATION MIDDLEWARE - Our "bouncer" function
+// AUTHENTICATION MIDDLEWARE - Our "bouncer" function
 // This checks if someone has a valid wristband before letting them into protected areas
 const requireAuth = (req, res, next) => {
   if (req.session.userId) {
@@ -71,7 +71,7 @@ const requireAuth = (req, res, next) => {
 
 function redirectLoggedInUsers(req, res, next) {
   if (req.session && req.session.userId) {
-    console.log(`🔀 Redirecting logged-in user ${req.session.userEmail} to tech-clubs`);
+    console.log(` Redirecting logged-in user ${req.session.userEmail} to tech-clubs`);
     return res.redirect('/tech-clubs');
   }
   next();
@@ -81,7 +81,7 @@ function redirectLoggedInUsers(req, res, next) {
 // ROUTES
 // =============================================================================
 
-// 🏠 HOME ROUTE
+// HOME ROUTE
 app.get('/', redirectLoggedInUsers, (req, res) => {
   res.sendFile(path.join(__dirname, '../frontend/pages/index.html'));
 });
@@ -90,7 +90,7 @@ app.get('/', redirectLoggedInUsers, (req, res) => {
 // AUTHENTICATION ROUTES
 // =============================================================================
 
-// 🚪 LOGIN ROUTES
+// LOGIN ROUTES
 app.get('/login', redirectLoggedInUsers, (req, res) => {
   res.sendFile(path.join(__dirname, '../frontend/pages/login.html'));
 });
@@ -115,11 +115,11 @@ app.post('/login', async (req, res) => {
 
     //Check EMAIL Verification
     if (!user.isVerified) {
-      console.log(`🔍 User ${user.email} is not verified. Redirecting to verification page.`);
+      console.log(` User ${user.email} is not verified. Redirecting to verification page.`);
       return res.redirect(`/verify-email-prompt?email=${encodeURIComponent(user.email)}&error=not_verified`);
     }
 
-    // Step 3: 🎟️ ISSUE THE WRISTBAND! Store user info in session
+    // Step 3: ISSUE THE WRISTBAND! Store user info in session
     req.session.userId = user._id;
     req.session.userEmail = user.email;
 
@@ -132,13 +132,13 @@ app.post('/login', async (req, res) => {
   }
 });
 
-// 📝 SIGNUP ROUTES
+// SIGNUP ROUTES
 app.use((err, req, res, next) => {
-  console.error('💥 Unhandled error:', err);
+  console.error(' Unhandled error:', err);
 
   // Check if response was already sent
   if (res.headersSent) {
-    console.error('⚠️ Headers already sent, cannot send error response');
+    console.error(' Headers already sent, cannot send error response');
     return next(err);
   }
 
@@ -147,11 +147,11 @@ app.use((err, req, res, next) => {
 });
 
 app.use((req, res, next) => {
-  console.log(`🔍 ${req.method} ${req.path} - ${new Date().toISOString()}`);
+  console.log(` ${req.method} ${req.path} - ${new Date().toISOString()}`);
 
   // Log when response is finished
   res.on('finish', () => {
-    console.log(`✅ Response sent: ${res.statusCode} for ${req.method} ${req.path}`);
+    console.log(` Response sent: ${res.statusCode} for ${req.method} ${req.path}`);
   });
 
   next();
@@ -161,14 +161,14 @@ app.get('/signup', redirectLoggedInUsers, (req, res) => {
 });
 
 app.get('/verify-email-prompt', (req, res) => {
-  console.log('📧 Verify email prompt accessed');
+  console.log(' Verify email prompt accessed');
   res.sendFile(path.join(__dirname, '../frontend/pages/verify-email-prompt.html'));
 });
 
 app.post('/signup', async (req, res) => {
   const { email, password } = req.body;
 
-  console.log('📝 JSON Signup attempt for:', email);
+  console.log(' JSON Signup attempt for:', email);
 
   try {
     // Step 1: Basic validation
@@ -182,7 +182,7 @@ app.post('/signup', async (req, res) => {
     // Step 2: Check if user already exists
     const existingUser = await User.findOne({ email: email.toLowerCase() });
     if (existingUser) {
-      console.log('❌ User already exists:', email);
+      console.log(' User already exists:', email);
       return res.status(409).json({
         success: false,
         error: 'An account with this email already exists',
@@ -192,7 +192,7 @@ app.post('/signup', async (req, res) => {
 
     // Step 3: Validate UC Davis email domain
     if (!email.toLowerCase().endsWith('@ucdavis.edu')) {
-      console.log('❌ Invalid email domain:', email);
+      console.log(' Invalid email domain:', email);
       return res.status(400).json({
         success: false,
         error: 'Please use your UC Davis email address (@ucdavis.edu)'
@@ -208,7 +208,7 @@ app.post('/signup', async (req, res) => {
     }
 
     // Step 5: Create new user
-    console.log('🔨 Creating new user...');
+    console.log(' Creating new user...');
     const newUser = new User({
       email: email.toLowerCase(),
       password: password,
@@ -216,15 +216,15 @@ app.post('/signup', async (req, res) => {
     });
 
     // Step 6: Generate verification token
-    console.log('🎟️ Generating verification token...');
+    console.log(' Generating verification token...');
     const verificationToken = newUser.generateVerificationToken();
 
     // Step 7: Save user to database  
     await newUser.save();
-    console.log('✅ User saved to database');
+    console.log(' User saved to database');
 
     // Step 8: Send verification email
-    console.log('📧 Attempting to send verification email...');
+    console.log('Attempting to send verification email...');
     let emailSent = false;
 
     try {
@@ -233,16 +233,16 @@ app.post('/signup', async (req, res) => {
       emailSent = emailResult.success;
 
       if (emailSent) {
-        console.log('✅ Verification email sent successfully');
+        console.log(' Verification email sent successfully');
       } else {
-        console.error('⚠️ Failed to send verification email:', emailResult.error);
+        console.error(' Failed to send verification email:', emailResult.error);
       }
     } catch (emailError) {
-      console.error('💥 Email service error:', emailError);
+      console.error(' Email service error:', emailError);
     }
 
     // Step 9: Return success response with redirect info
-    console.log('✅ Signup successful, sending JSON response');
+    console.log(' Signup successful, sending JSON response');
     return res.status(201).json({
       success: true,
       message: 'Account created successfully! Please check your email.',
@@ -255,7 +255,7 @@ app.post('/signup', async (req, res) => {
     });
 
   } catch (err) {
-    console.error('💥 Signup error:', err);
+    console.error(' Signup error:', err);
 
     // Handle MongoDB duplicate key error
     if (err.code === 11000) {
@@ -282,7 +282,7 @@ app.post('/signup', async (req, res) => {
   }
 });
 
-// 🚪 LOGOUT ROUTE
+//  LOGOUT ROUTE
 app.get('/logout', (req, res) => {
   // 🗑️ REMOVE THE WRISTBAND - Destroy the session completely
   req.session.destroy((err) => {
@@ -298,7 +298,7 @@ app.get('/logout', (req, res) => {
 // PROTECTED ROUTES - Only for users with valid wristbands!
 // =============================================================================
 
-// 🏛️ TECH CLUBS PAGE - Protected route example
+//  TECH CLUBS PAGE - Protected route example
 app.get('/tech-clubs', requireAuth, (req, res) => {
   // This line only runs if the user passed the requireAuth bouncer check
   console.log('Tech clubs accessed by:', req.session.userEmail);
@@ -307,7 +307,7 @@ app.get('/tech-clubs', requireAuth, (req, res) => {
 
 app.get('/api/bookmarks', requireAuth, async (req, res) => {
   try {
-    console.log(`📖 Fetching bookmarks for user: ${req.session.userEmail}`);
+    console.log(` Fetching bookmarks for user: ${req.session.userEmail}`);
 
     // Get user with populated bookmark details
     const userWithBookmarks = await User.findWithBookmarks(req.session.userId);
@@ -316,7 +316,7 @@ app.get('/api/bookmarks', requireAuth, async (req, res) => {
       return res.status(404).json({ error: 'User not found' });
     }
 
-    console.log(`✅ Found ${userWithBookmarks.bookmarkedClubs.length} bookmarks`);
+    console.log(` Found ${userWithBookmarks.bookmarkedClubs.length} bookmarks`);
 
     res.json({
       bookmarks: userWithBookmarks.bookmarkedClubs,
@@ -324,7 +324,7 @@ app.get('/api/bookmarks', requireAuth, async (req, res) => {
     });
 
   } catch (error) {
-    console.error('💥 Error fetching bookmarks:', error);
+    console.error(' Error fetching bookmarks:', error);
     res.status(500).json({ error: 'Failed to fetch bookmarks' });
   }
 });
@@ -334,16 +334,16 @@ app.get('/api/bookmarks', requireAuth, async (req, res) => {
 // Replace the commented out event routes with these enhanced versions
 // =============================================================================
 
-// 📅 EVENTS PAGE ROUTE - Serve the events HTML page
+//  EVENTS PAGE ROUTE - Serve the events HTML page
 app.get('/events', requireAuth, (req, res) => {
   console.log('Events page accessed by:', req.session.userEmail);
   res.sendFile(path.join(__dirname, '../frontend/pages/events.html'));
 });
 
-// 🔍 GET ALL EVENTS - Enhanced version with filtering
+//  GET ALL EVENTS - Enhanced version with filtering
 app.get('/api/events', requireAuth, async (req, res) => {
   try {
-    console.log('📅 Fetching events...');
+    console.log(' Fetching events...');
 
     const {
       limit = 50,
@@ -378,7 +378,7 @@ app.get('/api/events', requireAuth, async (req, res) => {
 
     const events = await eventsQuery.lean();
 
-    console.log(`✅ Found ${events.length} events`);
+    console.log(` Found ${events.length} events`);
 
     // Add additional computed fields
     const enhancedEvents = events.map(event => ({
@@ -397,15 +397,15 @@ app.get('/api/events', requireAuth, async (req, res) => {
     res.json(enhancedEvents);
 
   } catch (error) {
-    console.error('💥 Error fetching events:', error);
+    console.error(' Error fetching events:', error);
     res.status(500).json({ error: 'Failed to fetch events' });
   }
 });
 
-// 🌟 GET FEATURED EVENTS - Top 3 events for the main display
+//  GET FEATURED EVENTS - Top 3 events for the main display
 app.get('/api/events/featured', requireAuth, async (req, res) => {
   try {
-    console.log('🌟 Fetching featured events...');
+    console.log(' Fetching featured events...');
 
     const featuredEvents = await Event.find({
       isActive: true,
@@ -432,20 +432,20 @@ app.get('/api/events/featured', requireAuth, async (req, res) => {
       imageUrl: event.imageUrl || '/assets/default-event-image.jpg'
     }));
 
-    console.log(`✅ Found ${enhancedFeaturedEvents.length} featured events`);
+    console.log(` Found ${enhancedFeaturedEvents.length} featured events`);
     res.json(enhancedFeaturedEvents);
 
   } catch (error) {
-    console.error('💥 Error fetching featured events:', error);
+    console.error(' Error fetching featured events:', error);
     res.status(500).json({ error: 'Failed to fetch featured events' });
   }
 });
 
-// 📅 GET EVENTS BY DATE - For calendar functionality
+//  GET EVENTS BY DATE - For calendar functionality
 app.get('/api/events/date/:date', requireAuth, async (req, res) => {
   try {
     const { date } = req.params;
-    console.log(`📅 Fetching events for date: ${date}`);
+    console.log(` Fetching events for date: ${date}`);
 
     // Parse the date and get events for that day
     const targetDate = new Date(date);
@@ -491,11 +491,11 @@ app.get('/api/events/date/:date', requireAuth, async (req, res) => {
 });
 
 
-// 📊 GET CALENDAR DATA - Event counts by date for calendar visualization
+//  GET CALENDAR DATA - Event counts by date for calendar visualization
 app.get('/api/events/calendar/:year/:month', requireAuth, async (req, res) => {
   try {
     const { year, month } = req.params;
-    console.log(`📊 Fetching calendar data for ${year}-${month}`);
+    console.log(` Fetching calendar data for ${year}-${month}`);
 
     const startDate = new Date(year, month - 1, 1);
     const endDate = new Date(year, month, 0, 23, 59, 59);
@@ -543,16 +543,16 @@ app.get('/api/events/calendar/:year/:month', requireAuth, async (req, res) => {
       events: eventsByDate[dateKey]
     }));
 
-    console.log(`✅ Found events for ${calendarData.length} days in ${year}-${month}`);
+    console.log(` Found events for ${calendarData.length} days in ${year}-${month}`);
     res.json(calendarData);
 
   } catch (error) {
-    console.error('💥 Error fetching calendar data:', error);
+    console.error(' Error fetching calendar data:', error);
     res.status(500).json({ error: 'Failed to fetch calendar data' });
   }
 });
 
-// 📝 CREATE NEW EVENT - Enhanced version
+//  CREATE NEW EVENT - Enhanced version
 app.post('/api/events', requireAuth, async (req, res) => {
   try {
     const { title, date, time, location, description, imageUrl } = req.body;
@@ -576,16 +576,16 @@ app.post('/api/events', requireAuth, async (req, res) => {
 
     await newEvent.save();
 
-    console.log('📅 New event created:', newEvent.title);
+    console.log(' New event created:', newEvent.title);
     res.status(201).json(newEvent);
 
   } catch (error) {
-    console.error('💥 Error creating event:', error);
+    console.error(' Error creating event:', error);
     res.status(500).json({ error: 'Failed to create event' });
   }
 });
 
-// 🖼️ UPDATE CLUB IMAGES - Add this route
+// UPDATE CLUB IMAGES - Add this route
 app.put('/api/clubs/:id/images', requireAuth, async (req, res) => {
   try {
     const clubId = req.params.id;
@@ -598,7 +598,7 @@ app.put('/api/clubs/:id/images', requireAuth, async (req, res) => {
       });
     }
 
-    console.log(`🖼️ Updating images for club ID: ${clubId}`);
+    console.log(`Updating images for club ID: ${clubId}`);
 
     const updateData = {};
     if (logoUrl) updateData.logoUrl = logoUrl;
@@ -618,7 +618,7 @@ app.put('/api/clubs/:id/images', requireAuth, async (req, res) => {
       return res.status(404).json({ error: 'Club not found' });
     }
 
-    console.log(`✅ Updated images for: ${club.name}`);
+    console.log(`Updated images for: ${club.name}`);
     if (heroImageUrl) console.log(`   New hero image: ${heroImageUrl}`);
 
     res.json({
@@ -634,7 +634,7 @@ app.put('/api/clubs/:id/images', requireAuth, async (req, res) => {
     });
 
   } catch (error) {
-    console.error('💥 Error updating club images:', error);
+    console.error(' Error updating club images:', error);
     res.status(500).json({ error: 'Failed to update club images' });
   }
 });
@@ -653,7 +653,7 @@ app.put('/api/clubs/update-by-name', requireAuth, async (req, res) => {
       });
     }
 
-    console.log(`🖼️ Updating images for club: ${clubName}`);
+    console.log(` Updating images for club: ${clubName}`);
 
     const updateData = {};
     if (logoUrl) updateData.logoUrl = logoUrl;
@@ -676,7 +676,7 @@ app.put('/api/clubs/update-by-name', requireAuth, async (req, res) => {
       });
     }
 
-    console.log(`✅ Successfully updated: ${club.name}`);
+    console.log(` Successfully updated: ${club.name}`);
     if (heroImageUrl) console.log(`   New hero image: ${heroImageUrl}`);
 
     res.json({
@@ -692,14 +692,14 @@ app.put('/api/clubs/update-by-name', requireAuth, async (req, res) => {
     });
 
   } catch (error) {
-    console.error('💥 Error updating club by name:', error);
+    console.error(' Error updating club by name:', error);
     res.status(500).json({ error: 'Failed to update club' });
   }
 });
-// 🖼️ GIVE EACH CLUB A UNIQUE HERO IMAGE
+//  GIVE EACH CLUB A UNIQUE HERO IMAGE
 app.post('/api/clubs/set-default-images', requireAuth, async (req, res) => {
   try {
-    console.log('🎨 Setting default images only for clubs that need them...');
+    console.log(' Setting default images only for clubs that need them...');
 
     const defaultImages = {
       "#include": "https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=1200&h=600&fit=crop&crop=center",
@@ -725,11 +725,11 @@ app.post('/api/clubs/set-default-images', requireAuth, async (req, res) => {
       const club = await Club.findOne({ name: clubName });
 
       if (!club) {
-        console.log(`⚠️ Club not found: ${clubName}`);
+        console.log(` Club not found: ${clubName}`);
         continue;
       }
 
-      // 🔑 ONLY update if club doesn't have a custom hero image
+      //  ONLY update if club doesn't have a custom hero image
       if (!club.hasCustomHeroImage && (!club.heroImageUrl || club.heroImageUrl.includes('default-club-hero'))) {
         await Club.findOneAndUpdate(
           { name: clubName },
@@ -739,10 +739,10 @@ app.post('/api/clubs/set-default-images', requireAuth, async (req, res) => {
           }
         );
         updated++;
-        console.log(`✅ Set default image for: ${clubName}`);
+        console.log(` Set default image for: ${clubName}`);
       } else {
         skipped++;
-        console.log(`⏭️ Skipped (has custom image): ${clubName}`);
+        console.log(` Skipped (has custom image): ${clubName}`);
       }
     }
 
@@ -755,7 +755,7 @@ app.post('/api/clubs/set-default-images', requireAuth, async (req, res) => {
     });
 
   } catch (error) {
-    console.error('💥 Error setting default images:', error);
+    console.error(' Error setting default images:', error);
     res.status(500).json({ error: 'Failed to set default images' });
   }
 });
@@ -785,7 +785,7 @@ app.get('/api/clubs/image-management', requireAuth, async (req, res) => {
     });
 
   } catch (error) {
-    console.error('💥 Error fetching image management data:', error);
+    console.error(' Error fetching image management data:', error);
     res.status(500).json({ error: 'Failed to fetch image management data' });
   }
 });
@@ -809,7 +809,7 @@ app.post('/api/clubs/migrate', requireAuth, async (req, res) => {
     });
 
   } catch (error) {
-    console.error('💥 Migration error:', error);
+    console.error(' Migration error:', error);
     res.status(500).json({ error: 'Migration failed' });
   }
 });
@@ -830,7 +830,7 @@ app.put('/api/clubs/bulk-update', requireAuth, async (req, res) => {
       });
     }
 
-    console.log(`🚀 Bulk updating ${updates.length} clubs...`);
+    console.log(` Bulk updating ${updates.length} clubs...`);
 
     const results = [];
 
@@ -863,7 +863,7 @@ app.put('/api/clubs/bulk-update', requireAuth, async (req, res) => {
             success: true,
             heroImageUrl: club.heroImageUrl
           });
-          console.log(`✅ Updated: ${club.name}`);
+          console.log(` Updated: ${club.name}`);
         } else {
           results.push({
             clubName,
@@ -884,7 +884,7 @@ app.put('/api/clubs/bulk-update', requireAuth, async (req, res) => {
     const successCount = results.filter(r => r.success).length;
     const failCount = results.filter(r => !r.success).length;
 
-    console.log(`🎯 Bulk update complete: ${successCount} success, ${failCount} failed`);
+    console.log(` Bulk update complete: ${successCount} success, ${failCount} failed`);
 
     res.json({
       success: true,
@@ -895,7 +895,7 @@ app.put('/api/clubs/bulk-update', requireAuth, async (req, res) => {
     });
 
   } catch (error) {
-    console.error('💥 Bulk update error:', error);
+    console.error(' Bulk update error:', error);
     res.status(500).json({ error: 'Bulk update failed: ' + error.message });
   }
 });
@@ -915,7 +915,7 @@ app.put('/api/test/bulk-update', async (req, res) => {
       });
     }
 
-    console.log(`🧪 TEST: Bulk updating ${updates.length} clubs...`);
+    console.log(` TEST: Bulk updating ${updates.length} clubs...`);
 
     const results = [];
 
@@ -948,14 +948,14 @@ app.put('/api/test/bulk-update', async (req, res) => {
             success: true,
             heroImageUrl: club.heroImageUrl
           });
-          console.log(`✅ TEST: Updated ${club.name}`);
+          console.log(` TEST: Updated ${club.name}`);
         } else {
           results.push({
             clubName,
             success: false,
             error: 'Club not found'
           });
-          console.log(`❌ TEST: Club not found: ${clubName}`);
+          console.log(` TEST: Club not found: ${clubName}`);
         }
 
       } catch (error) {
@@ -964,14 +964,14 @@ app.put('/api/test/bulk-update', async (req, res) => {
           success: false,
           error: error.message
         });
-        console.error(`💥 TEST: Error updating ${update.clubName}:`, error);
+        console.error(` TEST: Error updating ${update.clubName}:`, error);
       }
     }
 
     const successCount = results.filter(r => r.success).length;
     const failCount = results.filter(r => !r.success).length;
 
-    console.log(`🎯 TEST: Bulk update complete - ${successCount} success, ${failCount} failed`);
+    console.log(` TEST: Bulk update complete - ${successCount} success, ${failCount} failed`);
 
     res.json({
       success: true,
@@ -982,17 +982,17 @@ app.put('/api/test/bulk-update', async (req, res) => {
     });
 
   } catch (error) {
-    console.error('💥 TEST: Bulk update error:', error);
+    console.error(' TEST: Bulk update error:', error);
     res.status(500).json({ error: 'Test bulk update failed: ' + error.message });
   }
 });
-// 🎟️ JOIN EVENT - Enhanced version
+//  JOIN EVENT - Enhanced version
 app.post('/api/events/:id/join', requireAuth, async (req, res) => {
   try {
     const eventId = req.params.id;
     const userId = req.session.userId;
 
-    console.log(`🎟️ User ${req.session.userEmail} attempting to join event ${eventId}`);
+    console.log(`User ${req.session.userEmail} attempting to join event ${eventId}`);
 
     const event = await Event.findById(eventId);
     if (!event) {
@@ -1025,7 +1025,7 @@ app.post('/api/events/:id/join', requireAuth, async (req, res) => {
     event.attendees.push(userId);
     await event.save();
 
-    console.log(`✅ User ${req.session.userEmail} successfully joined event: ${event.title}`);
+    console.log(` User ${req.session.userEmail} successfully joined event: ${event.title}`);
 
     res.json({
       success: true,
@@ -1037,19 +1037,19 @@ app.post('/api/events/:id/join', requireAuth, async (req, res) => {
     });
 
   } catch (error) {
-    console.error('💥 Error joining event:', error);
+    console.error(' Error joining event:', error);
     res.status(500).json({ error: 'Failed to join event' });
   }
 });
 
 
-// 🗑️ LEAVE EVENT
+//  LEAVE EVENT
 app.delete('/api/events/:id/join', requireAuth, async (req, res) => {
   try {
     const eventId = req.params.id;
     const userId = req.session.userId;
 
-    console.log(`🚪 User ${req.session.userEmail} attempting to leave event ${eventId}`);
+    console.log(` User ${req.session.userEmail} attempting to leave event ${eventId}`);
 
     const event = await Event.findById(eventId);
     if (!event) {
@@ -1068,7 +1068,7 @@ app.delete('/api/events/:id/join', requireAuth, async (req, res) => {
     event.attendees = event.attendees.filter(id => !id.equals(userId));
     await event.save();
 
-    console.log(`✅ User ${req.session.userEmail} successfully left event: ${event.title}`);
+    console.log(` User ${req.session.userEmail} successfully left event: ${event.title}`);
 
     res.json({
       success: true,
@@ -1080,7 +1080,7 @@ app.delete('/api/events/:id/join', requireAuth, async (req, res) => {
     });
 
   } catch (error) {
-    console.error('💥 Error leaving event:', error);
+    console.error(' Error leaving event:', error);
     res.status(500).json({ error: 'Failed to leave event' });
   }
 });
@@ -1088,7 +1088,7 @@ app.get('/niche-landing', (req, res) => {
   res.sendFile(path.join(__dirname, '../frontend/pages/niche-landing.html'));
 });
 
-// 🔖 ADD BOOKMARK - Save a club to user's bookmarks
+//  ADD BOOKMARK - Save a club to user's bookmarks
 app.post('/api/bookmarks', requireAuth, async (req, res) => {
   try {
     const { clubId } = req.body;
@@ -1098,7 +1098,7 @@ app.post('/api/bookmarks', requireAuth, async (req, res) => {
       return res.status(400).json({ error: 'Club ID is required' });
     }
 
-    console.log(`📌 Adding bookmark: ${clubId} for user: ${req.session.userEmail}`);
+    console.log(` Adding bookmark: ${clubId} for user: ${req.session.userEmail}`);
 
     // Check if club exists
     const Club = require('./models/Club');
@@ -1131,17 +1131,17 @@ app.post('/api/bookmarks', requireAuth, async (req, res) => {
     }
 
   } catch (error) {
-    console.error('💥 Error adding bookmark:', error);
+    console.error(' Error adding bookmark:', error);
     res.status(500).json({ error: 'Failed to add bookmark' });
   }
 });
 
-// 🗑️ REMOVE BOOKMARK - Remove a club from user's bookmarks
+//  REMOVE BOOKMARK - Remove a club from user's bookmarks
 app.delete('/api/bookmarks/:clubId', requireAuth, async (req, res) => {
   try {
     const { clubId } = req.params;
 
-    console.log(`🗑️ Removing bookmark: ${clubId} for user: ${req.session.userEmail}`);
+    console.log(` Removing bookmark: ${clubId} for user: ${req.session.userEmail}`);
 
     // Get user and remove bookmark
     const user = await User.findById(req.session.userId);
@@ -1166,12 +1166,12 @@ app.delete('/api/bookmarks/:clubId', requireAuth, async (req, res) => {
     }
 
   } catch (error) {
-    console.error('💥 Error removing bookmark:', error);
+    console.error(' Error removing bookmark:', error);
     res.status(500).json({ error: 'Failed to remove bookmark' });
   }
 });
 
-// 🔍 CHECK BOOKMARK STATUS - Check if a specific club is bookmarked
+//  CHECK BOOKMARK STATUS - Check if a specific club is bookmarked
 app.get('/api/bookmarks/check/:clubId', requireAuth, async (req, res) => {
   try {
     const { clubId } = req.params;
@@ -1189,7 +1189,7 @@ app.get('/api/bookmarks/check/:clubId', requireAuth, async (req, res) => {
     });
 
   } catch (error) {
-    console.error('💥 Error checking bookmark:', error);
+    console.error(' Error checking bookmark:', error);
     res.status(500).json({ error: 'Failed to check bookmark status' });
   }
 });
@@ -1219,7 +1219,7 @@ app.get('/api/events/:id/status', requireAuth, async (req, res) => {
     });
 
   } catch (error) {
-    console.error('💥 Error checking event status:', error);
+    console.error(' Error checking event status:', error);
     res.status(500).json({ error: 'Failed to check event status' });
   }
 });
@@ -1280,13 +1280,13 @@ app.get('/api/events/stats', requireAuth, async (req, res) => {
 });
 
 
-// 👤 USER DASHBOARD - Protected route for user profile and management
+//  USER DASHBOARD - Protected route for user profile and management
 app.get('/dashboard', requireAuth, (req, res) => {
   console.log('Dashboard accessed by:', req.session.userEmail);
   res.sendFile(path.join(__dirname, '../frontend/pages/dashboard.html'));
 });
 
-// 🏛️ GET ALL CLUBS - Replace static HTML cards
+//  GET ALL CLUBS - Replace static HTML cards
 app.get('/api/clubs', async (req, res) => {
   try {
     const clubs = await Club.find({ isActive: true })
@@ -1301,7 +1301,7 @@ app.get('/api/clubs', async (req, res) => {
   }
 });
 
-// 🔍 SEARCH CLUBS - Database-powered search  
+//  SEARCH CLUBS - Database-powered search  
 app.get('/api/clubs/search', async (req, res) => {
   try {
     const {
@@ -1314,13 +1314,13 @@ app.get('/api/clubs/search', async (req, res) => {
       limit        // Results per page (default 10)
     } = req.query;
 
-    console.log('🔍 Advanced search request:', req.query);
+    console.log(' Advanced search request:', req.query);
 
-    // 📊 BUILD SEARCH PIPELINE
+    //  BUILD SEARCH PIPELINE
     let searchCriteria = { isActive: true };
     let sortCriteria = {};
 
-    // 🔤 TEXT SEARCH - Search across multiple fields
+    //  TEXT SEARCH - Search across multiple fields
     if (q && q.trim()) {
       searchCriteria.$or = [
         { name: { $regex: q, $options: 'i' } },
@@ -1329,7 +1329,7 @@ app.get('/api/clubs/search', async (req, res) => {
       ];
     }
 
-    // 🏷️ TAG FILTERING - Support multiple tags
+    //  TAG FILTERING - Support multiple tags
     if (tags) {
       const tagArray = tags.split(',').map(tag => tag.trim().toLowerCase());
       // Use $in for "OR" logic (club has ANY of these tags)
@@ -1339,12 +1339,12 @@ app.get('/api/clubs/search', async (req, res) => {
       // searchCriteria.tags = { $all: tagArray };
     }
 
-    // 📂 CATEGORY FILTERING
+    //  CATEGORY FILTERING
     if (category && category !== 'all') {
       searchCriteria.category = category;
     }
 
-    // 📈 SORTING LOGIC
+    //  SORTING LOGIC
     switch (sortBy) {
       case 'name':
         sortCriteria.name = sortOrder === 'desc' ? -1 : 1;
@@ -1359,12 +1359,12 @@ app.get('/api/clubs/search', async (req, res) => {
         sortCriteria.memberCount = -1; // Default: most popular first
     }
 
-    // 📄 PAGINATION SETUP
+    //  PAGINATION SETUP
     const pageNum = parseInt(page) || 1;
     const pageLimit = parseInt(limit) || 10;
     const skip = (pageNum - 1) * pageLimit;
 
-    // 🗃️ EXECUTE SEARCH WITH PAGINATION
+    //  EXECUTE SEARCH WITH PAGINATION
     const [clubs, totalCount] = await Promise.all([
       Club.find(searchCriteria)
         .sort(sortCriteria)
@@ -1375,14 +1375,14 @@ app.get('/api/clubs/search', async (req, res) => {
       Club.countDocuments(searchCriteria) // Get total for pagination
     ]);
 
-    // 📊 CALCULATE PAGINATION INFO
+    //  CALCULATE PAGINATION INFO
     const totalPages = Math.ceil(totalCount / pageLimit);
     const hasNextPage = pageNum < totalPages;
     const hasPreviousPage = pageNum > 1;
 
-    console.log(`✅ Search found ${totalCount} clubs, returning page ${pageNum}/${totalPages}`);
+    console.log(` Search found ${totalCount} clubs, returning page ${pageNum}/${totalPages}`);
 
-    // 📤 SEND COMPREHENSIVE RESPONSE
+    //  SEND COMPREHENSIVE RESPONSE
     res.json({
       clubs,
       pagination: {
@@ -1403,7 +1403,7 @@ app.get('/api/clubs/search', async (req, res) => {
     });
 
   } catch (error) {
-    console.error('💥 Search error:', error);
+    console.error(' Search error:', error);
     res.status(500).json({
       error: 'Search failed',
       message: error.message
@@ -1411,10 +1411,10 @@ app.get('/api/clubs/search', async (req, res) => {
   }
 });
 
-// 📊 GET SEARCH METADATA - Categories, popular tags, etc.
+//  GET SEARCH METADATA - Categories, popular tags, etc.
 app.get('/api/clubs/metadata', async (req, res) => {
   try {
-    console.log('📊 Fetching club metadata...');
+    console.log(' Fetching club metadata...');
 
     const [categories, tagStats, totalClubs] = await Promise.all([
       // Get all unique categories
@@ -1447,10 +1447,10 @@ app.get('/api/clubs/metadata', async (req, res) => {
       ]
     });
 
-    console.log(`📊 Metadata: ${categories.length} categories, ${tagStats.length} tags, ${totalClubs} clubs`);
+    console.log(` Metadata: ${categories.length} categories, ${tagStats.length} tags, ${totalClubs} clubs`);
 
   } catch (error) {
-    console.error('💥 Metadata error:', error);
+    console.error(' Metadata error:', error);
     res.status(500).json({ error: 'Failed to fetch metadata' });
   }
 });
@@ -1460,17 +1460,17 @@ app.get('/api/clubs/metadata', async (req, res) => {
 // =============================================================================
 // Insert these routes after your existing club routes
 
-// 🏛️ CLUB DETAIL PAGE - Serve the club detail HTML
+//  CLUB DETAIL PAGE - Serve the club detail HTML
 app.get('/club/:id', requireAuth, (req, res) => {
   console.log('Club detail page accessed for ID:', req.params.id);
   res.sendFile(path.join(__dirname, '../frontend/pages/club-detail.html'));
 });
 
-// 🔍 GET SINGLE CLUB DETAILS - API endpoint for club data
+//  GET SINGLE CLUB DETAILS - API endpoint for club data
 app.get('/api/clubs/:id', async (req, res) => {
   try {
     const clubId = req.params.id;
-    console.log(`📡 Fetching club details for ID: ${clubId}`);
+    console.log(` Fetching club details for ID: ${clubId}`);
 
     // Validate ObjectId format
     if (!mongoose.Types.ObjectId.isValid(clubId)) {
@@ -1489,13 +1489,13 @@ app.get('/api/clubs/:id', async (req, res) => {
       return res.status(404).json({ error: 'Club not available' });
     }
 
-    console.log(`✅ Club found: ${club.name}`);
+    console.log(` Club found: ${club.name}`);
 
     // Return club data
     res.json(club);
 
   } catch (error) {
-    console.error('💥 Error fetching club details:', error);
+    console.error(' Error fetching club details:', error);
     res.status(500).json({
       error: 'Failed to fetch club details',
       message: error.message
@@ -1503,11 +1503,11 @@ app.get('/api/clubs/:id', async (req, res) => {
   }
 });
 
-// 🔍 GET CLUB EVENTS - API endpoint for club events (placeholder for now)
+//  GET CLUB EVENTS - API endpoint for club events (placeholder for now)
 app.get('/api/clubs/:id/events', async (req, res) => {
   try {
     const clubId = req.params.id;
-    console.log(`📅 Fetching events for club ID: ${clubId}`);
+    console.log(` Fetching events for club ID: ${clubId}`);
 
     // For now, return sample events
     // In the future, you could create an Events model and fetch real events
@@ -1557,7 +1557,7 @@ app.get('/api/clubs/:id/events', async (req, res) => {
     });
 
   } catch (error) {
-    console.error('💥 Error fetching club events:', error);
+    console.error(' Error fetching club events:', error);
     res.status(500).json({
       error: 'Failed to fetch club events',
       message: error.message
@@ -1570,7 +1570,7 @@ app.get('/api/clubs/:id/events', async (req, res) => {
 // UPDATED DASHBOARD API - Replace your existing /api/user/profile route
 // =============================================================================
 
-// 📊 ENHANCED USER API - More detailed user information for dashboard
+//  ENHANCED USER API - More detailed user information for dashboard
 app.get('/api/user/profile', requireAuth, async (req, res) => {
   try {
     // Find the user with populated bookmarks
@@ -1585,7 +1585,7 @@ app.get('/api/user/profile', requireAuth, async (req, res) => {
     const joinDate = userWithBookmarks.createdAt;
     const daysActive = Math.ceil((new Date() - joinDate) / (1000 * 60 * 60 * 24));
 
-    console.log(`📊 Dashboard data for ${userWithBookmarks.email}: ${bookmarkCount} bookmarks, ${daysActive} days active`);
+    console.log(` Dashboard data for ${userWithBookmarks.email}: ${bookmarkCount} bookmarks, ${daysActive} days active`);
 
     // Return comprehensive user data for dashboard
     res.json({
@@ -1593,14 +1593,14 @@ app.get('/api/user/profile', requireAuth, async (req, res) => {
       email: userWithBookmarks.email,
       joinDate: joinDate,
 
-      // 🔖 REAL BOOKMARK DATA
+      //  REAL BOOKMARK DATA
       bookmarkedClubs: userWithBookmarks.bookmarkedClubs, // Full club objects
       totalBookmarks: bookmarkCount,
 
-      // 📊 CALCULATED STATS
+      //  CALCULATED STATS
       daysActive: daysActive,
 
-      // 🎯 FUTURE: Additional user stats
+      //  FUTURE: Additional user stats
       clubsViewed: 12,      // Placeholder - could track this later
       eventsInterested: 3,  // Placeholder - for events feature
       searchesPerformed: 8  // Placeholder - could track this later
@@ -1616,7 +1616,7 @@ app.get('/api/user/profile', requireAuth, async (req, res) => {
 // API ROUTES - For frontend JavaScript to check authentication status
 // =============================================================================
 
-// 🔍 USER STATUS API - Let frontend know if someone is logged in
+//  USER STATUS API - Let frontend know if someone is logged in
 app.get('/api/user', (req, res) => {
   if (req.session.userId) {
     // User has a valid wristband - send their info
@@ -1635,13 +1635,13 @@ app.get('/api/user', (req, res) => {
 // NICHE QUIZ ROUTES - Add these AFTER app creation
 // =============================================================================
 
-// 🎯 NICHE QUIZ PAGE
+//  NICHE QUIZ PAGE
 app.get('/niche-quiz', requireAuth, (req, res) => {
   console.log('Niche quiz accessed by:', req.session.userEmail);
   res.sendFile(path.join(__dirname, '../frontend/pages/niche-quiz.html'));
 });
 
-// 🎯 GET QUIZ INTRO - Show available levels and preview
+//  GET QUIZ INTRO - Show available levels and preview
 app.get('/api/quiz/intro', async (req, res) => {
   try {
     const levels = [
@@ -1683,12 +1683,12 @@ app.get('/api/quiz/intro', async (req, res) => {
     });
 
   } catch (error) {
-    console.error('💥 Quiz intro error:', error);
+    console.error(' Quiz intro error:', error);
     res.status(500).json({ error: 'Failed to load quiz introduction' });
   }
 });
 
-// 📝 GET QUIZ QUESTIONS - Load questions for specific level
+//  GET QUIZ QUESTIONS - Load questions for specific level
 app.get('/api/quiz/questions/:level', async (req, res) => {
   try {
     const { level } = req.params;
@@ -1697,7 +1697,7 @@ app.get('/api/quiz/questions/:level', async (req, res) => {
       return res.status(400).json({ error: 'Invalid quiz level' });
     }
 
-    console.log(`📋 Loading ${level} quiz questions...`);
+    console.log(` Loading ${level} quiz questions...`);
 
     const questions = await QuizQuestion.find({
       questionLevel: level,
@@ -1734,7 +1734,7 @@ app.get('/api/quiz/questions/:level', async (req, res) => {
     });
 
   } catch (error) {
-    console.error('💥 Quiz questions error:', error);
+    console.error(' Quiz questions error:', error);
     res.status(500).json({ error: 'Failed to load quiz questions' });
   }
 });
@@ -1743,13 +1743,13 @@ app.get('/api/quiz/questions/:level', async (req, res) => {
 // ENHANCED NICHE QUIZ BACKEND ROUTES - Add to your backend/app.js
 // =============================================================================
 
-// 📝 SUBMIT QUIZ AND CALCULATE RESULTS
+//  SUBMIT QUIZ AND CALCULATE RESULTS
 // =============================================================================
 // QUIZ SCORING SYSTEM - Add to backend/app.js
 // =============================================================================
 // Replace your existing /api/quiz/submit route with this enhanced version
 
-// 📤 ENHANCED QUIZ SUBMISSION WITH REAL SCORING
+//  ENHANCED QUIZ SUBMISSION WITH REAL SCORING
 app.post('/api/quiz/submit', requireAuth, async (req, res) => {
   try {
     const { level, answers, completionTime } = req.body;
@@ -1772,18 +1772,18 @@ app.post('/api/quiz/submit', requireAuth, async (req, res) => {
     const allClubs = await Club.find({ isActive: true });
 
     if (questions.length === 0) {
-      console.log('⚠️ No questions found, using fallback results');
+      console.log(' No questions found, using fallback results');
       return res.json({
         success: true,
         results: getFallbackResults()
       });
     }
 
-    // 🎯 USE REAL SCORING ALGORITHM
+    //  USE REAL SCORING ALGORITHM
     console.log('🚀 Using real scoring algorithm...');
     const results = await processQuizSubmission(answers, questions, level, allClubs);
 
-    // 💾 SIMPLIFIED DATABASE SAVING (Fixed)
+    //  SIMPLIFIED DATABASE SAVING (Fixed)
     try {
       const newResult = new QuizResult({
         user: userId,
@@ -1801,11 +1801,11 @@ app.post('/api/quiz/submit', requireAuth, async (req, res) => {
       });
 
       await newResult.save();
-      console.log('✅ Quiz result saved successfully with real algorithm');
+      console.log(' Quiz result saved successfully with real algorithm');
     } catch (saveError) {
-      console.error('⚠️ Failed to save quiz result to database:', saveError.message);
+      console.error(' Failed to save quiz result to database:', saveError.message);
       // Continue anyway - the important part is returning results to user
-      console.log('✅ Continuing without saving to database');
+      console.log(' Continuing without saving to database');
     }
 
     res.json({
@@ -1814,7 +1814,7 @@ app.post('/api/quiz/submit', requireAuth, async (req, res) => {
     });
 
   } catch (error) {
-    console.error('💥 Quiz submission error:', error);
+    console.error(' Quiz submission error:', error);
 
     // Always return fallback results to ensure quiz works
     res.json({
@@ -1890,7 +1890,7 @@ function getFallbackResults() {
 // =============================================================================
 
 function calculateUserSkillProfile(answers, questions) {
-  console.log('🧮 Calculating user skill profile...');
+  console.log(' Calculating user skill profile...');
 
   // Initialize skill scores
   const skillScores = {
@@ -1910,11 +1910,11 @@ function calculateUserSkillProfile(answers, questions) {
   answers.forEach((answer, answerIndex) => {
     const question = questions[answerIndex];
     if (!question) {
-      console.warn(`⚠️ No question found for answer index ${answerIndex}`);
+      console.warn(` No question found for answer index ${answerIndex}`);
       return;
     }
 
-    console.log(`📝 Processing answer for question: "${question.questionText}"`);
+    console.log(` Processing answer for question: "${question.questionText}"`);
 
     // Get the user's ranking (array of option indices in order of preference)
     const userRanking = answer.ranking;
@@ -1923,7 +1923,7 @@ function calculateUserSkillProfile(answers, questions) {
     userRanking.forEach((optionIndex, rankPosition) => {
       const option = question.options[optionIndex];
       if (!option || !option.weights) {
-        console.warn(`⚠️ Invalid option or weights for option index ${optionIndex}`);
+        console.warn(` Invalid option or weights for option index ${optionIndex}`);
         return;
       }
 
@@ -1959,7 +1959,7 @@ function calculateUserSkillProfile(answers, questions) {
 }
 
 function calculateCareerMatches(userSkillProfile, careerFields) {
-  console.log('🎯 Calculating career matches...');
+  console.log(' Calculating career matches...');
 
   const matches = careerFields.map(career => {
     let totalMatch = 0;
@@ -2241,7 +2241,7 @@ app.post('/signup', async (req, res) => {
     const newUser = new User({
       email: email.toLowerCase(),
       password: password,
-      isVerified: false  // ✅ Start unverified
+      isVerified: false  //  Start unverified
     });
 
     // Step 4: Generate verification token
@@ -2269,7 +2269,7 @@ app.post('/signup', async (req, res) => {
   }
 });
 
-// ✅ EMAIL VERIFICATION ROUTES
+//  EMAIL VERIFICATION ROUTES
 
 // Show verification prompt page
 app.get('/verify-email-prompt', (req, res) => {
@@ -2306,7 +2306,7 @@ app.get('/verify-email', async (req, res) => {
     req.session.userId = user._id;
     req.session.userEmail = user.email;
 
-    console.log('✅ Email verified and user logged in:', user.email);
+    console.log(' Email verified and user logged in:', user.email);
     res.redirect('/tech-clubs?verified=true');
 
   } catch (error) {
@@ -2379,8 +2379,8 @@ app.get('/api/test/bulk-update', (req, res) => {
 // START SERVER
 // =============================================================================
 app.listen(port, () => {
-  console.log(`🚀 Cownect server running at http://localhost:${port}`);
-  console.log(`📊 Database: MongoDB Atlas`);
-  console.log(`🔐 Authentication: bcrypt + sessions`);
-  console.log(`🎯 Quiz system: Ready!`);
+  console.log(` Cownect server running at http://localhost:${port}`);
+  console.log(` Database: MongoDB Atlas`);
+  console.log(` Authentication: bcrypt + sessions`);
+  console.log(` Quiz system: Ready!`);
 });

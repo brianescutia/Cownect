@@ -1,4 +1,4 @@
-// 🔒 Require authentication
+//  Require authentication
 const requireAuth = (req, res, next) => {
     if (req.session.userId) {
         next();
@@ -7,7 +7,7 @@ const requireAuth = (req, res, next) => {
     }
 };
 
-// ✅ Require email verification
+//  Require email verification
 const requireVerification = async (req, res, next) => {
     try {
         if (!req.session.userId) {

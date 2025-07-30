@@ -3,13 +3,13 @@
 // =============================================================================
 // Save as frontend/scripts/niche-quiz.js
 
-// 🎯 GLOBAL STATE MANAGEMENT
+//  GLOBAL STATE MANAGEMENT
 // =============================================================================
 // NICHE QUIZ FRONTEND ENGINE - COMPLETE VERSION WITH ALL FUNCTIONS
 // =============================================================================
 // Save as frontend/scripts/niche-quiz.js
 
-// 🎯 GLOBAL STATE MANAGEMENT
+//  GLOBAL STATE MANAGEMENT
 const QuizState = {
     currentScreen: 'intro', // 'intro', 'questions', 'loading', 'results'
     selectedLevel: null,
@@ -22,16 +22,16 @@ const QuizState = {
     sortableInstances: []
 };
 
-// 🎯 WAIT FOR PAGE TO LOAD
+//  WAIT FOR PAGE TO LOAD
 document.addEventListener('DOMContentLoaded', async () => {
-    console.log('🚀 Initializing Niche Quiz...');
+    console.log(' Initializing Niche Quiz...');
 
     try {
         await initializeQuiz();
         setupEventListeners();
-        console.log('✅ Quiz initialized successfully');
+        console.log(' Quiz initialized successfully');
     } catch (error) {
-        console.error('💥 Quiz initialization error:', error);
+        console.error(' Quiz initialization error:', error);
         showError('Failed to initialize quiz. Please refresh the page.');
     }
 });
@@ -50,7 +50,7 @@ async function initializeQuiz() {
         populateIntroData(introData);
 
     } catch (error) {
-        console.error('💥 Error loading intro data:', error);
+        console.error(' Error loading intro data:', error);
         // Continue with default data if API fails
     }
 }
@@ -86,7 +86,7 @@ function setupEventListeners() {
     document.getElementById('exploreClubsBtn')?.addEventListener('click', exploreClubs);
     document.getElementById('saveToDashboardBtn')?.addEventListener('click', saveToDashboard);
 
-    console.log('🎧 Event listeners set up');
+    console.log(' Event listeners set up');
 }
 
 // =============================================================================
@@ -97,7 +97,7 @@ async function handleLevelSelection(event) {
     const levelCard = event.target.closest('.level-card');
     const level = levelCard.dataset.level;
 
-    console.log(`🎯 Selected level: ${level}`);
+    console.log(` Selected level: ${level}`);
 
     QuizState.selectedLevel = level;
     QuizState.startTime = Date.now();
@@ -113,14 +113,14 @@ async function handleLevelSelection(event) {
         await loadQuizQuestions(level);
         startQuiz();
     } catch (error) {
-        console.error('💥 Error starting quiz:', error);
+        console.error(' Error starting quiz:', error);
         showError('Failed to load quiz questions. Please try again.');
         hideLoading();
     }
 }
 
 async function loadQuizQuestions(level) {
-    console.log(`📡 Loading questions for level: ${level}`);
+    console.log(` Loading questions for level: ${level}`);
 
     const response = await fetch(`/api/quiz/questions/${level}`);
     if (!response.ok) {
@@ -131,11 +131,11 @@ async function loadQuizQuestions(level) {
     QuizState.questions = data.questions;
     QuizState.answers = Array(data.questions.length).fill(null);
 
-    console.log(`📋 Loaded ${QuizState.questions.length} questions`);
+    console.log(` Loaded ${QuizState.questions.length} questions`);
 }
 
 function startQuiz() {
-    console.log('🚀 Starting quiz...');
+    console.log(' Starting quiz...');
 
     hideLoading();
     switchScreen('questions');
@@ -151,11 +151,11 @@ function startQuiz() {
 function displayCurrentQuestion() {
     const question = QuizState.questions[QuizState.currentQuestionIndex];
     if (!question) {
-        console.error('❌ No question found at index:', QuizState.currentQuestionIndex);
+        console.error(' No question found at index:', QuizState.currentQuestionIndex);
         return;
     }
 
-    console.log(`📝 Displaying question ${QuizState.currentQuestionIndex + 1}: ${question.questionText}`);
+    console.log(` Displaying question ${QuizState.currentQuestionIndex + 1}: ${question.questionText}`);
 
     // Update question text
     document.getElementById('questionText').textContent = question.questionText;
@@ -228,7 +228,7 @@ function createSortableOptions(options) {
 
     QuizState.sortableInstances.push(sortableInstance);
 
-    console.log(`✅ Created ${shuffledOptions.length} sortable options`);
+    console.log(` Created ${shuffledOptions.length} sortable options`);
 }
 
 function updateRankNumbers() {

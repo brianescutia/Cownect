@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Ensure filters are hidden on page load
     if (filterTags) {
         filterTags.classList.add('hidden');
-        console.log('✅ Filter tags initially hidden');
+        console.log(' Filter tags initially hidden');
     }
 
     // Add click listener to filter icon
@@ -58,9 +58,9 @@ document.addEventListener('DOMContentLoaded', () => {
             filterTags.setAttribute('aria-hidden', isHidden);
         });
 
-        console.log('✅ Filter toggle event listener attached');
+        console.log(' Filter toggle event listener attached');
     } else {
-        console.error('❌ Filter elements not found:', {
+        console.error(' Filter elements not found:', {
             filterIcon: !!filterIcon,
             filterTags: !!filterTags
         });
@@ -80,7 +80,7 @@ document.addEventListener('DOMContentLoaded', () => {
         filterIcon.setAttribute('role', 'button');
         filterIcon.setAttribute('aria-label', 'Toggle filter options');
 
-        console.log('⌨️ Keyboard support added to filter toggle');
+        console.log(' Keyboard support added to filter toggle');
     }
 
     // Close filters when clicking outside
@@ -99,7 +99,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     filterIcon.setAttribute('aria-expanded', 'false');
                 }
                 filterTags.setAttribute('aria-hidden', 'true');
-                console.log('🖱️ Filters closed by outside click');
+                console.log(' Filters closed by outside click');
             }
         }
     });
@@ -134,13 +134,13 @@ function setupTagInteractions() {
                 activeFilters.delete(tagText);
                 tag.classList.remove('active-filter');
                 tag.setAttribute('aria-pressed', 'false');
-                console.log(`🏷️ Removed filter: ${tagText}`);
+                console.log(` Removed filter: ${tagText}`);
             } else {
                 // Add filter
                 activeFilters.add(tagText);
                 tag.classList.add('active-filter');
                 tag.setAttribute('aria-pressed', 'true');
-                console.log(`🏷️ Added filter: ${tagText}`);
+                console.log(` Added filter: ${tagText}`);
             }
 
             // Apply filters to clubs
@@ -165,7 +165,7 @@ function setupTagInteractions() {
         tag.setAttribute('aria-pressed', 'false');
     });
 
-    console.log(`🏷️ Set up ${tagButtons.length} tag interactions`);
+    console.log(` Set up ${tagButtons.length} tag interactions`);
 }
 
 // =============================================================================

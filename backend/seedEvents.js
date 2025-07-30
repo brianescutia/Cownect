@@ -235,17 +235,17 @@ async function seedEvents() {
 
         // Connect to MongoDB
         await mongoose.connect(process.env.MONGO_URI);
-        console.log('✅ Connected to MongoDB');
+        console.log(' Connected to MongoDB');
 
         // Clear existing events
-        console.log('🗑️ Clearing existing events...');
+        console.log(' Clearing existing events...');
         await Event.deleteMany({});
 
         // Get a sample user to use as creator (or create a system user)
         let systemUser = await User.findOne({ email: { $regex: /@ucdavis\.edu$/i } });
 
         if (!systemUser) {
-            console.log('📝 No UC Davis user found, creating system user...');
+            console.log(' No UC Davis user found, creating system user...');
             systemUser = new User({
                 email: 'events@ucdavis.edu',
                 password: 'systemuser123',
@@ -262,13 +262,13 @@ async function seedEvents() {
         }));
 
         // Insert events
-        console.log('📅 Inserting sample events...');
+        console.log(' Inserting sample events...');
         const insertedEvents = await Event.insertMany(eventsWithCreator);
 
-        console.log(`✅ Successfully inserted ${insertedEvents.length} events`);
+        console.log(` Successfully inserted ${insertedEvents.length} events`);
 
         // Display events by category
-        console.log('\n📋 Events by Month:');
+        console.log('\n Events by Month:');
 
         const eventsByMonth = {};
         insertedEvents.forEach(event => {
@@ -292,7 +292,7 @@ async function seedEvents() {
                 });
         });
 
-        console.log('\n📊 Event Categories:');
+        console.log('\n Event Categories:');
         const categories = {
             'Hackathons & Competitions': insertedEvents.filter(e =>
                 e.title.toLowerCase().includes('hack') ||
@@ -325,14 +325,14 @@ async function seedEvents() {
             console.log(`  ${category}: ${count} events`);
         });
 
-        console.log('\n🎉 Events seeding completed successfully!');
-        console.log('🚀 Your events page is ready with realistic UC Davis tech events!');
+        console.log('\n Events seeding completed successfully!');
+        console.log(' Your events page is ready with realistic UC Davis tech events!');
 
     } catch (error) {
-        console.error('💥 Error seeding events:', error);
+        console.error(' Error seeding events:', error);
     } finally {
         await mongoose.connection.close();
-        console.log('🔌 Database connection closed');
+        console.log(' Database connection closed');
         process.exit(0);
     }
 }
@@ -342,7 +342,7 @@ async function seedEvents() {
 // =============================================================================
 
 if (require.main === module) {
-    console.log('🌱 Starting events data seeding...');
+    console.log(' Starting events data seeding...');
     seedEvents();
 }
 

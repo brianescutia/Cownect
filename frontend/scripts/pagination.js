@@ -4,31 +4,31 @@
 // This file handles splitting club cards into pages for better user experience
 // Instead of showing 50+ clubs at once, we show 6 per page with navigation
 
-// 🎯 WAIT FOR PAGE TO LOAD - Ensure all elements exist before manipulation
+//  WAIT FOR PAGE TO LOAD - Ensure all elements exist before manipulation
 document.addEventListener('DOMContentLoaded', () => {
 
-    // 🎴 GET ALL CLUB CARDS and convert to array for easier manipulation
+    //  GET ALL CLUB CARDS and convert to array for easier manipulation
     // Array.from() converts NodeList to Array so we can use array methods
     const cards = Array.from(document.querySelectorAll('.club-card'));
 
-    // 🔢 FIND PAGINATION BUTTONS - These handle page navigation
+    //  FIND PAGINATION BUTTONS - These handle page navigation
     // Typically: [«] [1] [2] [3] [»] buttons at bottom of page
     const paginationButtons = document.querySelectorAll('.pagination button');
 
-    // ⚙️ PAGINATION CONFIGURATION
+    //  PAGINATION CONFIGURATION
     const cardsPerPage = 6;  // Show 6 clubs per page (2 rows of 3 in grid)
 
     // =============================================================================
     // SHOW PAGE FUNCTION - Display specific page of clubs
     // =============================================================================
     function showPage(pageIndex) {
-        // 📊 CALCULATE WHICH CARDS TO SHOW
+        //  CALCULATE WHICH CARDS TO SHOW
         // Page 0: cards 0-5 (start = 0)
         // Page 1: cards 6-11 (start = 6)  
         // Page 2: cards 12-17 (start = 12)
         const start = pageIndex * cardsPerPage;
 
-        // 🔄 LOOP THROUGH ALL CARDS and show/hide based on page
+        //  LOOP THROUGH ALL CARDS and show/hide based on page
         cards.forEach((card, i) => {
             // Check if this card's index falls within current page range
             // Example for Page 1 (pageIndex = 1):
@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        // 🎨 UPDATE ACTIVE BUTTON STYLING
+        //  UPDATE ACTIVE BUTTON STYLING
         // Remove 'active' class from all buttons
         paginationButtons.forEach(btn => btn.classList.remove('active'));
 
@@ -59,7 +59,7 @@ document.addEventListener('DOMContentLoaded', () => {
     paginationButtons.forEach((btn, idx) => {
         btn.addEventListener('click', () => {
 
-            // 🏠 HANDLE SPECIAL NAVIGATION BUTTONS
+            //  HANDLE SPECIAL NAVIGATION BUTTONS
 
             // First button is « (go to first page)
             if (idx === 0) {
@@ -73,14 +73,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 return showPage(lastPageIndex);
             }
 
-            // 🔢 HANDLE NUMBERED PAGE BUTTONS
+            //  HANDLE NUMBERED PAGE BUTTONS
             // Button index 1 = Page 0, Button index 2 = Page 1, etc.
             // Subtract 1 to convert button index to page index
             showPage(idx - 1);
         });
     });
 
-    // 🚀 INITIALIZE - Show first page when page loads
+    //  INITIALIZE - Show first page when page loads
     showPage(0);
 });
 
