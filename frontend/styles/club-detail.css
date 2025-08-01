@@ -99,7 +99,7 @@ body {
 }
 
 /* =============================================================================
-   ABOUT BOX
+   ABOUT BOX - UPDATED WITH HEADER STYLING
    =============================================================================
 */
 
@@ -109,19 +109,53 @@ body {
     background: rgba(255, 255, 255, 0.7);
     backdrop-filter: blur(12px);
     border-radius: 15px;
-    border: 1px solid rgba(255, 255, 255, 0.5);
+    border: 1px solid rgba(0, 4, 255, 0.25);
     padding: 1.5rem;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 8px 32px rgba(0, 4, 255, 0.1);
     display: flex;
     flex-direction: column;
     box-sizing: border-box;
+}
+
+.about-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
 }
 
 .about-box h2 {
     font-size: 1.5rem;
     font-weight: 600;
     color: #2c3e50;
-    margin: 0 0 1rem 0;
+    margin: 0;
+}
+
+.about-symbol {
+    width: 24px;
+    height: 24px;
+    opacity: 0.7;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    flex-shrink: 0;
+}
+
+.about-symbol:hover {
+    opacity: 1;
+    transform: scale(1.1);
+}
+
+/* Fallback styling if you don't have a custom symbol image */
+.default-symbol {
+    width: 24px;
+    height: 24px;
+    background: linear-gradient(135deg, #5F96C5, #4a8bc2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
 }
 
 .club-description {
@@ -175,9 +209,9 @@ body {
     background: rgba(255, 255, 255, 0.7);
     backdrop-filter: blur(12px);
     border-radius: 15px;
-    border: 1px solid rgba(255, 255, 255, 0.5);
+    border: 1px solid rgba(0, 4, 255, 0.45);
     padding: 1.5rem;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 8px 32px rgba(0, 4, 255, 0.1);
     box-sizing: border-box;
 }
 
@@ -186,6 +220,52 @@ body {
     font-weight: 600;
     color: #2c3e50;
     margin: 0 0 1rem 0;
+}
+
+.focus-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.focus-header h3 {
+    margin: 0;
+}
+
+.focus-symbol {
+    width: 20px;
+    height: 20px;
+    opacity: 0.7;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    flex-shrink: 0;
+}
+
+.focus-symbol:hover {
+    opacity: 1;
+    transform: scale(1.1);
+}
+
+.joining-symbol {
+    width: 20px;
+    height: 20px;
+    opacity: 0.7;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    flex-shrink: 0;
+    transform: translateY(-7px)
+}
+
+.joining-symbol:hover {
+    opacity: 1;
+    transform: scale(1.1) translateY(-1px);
+}
+
+.how-to-join-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    line-height: 1;
 }
 
 .info-box ul {
@@ -230,9 +310,9 @@ body {
     background: rgba(255, 255, 255, 0.7);
     backdrop-filter: blur(12px);
     border-radius: 15px;
-    border: 1px solid rgba(255, 255, 255, 0.5);
+    border: 1px solid rgba(0, 4, 255, 0.25);
     padding: 1.5rem;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 8px 32px rgba(0, 4, 255, 0.1);
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
@@ -464,9 +544,9 @@ body {
     background: rgba(255, 255, 255, 0.7);
     backdrop-filter: blur(12px);
     border-radius: 15px;
-    border: 1px solid rgba(255, 255, 255, 0.5);
+    border: 1px solid rgba(0, 4, 255, 0.25);
     padding: 1.5rem;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 8px 32px rgba(0, 4, 255, 0.1);
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
@@ -517,33 +597,6 @@ body {
     color: #4a8bc2;
 }
 
-.action-buttons {
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-    margin-top: auto;
-}
-
-.bookmark-btn,
-.join-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-    padding: 0.75rem 1rem;
-    border: none;
-    border-radius: 10px;
-    font-weight: 500;
-    font-size: 0.9rem;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.bookmark-btn {
-    background: rgba(255, 255, 255, 0.2);
-    color: #2c3e50;
-    border: 1px solid rgba(95, 150, 197, 0.3);
-}
 
 .bookmark-btn:hover {
     background: rgba(95, 150, 197, 0.1);
@@ -555,15 +608,6 @@ body {
     height: 16px;
 }
 
-.join-btn {
-    background: linear-gradient(135deg, #5F96C5, #4a8bc2);
-    color: white;
-}
-
-.join-btn:hover {
-    background: linear-gradient(135deg, #4a8bc2, #3d7bb5);
-    transform: translateY(-2px);
-}
 
 /* =============================================================================
    BACK SECTION - SHIFTED RIGHT
@@ -736,5 +780,14 @@ body {
         height: auto;
         min-height: 180px;
         margin: 0 auto;
+    }
+
+    .about-header {
+        gap: 1rem;
+    }
+
+    .about-symbol {
+        width: 20px;
+        height: 20px;
     }
 }
