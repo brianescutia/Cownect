@@ -5,7 +5,6 @@
 
 /* Override the tech-clubs background for club detail pages */
 body {
-    background-image: url('../assets/Group23.png');
     background-size: cover;
     background-position: right center;
     background-repeat: no-repeat;
@@ -55,43 +54,19 @@ body {
     width: 100%;
     max-width: 1400px;
     height: 100px;
-    margin: 4rem 0;
+    margin: 1rem 0;
     display: flex;
     justify-content: flex-start;
-    padding-left: 100px;
     /* Shift right */
 }
 
-.club-name-box {
-    width: 1150px;
-    height: 100%;
-    background: rgba(255, 255, 255, 0.7);
-    /* Whiter background */
-    backdrop-filter: blur(12px);
-    border-radius: 15px;
-    border: 1px solid rgba(255, 255, 255, 0.5);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    padding: 1rem;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-}
 
 .club-title {
-    font-size: 2.5rem;
+    font-size: 3rem;
     font-weight: 700;
     color: #2c3e50;
     margin: 0;
     line-height: 1.1;
-}
-
-.club-category {
-    font-size: 1.2rem;
-    color: #5F96C5;
-    font-weight: 500;
-    margin: 0.5rem 0 0 0;
 }
 
 /* =============================================================================
@@ -105,7 +80,7 @@ body {
     display: grid;
     grid-template-columns: 750px 380px;
     gap: 25px;
-    margin: 2rem 0;
+    margin: 1rem 0;
     justify-content: flex-start;
     padding-left: 100px;
     /* Shift right to match name box */
