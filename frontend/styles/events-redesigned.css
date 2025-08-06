@@ -1,5 +1,5 @@
 /* =============================================================================
-   REDESIGNED EVENTS PAGE STYLES
+   REDESIGNED EVENTS PAGE STYLES - CONSISTENT WITH TECH-CLUBS
    Save as: frontend/styles/events-redesigned.css
    ============================================================================= */
 
@@ -12,60 +12,121 @@
 
 body {
     font-family: 'Rethink Sans', sans-serif;
-    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    background: #f5fcff;
+    /* Same as tech-clubs */
     min-height: 100vh;
     color: #2c3e50;
+    position: relative;
+    overflow-x: hidden;
+}
+
+/* Background blur decorations - Same as tech-clubs */
+.blur-decoration-left {
+    position: fixed;
+    top: -1em;
+    left: -20em;
+    transform: translateY(-50%);
+    width: 75%;
+    height: 75%;
+    background-image: url('../assets/blueBlur.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+    opacity: 0.6;
+    z-index: -1;
+    transform: rotate(91deg);
+}
+
+.blur-decoration-left2 {
+    position: fixed;
+    top: 20em;
+    left: -30em;
+    transform: translateY(-50%);
+    width: 50%;
+    height: 50%;
+    background-image: url('../assets/blueBlur.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+    opacity: 0.4;
+    z-index: -1;
+    transform: rotate(45deg);
+}
+
+.blur-decoration-right {
+    position: fixed;
+    top: 10em;
+    right: -26em;
+    transform: translateY(-50%);
+    width: 75%;
+    height: 75%;
+    background-image: url('../assets/blueBlur.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+    opacity: 0.6;
+    z-index: -1;
+    transform: rotate(270deg);
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+button {
+    cursor: pointer;
 }
 
 /* =============================================================================
-   NAVBAR STYLES (No backdrop image)
+   NAVBAR STYLES - EXACTLY LIKE TECH-CLUBS
    ============================================================================= */
 
 .navbar {
-    background: linear-gradient(135deg, #5F96C5, #4a8bc2);
-    padding: 1rem 0;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-    width: 100%;
+    display: flex;
+    justify-content: center;
+    border-radius: 25px;
+    margin: 1rem auto;
+    padding: 0.75rem 2rem;
+    max-width: 1130px;
+    width: 90%;
+    height: clamp(50px, 8vw, 68px);
 }
 
 .navbar-container {
-    max-width: 1400px;
-    margin: 0 auto;
+    background-color: rgba(183, 183, 183, 0.30);
+    border-radius: 25px;
+    width: 65.5vw;
+    height: 4.2vw;
+    max-width: 1129px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0 2rem;
+    padding: 0 3rem;
 }
 
 .logo-title {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
+    gap: 1rem;
+    font-weight: bold;
+    font-size: 1.2rem;
+    margin-left: -1rem;
 }
 
 .logo {
-    width: 40px;
     height: 40px;
-    border-radius: 8px;
 }
 
 .logo-text {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: white;
-    text-decoration: none;
+    font-weight: bold;
+    font-size: 1.2rem;
+    color: inherit;
 }
 
 .nav-links {
-    display: flex;
     list-style: none;
-    margin: 0;
-    padding: 0;
-    gap: 2rem;
+    display: flex;
+    gap: 3rem;
     align-items: center;
+    margin: 0;
 }
 
 .nav-links li {
@@ -73,34 +134,30 @@ body {
 }
 
 .nav-links a {
-    color: white;
-    text-decoration: none;
     font-weight: 500;
     font-size: 1rem;
-    padding: 0.5rem 1rem;
-    border-radius: 6px;
+    color: inherit;
+    text-decoration: none;
     transition: all 0.3s ease;
 }
 
 .nav-links a:hover,
 .nav-links a.active {
-    background: rgba(255, 255, 255, 0.2);
+    color: #5F96C5;
     transform: translateY(-1px);
 }
 
 .account-btn {
-    background: rgba(255, 255, 255, 0.1);
-    border: 2px solid rgba(255, 255, 255, 0.3);
+    background-color: #5F96C5;
     color: white !important;
-    padding: 0.5rem 1rem;
-    border-radius: 8px;
-    font-weight: 600;
+    padding: 0.4rem 0.9rem;
+    border-radius: 20px;
     transition: all 0.3s ease;
 }
 
 .account-btn:hover {
-    background: rgba(255, 255, 255, 0.2);
-    border-color: rgba(255, 255, 255, 0.5);
+    background-color: #4a8bc2;
+    transform: translateY(-1px);
 }
 
 /* =============================================================================
@@ -193,7 +250,7 @@ body {
 }
 
 /* =============================================================================
-   EVENT CARDS (Responsive sizing)
+   EVENT CARDS - WITH TECH-CLUBS STYLING
    ============================================================================= */
 
 .event-card {
@@ -201,20 +258,27 @@ body {
     max-width: 450px;
     min-width: 320px;
     height: 300px;
-    background: white;
-    border-radius: 16px;
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    background-color: rgba(255, 255, 255, 0.7);
+    /* Same as tech-clubs cards */
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    border-radius: 15px;
+    /* Same as tech-clubs */
     overflow: hidden;
     position: relative;
     transition: all 0.3s ease;
     cursor: pointer;
     display: flex;
     flex-direction: column;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    /* Same as tech-clubs */
 }
 
 .event-card:hover {
     transform: translateY(-8px);
-    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+    /* Same as tech-clubs hover */
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15);
 }
 
 /* Date Badge - Top Left */
@@ -223,6 +287,7 @@ body {
     top: 12px;
     left: 12px;
     background: rgba(95, 150, 197, 0.95);
+    /* Using tech-clubs color */
     color: white;
     padding: 8px 10px;
     border-radius: 8px;
@@ -273,10 +338,12 @@ body {
     background: white;
     transform: scale(1.1);
     color: #5F96C5;
+    /* Tech-clubs color */
 }
 
 .event-bookmark.bookmarked {
     background: #5F96C5;
+    /* Tech-clubs color */
     color: white;
 }
 
@@ -350,6 +417,7 @@ body {
 .event-location svg,
 .event-time svg {
     color: #5F96C5;
+    /* Tech-clubs color */
     flex-shrink: 0;
 }
 
@@ -361,7 +429,8 @@ body {
 }
 
 .join-event-btn {
-    background: linear-gradient(135deg, #5F96C5, #4a8bc2);
+    background: #5F96C5;
+    /* Tech-clubs color */
     color: white;
     border: none;
     padding: 0.5rem 1rem;
@@ -374,7 +443,8 @@ body {
 }
 
 .join-event-btn:hover {
-    background: linear-gradient(135deg, #4a8bc2, #3d7bb5);
+    background: #4a8bc2;
+    /* Darker shade of tech-clubs color */
     transform: translateY(-1px);
 }
 
@@ -401,7 +471,6 @@ body {
 /* Loading Cards */
 .loading-cards {
     display: contents;
-    /* This makes the loading cards participate in the grid */
 }
 
 .loading-card {
@@ -409,14 +478,18 @@ body {
     max-width: 450px;
     min-width: 320px;
     height: 300px;
-    background: white;
-    border-radius: 16px;
+    background-color: rgba(255, 255, 255, 0.7);
+    /* Same as tech-clubs */
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    border-radius: 15px;
     display: flex;
     align-items: center;
     justify-content: center;
     color: #666;
     font-size: 1.1rem;
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
     animation: pulse 2s ease-in-out infinite;
 }
 
@@ -437,11 +510,14 @@ body {
    ============================================================================= */
 
 .calendar-section {
-    background: rgba(255, 255, 255, 0.95);
-    border-radius: 20px;
+    background-color: rgba(255, 255, 255, 0.7);
+    /* Same as tech-clubs cards */
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    border-radius: 15px;
     padding: 2rem;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
     margin-top: 0.5rem;
 }
 
@@ -455,7 +531,8 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(255, 255, 255, 0.95);
+    background: rgba(245, 252, 255, 0.95);
+    /* Tech-clubs background */
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -468,6 +545,7 @@ body {
     width: 50px;
     height: 50px;
     border: 4px solid rgba(95, 150, 197, 0.3);
+    /* Tech-clubs color */
     border-top: 4px solid #5F96C5;
     border-radius: 50%;
     animation: spin 1s linear infinite;
@@ -486,6 +564,7 @@ body {
 
 .loading-overlay p {
     color: #5F96C5;
+    /* Tech-clubs color */
     font-weight: 500;
     font-size: 1.1rem;
 }
@@ -505,7 +584,8 @@ body {
 }
 
 .retry-btn {
-    background: #e74c3c;
+    background: #5F96C5;
+    /* Tech-clubs color */
     color: white;
     border: none;
     padding: 0.75rem 1.5rem;
@@ -517,21 +597,23 @@ body {
 }
 
 .retry-btn:hover {
-    background: #c0392b;
+    background: #4a8bc2;
 }
 
 /* =============================================================================
-   RESPONSIVE DESIGN
+   RESPONSIVE DESIGN - MATCHING TECH-CLUBS
    ============================================================================= */
 
-@media (max-width: 1500px) {
-    .events-container {
-        max-width: 1200px;
-        padding: 1.5rem;
+@media (min-width: 2560px) {
+
+    .blur-decoration-left,
+    .blur-decoration-right {
+        width: 250px;
+        height: 250px;
     }
 }
 
-@media (max-width: 1199px) {
+@media (max-width: 1440px) {
     .events-container {
         padding: 1.5rem;
     }
@@ -543,9 +625,62 @@ body {
     .event-card {
         height: 280px;
     }
+
+    .nav-links {
+        list-style: none;
+        display: flex;
+        gap: 1.5rem;
+        align-items: center;
+        margin: 0rem;
+    }
+
+    .account-btn {
+        background-color: #5F96C5;
+        color: white !important;
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        transition: all 0.3s ease;
+    }
 }
 
-@media (max-width: 767px) {
+@media (max-width: 1024px) {
+    .events-container {
+        padding: 1.5rem;
+    }
+
+    .featured-events-grid {
+        gap: 1.5rem;
+    }
+
+    .event-card {
+        height: 280px;
+    }
+
+    .nav-links {
+        list-style: none;
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+        margin: 2rem;
+    }
+
+    .account-btn {
+        background-color: #5F96C5;
+        color: white !important;
+        padding: 0.15rem 1rem;
+        border-radius: 20px;
+        transition: all 0.3s ease;
+    }
+}
+
+@media (max-width: 768px) {
+
+    .blur-decoration-left,
+    .blur-decoration-right {
+        width: 200px;
+        height: 200px;
+    }
+
     .events-container {
         padding: 1rem;
     }
@@ -565,56 +700,39 @@ body {
     }
 
     .navbar-container {
-        padding: 0 1rem;
-        flex-wrap: wrap;
+        padding: 2rem 1.25rem;
+        display: flex;
+        margin-right: 11rem;
         gap: 1rem;
     }
 
     .nav-links {
         gap: 1rem;
-        font-size: 0.9rem;
     }
 }
 
-@media (max-width: 480px) {
-    .events-container {
-        padding: 0.5rem;
-    }
-
-    .event-card {
-        height: 260px;
-        min-width: 260px;
-    }
-
-    .event-content {
-        padding: 0.75rem;
-    }
-
-    .event-title {
-        font-size: 1rem;
-    }
-
-    .event-description {
-        font-size: 0.8rem;
+@media (max-width: 426px) {
+    .navbar-container {
+        margin-left: 17rem;
+        padding: 1.5rem 1.5rem;
+        display: flex;
+        transform: scale(0.6);
+        width: 100rem;
     }
 
     .nav-links {
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 0.5rem;
-    }
-
-    .featured-events-grid {
-        padding: 0;
+        gap: 1rem;
     }
 }
+
 
 /* =============================================================================
    EVENT IMAGE FALLBACK SYSTEM
    ============================================================================= */
 
 .event-image {
-    background: linear-gradient(135deg, #5F96C5, #4a8bc2);
+    background: #5F96C5;
+    /* Tech-clubs color */
 }
 
 .event-image::before {
@@ -624,7 +742,8 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(135deg, #5F96C5, #4a8bc2);
+    background: #5F96C5;
+    /* Tech-clubs color */
     display: flex;
     align-items: center;
     justify-content: center;

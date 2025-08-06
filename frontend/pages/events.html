@@ -8,11 +8,17 @@
     <link rel="stylesheet" href="../styles/events-redesigned.css" />
     <link rel="stylesheet" href="../styles/events-calendar.css" />
     <script src="/scripts/calendar-utils.js" defer></script>
-    <link href="https://fonts.googleapis.com/css2?family=Rethink+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Rethink+Sans:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
 </head>
 
 <body>
-    <!-- Fixed Navbar (no backdrop image) -->
+    <!-- Background blur decorations - Same as tech-clubs -->
+    <div class="blur-decoration-left"></div>
+    <div class="blur-decoration-left2"></div>
+    <div class="blur-decoration-right"></div>
+
+    <!-- Navbar - Now consistent with tech-clubs -->
     <nav class="navbar">
         <div class="navbar-container">
             <div class="logo-title">
@@ -55,7 +61,7 @@
                             <h2>📅 Events Calendar</h2>
                             <p>Click on any date to see events for that day</p>
                         </div>
-                        
+
                         <!-- View Toggle -->
                         <div class="view-toggle">
                             <button class="view-btn active" id="monthViewBtn">Month</button>
@@ -85,7 +91,7 @@
                                 <h3 id="selectedDateTitle">Select a date</h3>
                                 <button class="close-sidebar" id="closeSidebar">×</button>
                             </div>
-                            
+
                             <div class="sidebar-content" id="sidebarContent">
                                 <div class="no-date-selected">
                                     <div class="calendar-icon">📅</div>
@@ -121,11 +127,11 @@
                     <span class="date-day">15</span>
                     <span class="date-month">JAN</span>
                 </div>
-                
+
                 <!-- Bookmark Button - Top Right -->
                 <button class="event-bookmark">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/>
+                        <path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z" />
                     </svg>
                 </button>
 
@@ -138,19 +144,21 @@
                 <div class="event-content">
                     <h3 class="event-title">Event Title</h3>
                     <p class="event-description">Short event description goes here...</p>
-                    
+
                     <div class="event-details">
                         <div class="event-location">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
-                                <circle cx="12" cy="10" r="3"/>
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                                <circle cx="12" cy="10" r="3" />
                             </svg>
                             <span class="location-text">Location</span>
                         </div>
                         <div class="event-time">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <circle cx="12" cy="12" r="10"/>
-                                <polyline points="12,6 12,12 16,14"/>
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <circle cx="12" cy="12" r="10" />
+                                <polyline points="12,6 12,12 16,14" />
                             </svg>
                             <span class="time-text">6:00 PM</span>
                         </div>
@@ -159,11 +167,12 @@
                     <div class="event-actions">
                         <button class="join-event-btn">Join Event</button>
                         <button class="add-calendar-btn" title="Add to Calendar">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
-                                <line x1="16" y1="2" x2="16" y2="6"/>
-                                <line x1="8" y1="2" x2="8" y2="6"/>
-                                <line x1="3" y1="10" x2="21" y2="10"/>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                                <line x1="16" y1="2" x2="16" y2="6" />
+                                <line x1="8" y1="2" x2="8" y2="6" />
+                                <line x1="3" y1="10" x2="21" y2="10" />
                             </svg>
                         </button>
                     </div>
