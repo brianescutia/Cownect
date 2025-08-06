@@ -2,7 +2,7 @@
 // UPDATED DYNAMIC CLUBS WITH WORKING PAGINATION & FIXED NAVIGATION
 // =============================================================================
 
-// 🎯 GLOBAL STATE MANAGEMENT
+//  GLOBAL STATE MANAGEMENT
 let searchState = {
     query: '',
     selectedTags: [],
@@ -13,10 +13,10 @@ let searchState = {
 let allClubs = [];
 let filteredClubs = [];
 
-// 🎯 PAGINATION SETTINGS
+//  PAGINATION SETTINGS
 const CLUBS_PER_PAGE = 6;
 
-// 🎯 DEBOUNCING - Prevent excessive searches
+//  DEBOUNCING - Prevent excessive searches
 let searchTimeout;
 const DEBOUNCE_DELAY = 300;
 
@@ -25,7 +25,7 @@ const DEBOUNCE_DELAY = 300;
 // =============================================================================
 
 document.addEventListener('DOMContentLoaded', async () => {
-    console.log('🚀 Initializing dynamic clubs with pagination...');
+    console.log(' Initializing dynamic clubs with pagination...');
 
     try {
         await loadClubs();
@@ -33,9 +33,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         setupPaginationListeners(); // New pagination setup
         performSearch(); // Initial display
 
-        console.log('✅ Dynamic clubs system ready!');
+        console.log(' Dynamic clubs system ready!');
     } catch (error) {
-        console.error('💥 Initialization error:', error);
+        console.error(' Initialization error:', error);
         showError('Failed to load clubs');
     }
 });
@@ -46,7 +46,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 async function loadClubs() {
     try {
-        console.log('📡 Loading clubs from API...');
+        console.log(' Loading clubs from API...');
         showLoadingState();
 
         const response = await fetch('/api/clubs');
@@ -55,11 +55,11 @@ async function loadClubs() {
         allClubs = await response.json();
         filteredClubs = [...allClubs];
 
-        console.log(`📦 Loaded ${allClubs.length} clubs`);
+        console.log(` Loaded ${allClubs.length} clubs`);
         hideLoadingState();
 
     } catch (error) {
-        console.error('💥 Error loading clubs:', error);
+        console.error(' Error loading clubs:', error);
         showError('Failed to load clubs');
     }
 }
@@ -69,7 +69,7 @@ async function loadClubs() {
 // =============================================================================
 
 function performSearch() {
-    console.log('🔍 Performing search:', searchState);
+    console.log(' Performing search:', searchState);
 
     let results = [...allClubs];
 
@@ -103,7 +103,7 @@ function performSearch() {
     renderSearchInfo();
     updatePaginationButtons();
 
-    console.log(`✅ Search complete: ${results.length} clubs found, showing page ${searchState.currentPage}`);
+    console.log(` Search complete: ${results.length} clubs found, showing page ${searchState.currentPage}`);
 }
 
 // =============================================================================
@@ -130,7 +130,7 @@ function renderClubsWithPagination(clubs) {
     const endIndex = startIndex + CLUBS_PER_PAGE;
     const clubsToShow = clubs.slice(startIndex, endIndex);
 
-    console.log(`📄 Showing clubs ${startIndex + 1}-${Math.min(endIndex, clubs.length)} of ${clubs.length}`);
+    console.log(` Showing clubs ${startIndex + 1}-${Math.min(endIndex, clubs.length)} of ${clubs.length}`);
 
     const clubsHTML = clubsToShow.map(club => `
         <div class="club-card clickable-card" data-club-id="${club._id}">
@@ -189,7 +189,7 @@ function setupPaginationListeners() {
         });
     });
 
-    console.log(`🔢 Set up ${paginationButtons.length} pagination buttons`);
+    console.log(` Set up ${paginationButtons.length} pagination buttons`);
 }
 
 function updatePaginationButtons() {
@@ -249,24 +249,24 @@ function addClubCardListeners() {
             const isBookmarkClick = e.target.closest('.bookmark-icon');
 
             if (isBookmarkClick) {
-                console.log('📌 Bookmark clicked, not navigating to club');
+                console.log(' Bookmark clicked, not navigating to club');
                 // Let the bookmark handler deal with this
                 return;
             }
 
             // This is a card click, navigate to the club
             const clubId = card.dataset.clubId;
-            console.log(`🔗 Club card clicked! Club ID: ${clubId}`);
+            console.log(` Club card clicked! Club ID: ${clubId}`);
 
             if (clubId) {
                 navigateToClub(clubId);
             } else {
-                console.error('❌ No club ID found on card');
+                console.error(' No club ID found on card');
             }
         });
     });
 
-    console.log(`🎧 Added click listeners to ${clubCards.length} club cards`);
+    console.log(` Added click listeners to ${clubCards.length} club cards`);
 }
 
 // =============================================================================
@@ -282,17 +282,17 @@ function debouncedSearch() {
 }
 
 function setupEventListeners() {
-    // 🔍 SEARCH INPUT
+    //  SEARCH INPUT
     const searchInput = document.getElementById('clubSearch');
     if (searchInput) {
         searchInput.addEventListener('input', (e) => {
             searchState.query = e.target.value;
             debouncedSearch();
         });
-        console.log('✅ Search input listener added');
+        console.log(' Search input listener added');
     }
 
-    // 🏷️ TAG FILTERS
+    //  TAG FILTERS
     const tagButtons = document.querySelectorAll('.filter-tags .tag');
     tagButtons.forEach(tag => {
         tag.addEventListener('click', () => {
@@ -300,7 +300,7 @@ function setupEventListeners() {
             handleTagToggle(tagName);
         });
     });
-    console.log(`✅ ${tagButtons.length} tag listeners added`);
+    console.log(` ${tagButtons.length} tag listeners added`);
 }
 
 function handleTagToggle(tagName) {
@@ -316,7 +316,7 @@ function handleTagToggle(tagName) {
     updateTagUI();
     performSearch();
 
-    console.log('🏷️ Active tags:', searchState.selectedTags);
+    console.log(' Active tags:', searchState.selectedTags);
 }
 
 function clearAllFilters() {
@@ -333,7 +333,7 @@ function clearAllFilters() {
     updateTagUI();
     performSearch();
 
-    console.log('🗑️ All filters cleared');
+    console.log(' All filters cleared');
 }
 
 // Keep all your existing utility functions...
@@ -407,7 +407,7 @@ function showError(message) {
     if (clubsGrid) {
         clubsGrid.innerHTML = `
             <div class="error-state">
-                <h3>⚠️ Error</h3>
+                <h3> Error</h3>
                 <p>${message}</p>
                 <button onclick="location.reload()" class="retry-btn">Reload Page</button>
             </div>
@@ -429,7 +429,7 @@ window.navigateToClub = navigateToClub;
 
 // Debug function
 window.debugPagination = () => {
-    console.log('🐛 Pagination Debug:');
+    console.log(' Pagination Debug:');
     console.log('  Current page:', searchState.currentPage);
     console.log('  Clubs per page:', CLUBS_PER_PAGE);
     console.log('  Total clubs:', filteredClubs.length);

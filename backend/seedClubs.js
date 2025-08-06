@@ -1209,26 +1209,26 @@ function validateClubTags() {
 
 async function seedClubs() {
     try {
-        console.log('🔗 Connecting to MongoDB...');
+        console.log(' Connecting to MongoDB...');
         await mongoose.connect(process.env.MONGO_URI, {
             useNewUrlParser: true,
             useUnifiedTopology: true,
         });
-        console.log('✅ Connected to MongoDB Atlas');
+        console.log(' Connected to MongoDB Atlas');
 
-        // 🗑️ CLEAR EXISTING CLUBS
-        console.log('🗑️ Clearing existing clubs...');
+        //  CLEAR EXISTING CLUBS
+        console.log(' Clearing existing clubs...');
         await Club.deleteMany({});
-        console.log('✅ Existing clubs cleared');
+        console.log(' Existing clubs cleared');
 
-        // 📊 INSERT NEW CLUB DATA
-        console.log('📊 Inserting all 50 UC Davis clubs...');
+        //  INSERT NEW CLUB DATA
+        console.log(' Inserting all 50 UC Davis clubs...');
         const insertedClubs = await Club.insertMany(clubData);
-        console.log(`✅ Successfully inserted ${insertedClubs.length} clubs`);
+        console.log(` Successfully inserted ${insertedClubs.length} clubs`);
 
-        // 📋 DISPLAY COMPREHENSIVE STATISTICS
+        //  DISPLAY COMPREHENSIVE STATISTICS
         const categories = [...new Set(clubData.map(club => club.category))];
-        console.log('\n📋 Clubs by Category:');
+        console.log('\n Clubs by Category:');
         categories.forEach(category => {
             const categoryClubs = clubData.filter(club => club.category === category);
             console.log(`\n${category} (${categoryClubs.length} clubs):`);
@@ -1245,7 +1245,7 @@ async function seedClubs() {
             });
         });
 
-        console.log('\n🏷️ Most Popular Tags:');
+        console.log('\n Most Popular Tags:');
         Object.entries(tagCounts)
             .sort(([, a], [, b]) => b - a)
             .slice(0, 15)
@@ -1253,7 +1253,7 @@ async function seedClubs() {
                 console.log(`  #${tag}: ${count} clubs`);
             });
 
-        console.log('\n📊 Final Statistics:');
+        console.log('\n Final Statistics:');
         console.log(`  Total Clubs: ${clubData.length}`);
         console.log(`  Categories: ${categories.length}`);
         console.log(`  Unique Tags: ${Object.keys(tagCounts).length}`);
@@ -1261,14 +1261,14 @@ async function seedClubs() {
         console.log(`  Clubs with Filler Data: ${clubData.filter(club => club.logoUrl.includes('default-club-logo')).length}`);
         console.log(`  Average Members: ${Math.round(clubData.reduce((sum, club) => sum + club.memberCount, 0) / clubData.length)}`);
 
-        console.log('\n🎉 Complete UC Davis tech club database ready!');
-        console.log('🚀 All clubs now have detail pages, proper categorization, and filtering!');
+        console.log('\n Complete UC Davis tech club database ready!');
+        console.log(' All clubs now have detail pages, proper categorization, and filtering!');
 
     } catch (error) {
-        console.error('💥 Error seeding database:', error);
+        console.error(' Error seeding database:', error);
     } finally {
         await mongoose.connection.close();
-        console.log('🔌 Database connection closed');
+        console.log(' Database connection closed');
         process.exit(0);
     }
 }
@@ -1278,7 +1278,7 @@ async function seedClubs() {
 // =============================================================================
 
 if (require.main === module) {
-    console.log('🌱 Seeding complete UC Davis club database...');
+    console.log(' Seeding complete UC Davis club database...');
     seedClubs();
 }
 

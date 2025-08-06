@@ -2,19 +2,19 @@
 // ENHANCED CLUB DETAIL PAGE FUNCTIONALITY - Now with Real UC Davis Data
 // =============================================================================
 
-// 🎯 GLOBAL STATE
+//  GLOBAL STATE
 let currentClub = null;
 let currentSlide = 0;
 const slidesToShow = window.innerWidth > 768 ? 2 : 1;
 
-// 🎯 WAIT FOR PAGE TO LOAD
+//  WAIT FOR PAGE TO LOAD
 document.addEventListener('DOMContentLoaded', async () => {
     try {
         // Get club ID from URL PATH
         const pathParts = window.location.pathname.split('/');
         const clubId = pathParts[pathParts.length - 1];
 
-        console.log('🔍 Loading club details for ID:', clubId);
+        console.log(' Loading club details for ID:', clubId);
 
         if (!clubId || clubId === 'club') {
             showError('No club ID provided');
@@ -28,10 +28,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         setupEventsCarousel();
         setupBookmarkButton();
 
-        console.log('✅ Club detail page initialized with real data');
+        console.log(' Club detail page initialized with real data');
 
     } catch (error) {
-        console.error('💥 Error initializing club detail page:', error);
+        console.error(' Error initializing club detail page:', error);
         showError('Failed to load club details');
     }
 });
@@ -42,7 +42,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 async function loadClubDetails(clubId) {
     try {
-        console.log(`📡 Loading details for club: ${clubId}`);
+        console.log(` Loading details for club: ${clubId}`);
 
         const response = await fetch(`/api/clubs/${clubId}`);
 
@@ -51,14 +51,14 @@ async function loadClubDetails(clubId) {
         }
 
         currentClub = await response.json();
-        console.log('📦 Real club data loaded:', currentClub);
+        console.log(' Real club data loaded:', currentClub);
 
         // Update page content with real data
         updatePageContent(currentClub);
         hideLoading();
 
     } catch (error) {
-        console.error('💥 Error loading club details:', error);
+        console.error(' Error loading club details:', error);
         showError('Club not found');
     }
 }
@@ -146,7 +146,7 @@ function updateContactInfo(club) {
     if (!contactsBox) return;
 
     // Build contact info HTML
-    let contactHTML = '<h2>📧 Contact & Links</h2><div class="contact-info">';
+    let contactHTML = '<h2> Contact & Links</h2><div class="contact-info">';
 
     // Add officers if available
     if (club.officers && club.officers.length > 0) {
@@ -313,7 +313,7 @@ function setupEventsCarousel() {
         startX = 0;
     });
 
-    console.log('✅ Events carousel set up');
+    console.log(' Events carousel set up');
 }
 
 function slideCarousel(direction) {
@@ -332,24 +332,24 @@ function slideCarousel(direction) {
 // =============================================================================
 
 function hideLoading() {
-    console.log('🔄 Hiding loading overlay...');
+    console.log(' Hiding loading overlay...');
 
     const loadingOverlay = document.getElementById('loadingOverlay');
     const clubContainer = document.getElementById('clubDetailContainer');
 
     if (loadingOverlay) {
         loadingOverlay.style.display = 'none';
-        console.log('✅ Loading overlay hidden');
+        console.log(' Loading overlay hidden');
     }
 
     if (clubContainer) {
         clubContainer.style.display = 'block';
-        console.log('✅ Club container shown');
+        console.log(' Club container shown');
     }
 }
 
 function showError(message) {
-    console.log('❌ Showing error:', message);
+    console.log(' Showing error:', message);
 
     const loadingOverlay = document.getElementById('loadingOverlay');
     const clubContainer = document.getElementById('clubDetailContainer');
@@ -369,9 +369,9 @@ function showError(message) {
         if (errorText) {
             errorText.textContent = message;
         }
-        console.log('✅ Error container shown');
+        console.log(' Error container shown');
     } else {
-        console.warn('⚠️ Error container not found');
+        console.warn(' Error container not found');
         alert(`Error: ${message}`);
     }
 }
@@ -391,7 +391,7 @@ function updateHeroImage(club) {
             this.src = '../assets/default-club-hero.jpg';
         };
 
-        console.log('✅ Updated big hero image for:', club.name);
+        console.log(' Updated big hero image for:', club.name);
     }
 }
 
@@ -420,7 +420,7 @@ window.slideCarousel = slideCarousel;
 
 // Debug function
 window.debugClubDetail = () => {
-    console.log('🐛 Club Detail Debug:');
+    console.log(' Club Detail Debug:');
     console.log('  Current club:', currentClub);
     console.log('  Officers:', currentClub?.officers);
     console.log('  Meeting info:', currentClub?.meetingInfo);

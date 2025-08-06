@@ -26,7 +26,7 @@ app.use(express.static(path.join(__dirname, '../frontend')));  // Serve static f
 app.use(express.urlencoded({ extended: true }));               // Parse form data
 app.use(express.json());                                       // Parse JSON data
 
-// 🎟️ SESSION CONFIGURATION - Like setting up a wristband system at a concert
+// SESSION CONFIGURATION - Like setting up a wristband system at a concert
 app.use(session({
   // This is the "ink" used to create secure wristbands - keep it secret!
   secret: process.env.SESSION_SECRET || 'change-this-in-production',
@@ -57,7 +57,7 @@ mongoose.connect(process.env.MONGO_URI, {
   .then(() => console.log('Connected to MongoDB Atlas'))
   .catch(err => console.error('MongoDB connection error:', err));
 
-// 🎟️ AUTHENTICATION MIDDLEWARE - Our "bouncer" function
+// AUTHENTICATION MIDDLEWARE - Our "bouncer" function
 // This checks if someone has a valid wristband before letting them into protected areas
 const requireAuth = (req, res, next) => {
   if (req.session.userId) {
@@ -71,7 +71,7 @@ const requireAuth = (req, res, next) => {
 
 function redirectLoggedInUsers(req, res, next) {
   if (req.session && req.session.userId) {
-    console.log(`🔀 Redirecting logged-in user ${req.session.userEmail} to tech-clubs`);
+    console.log(` Redirecting logged-in user ${req.session.userEmail} to tech-clubs`);
     return res.redirect('/tech-clubs');
   }
   next();
@@ -81,7 +81,7 @@ function redirectLoggedInUsers(req, res, next) {
 // ROUTES
 // =============================================================================
 
-// 🏠 HOME ROUTE
+// HOME ROUTE
 app.get('/', redirectLoggedInUsers, (req, res) => {
   res.sendFile(path.join(__dirname, '../frontend/pages/index.html'));
 });
@@ -90,7 +90,7 @@ app.get('/', redirectLoggedInUsers, (req, res) => {
 // AUTHENTICATION ROUTES
 // =============================================================================
 
-// 🚪 LOGIN ROUTES
+// LOGIN ROUTES
 app.get('/login', redirectLoggedInUsers, (req, res) => {
   res.sendFile(path.join(__dirname, '../frontend/pages/login.html'));
 });
@@ -115,11 +115,11 @@ app.post('/login', async (req, res) => {
 
     //Check EMAIL Verification
     if (!user.isVerified) {
-      console.log(`🔍 User ${user.email} is not verified. Redirecting to verification page.`);
+      console.log(` User ${user.email} is not verified. Redirecting to verification page.`);
       return res.redirect(`/verify-email-prompt?email=${encodeURIComponent(user.email)}&error=not_verified`);
     }
 
-    // Step 3: 🎟️ ISSUE THE WRISTBAND! Store user info in session
+    // Step 3: ISSUE THE WRISTBAND! Store user info in session
     req.session.userId = user._id;
     req.session.userEmail = user.email;
 
@@ -132,13 +132,13 @@ app.post('/login', async (req, res) => {
   }
 });
 
-// 📝 SIGNUP ROUTES
+// SIGNUP ROUTES
 app.use((err, req, res, next) => {
-  console.error('💥 Unhandled error:', err);
+  console.error(' Unhandled error:', err);
 
   // Check if response was already sent
   if (res.headersSent) {
-    console.error('⚠️ Headers already sent, cannot send error response');
+    console.error(' Headers already sent, cannot send error response');
     return next(err);
   }
 
@@ -147,11 +147,11 @@ app.use((err, req, res, next) => {
 });
 
 app.use((req, res, next) => {
-  console.log(`🔍 ${req.method} ${req.path} - ${new Date().toISOString()}`);
+  console.log(` ${req.method} ${req.path} - ${new Date().toISOString()}`);
 
   // Log when response is finished
   res.on('finish', () => {
-    console.log(`✅ Response sent: ${res.statusCode} for ${req.method} ${req.path}`);
+    console.log(` Response sent: ${res.statusCode} for ${req.method} ${req.path}`);
   });
 
   next();
@@ -161,14 +161,14 @@ app.get('/signup', redirectLoggedInUsers, (req, res) => {
 });
 
 app.get('/verify-email-prompt', (req, res) => {
-  console.log('📧 Verify email prompt accessed');
+  console.log(' Verify email prompt accessed');
   res.sendFile(path.join(__dirname, '../frontend/pages/verify-email-prompt.html'));
 });
 
 app.post('/signup', async (req, res) => {
   const { email, password } = req.body;
 
-  console.log('📝 JSON Signup attempt for:', email);
+  console.log(' JSON Signup attempt for:', email);
 
   try {
     // Step 1: Basic validation
@@ -182,7 +182,7 @@ app.post('/signup', async (req, res) => {
     // Step 2: Check if user already exists
     const existingUser = await User.findOne({ email: email.toLowerCase() });
     if (existingUser) {
-      console.log('❌ User already exists:', email);
+      console.log(' User already exists:', email);
       return res.status(409).json({
         success: false,
         error: 'An account with this email already exists',
@@ -192,7 +192,7 @@ app.post('/signup', async (req, res) => {
 
     // Step 3: Validate UC Davis email domain
     if (!email.toLowerCase().endsWith('@ucdavis.edu')) {
-      console.log('❌ Invalid email domain:', email);
+      console.log(' Invalid email domain:', email);
       return res.status(400).json({
         success: false,
         error: 'Please use your UC Davis email address (@ucdavis.edu)'
@@ -208,7 +208,7 @@ app.post('/signup', async (req, res) => {
     }
 
     // Step 5: Create new user
-    console.log('🔨 Creating new user...');
+    console.log(' Creating new user...');
     const newUser = new User({
       email: email.toLowerCase(),
       password: password,
@@ -216,15 +216,15 @@ app.post('/signup', async (req, res) => {
     });
 
     // Step 6: Generate verification token
-    console.log('🎟️ Generating verification token...');
+    console.log(' Generating verification token...');
     const verificationToken = newUser.generateVerificationToken();
 
     // Step 7: Save user to database  
     await newUser.save();
-    console.log('✅ User saved to database');
+    console.log(' User saved to database');
 
     // Step 8: Send verification email
-    console.log('📧 Attempting to send verification email...');
+    console.log('Attempting to send verification email...');
     let emailSent = false;
 
     try {
@@ -233,16 +233,16 @@ app.post('/signup', async (req, res) => {
       emailSent = emailResult.success;
 
       if (emailSent) {
-        console.log('✅ Verification email sent successfully');
+        console.log(' Verification email sent successfully');
       } else {
-        console.error('⚠️ Failed to send verification email:', emailResult.error);
+        console.error(' Failed to send verification email:', emailResult.error);
       }
     } catch (emailError) {
-      console.error('💥 Email service error:', emailError);
+      console.error(' Email service error:', emailError);
     }
 
     // Step 9: Return success response with redirect info
-    console.log('✅ Signup successful, sending JSON response');
+    console.log(' Signup successful, sending JSON response');
     return res.status(201).json({
       success: true,
       message: 'Account created successfully! Please check your email.',
@@ -255,7 +255,7 @@ app.post('/signup', async (req, res) => {
     });
 
   } catch (err) {
-    console.error('💥 Signup error:', err);
+    console.error(' Signup error:', err);
 
     // Handle MongoDB duplicate key error
     if (err.code === 11000) {
@@ -282,7 +282,7 @@ app.post('/signup', async (req, res) => {
   }
 });
 
-// 🚪 LOGOUT ROUTE
+//  LOGOUT ROUTE
 app.get('/logout', (req, res) => {
   // 🗑️ REMOVE THE WRISTBAND - Destroy the session completely
   req.session.destroy((err) => {
@@ -298,7 +298,7 @@ app.get('/logout', (req, res) => {
 // PROTECTED ROUTES - Only for users with valid wristbands!
 // =============================================================================
 
-// 🏛️ TECH CLUBS PAGE - Protected route example
+//  TECH CLUBS PAGE - Protected route example
 app.get('/tech-clubs', requireAuth, (req, res) => {
   // This line only runs if the user passed the requireAuth bouncer check
   console.log('Tech clubs accessed by:', req.session.userEmail);
@@ -307,7 +307,7 @@ app.get('/tech-clubs', requireAuth, (req, res) => {
 
 app.get('/api/bookmarks', requireAuth, async (req, res) => {
   try {
-    console.log(`📖 Fetching bookmarks for user: ${req.session.userEmail}`);
+    console.log(` Fetching bookmarks for user: ${req.session.userEmail}`);
 
     // Get user with populated bookmark details
     const userWithBookmarks = await User.findWithBookmarks(req.session.userId);
@@ -316,7 +316,7 @@ app.get('/api/bookmarks', requireAuth, async (req, res) => {
       return res.status(404).json({ error: 'User not found' });
     }
 
-    console.log(`✅ Found ${userWithBookmarks.bookmarkedClubs.length} bookmarks`);
+    console.log(` Found ${userWithBookmarks.bookmarkedClubs.length} bookmarks`);
 
     res.json({
       bookmarks: userWithBookmarks.bookmarkedClubs,
@@ -324,7 +324,7 @@ app.get('/api/bookmarks', requireAuth, async (req, res) => {
     });
 
   } catch (error) {
-    console.error('💥 Error fetching bookmarks:', error);
+    console.error(' Error fetching bookmarks:', error);
     res.status(500).json({ error: 'Failed to fetch bookmarks' });
   }
 });
@@ -334,16 +334,16 @@ app.get('/api/bookmarks', requireAuth, async (req, res) => {
 // Replace the commented out event routes with these enhanced versions
 // =============================================================================
 
-// 📅 EVENTS PAGE ROUTE - Serve the events HTML page
+//  EVENTS PAGE ROUTE - Serve the events HTML page
 app.get('/events', requireAuth, (req, res) => {
   console.log('Events page accessed by:', req.session.userEmail);
   res.sendFile(path.join(__dirname, '../frontend/pages/events.html'));
 });
 
-// 🔍 GET ALL EVENTS - Enhanced version with filtering
+//  GET ALL EVENTS - Enhanced version with filtering
 app.get('/api/events', requireAuth, async (req, res) => {
   try {
-    console.log('📅 Fetching events...');
+    console.log(' Fetching events...');
 
     const {
       limit = 50,
@@ -378,7 +378,7 @@ app.get('/api/events', requireAuth, async (req, res) => {
 
     const events = await eventsQuery.lean();
 
-    console.log(`✅ Found ${events.length} events`);
+    console.log(` Found ${events.length} events`);
 
     // Add additional computed fields
     const enhancedEvents = events.map(event => ({
@@ -397,15 +397,15 @@ app.get('/api/events', requireAuth, async (req, res) => {
     res.json(enhancedEvents);
 
   } catch (error) {
-    console.error('💥 Error fetching events:', error);
+    console.error(' Error fetching events:', error);
     res.status(500).json({ error: 'Failed to fetch events' });
   }
 });
 
-// 🌟 GET FEATURED EVENTS - Top 3 events for the main display
+//  GET FEATURED EVENTS - Top 3 events for the main display
 app.get('/api/events/featured', requireAuth, async (req, res) => {
   try {
-    console.log('🌟 Fetching featured events...');
+    console.log(' Fetching featured events...');
 
     const featuredEvents = await Event.find({
       isActive: true,
@@ -432,20 +432,20 @@ app.get('/api/events/featured', requireAuth, async (req, res) => {
       imageUrl: event.imageUrl || '/assets/default-event-image.jpg'
     }));
 
-    console.log(`✅ Found ${enhancedFeaturedEvents.length} featured events`);
+    console.log(` Found ${enhancedFeaturedEvents.length} featured events`);
     res.json(enhancedFeaturedEvents);
 
   } catch (error) {
-    console.error('💥 Error fetching featured events:', error);
+    console.error(' Error fetching featured events:', error);
     res.status(500).json({ error: 'Failed to fetch featured events' });
   }
 });
 
-// 📅 GET EVENTS BY DATE - For calendar functionality
+//  GET EVENTS BY DATE - For calendar functionality
 app.get('/api/events/date/:date', requireAuth, async (req, res) => {
   try {
     const { date } = req.params;
-    console.log(`📅 Fetching events for date: ${date}`);
+    console.log(` Fetching events for date: ${date}`);
 
     // Parse the date and get events for that day
     const targetDate = new Date(date);
@@ -491,11 +491,11 @@ app.get('/api/events/date/:date', requireAuth, async (req, res) => {
 });
 
 
-// 📊 GET CALENDAR DATA - Event counts by date for calendar visualization
+//  GET CALENDAR DATA - Event counts by date for calendar visualization
 app.get('/api/events/calendar/:year/:month', requireAuth, async (req, res) => {
   try {
     const { year, month } = req.params;
-    console.log(`📊 Fetching calendar data for ${year}-${month}`);
+    console.log(` Fetching calendar data for ${year}-${month}`);
 
     const startDate = new Date(year, month - 1, 1);
     const endDate = new Date(year, month, 0, 23, 59, 59);
@@ -543,16 +543,16 @@ app.get('/api/events/calendar/:year/:month', requireAuth, async (req, res) => {
       events: eventsByDate[dateKey]
     }));
 
-    console.log(`✅ Found events for ${calendarData.length} days in ${year}-${month}`);
+    console.log(` Found events for ${calendarData.length} days in ${year}-${month}`);
     res.json(calendarData);
 
   } catch (error) {
-    console.error('💥 Error fetching calendar data:', error);
+    console.error(' Error fetching calendar data:', error);
     res.status(500).json({ error: 'Failed to fetch calendar data' });
   }
 });
 
-// 📝 CREATE NEW EVENT - Enhanced version
+//  CREATE NEW EVENT - Enhanced version
 app.post('/api/events', requireAuth, async (req, res) => {
   try {
     const { title, date, time, location, description, imageUrl } = req.body;
@@ -576,24 +576,37 @@ app.post('/api/events', requireAuth, async (req, res) => {
 
     await newEvent.save();
 
-    console.log('📅 New event created:', newEvent.title);
+    console.log(' New event created:', newEvent.title);
     res.status(201).json(newEvent);
 
   } catch (error) {
-    console.error('💥 Error creating event:', error);
+    console.error(' Error creating event:', error);
     res.status(500).json({ error: 'Failed to create event' });
   }
 });
 
-// 🖼️ UPDATE CLUB IMAGES - Add this route
+// UPDATE CLUB IMAGES - Add this route
 app.put('/api/clubs/:id/images', requireAuth, async (req, res) => {
   try {
     const clubId = req.params.id;
     const { logoUrl, heroImageUrl } = req.body;
 
+    // Validate input
+    if (!logoUrl && !heroImageUrl) {
+      return res.status(400).json({
+        error: 'At least one image URL (logoUrl or heroImageUrl) is required'
+      });
+    }
+
+    console.log(`Updating images for club ID: ${clubId}`);
+
     const updateData = {};
     if (logoUrl) updateData.logoUrl = logoUrl;
-    if (heroImageUrl) updateData.heroImageUrl = heroImageUrl;
+    if (heroImageUrl) {
+      updateData.heroImageUrl = heroImageUrl;
+      updateData.hasCustomHeroImage = true; // 🔑 Mark as manually set
+    }
+    updateData.updatedAt = new Date();
 
     const club = await Club.findByIdAndUpdate(
       clubId,
@@ -605,235 +618,353 @@ app.put('/api/clubs/:id/images', requireAuth, async (req, res) => {
       return res.status(404).json({ error: 'Club not found' });
     }
 
-    console.log(`✅ Updated images for club: ${club.name}`);
-    res.json({ message: 'Club images updated successfully', club });
+    console.log(`Updated images for: ${club.name}`);
+    if (heroImageUrl) console.log(`   New hero image: ${heroImageUrl}`);
+
+    res.json({
+      success: true,
+      message: 'Club images updated successfully',
+      club: {
+        id: club._id,
+        name: club.name,
+        logoUrl: club.logoUrl,
+        heroImageUrl: club.heroImageUrl,
+        hasCustomHeroImage: club.hasCustomHeroImage
+      }
+    });
 
   } catch (error) {
-    console.error('💥 Error updating club images:', error);
+    console.error(' Error updating club images:', error);
     res.status(500).json({ error: 'Failed to update club images' });
   }
 });
-// 🖼️ GIVE EACH CLUB A UNIQUE HERO IMAGE
-app.get('/api/set-hero-images', requireAuth, async (req, res) => {
-  try {
-    console.log('🎨 Setting unique hero images for all clubs...');
 
-    // Unique hero images for each club
-    const heroImages = {
-      "#include": "https://includedavis.com/_next/image?url=%2Fabout%2Fimages%2FdescPic.jpg&w=3840&q=75",
-      "Davis Filmmaking Society": "https://scontent-sjc3-1.xx.fbcdn.net/v/t39.30808-6/484339313_9598920923463421_8129779707304310584_n.jpg?_nc_cat=106&ccb=1-7&_nc_sid=3a1ebe&_nc_ohc=HKWUi9c4fYUQ7kNvwH7NXcU&_nc_oc=AdnaVLTjTam22xwP-_5I7fBdhvRowq3fOEoHxXdZaO9Sqyyy8nCvDJ3Wwl4aDkh4wXu0F594PzqNqaspGJXy0XZk&_nc_zt=23&_nc_ht=scontent-sjc3-1.xx&_nc_gid=b-pUQTSfmhjwsQJZz4S_Ng&oh=00_AfQERQglKyUNngpTJaKoARKmgG-6fQBaQV0SrToJEhVxVg&oe=688F51CA",
-      "Google Developer Student Club": "https://storage.googleapis.com/creatorspace-public/users%2Fcln22djyd00i1p301whvmgxbp%2FAXLN0jmEde3yHgMf-IMG_4612.JPG",
-      "HackDavis": "https://miro.medium.com/v2/resize:fit:1400/1*YQl_MmSsFEmQUGleWrX1LA.jpeg",
-      "Women in Computer Science": "https://engineering.ucdavis.edu/sites/g/files/dgvnsk2151/files/styles/sf_landscape_16x9/public/media/images/wics-04.jpg?h=a1e1a043&itok=1dnFRIkJ",
-      "Design Interactive": "https://davisdi.org/wp-content/uploads/2023/01/BDF3EBAA-352B-419A-BBF1-39BC872177FC_1_105_c-1.jpeg",
-      "Quantum Computing Society at Davis": "https://engineering.ucdavis.edu/sites/g/files/dgvnsk2151/files/styles/sf_landscape_16x9/public/media/images/52490699602_769427698e_k_0.jpg?h=a1e1a043&itok=9C8m4Wmr",
-      "AI Student Collective": "https://engineering.ucdavis.edu/sites/g/files/dgvnsk2151/files/media/images/Next%20to%20_The%20annual%20CS%20Research%20Symposium_.jpeg",
-      "Aggie Sports Analytics": "https://aggiesportsanalytics.com/_next/image?url=%2Fhp3bw.png&w=3840&q=75",
-      "Cyber Security Club at UC Davis": "https://cs.ucdavis.edu/sites/g/files/dgvnsk8441/files/styles/sf_landscape_16x9/public/images/article/cybersecurity2.png?h=c673cd1c&itok=JK2rjPXu",
-      "AggieWorks": "https://framerusercontent.com/images/0aiCYbgzl1BvB9G6sioq0BFcoo4.jpg",
-      "BAJA SAE": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQAlBYvGyxMiFiiCF8ARVCZqaTyX2_X9Y7-sQ&s",
-      "Club of Future Female Engineers": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTdEQiLE7rPuTguN5R7upgv1ubDzwC4Q17EKw&s",
-      "CodeLab": "https://codelabdavis.com/_astro/GroupPhoto.BmIde2tY_Z1vc07W.webp",
-      "Computer Science Tutoring Club": "https://media.licdn.com/dms/image/v2/D5616AQGFLxjjcHGaXg/profile-displaybackgroundimage-shrink_200_800/profile-displaybackgroundimage-shrink_200_800/0/1738706218012?e=2147483647&v=beta&t=F2dou-FQe5SYLy6ny6aR1HFaA4r9fT499-WFNevkrmE",
-      "Davis Data Science Club": "https://media.licdn.com/dms/image/v2/C561BAQEKjNmWZGeiug/company-background_10000/company-background_10000/0/1649187010603/data_science_club_at_utdallas_cover?e=2147483647&v=beta&t=Xy4BZ4WGD_eEmJTBCTZCaHqIspUJbxRjxzqlr80dW6E",
-      "Game Development and Arts Club": "https://cdn.downloadgram.org/?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmaWxlbmFtZSI6ImRvd25sb2FkZ3JhbS5vcmdfNDA1MjQ2Mjg5XzEwNzY2MTA5MDAzNjM0ODBfNzUxMTY2OTY1NDAyODUzOTg5X24uanBnIiwidXJsIjoiaHR0cHM6Ly9zY29udGVudC1sZ2EzLTIuY2RuaW5zdGFncmFtLmNvbS92L3Q1MS4yOTM1MC0xNS80MDUyNDYyODlfMTA3NjYxMDkwMDM2MzQ4MF83NTExNjY5NjU0MDI4NTM5ODlfbi5qcGc_c3RwPWRzdC1qcGdfZTM1X3MxMDgweDEwODBfdHQ2Jl9uY19odD1zY29udGVudC1sZ2EzLTIuY2RuaW5zdGFncmFtLmNvbSZfbmNfY2F0PTEwMCZfbmNfb2M9UTZjWjJRRjZHRU13V0RqbUJsMGJlUFJFTjhHRDZXQUdZY1hPeE8yQ2Q0SDJFN243N1BXTVdiRVdWeFd3eTZnS0J0N2lnbUZEaGZheGJEb0NESWFsWGU2UEh6bXcmX25jX29oYz1feTJJUTE4THh4b1E3a052d0ViRVBrLSZfbmNfZ2lkPWMxVjh2MEZDUTVXTWJ6TWN4RE9fTncmZWRtPUFOVEtJSW9CQUFBQSZjY2I9Ny01Jm9oPTAwX0FmUW05QUZaakN6U1k1NGxZNFloRmNnOEVVMV9DS01JUXlwRU1lZUNwODMtdkEmb2U9Njg4RjdEQTMmX25jX3NpZD1kODg1YTIiLCJleHAiOjE3NTM4NDkxODksImZvcmNlIjpmYWxzZSwiaWF0IjoxNzUzODQ1NTg5fQ.OR4OgVkgCxnLfPCqwA5tjAhrt3gkqqFPVX_-PZKT9IU",
-      "Girls Who Code at UC Davis": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRQC_ba7agblrtPuQEBU9FK6fpXtrrLccc0tg&s",
-      "Cognitive Science Student Association": "https://cogsci.ucdavis.edu/sites/g/files/dgvnsk11466/files/media/images/2022-23-cog-sci-club-officers.png",
-      "ColorStack": "https://media.licdn.com/dms/image/v2/D5622AQEfs-uFPz86aw/feedshare-shrink_800/feedshare-shrink_800/0/1729541929880?e=2147483647&v=beta&t=M7aQ6Xhb1Ab2reJBGBTiV7OsOb67me4L0BsgyOrzZes",
-      "Cyclone RoboSub": "https://cyclone-robosub.github.io/gallery/dirty-hands.jpg",
-      "Davis Data Driven Change": "https://media.licdn.com/dms/image/v2/D4E22AQHWDIuQwkKudQ/feedshare-shrink_800/B4EZS10hwLHUAg-/0/1738217234622?e=2147483647&v=beta&t=N3mxF_75Ibr87pwTV9n5V2xeB6LnZCfzhX3t2L3ccoc",
-      "Engineering Collaborative Council": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRJzCB5J0JKVV2ID9B1DiqztpfJONHo-CiHdA&s",
-      "Engineers Without Borders at UC Davis": "https://engineering.ucdavis.edu/sites/g/files/dgvnsk2151/files/styles/sf_landscape_4x3/public/media/images/Bolivia%202.JPG?h=c660573c&itok=QD3O8Rck",
-      "Food Tech Club": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTg2hkuQzm_lbgmTTOwzl6rywfi6EkopjCOVA&s",
-      "Green Innovation Network": "https://substackcdn.com/image/fetch/f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F319388ee-7303-4641-bf46-a76c171d6905_1796x1170.png",
-      "Human Resources Managment Association (HRMA)": "https://media.licdn.com/dms/image/v2/D4D0BAQFPWZ8uQQYfyQ/company-logo_200_200/company-logo_200_200/0/1727326225643?e=2147483647&v=beta&t=h4AF50RdNmOt1sUPKwX8JzlLurWmkchAPread4GuZuE",
-      "Nuerotech @ UCDavis": "https://neurotechdavis.com/assets/aboutheader20232024-DjZ4AXfB.jpeg",
-      "Product Space @ UC Davis": "https://www.davisproductspace.org/images/WhoWeAre/capstone-pres.png",
-      "SacHacks": "https://miro.medium.com/v2/resize:fill:320:214/1*ZLnH1YoLY2RvsdqS-W_kiw.png",
-      "The Davis Consulting Group": "https://images.squarespace-cdn.com/content/v1/5d71898a6704a60001e27c6c/1661475566819-9WV1TLMNDQNGUJ9ZNHU2/IMG_2084+1.png?format=1500w",
-      "The Hardware Club @ UC Davis": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSJfcBwQXEFnb1XQhVFQiPRvjnKPuP119iCdg&s",
-      "Women in Gaming at UC Davis": "https://campusrecreation.ucdavis.edu/sites/g/files/dgvnsk6556/files/styles/sf_landscape_16x9/public/media/images/51606528997_183fb3175b_c.jpg?h=827069f2&itok=ebRnUAG0",
-      "Aggie Space initiative": "https://engineering.ucdavis.edu/sites/g/files/dgvnsk2151/files/styles/sf_slideshow_full/public/media/images/ASI%2015.jpg?h=7a8a8cdf&itok=ijUelDyM",
-      "Biomedical Engineering Society (BES)": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTBS-FKjHdM5VMmhs3H1GuGSF0nRkyVjk8RaA&s",
-      "IEEE (Institute of Electrical & Electronics Engineers)": "https://scontent-sjc3-1.xx.fbcdn.net/v/t39.30808-6/472462935_10171062722225193_2476418674163943373_n.jpg?_nc_cat=106&ccb=1-7&_nc_sid=127cfc&_nc_ohc=spYpFN3D3jkQ7kNvwEHKQqU&_nc_oc=AdnzPUNTgU1N6PKizqM__WEZYPxTOFlemDBLAHbOuy_CiyTXy--pt2t5CCiIzphd_Wt9G6mUlpIhzFtpqXYOuA1d&_nc_zt=23&_nc_ht=scontent-sjc3-1.xx&_nc_gid=Mxl2V4ZPLY6FokVfpGjt9Q&oh=00_AfRg4_o0_Aco6pot2LN-Sndx9QslE15-A68VRgs2xrPavQ&oe=6890EBFC",
-      "Tau Beta Pi": "https://tbp.engineering.ucdavis.edu/files/2023/09/tbpwebsitepic2-300x151.jpg",
-      "Swift Coding Club": "https://swiftcodingucd.org/homepageImages/image2.jpeg",
-      "Finance and Investment Club": "https://images.squarespace-cdn.com/content/v1/6397cf97e73677755585fd57/38d3a78c-3610-4bb4-a887-d47957076b18/DSC05856-2.jpg",
-      "IDSA at UC Davis": "https://media.licdn.com/dms/image/v2/D5622AQE41VQnrm7V5Q/feedshare-shrink_800/B56ZUaSY9RHsAk-/0/1739902783962?e=2147483647&v=beta&t=P7rsYp8XTjLCKAnd4VKCw3sv8vZy0epSPMFVG7nv6pU",
-      "Project Catalyst": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRTX6ceYLR1WlV1wXxB4fbO62rw_xoJRKtitw&s",
-      "SACNAS": "https://lettersandsciencemag.ucdavis.edu/sites/g/files/dgvnsk15406/files/styles/sf_landscape_16x9/public/media/images/SACNAS-Group-Photo-2-Jace-Kuske.jpg?h=6eb229a4&itok=Lamhp2tc",
-      "Science Says": "https://davissciencesays.ucdavis.edu/sites/g/files/dgvnsk6006/files/inline-images/EEOXdGEUwAMP_1Z.jpg",
-      "Construction Management Club": "https://engineering.ucdavis.edu/sites/g/files/dgvnsk2151/files/styles/sf_landscape_4x3/public/media/images/IMG_9715.jpeg?h=640cca5b&itok=sKGtVvIx",
-      "EBSA": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSFZcm6GJ8aKQJleiqz0gUSauYSYoYb9f1EUQ&s",
-      "Materials Advantage Student Chapter": "https://mse.engineering.ucdavis.edu/sites/g/files/dgvnsk4451/files/media/images/MaterialsMagicShow2023.jpg",
-      "American Institute of Chemical Engineers": "https://aiche.ucdavis.edu/sites/g/files/dgvnsk5996/files/styles/sf_image_banner/public/media/images/IMG_2282_1_80.jpeg?itok=9hOLB5ns",
-    };
+// Unique hero images for each club
+const heroImages = {
+  "#include": "https://includedavis.com/_next/image?url=%2Fabout%2Fimages%2FdescPic.jpg&w=3840&q=75",
+  "Davis Filmmaking Society": "https://scontent-sjc3-1.xx.fbcdn.net/v/t39.30808-6/484339313_9598920923463421_8129779707304310584_n.jpg?_nc_cat=106&ccb=1-7&_nc_sid=3a1ebe&_nc_ohc=HKWUi9c4fYUQ7kNvwH7NXcU&_nc_oc=AdnaVLTjTam22xwP-_5I7fBdhvRowq3fOEoHxXdZaO9Sqyyy8nCvDJ3Wwl4aDkh4wXu0F594PzqNqaspGJXy0XZk&_nc_zt=23&_nc_ht=scontent-sjc3-1.xx&_nc_gid=b-pUQTSfmhjwsQJZz4S_Ng&oh=00_AfQERQglKyUNngpTJaKoARKmgG-6fQBaQV0SrToJEhVxVg&oe=688F51CA",
+  "Google Developer Student Club": "https://storage.googleapis.com/creatorspace-public/users%2Fcln22djyd00i1p301whvmgxbp%2FAXLN0jmEde3yHgMf-IMG_4612.JPG",
+  "HackDavis": "https://miro.medium.com/v2/resize:fit:1400/1*YQl_MmSsFEmQUGleWrX1LA.jpeg",
+  "Women in Computer Science": "https://engineering.ucdavis.edu/sites/g/files/dgvnsk2151/files/styles/sf_landscape_16x9/public/media/images/wics-04.jpg?h=a1e1a043&itok=1dnFRIkJ",
+  "Design Interactive": "https://davisdi.org/wp-content/uploads/2023/01/BDF3EBAA-352B-419A-BBF1-39BC872177FC_1_105_c-1.jpeg",
+  "Quantum Computing Society at Davis": "https://engineering.ucdavis.edu/sites/g/files/dgvnsk2151/files/styles/sf_landscape_16x9/public/media/images/52490699602_769427698e_k_0.jpg?h=a1e1a043&itok=9C8m4Wmr",
+  "AI Student Collective": "https://engineering.ucdavis.edu/sites/g/files/dgvnsk2151/files/media/images/Next%20to%20_The%20annual%20CS%20Research%20Symposium_.jpeg",
+  "Aggie Sports Analytics": "https://aggiesportsanalytics.com/_next/image?url=%2Fhp3bw.png&w=3840&q=75",
+  "Cyber Security Club at UC Davis": "https://cs.ucdavis.edu/sites/g/files/dgvnsk8441/files/styles/sf_landscape_16x9/public/images/article/cybersecurity2.png?h=c673cd1c&itok=JK2rjPXu",
+  "AggieWorks": "https://framerusercontent.com/images/0aiCYbgzl1BvB9G6sioq0BFcoo4.jpg",
+  "BAJA SAE": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQAlBYvGyxMiFiiCF8ARVCZqaTyX2_X9Y7-sQ&s",
+  "Club of Future Female Engineers": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTdEQiLE7rPuTguN5R7upgv1ubDzwC4Q17EKw&s",
+  "CodeLab": "https://codelabdavis.com/_astro/GroupPhoto.BmIde2tY_Z1vc07W.webp",
+  "Computer Science Tutoring Club": "https://media.licdn.com/dms/image/v2/D5616AQGFLxjjcHGaXg/profile-displaybackgroundimage-shrink_200_800/profile-displaybackgroundimage-shrink_200_800/0/1738706218012?e=2147483647&v=beta&t=F2dou-FQe5SYLy6ny6aR1HFaA4r9fT499-WFNevkrmE",
+  "Davis Data Science Club": "https://media.licdn.com/dms/image/v2/C561BAQEKjNmWZGeiug/company-background_10000/company-background_10000/0/1649187010603/data_science_club_at_utdallas_cover?e=2147483647&v=beta&t=Xy4BZ4WGD_eEmJTBCTZCaHqIspUJbxRjxzqlr80dW6E",
+  "Game Development and Arts Club": "https://cdn.downloadgram.org/?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmaWxlbmFtZSI6ImRvd25sb2FkZ3JhbS5vcmdfNDA1MjQ2Mjg5XzEwNzY2MTA5MDAzNjM0ODBfNzUxMTY2OTY1NDAyODUzOTg5X24uanBnIiwidXJsIjoiaHR0cHM6Ly9zY29udGVudC1sZ2EzLTIuY2RuaW5zdGFncmFtLmNvbS92L3Q1MS4yOTM1MC0xNS80MDUyNDYyODlfMTA3NjYxMDkwMDM2MzQ4MF83NTExNjY5NjU0MDI4NTM5ODlfbi5qcGc_c3RwPWRzdC1qcGdfZTM1X3MxMDgweDEwODBfdHQ2Jl9uY19odD1zY29udGVudC1sZ2EzLTIuY2RuaW5zdGFncmFtLmNvbSZfbmNfY2F0PTEwMCZfbmNfb2M9UTZjWjJRRjZHRU13V0RqbUJsMGJlUFJFTjhHRDZXQUdZY1hPeE8yQ2Q0SDJFN243N1BXTVdiRVdWeFd3eTZnS0J0N2lnbUZEaGZheGJEb0NESWFsWGU2UEh6bXcmX25jX29oYz1feTJJUTE4THh4b1E3a052d0ViRVBrLSZfbmNfZ2lkPWMxVjh2MEZDUTVXTWJ6TWN4RE9fTncmZWRtPUFOVEtJSW9CQUFBQSZjY2I9Ny01Jm9oPTAwX0FmUW05QUZaakN6U1k1NGxZNFloRmNnOEVVMV9DS01JUXlwRU1lZUNwODMtdkEmb2U9Njg4RjdEQTMmX25jX3NpZD1kODg1YTIiLCJleHAiOjE3NTM4NDkxODksImZvcmNlIjpmYWxzZSwiaWF0IjoxNzUzODQ1NTg5fQ.OR4OgVkgCxnLfPCqwA5tjAhrt3gkqqFPVX_-PZKT9IU",
+  "Girls Who Code at UC Davis": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRQC_ba7agblrtPuQEBU9FK6fpXtrrLccc0tg&s",
+  "Cognitive Science Student Association": "https://cogsci.ucdavis.edu/sites/g/files/dgvnsk11466/files/media/images/2022-23-cog-sci-club-officers.png",
+  "ColorStack": "https://media.licdn.com/dms/image/v2/D5622AQEfs-uFPz86aw/feedshare-shrink_800/feedshare-shrink_800/0/1729541929880?e=2147483647&v=beta&t=M7aQ6Xhb1Ab2reJBGBTiV7OsOb67me4L0BsgyOrzZes",
+  "Cyclone RoboSub": "https://cyclone-robosub.github.io/gallery/dirty-hands.jpg",
+  "Davis Data Driven Change": "https://media.licdn.com/dms/image/v2/D4E22AQHWDIuQwkKudQ/feedshare-shrink_800/B4EZS10hwLHUAg-/0/1738217234622?e=2147483647&v=beta&t=N3mxF_75Ibr87pwTV9n5V2xeB6LnZCfzhX3t2L3ccoc",
+  "Engineering Collaborative Council": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRJzCB5J0JKVV2ID9B1DiqztpfJONHo-CiHdA&s",
+  "Engineers Without Borders at UC Davis": "https://engineering.ucdavis.edu/sites/g/files/dgvnsk2151/files/styles/sf_landscape_4x3/public/media/images/Bolivia%202.JPG?h=c660573c&itok=QD3O8Rck",
+  "Food Tech Club": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTg2hkuQzm_lbgmTTOwzl6rywfi6EkopjCOVA&s",
+  "Green Innovation Network": "https://substackcdn.com/image/fetch/f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F319388ee-7303-4641-bf46-a76c171d6905_1796x1170.png",
+  "Human Resources Managment Association (HRMA)": "https://media.licdn.com/dms/image/v2/D4D0BAQFPWZ8uQQYfyQ/company-logo_200_200/company-logo_200_200/0/1727326225643?e=2147483647&v=beta&t=h4AF50RdNmOt1sUPKwX8JzlLurWmkchAPread4GuZuE",
+  "Nuerotech @ UCDavis": "https://neurotechdavis.com/assets/aboutheader20232024-DjZ4AXfB.jpeg",
+  "Product Space @ UC Davis": "https://www.davisproductspace.org/images/WhoWeAre/capstone-pres.png",
+  "SacHacks": "https://miro.medium.com/v2/resize:fill:320:214/1*ZLnH1YoLY2RvsdqS-W_kiw.png",
+  "The Davis Consulting Group": "https://images.squarespace-cdn.com/content/v1/5d71898a6704a60001e27c6c/1661475566819-9WV1TLMNDQNGUJ9ZNHU2/IMG_2084+1.png?format=1500w",
+  "The Hardware Club @ UC Davis": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSJfcBwQXEFnb1XQhVFQiPRvjnKPuP119iCdg&s",
+  "Women in Gaming at UC Davis": "https://campusrecreation.ucdavis.edu/sites/g/files/dgvnsk6556/files/styles/sf_landscape_16x9/public/media/images/51606528997_183fb3175b_c.jpg?h=827069f2&itok=ebRnUAG0",
+  "Aggie Space initiative": "https://engineering.ucdavis.edu/sites/g/files/dgvnsk2151/files/styles/sf_slideshow_full/public/media/images/ASI%2015.jpg?h=7a8a8cdf&itok=ijUelDyM",
+  "Biomedical Engineering Society (BES)": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTBS-FKjHdM5VMmhs3H1GuGSF0nRkyVjk8RaA&s",
+  "IEEE (Institute of Electrical & Electronics Engineers)": "https://scontent-sjc3-1.xx.fbcdn.net/v/t39.30808-6/472462935_10171062722225193_2476418674163943373_n.jpg?_nc_cat=106&ccb=1-7&_nc_sid=127cfc&_nc_ohc=spYpFN3D3jkQ7kNvwEHKQqU&_nc_oc=AdnzPUNTgU1N6PKizqM__WEZYPxTOFlemDBLAHbOuy_CiyTXy--pt2t5CCiIzphd_Wt9G6mUlpIhzFtpqXYOuA1d&_nc_zt=23&_nc_ht=scontent-sjc3-1.xx&_nc_gid=Mxl2V4ZPLY6FokVfpGjt9Q&oh=00_AfRg4_o0_Aco6pot2LN-Sndx9QslE15-A68VRgs2xrPavQ&oe=6890EBFC",
+  "Tau Beta Pi": "https://tbp.engineering.ucdavis.edu/files/2023/09/tbpwebsitepic2-300x151.jpg",
+  "Swift Coding Club": "https://swiftcodingucd.org/homepageImages/image2.jpeg",
+  "Finance and Investment Club": "https://images.squarespace-cdn.com/content/v1/6397cf97e73677755585fd57/38d3a78c-3610-4bb4-a887-d47957076b18/DSC05856-2.jpg",
+  "IDSA at UC Davis": "https://media.licdn.com/dms/image/v2/D5622AQE41VQnrm7V5Q/feedshare-shrink_800/B56ZUaSY9RHsAk-/0/1739902783962?e=2147483647&v=beta&t=P7rsYp8XTjLCKAnd4VKCw3sv8vZy0epSPMFVG7nv6pU",
+  "Project Catalyst": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRTX6ceYLR1WlV1wXxB4fbO62rw_xoJRKtitw&s",
+  "SACNAS": "https://lettersandsciencemag.ucdavis.edu/sites/g/files/dgvnsk15406/files/styles/sf_landscape_16x9/public/media/images/SACNAS-Group-Photo-2-Jace-Kuske.jpg?h=6eb229a4&itok=Lamhp2tc",
+  "Science Says": "https://davissciencesays.ucdavis.edu/sites/g/files/dgvnsk6006/files/inline-images/EEOXdGEUwAMP_1Z.jpg",
+  "Construction Management Club": "https://engineering.ucdavis.edu/sites/g/files/dgvnsk2151/files/styles/sf_landscape_4x3/public/media/images/IMG_9715.jpeg?h=640cca5b&itok=sKGtVvIx",
+  "EBSA": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSFZcm6GJ8aKQJleiqz0gUSauYSYoYb9f1EUQ&s",
+  "Materials Advantage Student Chapter": "https://mse.engineering.ucdavis.edu/sites/g/files/dgvnsk4451/files/media/images/MaterialsMagicShow2023.jpg",
+  "American Institute of Chemical Engineers": "https://aiche.ucdavis.edu/sites/g/files/dgvnsk5996/files/styles/sf_image_banner/public/media/images/IMG_2282_1_80.jpeg?itok=9hOLB5ns",
+};
 
-    let updated = 0;
+let updated = 0;
+let skipped = 0;
 
-    for (const [clubName, heroUrl] of Object.entries(heroImages)) {
-      const club = await Club.findOneAndUpdate(
-        { name: clubName },
-        { heroImageUrl: heroUrl },
-        { new: true }
-      );
+for (const [clubName, defaultHeroUrl] of Object.entries(defaultImages)) {
+  const club = await Club.findOne({ name: clubName });
 
-      if (club) {
-        updated++;
-        console.log(`✅ Updated hero image for: ${clubName}`);
+  if (!club) {
+    console.log(` Club not found: ${clubName}`);
+    continue;
+  }
+
+  //  ONLY update if club doesn't have a custom hero image
+  if (!club.hasCustomHeroImage && (!club.heroImageUrl || club.heroImageUrl.includes('default-club-hero'))) {
+    await Club.findOneAndUpdate(
+      { name: clubName },
+      {
+        heroImageUrl: defaultHeroUrl,
+        hasCustomHeroImage: false // Mark as default, not custom
       }
-    }
+    );
+    updated++;
+    console.log(` Set default image for: ${clubName}`);
+  } else {
+    skipped++;
+    console.log(` Skipped (has custom image): ${clubName}`);
+  }
+}
+
+res.json({
+  success: true,
+  message: `Set defaults for ${updated} clubs, protected ${skipped} custom images`,
+  updated,
+  skipped,
+  total: Object.keys(defaultImages).length
+});
+
+  } catch (error) {
+  console.error(' Error setting default images:', error);
+  res.status(500).json({ error: 'Failed to set default images' });
+}
+});
+app.get('/api/clubs/image-management', requireAuth, async (req, res) => {
+  try {
+    const clubs = await Club.find({ isActive: true })
+      .select('name logoUrl heroImageUrl hasCustomHeroImage')
+      .sort({ name: 1 });
+
+    const imageData = clubs.map(club => ({
+      id: club._id,
+      name: club.name,
+      logoUrl: club.logoUrl,
+      heroImageUrl: club.heroImageUrl,
+      hasCustomHeroImage: club.hasCustomHeroImage || false,
+      imageStatus: getImageStatus(club)
+    }));
 
     res.json({
-      message: `Updated ${updated} club hero images`,
-      updated: updated,
-      total: Object.keys(heroImages).length
+      clubs: imageData,
+      summary: {
+        total: clubs.length,
+        withCustomHero: clubs.filter(c => c.hasCustomHeroImage).length,
+        withDefaultHero: clubs.filter(c => c.heroImageUrl && !c.hasCustomHeroImage).length,
+        withoutHero: clubs.filter(c => !c.heroImageUrl).length
+      }
     });
 
   } catch (error) {
-    console.error('💥 Error updating hero images:', error);
-    res.status(500).json({ error: 'Failed to update hero images' });
+    console.error(' Error fetching image management data:', error);
+    res.status(500).json({ error: 'Failed to fetch image management data' });
   }
 });
 
-//RESIZE A CLUBS HERO IMAGE 
-app.get('/api/apply-custom-hero-sizing', requireAuth, async (req, res) => {
+function getImageStatus(club) {
+  if (club.hasCustomHeroImage) return 'custom';
+  if (club.heroImageUrl) return 'default';
+  return 'none';
+}
+app.post('/api/clubs/migrate', requireAuth, async (req, res) => {
   try {
-    console.log('🎨 Applying custom hero image sizing...');
-
-    // Club-specific customizations
-    const clubCustomizations = [
-      {
-        name: "#include",
-        heroImageUrl: "https://includedavis.com/_next/image?url=%2Fabout%2Fimages%2FdescPic.jpg&w=1200&q=75", // Reduced from w=3840
-        customCSS: { backgroundSize: '10%', backgroundPosition: 'center' }
-      },
-      {
-        name: "Aggie Sports Analytics",
-        heroImageUrl: "https://aggiesportsanalytics.com/_next/image?url=%2Fhp3bw.png&w=1200&q=75", // Reduced from w=3840
-        customCSS: { backgroundSize: 'cover', backgroundPosition: 'center bottom' }
-      },
-      {
-        name: "Google Developer Student Club",
-        heroImageUrl: "https://storage.googleapis.com/creatorspace-public/users%2Fcln22djyd00i1p301whvmgxbp%2FAXLN0jmEde3yHgMf-IMG_4612.JPG=s1200", // Added =s1200
-        customCSS: { backgroundSize: '120%', backgroundPosition: 'center' }
-      },
-      {
-        name: "HackDavis",
-        heroImageUrl: "https://miro.medium.com/v2/resize:fit:1200/1*YQl_MmSsFEmQUGleWrX1LA.jpeg", // Changed fit:1400 to fit:1200
-        customCSS: { backgroundSize: 'contain', backgroundPosition: 'center' }
-      },
-      {
-        name: "Women in Computer Science",
-        heroImageUrl: "https://engineering.ucdavis.edu/sites/g/files/dgvnsk2151/files/styles/sf_landscape_16x9/public/media/images/wics-04.jpg?h=a1e1a043&itok=1dnFRIkJ&width=1200", // Added &width=1200
-        customCSS: { backgroundSize: 'cover', backgroundPosition: '30% 40%' }
-      },
-      {
-        name: "AI Student Collective",
-        heroImageUrl: "https://images.unsplash.com/photo-1677442136019-21780ecad995?w=1200&h=600&fit=crop&crop=center", // Added sizing params
-        customCSS: { backgroundSize: 'cover', backgroundPosition: 'left center' }
-      },
-      {
-        name: "CodeLab",
-        heroImageUrl: "https://codelabdavis.com/_astro/GroupPhoto.BmIde2tY_Z1vc07W.webp",
-        customCSS: { backgroundSize: '100% 100%', backgroundPosition: 'center' } // Stretch to fit
-      },
-      {
-        name: "Design Interactive",
-        heroImageUrl: "https://davisdi.org/wp-content/uploads/2023/01/BDF3EBAA-352B-419A-BBF1-39BC872177FC_1_105_c-1.jpeg",
-        customCSS: { backgroundSize: '70%', backgroundPosition: 'center' }
-      }
-    ];
-
-    let updated = 0;
-    const results = [];
-
-    for (const customization of clubCustomizations) {
-      // Update the club with new hero URL and custom CSS properties
-      const updateData = {
-        heroImageUrl: customization.heroImageUrl
-      };
-
-      // Add custom CSS properties if they exist
-      if (customization.customCSS) {
-        updateData.heroImageCSS = customization.customCSS;
-      }
-
-      const club = await Club.findOneAndUpdate(
-        { name: customization.name },
-        updateData,
-        { new: true }
-      );
-
-      if (club) {
-        updated++;
-        results.push(`✅ ${customization.name}: Updated with custom sizing`);
-        console.log(`✅ Updated with custom sizing: ${customization.name}`);
-      } else {
-        results.push(`❌ ${customization.name}: Not found`);
-        console.log(`❌ Not found: ${customization.name}`);
-      }
-    }
-
-    res.json({
-      message: `Applied custom sizing to ${updated} clubs`,
-      updated: updated,
-      total: clubCustomizations.length,
-      details: results
-    });
-
-  } catch (error) {
-    console.error('💥 Error applying custom sizing:', error);
-    res.status(500).json({ error: 'Failed to apply custom sizing' });
-  }
-});
-
-// METHOD 4: Individual club resizing route
-app.put('/api/clubs/:id/resize', requireAuth, async (req, res) => {
-  try {
-    const { clubId } = req.params;
-    const {
-      heroImageUrl,
-      backgroundSize = 'cover',
-      backgroundPosition = 'center'
-    } = req.body;
-
-    // Update club with new sizing
-    const club = await Club.findByIdAndUpdate(
-      clubId,
-      {
-        heroImageUrl: heroImageUrl,
-        heroImageCSS: {
-          backgroundSize: backgroundSize,
-          backgroundPosition: backgroundPosition
-        }
-      },
-      { new: true }
+    const result = await Club.updateMany(
+      { hasCustomHeroImage: { $exists: false } },
+      { hasCustomHeroImage: false }
     );
 
-    if (!club) {
-      return res.status(404).json({ error: 'Club not found' });
-    }
-
-    console.log(`✅ Updated sizing for: ${club.name}`);
     res.json({
-      message: 'Club hero image sizing updated successfully',
-      club: club
+      success: true,
+      message: `Updated ${result.modifiedCount} clubs`,
+      modifiedCount: result.modifiedCount
     });
 
   } catch (error) {
-    console.error('💥 Error updating club sizing:', error);
-    res.status(500).json({ error: 'Failed to update club sizing' });
+    console.error(' Migration error:', error);
+    res.status(500).json({ error: 'Migration failed' });
   }
 });
 
-// 🎟️ JOIN EVENT - Enhanced version
+app.put('/api/clubs/bulk-update', requireAuth, async (req, res) => {
+  try {
+    const { updates } = req.body;
+
+    if (!updates || !Array.isArray(updates)) {
+      return res.status(400).json({
+        error: 'updates array is required',
+        example: {
+          updates: [
+            { clubName: "Club Name 1", heroImageUrl: "https://..." },
+            { clubName: "Club Name 2", heroImageUrl: "https://..." }
+          ]
+        }
+      });
+    }
+
+    console.log(` Bulk updating ${updates.length} clubs...`);
+
+    const results = [];
+
+    for (const update of updates) {
+      try {
+        const { clubName, heroImageUrl } = update;
+
+        if (!clubName || !heroImageUrl) {
+          results.push({
+            clubName: clubName || 'Unknown',
+            success: false,
+            error: 'Missing clubName or heroImageUrl'
+          });
+          continue;
+        }
+
+        const club = await Club.findOneAndUpdate(
+          { name: { $regex: new RegExp(`^${clubName}$`, 'i') } },
+          {
+            heroImageUrl: heroImageUrl,
+            hasCustomHeroImage: true,
+            updatedAt: new Date()
+          },
+          { new: true }
+        );
+
+        if (club) {
+          results.push({
+            clubName: club.name,
+            success: true,
+            heroImageUrl: club.heroImageUrl
+          });
+          console.log(` Updated: ${club.name}`);
+        } else {
+          results.push({
+            clubName,
+            success: false,
+            error: 'Club not found'
+          });
+        }
+
+      } catch (error) {
+        results.push({
+          clubName: update.clubName || 'Unknown',
+          success: false,
+          error: error.message
+        });
+      }
+    }
+
+    const successCount = results.filter(r => r.success).length;
+    const failCount = results.filter(r => !r.success).length;
+
+    console.log(` Bulk update complete: ${successCount} success, ${failCount} failed`);
+
+    res.json({
+      success: true,
+      message: `Updated ${successCount}/${updates.length} clubs`,
+      successCount,
+      failCount,
+      results
+    });
+
+  } catch (error) {
+    console.error(' Bulk update error:', error);
+    res.status(500).json({ error: 'Bulk update failed: ' + error.message });
+  }
+});
+app.put('/api/test/bulk-update', async (req, res) => {
+  try {
+    const { updates } = req.body;
+
+    if (!updates || !Array.isArray(updates)) {
+      return res.status(400).json({
+        error: 'updates array is required',
+        example: {
+          updates: [
+            { clubName: "Club Name 1", heroImageUrl: "https://..." },
+            { clubName: "Club Name 2", heroImageUrl: "https://..." }
+          ]
+        }
+      });
+    }
+
+    console.log(` TEST: Bulk updating ${updates.length} clubs...`);
+
+    const results = [];
+
+    for (const update of updates) {
+      try {
+        const { clubName, heroImageUrl } = update;
+
+        if (!clubName || !heroImageUrl) {
+          results.push({
+            clubName: clubName || 'Unknown',
+            success: false,
+            error: 'Missing clubName or heroImageUrl'
+          });
+          continue;
+        }
+
+        const club = await Club.findOneAndUpdate(
+          { name: { $regex: new RegExp(`^${clubName}$`, 'i') } },
+          {
+            heroImageUrl: heroImageUrl,
+            hasCustomHeroImage: true,
+            updatedAt: new Date()
+          },
+          { new: true }
+        );
+
+        if (club) {
+          results.push({
+            clubName: club.name,
+            success: true,
+            heroImageUrl: club.heroImageUrl
+          });
+          console.log(` TEST: Updated ${club.name}`);
+        } else {
+          results.push({
+            clubName,
+            success: false,
+            error: 'Club not found'
+          });
+          console.log(` TEST: Club not found: ${clubName}`);
+        }
+
+      } catch (error) {
+        results.push({
+          clubName: update.clubName || 'Unknown',
+          success: false,
+          error: error.message
+        });
+        console.error(` TEST: Error updating ${update.clubName}:`, error);
+      }
+    }
+
+    const successCount = results.filter(r => r.success).length;
+    const failCount = results.filter(r => !r.success).length;
+
+    console.log(` TEST: Bulk update complete - ${successCount} success, ${failCount} failed`);
+
+    res.json({
+      success: true,
+      message: `TEST: Updated ${successCount}/${updates.length} clubs`,
+      successCount,
+      failCount,
+      results
+    });
+
+  } catch (error) {
+    console.error(' TEST: Bulk update error:', error);
+    res.status(500).json({ error: 'Test bulk update failed: ' + error.message });
+  }
+});
+//  JOIN EVENT - Enhanced version
 app.post('/api/events/:id/join', requireAuth, async (req, res) => {
   try {
     const eventId = req.params.id;
     const userId = req.session.userId;
 
-    console.log(`🎟️ User ${req.session.userEmail} attempting to join event ${eventId}`);
+    console.log(`User ${req.session.userEmail} attempting to join event ${eventId}`);
 
     const event = await Event.findById(eventId);
     if (!event) {
@@ -866,7 +997,7 @@ app.post('/api/events/:id/join', requireAuth, async (req, res) => {
     event.attendees.push(userId);
     await event.save();
 
-    console.log(`✅ User ${req.session.userEmail} successfully joined event: ${event.title}`);
+    console.log(` User ${req.session.userEmail} successfully joined event: ${event.title}`);
 
     res.json({
       success: true,
@@ -878,19 +1009,19 @@ app.post('/api/events/:id/join', requireAuth, async (req, res) => {
     });
 
   } catch (error) {
-    console.error('💥 Error joining event:', error);
+    console.error(' Error joining event:', error);
     res.status(500).json({ error: 'Failed to join event' });
   }
 });
 
 
-// 🗑️ LEAVE EVENT
+//  LEAVE EVENT
 app.delete('/api/events/:id/join', requireAuth, async (req, res) => {
   try {
     const eventId = req.params.id;
     const userId = req.session.userId;
 
-    console.log(`🚪 User ${req.session.userEmail} attempting to leave event ${eventId}`);
+    console.log(` User ${req.session.userEmail} attempting to leave event ${eventId}`);
 
     const event = await Event.findById(eventId);
     if (!event) {
@@ -909,7 +1040,7 @@ app.delete('/api/events/:id/join', requireAuth, async (req, res) => {
     event.attendees = event.attendees.filter(id => !id.equals(userId));
     await event.save();
 
-    console.log(`✅ User ${req.session.userEmail} successfully left event: ${event.title}`);
+    console.log(` User ${req.session.userEmail} successfully left event: ${event.title}`);
 
     res.json({
       success: true,
@@ -921,7 +1052,7 @@ app.delete('/api/events/:id/join', requireAuth, async (req, res) => {
     });
 
   } catch (error) {
-    console.error('💥 Error leaving event:', error);
+    console.error(' Error leaving event:', error);
     res.status(500).json({ error: 'Failed to leave event' });
   }
 });
@@ -929,7 +1060,7 @@ app.get('/niche-landing', (req, res) => {
   res.sendFile(path.join(__dirname, '../frontend/pages/niche-landing.html'));
 });
 
-// 🔖 ADD BOOKMARK - Save a club to user's bookmarks
+//  ADD BOOKMARK - Save a club to user's bookmarks
 app.post('/api/bookmarks', requireAuth, async (req, res) => {
   try {
     const { clubId } = req.body;
@@ -939,7 +1070,7 @@ app.post('/api/bookmarks', requireAuth, async (req, res) => {
       return res.status(400).json({ error: 'Club ID is required' });
     }
 
-    console.log(`📌 Adding bookmark: ${clubId} for user: ${req.session.userEmail}`);
+    console.log(` Adding bookmark: ${clubId} for user: ${req.session.userEmail}`);
 
     // Check if club exists
     const Club = require('./models/Club');
@@ -972,17 +1103,17 @@ app.post('/api/bookmarks', requireAuth, async (req, res) => {
     }
 
   } catch (error) {
-    console.error('💥 Error adding bookmark:', error);
+    console.error(' Error adding bookmark:', error);
     res.status(500).json({ error: 'Failed to add bookmark' });
   }
 });
 
-// 🗑️ REMOVE BOOKMARK - Remove a club from user's bookmarks
+//  REMOVE BOOKMARK - Remove a club from user's bookmarks
 app.delete('/api/bookmarks/:clubId', requireAuth, async (req, res) => {
   try {
     const { clubId } = req.params;
 
-    console.log(`🗑️ Removing bookmark: ${clubId} for user: ${req.session.userEmail}`);
+    console.log(` Removing bookmark: ${clubId} for user: ${req.session.userEmail}`);
 
     // Get user and remove bookmark
     const user = await User.findById(req.session.userId);
@@ -1007,12 +1138,12 @@ app.delete('/api/bookmarks/:clubId', requireAuth, async (req, res) => {
     }
 
   } catch (error) {
-    console.error('💥 Error removing bookmark:', error);
+    console.error(' Error removing bookmark:', error);
     res.status(500).json({ error: 'Failed to remove bookmark' });
   }
 });
 
-// 🔍 CHECK BOOKMARK STATUS - Check if a specific club is bookmarked
+//  CHECK BOOKMARK STATUS - Check if a specific club is bookmarked
 app.get('/api/bookmarks/check/:clubId', requireAuth, async (req, res) => {
   try {
     const { clubId } = req.params;
@@ -1030,7 +1161,7 @@ app.get('/api/bookmarks/check/:clubId', requireAuth, async (req, res) => {
     });
 
   } catch (error) {
-    console.error('💥 Error checking bookmark:', error);
+    console.error(' Error checking bookmark:', error);
     res.status(500).json({ error: 'Failed to check bookmark status' });
   }
 });
@@ -1060,7 +1191,7 @@ app.get('/api/events/:id/status', requireAuth, async (req, res) => {
     });
 
   } catch (error) {
-    console.error('💥 Error checking event status:', error);
+    console.error(' Error checking event status:', error);
     res.status(500).json({ error: 'Failed to check event status' });
   }
 });
@@ -1121,13 +1252,13 @@ app.get('/api/events/stats', requireAuth, async (req, res) => {
 });
 
 
-// 👤 USER DASHBOARD - Protected route for user profile and management
+//  USER DASHBOARD - Protected route for user profile and management
 app.get('/dashboard', requireAuth, (req, res) => {
   console.log('Dashboard accessed by:', req.session.userEmail);
   res.sendFile(path.join(__dirname, '../frontend/pages/dashboard.html'));
 });
 
-// 🏛️ GET ALL CLUBS - Replace static HTML cards
+//  GET ALL CLUBS - Replace static HTML cards
 app.get('/api/clubs', async (req, res) => {
   try {
     const clubs = await Club.find({ isActive: true })
@@ -1142,7 +1273,7 @@ app.get('/api/clubs', async (req, res) => {
   }
 });
 
-// 🔍 SEARCH CLUBS - Database-powered search  
+//  SEARCH CLUBS - Database-powered search  
 app.get('/api/clubs/search', async (req, res) => {
   try {
     const {
@@ -1155,13 +1286,13 @@ app.get('/api/clubs/search', async (req, res) => {
       limit        // Results per page (default 10)
     } = req.query;
 
-    console.log('🔍 Advanced search request:', req.query);
+    console.log(' Advanced search request:', req.query);
 
-    // 📊 BUILD SEARCH PIPELINE
+    //  BUILD SEARCH PIPELINE
     let searchCriteria = { isActive: true };
     let sortCriteria = {};
 
-    // 🔤 TEXT SEARCH - Search across multiple fields
+    //  TEXT SEARCH - Search across multiple fields
     if (q && q.trim()) {
       searchCriteria.$or = [
         { name: { $regex: q, $options: 'i' } },
@@ -1170,7 +1301,7 @@ app.get('/api/clubs/search', async (req, res) => {
       ];
     }
 
-    // 🏷️ TAG FILTERING - Support multiple tags
+    //  TAG FILTERING - Support multiple tags
     if (tags) {
       const tagArray = tags.split(',').map(tag => tag.trim().toLowerCase());
       // Use $in for "OR" logic (club has ANY of these tags)
@@ -1180,12 +1311,12 @@ app.get('/api/clubs/search', async (req, res) => {
       // searchCriteria.tags = { $all: tagArray };
     }
 
-    // 📂 CATEGORY FILTERING
+    //  CATEGORY FILTERING
     if (category && category !== 'all') {
       searchCriteria.category = category;
     }
 
-    // 📈 SORTING LOGIC
+    //  SORTING LOGIC
     switch (sortBy) {
       case 'name':
         sortCriteria.name = sortOrder === 'desc' ? -1 : 1;
@@ -1200,12 +1331,12 @@ app.get('/api/clubs/search', async (req, res) => {
         sortCriteria.memberCount = -1; // Default: most popular first
     }
 
-    // 📄 PAGINATION SETUP
+    //  PAGINATION SETUP
     const pageNum = parseInt(page) || 1;
     const pageLimit = parseInt(limit) || 10;
     const skip = (pageNum - 1) * pageLimit;
 
-    // 🗃️ EXECUTE SEARCH WITH PAGINATION
+    //  EXECUTE SEARCH WITH PAGINATION
     const [clubs, totalCount] = await Promise.all([
       Club.find(searchCriteria)
         .sort(sortCriteria)
@@ -1216,14 +1347,14 @@ app.get('/api/clubs/search', async (req, res) => {
       Club.countDocuments(searchCriteria) // Get total for pagination
     ]);
 
-    // 📊 CALCULATE PAGINATION INFO
+    //  CALCULATE PAGINATION INFO
     const totalPages = Math.ceil(totalCount / pageLimit);
     const hasNextPage = pageNum < totalPages;
     const hasPreviousPage = pageNum > 1;
 
-    console.log(`✅ Search found ${totalCount} clubs, returning page ${pageNum}/${totalPages}`);
+    console.log(` Search found ${totalCount} clubs, returning page ${pageNum}/${totalPages}`);
 
-    // 📤 SEND COMPREHENSIVE RESPONSE
+    //  SEND COMPREHENSIVE RESPONSE
     res.json({
       clubs,
       pagination: {
@@ -1244,7 +1375,7 @@ app.get('/api/clubs/search', async (req, res) => {
     });
 
   } catch (error) {
-    console.error('💥 Search error:', error);
+    console.error(' Search error:', error);
     res.status(500).json({
       error: 'Search failed',
       message: error.message
@@ -1252,10 +1383,10 @@ app.get('/api/clubs/search', async (req, res) => {
   }
 });
 
-// 📊 GET SEARCH METADATA - Categories, popular tags, etc.
+//  GET SEARCH METADATA - Categories, popular tags, etc.
 app.get('/api/clubs/metadata', async (req, res) => {
   try {
-    console.log('📊 Fetching club metadata...');
+    console.log(' Fetching club metadata...');
 
     const [categories, tagStats, totalClubs] = await Promise.all([
       // Get all unique categories
@@ -1288,10 +1419,10 @@ app.get('/api/clubs/metadata', async (req, res) => {
       ]
     });
 
-    console.log(`📊 Metadata: ${categories.length} categories, ${tagStats.length} tags, ${totalClubs} clubs`);
+    console.log(` Metadata: ${categories.length} categories, ${tagStats.length} tags, ${totalClubs} clubs`);
 
   } catch (error) {
-    console.error('💥 Metadata error:', error);
+    console.error(' Metadata error:', error);
     res.status(500).json({ error: 'Failed to fetch metadata' });
   }
 });
@@ -1301,17 +1432,17 @@ app.get('/api/clubs/metadata', async (req, res) => {
 // =============================================================================
 // Insert these routes after your existing club routes
 
-// 🏛️ CLUB DETAIL PAGE - Serve the club detail HTML
+//  CLUB DETAIL PAGE - Serve the club detail HTML
 app.get('/club/:id', requireAuth, (req, res) => {
   console.log('Club detail page accessed for ID:', req.params.id);
   res.sendFile(path.join(__dirname, '../frontend/pages/club-detail.html'));
 });
 
-// 🔍 GET SINGLE CLUB DETAILS - API endpoint for club data
+//  GET SINGLE CLUB DETAILS - API endpoint for club data
 app.get('/api/clubs/:id', async (req, res) => {
   try {
     const clubId = req.params.id;
-    console.log(`📡 Fetching club details for ID: ${clubId}`);
+    console.log(` Fetching club details for ID: ${clubId}`);
 
     // Validate ObjectId format
     if (!mongoose.Types.ObjectId.isValid(clubId)) {
@@ -1330,13 +1461,13 @@ app.get('/api/clubs/:id', async (req, res) => {
       return res.status(404).json({ error: 'Club not available' });
     }
 
-    console.log(`✅ Club found: ${club.name}`);
+    console.log(` Club found: ${club.name}`);
 
     // Return club data
     res.json(club);
 
   } catch (error) {
-    console.error('💥 Error fetching club details:', error);
+    console.error(' Error fetching club details:', error);
     res.status(500).json({
       error: 'Failed to fetch club details',
       message: error.message
@@ -1344,11 +1475,11 @@ app.get('/api/clubs/:id', async (req, res) => {
   }
 });
 
-// 🔍 GET CLUB EVENTS - API endpoint for club events (placeholder for now)
+//  GET CLUB EVENTS - API endpoint for club events (placeholder for now)
 app.get('/api/clubs/:id/events', async (req, res) => {
   try {
     const clubId = req.params.id;
-    console.log(`📅 Fetching events for club ID: ${clubId}`);
+    console.log(` Fetching events for club ID: ${clubId}`);
 
     // For now, return sample events
     // In the future, you could create an Events model and fetch real events
@@ -1398,7 +1529,7 @@ app.get('/api/clubs/:id/events', async (req, res) => {
     });
 
   } catch (error) {
-    console.error('💥 Error fetching club events:', error);
+    console.error(' Error fetching club events:', error);
     res.status(500).json({
       error: 'Failed to fetch club events',
       message: error.message
@@ -1411,7 +1542,7 @@ app.get('/api/clubs/:id/events', async (req, res) => {
 // UPDATED DASHBOARD API - Replace your existing /api/user/profile route
 // =============================================================================
 
-// 📊 ENHANCED USER API - More detailed user information for dashboard
+//  ENHANCED USER API - More detailed user information for dashboard
 app.get('/api/user/profile', requireAuth, async (req, res) => {
   try {
     // Find the user with populated bookmarks
@@ -1426,7 +1557,7 @@ app.get('/api/user/profile', requireAuth, async (req, res) => {
     const joinDate = userWithBookmarks.createdAt;
     const daysActive = Math.ceil((new Date() - joinDate) / (1000 * 60 * 60 * 24));
 
-    console.log(`📊 Dashboard data for ${userWithBookmarks.email}: ${bookmarkCount} bookmarks, ${daysActive} days active`);
+    console.log(` Dashboard data for ${userWithBookmarks.email}: ${bookmarkCount} bookmarks, ${daysActive} days active`);
 
     // Return comprehensive user data for dashboard
     res.json({
@@ -1434,14 +1565,14 @@ app.get('/api/user/profile', requireAuth, async (req, res) => {
       email: userWithBookmarks.email,
       joinDate: joinDate,
 
-      // 🔖 REAL BOOKMARK DATA
+      //  REAL BOOKMARK DATA
       bookmarkedClubs: userWithBookmarks.bookmarkedClubs, // Full club objects
       totalBookmarks: bookmarkCount,
 
-      // 📊 CALCULATED STATS
+      //  CALCULATED STATS
       daysActive: daysActive,
 
-      // 🎯 FUTURE: Additional user stats
+      //  FUTURE: Additional user stats
       clubsViewed: 12,      // Placeholder - could track this later
       eventsInterested: 3,  // Placeholder - for events feature
       searchesPerformed: 8  // Placeholder - could track this later
@@ -1457,7 +1588,7 @@ app.get('/api/user/profile', requireAuth, async (req, res) => {
 // API ROUTES - For frontend JavaScript to check authentication status
 // =============================================================================
 
-// 🔍 USER STATUS API - Let frontend know if someone is logged in
+//  USER STATUS API - Let frontend know if someone is logged in
 app.get('/api/user', (req, res) => {
   if (req.session.userId) {
     // User has a valid wristband - send their info
@@ -1476,13 +1607,13 @@ app.get('/api/user', (req, res) => {
 // NICHE QUIZ ROUTES - Add these AFTER app creation
 // =============================================================================
 
-// 🎯 NICHE QUIZ PAGE
+//  NICHE QUIZ PAGE
 app.get('/niche-quiz', requireAuth, (req, res) => {
   console.log('Niche quiz accessed by:', req.session.userEmail);
   res.sendFile(path.join(__dirname, '../frontend/pages/niche-quiz.html'));
 });
 
-// 🎯 GET QUIZ INTRO - Show available levels and preview
+//  GET QUIZ INTRO - Show available levels and preview
 app.get('/api/quiz/intro', async (req, res) => {
   try {
     const levels = [
@@ -1524,12 +1655,12 @@ app.get('/api/quiz/intro', async (req, res) => {
     });
 
   } catch (error) {
-    console.error('💥 Quiz intro error:', error);
+    console.error(' Quiz intro error:', error);
     res.status(500).json({ error: 'Failed to load quiz introduction' });
   }
 });
 
-// 📝 GET QUIZ QUESTIONS - Load questions for specific level
+//  GET QUIZ QUESTIONS - Load questions for specific level
 app.get('/api/quiz/questions/:level', async (req, res) => {
   try {
     const { level } = req.params;
@@ -1538,7 +1669,7 @@ app.get('/api/quiz/questions/:level', async (req, res) => {
       return res.status(400).json({ error: 'Invalid quiz level' });
     }
 
-    console.log(`📋 Loading ${level} quiz questions...`);
+    console.log(` Loading ${level} quiz questions...`);
 
     const questions = await QuizQuestion.find({
       questionLevel: level,
@@ -1575,7 +1706,7 @@ app.get('/api/quiz/questions/:level', async (req, res) => {
     });
 
   } catch (error) {
-    console.error('💥 Quiz questions error:', error);
+    console.error(' Quiz questions error:', error);
     res.status(500).json({ error: 'Failed to load quiz questions' });
   }
 });
@@ -1584,13 +1715,13 @@ app.get('/api/quiz/questions/:level', async (req, res) => {
 // ENHANCED NICHE QUIZ BACKEND ROUTES - Add to your backend/app.js
 // =============================================================================
 
-// 📝 SUBMIT QUIZ AND CALCULATE RESULTS
+//  SUBMIT QUIZ AND CALCULATE RESULTS
 // =============================================================================
 // QUIZ SCORING SYSTEM - Add to backend/app.js
 // =============================================================================
 // Replace your existing /api/quiz/submit route with this enhanced version
 
-// 📤 ENHANCED QUIZ SUBMISSION WITH REAL SCORING
+//  ENHANCED QUIZ SUBMISSION WITH REAL SCORING
 app.post('/api/quiz/submit', requireAuth, async (req, res) => {
   try {
     const { level, answers, completionTime } = req.body;
@@ -1613,18 +1744,18 @@ app.post('/api/quiz/submit', requireAuth, async (req, res) => {
     const allClubs = await Club.find({ isActive: true });
 
     if (questions.length === 0) {
-      console.log('⚠️ No questions found, using fallback results');
+      console.log(' No questions found, using fallback results');
       return res.json({
         success: true,
         results: getFallbackResults()
       });
     }
 
-    // 🎯 USE REAL SCORING ALGORITHM
+    //  USE REAL SCORING ALGORITHM
     console.log('🚀 Using real scoring algorithm...');
     const results = await processQuizSubmission(answers, questions, level, allClubs);
 
-    // 💾 SIMPLIFIED DATABASE SAVING (Fixed)
+    //  SIMPLIFIED DATABASE SAVING (Fixed)
     try {
       const newResult = new QuizResult({
         user: userId,
@@ -1642,11 +1773,11 @@ app.post('/api/quiz/submit', requireAuth, async (req, res) => {
       });
 
       await newResult.save();
-      console.log('✅ Quiz result saved successfully with real algorithm');
+      console.log(' Quiz result saved successfully with real algorithm');
     } catch (saveError) {
-      console.error('⚠️ Failed to save quiz result to database:', saveError.message);
+      console.error(' Failed to save quiz result to database:', saveError.message);
       // Continue anyway - the important part is returning results to user
-      console.log('✅ Continuing without saving to database');
+      console.log(' Continuing without saving to database');
     }
 
     res.json({
@@ -1655,7 +1786,7 @@ app.post('/api/quiz/submit', requireAuth, async (req, res) => {
     });
 
   } catch (error) {
-    console.error('💥 Quiz submission error:', error);
+    console.error(' Quiz submission error:', error);
 
     // Always return fallback results to ensure quiz works
     res.json({
@@ -1731,7 +1862,7 @@ function getFallbackResults() {
 // =============================================================================
 
 function calculateUserSkillProfile(answers, questions) {
-  console.log('🧮 Calculating user skill profile...');
+  console.log(' Calculating user skill profile...');
 
   // Initialize skill scores
   const skillScores = {
@@ -1751,11 +1882,11 @@ function calculateUserSkillProfile(answers, questions) {
   answers.forEach((answer, answerIndex) => {
     const question = questions[answerIndex];
     if (!question) {
-      console.warn(`⚠️ No question found for answer index ${answerIndex}`);
+      console.warn(` No question found for answer index ${answerIndex}`);
       return;
     }
 
-    console.log(`📝 Processing answer for question: "${question.questionText}"`);
+    console.log(` Processing answer for question: "${question.questionText}"`);
 
     // Get the user's ranking (array of option indices in order of preference)
     const userRanking = answer.ranking;
@@ -1764,7 +1895,7 @@ function calculateUserSkillProfile(answers, questions) {
     userRanking.forEach((optionIndex, rankPosition) => {
       const option = question.options[optionIndex];
       if (!option || !option.weights) {
-        console.warn(`⚠️ Invalid option or weights for option index ${optionIndex}`);
+        console.warn(` Invalid option or weights for option index ${optionIndex}`);
         return;
       }
 
@@ -1800,7 +1931,7 @@ function calculateUserSkillProfile(answers, questions) {
 }
 
 function calculateCareerMatches(userSkillProfile, careerFields) {
-  console.log('🎯 Calculating career matches...');
+  console.log(' Calculating career matches...');
 
   const matches = careerFields.map(career => {
     let totalMatch = 0;
@@ -2082,7 +2213,7 @@ app.post('/signup', async (req, res) => {
     const newUser = new User({
       email: email.toLowerCase(),
       password: password,
-      isVerified: false  // ✅ Start unverified
+      isVerified: false  //  Start unverified
     });
 
     // Step 4: Generate verification token
@@ -2110,7 +2241,7 @@ app.post('/signup', async (req, res) => {
   }
 });
 
-// ✅ EMAIL VERIFICATION ROUTES
+//  EMAIL VERIFICATION ROUTES
 
 // Show verification prompt page
 app.get('/verify-email-prompt', (req, res) => {
@@ -2147,7 +2278,7 @@ app.get('/verify-email', async (req, res) => {
     req.session.userId = user._id;
     req.session.userEmail = user.email;
 
-    console.log('✅ Email verified and user logged in:', user.email);
+    console.log(' Email verified and user logged in:', user.email);
     res.redirect('/tech-clubs?verified=true');
 
   } catch (error) {
@@ -2202,4 +2333,26 @@ app.listen(port, () => {
   console.log(`🔐 Authentication: bcrypt + sessions`);
   console.log(`🎯 Quiz system: Ready!`);
 
+});
+
+// 🧪 SIMPLE TEST ROUTE - Add this right before app.listen
+app.get('/api/test/hello', (req, res) => {
+  res.json({ message: 'Hello! Routes are working!' });
+});
+
+app.get('/api/test/bulk-update', (req, res) => {
+  res.json({
+    message: 'Bulk update route exists!',
+    note: 'Use PUT method with updates array to actually update clubs'
+  });
+});
+
+// =============================================================================
+// START SERVER
+// =============================================================================
+app.listen(port, () => {
+  console.log(` Cownect server running at http://localhost:${port}`);
+  console.log(` Database: MongoDB Atlas`);
+  console.log(` Authentication: bcrypt + sessions`);
+  console.log(` Quiz system: Ready!`);
 });

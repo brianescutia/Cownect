@@ -2,12 +2,12 @@
 
 A full-stack web application helping UC Davis students discover tech clubs, explore career paths, and build community connections. Features real club data, user authentication, interactive career quiz, and modern responsive design.
 
-**🚀 Live Demo:** [Insert deployment URL]  
-**💻 GitHub:** https://github.com/brianescutia/Cownect
+** Live Demo:** [Insert deployment URL]  
+** GitHub:** https://github.com/brianescutia/Cownect
 
 ---
 
-## 🛠️ Tech Stack
+##  Tech Stack
 
 **Backend:**
 - Node.js & Express.js
@@ -30,33 +30,33 @@ A full-stack web application helping UC Davis students discover tech clubs, expl
 
 ---
 
-## ⚡ Key Features
+##  Key Features
 
-### 🔐 **Full Authentication System**
+###  **Full Authentication System**
 - Secure user registration/login with bcrypt
 - Session-based authentication
 - UC Davis email validation
 - Protected routes and middleware
 
-### 🏛️ **Dynamic Club Discovery**
+###  **Dynamic Club Discovery**
 - Real UC Davis tech club database (20+ clubs)
 - Advanced search & filtering system
 - Tag-based categorization
 - Pagination and responsive cards
 
-### 🔖 **Personal Bookmark System**
+###  **Personal Bookmark System**
 - Real-time bookmark management
 - Database persistence
 - User dashboard integration
 - Visual feedback system
 
-### 🎯 **Interactive Career Quiz**
+###  **Interactive Career Quiz**
 - Research-backed career assessment
 - Drag-and-drop ranking interface
 - Progressive difficulty levels
 - Personalized recommendations with salary data
 
-### 📱 **Modern UX/UI**
+###  **Modern UX/UI**
 - Mobile-first responsive design
 - Glassmorphism visual effects
 - Smooth animations and transitions
@@ -64,7 +64,7 @@ A full-stack web application helping UC Davis students discover tech clubs, expl
 
 ---
 
-## 🏗️ Architecture & Design Patterns
+##  Architecture & Design Patterns
 
 **MVC Architecture:**
 - Separation of concerns with models, views, controllers
@@ -90,7 +90,7 @@ A full-stack web application helping UC Davis students discover tech clubs, expl
 
 ---
 
-## 🚀 Quick Start
+##  Quick Start
 
 ```bash
 # Clone and install
@@ -111,7 +111,7 @@ npm start    # Production mode
 
 ---
 
-## 📊 Technical Achievements
+##  Technical Achievements
 
 - **Database Management:** Designed and implemented 4 MongoDB collections with complex relationships
 - **API Development:** 15+ RESTful endpoints with proper error handling and status codes
@@ -122,7 +122,7 @@ npm start    # Production mode
 
 ---
 
-## 🎯 Business Impact
+##  Business Impact
 
 - **Problem Solved:** UC Davis students struggle to discover relevant tech opportunities
 - **Solution:** Centralized platform with 20+ verified tech clubs and career guidance
@@ -131,7 +131,7 @@ npm start    # Production mode
 
 ---
 
-## 📈 Future Enhancements
+##  Future Enhancements
 
 - [ ] **Events Management System** - Calendar integration for club events
 - [ ] **Mentor Matching** - Connect students with alumni professionals  
@@ -141,7 +141,7 @@ npm start    # Production mode
 
 ---
 
-## 👨‍💻 Technical Skills Demonstrated
+##  Technical Skills Demonstrated
 
 **Backend Development:**
 - RESTful API design and implementation
@@ -168,7 +168,7 @@ npm start    # Production mode
 - Production deployment preparation
 
 
-## 👥 Team Roles
+##  Team Roles
 
 | Name     | Role                       |
 |----------|----------------------------|

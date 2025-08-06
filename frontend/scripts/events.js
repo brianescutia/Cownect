@@ -13,14 +13,14 @@ async function checkAuth() {
 
         if (userData.isLoggedIn) {
             currentUser = userData;
-            console.log('✅ User authenticated:', userData.email);
+            console.log(' User authenticated:', userData.email);
             return true;
         } else {
-            console.log('❌ User not authenticated');
+            console.log(' User not authenticated');
             return false;
         }
     } catch (error) {
-        console.error('❌ Auth check failed:', error);
+        console.error(' Auth check failed:', error);
         return false;
     }
 }
@@ -28,7 +28,7 @@ async function checkAuth() {
 // Load events data
 async function loadEvents() {
     try {
-        console.log('📅 Loading events...');
+        console.log(' Loading events...');
 
         // For now, use the static events from your HTML
         // Later you can replace this with API calls
@@ -62,10 +62,10 @@ async function loadEvents() {
             }
         ];
 
-        console.log(`✅ Loaded ${eventsData.length} events`);
+        console.log(` Loaded ${eventsData.length} events`);
         return true;
     } catch (error) {
-        console.error('💥 Error loading events:', error);
+        console.error(' Error loading events:', error);
         return false;
     }
 }
@@ -168,7 +168,7 @@ function setupEventButtons() {
 
 // Initialize everything when page loads
 document.addEventListener('DOMContentLoaded', async () => {
-    console.log('🚀 Initializing Events Page...');
+    console.log(' Initializing Events Page...');
 
     try {
         // Check authentication (but don't redirect)
@@ -183,10 +183,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         // Setup event buttons
         setupEventButtons();
 
-        console.log('✅ Events page loaded successfully!');
+        console.log(' Events page loaded successfully!');
 
     } catch (error) {
-        console.error('💥 Error initializing events page:', error);
+        console.error(' Error initializing events page:', error);
 
         // Show user-friendly error
         const calendar = document.getElementById('calendar');
@@ -318,4 +318,4 @@ style.textContent = `
 `;
 document.head.appendChild(style);
 
-console.log('✅ Events script loaded!');
+console.log(' Events script loaded!');

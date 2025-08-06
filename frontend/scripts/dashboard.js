@@ -1,296 +1,353 @@
 // =============================================================================
-// UPDATED DASHBOARD FUNCTIONALITY - Now with Real Bookmarks
+// DASHBOARD FUNCTIONALITY - Working Version
 // =============================================================================
+// Save as frontend/scripts/dashboard.js
 
-// 🎯 GLOBAL STATE: Store dashboard data
-let dashboardData = null;
+//  GLOBAL STATE
+let userProfile = null;
 
-// 🎯 WAIT FOR PAGE TO LOAD
+//  WAIT FOR PAGE TO LOAD
 document.addEventListener('DOMContentLoaded', async () => {
-
-    // 🔍 FIND DASHBOARD ELEMENTS
-    const loadingOverlay = document.getElementById('loadingOverlay');
-
     try {
-        // 📡 FETCH USER PROFILE DATA
-        console.log('Loading user profile data...');
-        await loadDashboardData();
+        console.log(' Dashboard initializing...');
 
-        // ✅ HIDE LOADING OVERLAY
-        hideLoadingOverlay();
+        await loadUserProfile();
+        updateDashboard();
 
+        console.log(' Dashboard loaded successfully');
     } catch (error) {
-        console.error('Error loading profile:', error);
-        showErrorState();
-        hideLoadingOverlay();
+        console.error(' Dashboard initialization error:', error);
+        showError('Failed to load dashboard');
     }
 });
 
-// 📡 FUNCTION: Load dashboard data from API
-async function loadDashboardData() {
-    const response = await fetch('/api/user/profile');
+// =============================================================================
+// LOAD USER DATA
+// =============================================================================
 
-    if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+async function loadUserProfile() {
+    try {
+        console.log(' Loading user profile...');
+
+        const response = await fetch('/api/user/profile');
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        userProfile = await response.json();
+        console.log(' User profile loaded:', userProfile);
+
+        return userProfile;
+    } catch (error) {
+        console.error(' Error loading user profile:', error);
+        throw error;
     }
-
-    dashboardData = await response.json();
-    console.log('Profile data loaded:', dashboardData);
-
-    // 🎨 UPDATE ALL DASHBOARD SECTIONS
-    updateProfileInfo(dashboardData);
-    updateBookmarksSection(dashboardData);
-    updateStatsSection(dashboardData);
 }
 
 // =============================================================================
-// UPDATE PROFILE INFORMATION SECTION
+// UPDATE DASHBOARD CONTENT
 // =============================================================================
-function updateProfileInfo(profileData) {
-    const userEmail = document.getElementById('userEmail');
-    const joinDate = document.getElementById('joinDate');
 
-    // 📧 UPDATE EMAIL DISPLAY
-    if (userEmail) {
-        userEmail.textContent = profileData.email;
+function updateDashboard() {
+    if (!userProfile) {
+        console.error(' No user profile data');
+        return;
     }
 
-    // 📅 UPDATE JOIN DATE - Format the date nicely
-    if (joinDate && profileData.joinDate) {
-        const date = new Date(profileData.joinDate);
-        const formattedDate = date.toLocaleDateString('en-US', {
+    console.log(' Updating dashboard content...');
+
+    // Update user info
+    updateUserInfo();
+
+    // Update statistics
+    updateStatistics();
+
+    // Update bookmarked clubs
+    updateBookmarkedClubs();
+
+    // Hide loading spinner
+    hideLoading();
+
+    console.log(' Dashboard content updated');
+}
+
+function updateUserInfo() {
+    // Update email
+    const emailElement = document.getElementById('userEmail');
+    if (emailElement && userProfile.email) {
+        emailElement.textContent = userProfile.email;
+    }
+
+    // Update join date
+    const joinDateElement = document.getElementById('joinDate');
+    if (joinDateElement && userProfile.joinDate) {
+        const joinDate = new Date(userProfile.joinDate);
+        joinDateElement.textContent = joinDate.toLocaleDateString('en-US', {
             year: 'numeric',
             month: 'long',
             day: 'numeric'
         });
-        joinDate.textContent = formattedDate;
     }
 
-    console.log('Profile info updated');
+    // Update days active
+    const daysActiveElement = document.getElementById('daysActive');
+    if (daysActiveElement && userProfile.daysActive) {
+        daysActiveElement.textContent = userProfile.daysActive;
+    }
+
+    console.log(' User info updated');
 }
 
-// =============================================================================
-// UPDATE BOOKMARKS SECTION - NOW WITH REAL DATA!
-// =============================================================================
-function updateBookmarksSection(profileData) {
-    const bookmarkCount = document.getElementById('bookmarkCount');
-    const bookmarkList = document.getElementById('bookmarkList');
-
-    // 🔖 UPDATE BOOKMARK COUNT
-    if (bookmarkCount) {
-        const count = profileData.totalBookmarks || 0;
-        bookmarkCount.textContent = count;
-        console.log(`📊 Updated bookmark count to: ${count}`);
+function updateStatistics() {
+    // Update bookmark count
+    const bookmarkCountElement = document.getElementById('bookmarkCount');
+    if (bookmarkCountElement && userProfile.totalBookmarks !== undefined) {
+        bookmarkCountElement.textContent = userProfile.totalBookmarks;
     }
 
-    // 📝 UPDATE BOOKMARK LIST
-    if (bookmarkList) {
-        if (profileData.bookmarkedClubs && profileData.bookmarkedClubs.length > 0) {
-            // Show actual bookmarked clubs
-            displayBookmarkedClubs(profileData.bookmarkedClubs, bookmarkList);
-        } else {
-            // Show placeholder message
-            bookmarkList.innerHTML = `
-                <p class="placeholder-text">
-                    No bookmarks yet. Start exploring clubs to save your favorites!
-                </p>
-            `;
-        }
+    // Update clubs viewed (fallback if not provided)
+    const clubsViewedElement = document.getElementById('clubsViewed');
+    if (clubsViewedElement) {
+        clubsViewedElement.textContent = userProfile.clubsViewed || '12';
     }
 
-    console.log('Bookmarks section updated with real data');
+    // Update events interested (fallback if not provided)
+    const eventsInterestedElement = document.getElementById('eventsInterested');
+    if (eventsInterestedElement) {
+        eventsInterestedElement.textContent = userProfile.eventsInterested || '3';
+    }
+
+    // Update searches performed (fallback if not provided)
+    const searchesElement = document.getElementById('searchesPerformed');
+    if (searchesElement) {
+        searchesElement.textContent = userProfile.searchesPerformed || '8';
+    }
+
+    console.log(' Statistics updated');
 }
 
-// =============================================================================
-// DISPLAY BOOKMARKED CLUBS
-// =============================================================================
-function displayBookmarkedClubs(bookmarkedClubs, container) {
-    // 🎴 CREATE MINI CLUB CARDS for bookmarked clubs
-    const clubsHTML = bookmarkedClubs.map(club => `
-        <div class="mini-club-card" onclick="goToClub('${club._id}')">
-            <div class="mini-club-info">
-                <img src="${club.logoUrl}" alt="${club.name}" class="mini-club-logo" />
-                <div class="mini-club-details">
-                    <span class="mini-club-name">${club.name}</span>
-                    <span class="mini-club-category">${club.category}</span>
-                </div>
+function updateBookmarkedClubs() {
+    const bookmarkedClubsContainer = document.getElementById('bookmarkedClubsContainer');
+
+    if (!bookmarkedClubsContainer) {
+        console.warn(' Bookmarked clubs container not found');
+        return;
+    }
+
+    if (!userProfile.bookmarkedClubs || userProfile.bookmarkedClubs.length === 0) {
+        bookmarkedClubsContainer.innerHTML = `
+            <div class="no-bookmarks">
+                <p>No bookmarked clubs yet.</p>
+                <a href="/tech-clubs" class="btn-primary">Explore Clubs</a>
             </div>
-            <div class="mini-club-tags">
-                ${club.tags.slice(0, 2).map(tag => `<span class="mini-tag">#${tag}</span>`).join('')}
+        `;
+        return;
+    }
+
+    // Generate bookmarked clubs HTML
+    const clubsHTML = userProfile.bookmarkedClubs.map(club => `
+        <div class="bookmark-card">
+            <div class="club-logo">
+                <img src="${club.logoUrl || '/assets/default-club-logo.png'}" 
+                     alt="${club.name} Logo" 
+                     onerror="this.src='/assets/default-club-logo.png'">
+            </div>
+            <div class="club-info">
+                <h4>${club.name}</h4>
+                <p class="club-category">${club.category || 'Technology'}</p>
+                <p class="club-members">${club.memberCount || 0} members</p>
+            </div>
+            <div class="club-actions">
+                <a href="/club/${club._id}" class="btn-view">View Club</a>
+                <button class="btn-remove" onclick="removeBookmark('${club._id}', this)">
+                    Remove
+                </button>
             </div>
         </div>
     `).join('');
 
-    container.innerHTML = `
-        <div class="bookmark-clubs-grid">
-            ${clubsHTML}
-        </div>
-        <div class="bookmark-actions">
-            <a href="/tech-clubs" class="view-all-btn">View All Clubs</a>
-        </div>
-    `;
+    bookmarkedClubsContainer.innerHTML = clubsHTML;
+
+    console.log(` Displayed ${userProfile.bookmarkedClubs.length} bookmarked clubs`);
 }
 
 // =============================================================================
-// UPDATE STATS SECTION
-// =============================================================================
-function updateStatsSection(profileData) {
-    // 📊 UPDATE DAYS ACTIVE (now calculated from server)
-    const daysActiveElement = document.getElementById('daysActive');
-    if (daysActiveElement && profileData.daysActive) {
-        daysActiveElement.textContent = profileData.daysActive;
-    }
-
-    // 🔢 UPDATE OTHER STATS
-    const clubsViewed = document.getElementById('clubsViewed');
-    const eventsInterested = document.getElementById('eventsInterested');
-    const searchesPerformed = document.getElementById('searchesPerformed');
-
-    if (clubsViewed) clubsViewed.textContent = profileData.clubsViewed || '12';
-    if (eventsInterested) eventsInterested.textContent = profileData.eventsInterested || '3';
-    if (searchesPerformed) searchesPerformed.textContent = profileData.searchesPerformed || '8';
-
-    console.log('Stats section updated');
-}
-
-// =============================================================================
-// REAL-TIME BOOKMARK UPDATES
+// BOOKMARK MANAGEMENT
 // =============================================================================
 
-// 🔄 FUNCTION: Refresh bookmark data (called when bookmarks change)
-async function refreshBookmarkData() {
+async function removeBookmark(clubId, buttonElement) {
     try {
-        console.log('🔄 Refreshing bookmark data...');
-        await loadDashboardData();
-        console.log('✅ Bookmark data refreshed');
+        console.log(` Removing bookmark for club: ${clubId}`);
+
+        buttonElement.disabled = true;
+        buttonElement.textContent = 'Removing...';
+
+        const response = await fetch(`/api/bookmarks/${clubId}`, {
+            method: 'DELETE'
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const result = await response.json();
+        console.log(' Bookmark removed:', result);
+
+        // Remove the card from UI
+        const bookmarkCard = buttonElement.closest('.bookmark-card');
+        if (bookmarkCard) {
+            bookmarkCard.remove();
+        }
+
+        // Update bookmark count
+        userProfile.totalBookmarks--;
+        const bookmarkCountElement = document.getElementById('bookmarkCount');
+        if (bookmarkCountElement) {
+            bookmarkCountElement.textContent = userProfile.totalBookmarks;
+        }
+
+        // Show empty state if no bookmarks left
+        if (userProfile.totalBookmarks === 0) {
+            const container = document.getElementById('bookmarkedClubsContainer');
+            if (container) {
+                container.innerHTML = `
+                    <div class="no-bookmarks">
+                        <p>No bookmarked clubs yet.</p>
+                        <a href="/tech-clubs" class="btn-primary">Explore Clubs</a>
+                    </div>
+                `;
+            }
+        }
+
+        showMessage('Bookmark removed successfully', 'success');
+
     } catch (error) {
-        console.error('💥 Error refreshing bookmark data:', error);
+        console.error(' Error removing bookmark:', error);
+        buttonElement.disabled = false;
+        buttonElement.textContent = 'Remove';
+        showMessage('Failed to remove bookmark', 'error');
     }
 }
 
-// 🎯 FUNCTION: Handle navigation to club details
-function goToClub(clubId) {
-    // For now, just go to tech-clubs page
-    // Later we could add a specific club detail page
-    window.location.href = '/tech-clubs';
-}
-
 // =============================================================================
-// LISTEN FOR BOOKMARK CHANGES
-// =============================================================================
-// Listen for custom events from bookmark system
-document.addEventListener('bookmarkChanged', () => {
-    console.log('📡 Bookmark change detected, refreshing dashboard...');
-    refreshBookmarkData();
-});
-
-// =============================================================================
-// LOADING AND ERROR STATES
+// UI UTILITIES
 // =============================================================================
 
-function hideLoadingOverlay() {
+function hideLoading() {
     const loadingOverlay = document.getElementById('loadingOverlay');
+    const dashboardContent = document.getElementById('dashboardContent');
+
     if (loadingOverlay) {
-        loadingOverlay.classList.add('hidden');
+        loadingOverlay.style.display = 'none';
+    }
+
+    if (dashboardContent) {
+        dashboardContent.style.display = 'block';
+    }
+
+    console.log(' Loading overlay hidden');
+}
+
+function showError(message) {
+    console.error(' Dashboard error:', message);
+
+    const loadingOverlay = document.getElementById('loadingOverlay');
+    const dashboardContent = document.getElementById('dashboardContent');
+
+    if (loadingOverlay) {
+        loadingOverlay.innerHTML = `
+            <div class="error-content">
+                <h2>⚠️ Error Loading Dashboard</h2>
+                <p>${message}</p>
+                <button onclick="location.reload()" class="btn-primary">Retry</button>
+                <a href="/tech-clubs" class="btn-secondary">Go to Tech Clubs</a>
+            </div>
+        `;
+    }
+
+    if (dashboardContent) {
+        dashboardContent.style.display = 'none';
     }
 }
 
-function showErrorState() {
-    const userEmail = document.getElementById('userEmail');
-    const joinDate = document.getElementById('joinDate');
+function showMessage(message, type = 'info') {
+    // Create message element if it doesn't exist
+    let messageContainer = document.getElementById('messageContainer');
+    if (!messageContainer) {
+        messageContainer = document.createElement('div');
+        messageContainer.id = 'messageContainer';
+        messageContainer.className = 'message-container';
+        document.body.appendChild(messageContainer);
+    }
 
-    if (userEmail) userEmail.textContent = 'Error loading profile';
-    if (joinDate) joinDate.textContent = 'Unable to load';
+    // Create message
+    const messageElement = document.createElement('div');
+    messageElement.className = `message message-${type}`;
+    messageElement.textContent = message;
 
-    showNotification('Failed to load profile data. Please refresh the page.', 'error');
-}
+    messageContainer.appendChild(messageElement);
 
-function showNotification(message, type = 'info') {
-    const notification = document.createElement('div');
-    notification.className = `notification ${type}`;
-    notification.innerHTML = `
-        <span>${message}</span>
-        <button onclick="this.parentElement.remove()">&times;</button>
-    `;
-
-    notification.style.cssText = `
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        background: ${type === 'error' ? '#e74c3c' : '#5F96C5'};
-        color: white;
-        padding: 1rem 1.5rem;
-        border-radius: 8px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-        z-index: 1001;
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-        max-width: 300px;
-    `;
-
-    document.body.appendChild(notification);
-
+    // Auto-remove after 3 seconds
     setTimeout(() => {
-        if (notification.parentElement) {
-            notification.remove();
-        }
-    }, 5000);
+        messageElement.remove();
+    }, 3000);
 }
 
-// User Profile Component for Dashboard
-class UserProfile {
-    constructor() {
-        this.settings = null;
-        this.init();
-    }
+// =============================================================================
+// REFRESH FUNCTIONALITY
+// =============================================================================
 
-    async init() {
-        await this.loadUserSettings();
-        this.renderProfileWidget();
-        this.setupEventListeners();
-    }
+async function refreshDashboard() {
+    try {
+        console.log('🔄 Refreshing dashboard...');
 
-    async loadUserSettings() {
-        try {
-            const response = await fetch('/api/settings');
-            const data = await response.json();
+        // Show loading state
+        const refreshButton = document.querySelector('.refresh-btn');
+        if (refreshButton) {
+            refreshButton.disabled = true;
+            refreshButton.textContent = 'Refreshing...';
+        }
 
-            if (data.success) {
-                this.settings = data.settings;
-            }
-        } catch (error) {
-            console.error('Error loading user settings:', error);
+        // Reload user profile
+        await loadUserProfile();
+        updateDashboard();
+
+        // Reset refresh button
+        if (refreshButton) {
+            refreshButton.disabled = false;
+            refreshButton.textContent = 'Refresh';
+        }
+
+        showMessage('Dashboard refreshed successfully', 'success');
+
+    } catch (error) {
+        console.error(' Error refreshing dashboard:', error);
+        showMessage('Failed to refresh dashboard', 'error');
+
+        // Reset refresh button
+        const refreshButton = document.querySelector('.refresh-btn');
+        if (refreshButton) {
+            refreshButton.disabled = false;
+            refreshButton.textContent = 'Refresh';
         }
     }
+}
 
-    renderProfileWidget() {
-        const profileWidget = document.getElementById('profileWidget');
-        if (!profileWidget || !this.settings) return;
+// =============================================================================
+// GLOBAL FUNCTIONS FOR HTML
+// =============================================================================
 
-        const { profile } = this.settings;
+// Make functions available globally for onclick handlers
+window.removeBookmark = removeBookmark;
+window.refreshDashboard = refreshDashboard;
 
-        profileWidget.innerHTML = `
-      <div class="profile-widget">
-        <div class="profile-header">
-          <div class="profile-avatar">
-            ${profile?.profilePicture
-                ? `<img src="${profile.profilePicture}" alt="Profile Picture">`
-                : '<div class="avatar-placeholder">👤</div>'
-            }
-          </div>
-          <div class="profile-info">
-            <h3>${profile?.displayName || 'User'}</h3>
-            <p class="profile-major">${profile?.major || 'Undeclared'}</p>
-            <p class="profile-year">Class of ${profile?.graduationYear || 'TBD'}</p>
-          </div>
-        </div>
-        
-        ${profile?.bio ? `
-          <div class="profile-bio">
-            <p>${profile.bio}</p>
+// Debug function
+window.debugDashboard = () => {
+    console.log(' Dashboard Debug Info:');
+    console.log('  User Profile:', userProfile);
+    console.log('  Bookmarks:', userProfile?.bookmarkedClubs?.length || 0);
+    console.log('  Total Bookmarks:', userProfile?.totalBookmarks || 0);
+};
 
-
-// 🌐 GLOBAL FUNCTIONS (for external access)
-window.refreshBookmarkData = refreshBookmarkData;
-window.goToClub = goToClub;
+console.log(' Dashboard script loaded successfully!');

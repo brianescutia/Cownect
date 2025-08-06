@@ -15,7 +15,7 @@ const eventSchema = new mongoose.Schema({
     date: {
         type: Date,
         required: true,
-        index: true // Index for faster date queries
+        index: true
     },
     time: {
         type: String,
@@ -33,14 +33,11 @@ const eventSchema = new mongoose.Schema({
         required: true,
         maxlength: 2000
     },
-
-    // NEW FIELDS FOR ENHANCED EVENTS PAGE
     imageUrl: {
         type: String,
         default: '/assets/default-event-image.jpg',
         trim: true
     },
-
     category: {
         type: String,
         enum: [
@@ -56,37 +53,42 @@ const eventSchema = new mongoose.Schema({
         ],
         default: 'Other'
     },
-
     tags: [{
         type: String,
         lowercase: true,
         trim: true
     }],
-
-    // Event capacity and registration
     maxAttendees: {
         type: Number,
-        default: null // null means unlimited
+        default: null
     },
-
     registrationRequired: {
         type: Boolean,
         default: false
     },
-
     registrationUrl: {
         type: String,
         default: null
     },
-
-    // Event status
     status: {
         type: String,
         enum: ['draft', 'published', 'cancelled', 'completed'],
         default: 'published'
     },
 
-    // EXISTING FIELDS
+    // NEW FEATURED FIELD
+    featured: {
+        type: Boolean,
+        default: false,
+        index: true // Index for faster queries
+    },
+
+    // Featured priority (1 = highest priority)
+    featuredPriority: {
+        type: Number,
+        default: null
+    },
+
     createdBy: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
@@ -105,7 +107,6 @@ const eventSchema = new mongoose.Schema({
     toJSON: { virtuals: true },
     toObject: { virtuals: true }
 });
-
 // =============================================================================
 // VIRTUAL FIELDS
 // =============================================================================
@@ -212,9 +213,12 @@ eventSchema.statics.getFeatured = function () {
     return this.find({
         isActive: true,
         status: 'published',
-        date: { $gte: new Date() }
+        featured: true  // Only get events marked as featured
     })
-        .sort({ date: 1 })
+        .sort({
+            featuredPriority: 1,  // Sort by priority first (1 = highest)
+            date: 1               // Then by date
+        })
         .limit(3)
         .populate('createdBy', 'email');
 };

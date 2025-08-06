@@ -50,7 +50,6 @@
     <section class="club-name-section">
       <div class="club-name-box">
         <h1 id="clubName" class="club-title">Loading...</h1>
-        <p id="clubCategory" class="club-category">Loading...</p>
       </div>
     </section>
 
@@ -62,29 +61,23 @@
         
         <!-- About Box -->
         <section class="about-box">
-          <h2>About This Club</h2>
+          <div class="about-header">
+            <h2>About</h2>
+            <img src="../assets/about-symbol.png" alt="About Symbol" class="about-symbol" />
+            </div>
+
           <p id="clubDescription" class="club-description">Loading club description...</p>
           
-          <div class="club-stats">
-            <div class="stat-item">
-              <span class="stat-number" id="memberCount">0</span>
-              <span class="stat-label">Members</span>
-            </div>
-            <div class="stat-item">
-              <span class="stat-number">Weekly</span>
-              <span class="stat-label">Meetings</span>
-            </div>
-            <div class="stat-item">
-              <span class="stat-number">4.8</span>
-              <span class="stat-label">Rating</span>
-            </div>
-          </div>
         </section>
 
         <!-- Two Side-by-Side Boxes -->
         <div class="side-by-side-boxes">
           <div class="info-box">
-            <h3>🎯 Focus Areas</h3>
+            <div class="focus-header">
+              <h3>Why Should I Join</h3>
+              <img src="../assets/focus-areas.png" alt="Focus Symbol" class="focus-symbol" />
+            </div>
+            <h3></h3>
             <ul>
               <li>Machine Learning</li>
               <li>Computer Vision</li>
@@ -94,7 +87,10 @@
           </div>
           
           <div class="info-box">
-            <h3>📍 Meeting Info</h3>
+              <div class="how-to-join-header">
+            <h3>Events</h3>
+            <img src="../assets/how-to-join.png" alt="Focus Symbol" class="joining-symbol" />
+                </div>
             <div class="meeting-info">
               <p><strong>Location:</strong> Kemper Hall 1131</p>
               <p><strong>Time:</strong> Thursday 6:00 PM</p>
@@ -238,16 +234,6 @@
             <a href="#" class="social-link">💬 Discord</a>
             <a href="#" class="social-link">📱 Instagram</a>
             <a href="#" class="social-link">🐦 Twitter</a>
-          </div>
-
-          <div class="action-buttons">
-            <button class="bookmark-btn" id="heroBookmarkBtn">
-              <img src="../assets/bookmark.png" alt="Bookmark" class="bookmark-icon" />
-              <span>Save Club</span>
-            </button>
-            <button class="join-btn">
-              <span>Join Club</span>
-            </button>
           </div>
         </section>
 

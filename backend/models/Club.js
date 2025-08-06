@@ -53,7 +53,7 @@ const meetingInfoSchema = new mongoose.Schema({
 // ENHANCED CLUB SCHEMA
 // =============================================================================
 const clubSchema = new mongoose.Schema({
-    // 📛 BASIC CLUB INFORMATION
+    // BASIC CLUB INFORMATION
     name: {
         type: String,
         required: true,
@@ -69,7 +69,7 @@ const clubSchema = new mongoose.Schema({
         trim: true
     },
 
-    // 🏷️ TAGS FOR FILTERING AND SEARCH
+    // TAGS FOR FILTERING AND SEARCH
     tags: [{
         type: String,
         lowercase: true,
@@ -77,7 +77,7 @@ const clubSchema = new mongoose.Schema({
         maxlength: 20
     }],
 
-    // 📂 CATEGORY FOR ORGANIZATION
+    // CATEGORY FOR ORGANIZATION
     category: {
         type: String,
         enum: [
@@ -93,7 +93,7 @@ const clubSchema = new mongoose.Schema({
         index: true
     },
 
-    // 🖼️ VISUAL ELEMENTS
+    // VISUAL ELEMENTS
     logoUrl: {
         type: String,
         default: '/assets/default-club-logo.png',
@@ -104,8 +104,12 @@ const clubSchema = new mongoose.Schema({
         default: '/assets/default-club-hero.jpg',  // Fallback hero image
         trim: true
     },
+    hasCustomHeroImage: {
+        type: Boolean,
+        default: false
+    },
 
-    // 🌐 WEB PRESENCE
+    // WEB PRESENCE
     websiteUrl: {
         type: String,
         trim: true,
@@ -125,23 +129,23 @@ const clubSchema = new mongoose.Schema({
         default: null
     },
 
-    // 📅 MEETING INFORMATION
+    // MEETING INFORMATION
     meetingInfo: {
         type: meetingInfoSchema,
         default: () => ({})
     },
 
-    // 🎯 FOCUS AREAS
+    // FOCUS AREAS
     focusAreas: [{
         type: String,
         trim: true,
         maxlength: 50
     }],
 
-    // 👥 CLUB OFFICERS
+    // CLUB OFFICERS
     officers: [officerSchema],
 
-    // 📊 METADATA AND STATUS
+    // METADATA AND STATUS
     isActive: {
         type: Boolean,
         default: true,
@@ -154,7 +158,7 @@ const clubSchema = new mongoose.Schema({
         min: 0
     },
 
-    // 📅 TIMESTAMPS
+    // TIMESTAMPS
     createdAt: {
         type: Date,
         default: Date.now,
@@ -204,7 +208,7 @@ clubSchema.virtual('meetingString').get(function () {
 // SCHEMA MIDDLEWARE
 // =============================================================================
 
-// 🔄 UPDATE TIMESTAMP
+// UPDATE TIMESTAMP
 clubSchema.pre('save', function (next) {
     if (this.isModified() && !this.isNew) {
         this.updatedAt = Date.now();
@@ -212,7 +216,7 @@ clubSchema.pre('save', function (next) {
     next();
 });
 
-// 🏷️ TAG CLEANUP
+// TAG CLEANUP
 clubSchema.pre('save', function (next) {
     if (this.tags && this.tags.length > 0) {
         this.tags = [...new Set(this.tags.filter(tag => tag.trim().length > 0))];
@@ -224,7 +228,7 @@ clubSchema.pre('save', function (next) {
 // INSTANCE METHODS
 // =============================================================================
 
-// 🔍 CHECK IF CLUB MATCHES SEARCH QUERY
+// CHECK IF CLUB MATCHES SEARCH QUERY
 clubSchema.methods.matchesQuery = function (query) {
     const searchText = query.toLowerCase();
 
@@ -234,19 +238,19 @@ clubSchema.methods.matchesQuery = function (query) {
         this.focusAreas.some(area => area.toLowerCase().includes(searchText));
 };
 
-// 📊 GET DISPLAY-FRIENDLY TAG STRING  
+// GET DISPLAY-FRIENDLY TAG STRING  
 clubSchema.methods.getTagString = function () {
     return this.tags.map(tag => `#${tag}`).join(' ');
 };
 
-// 👥 GET OFFICER BY POSITION
+// GET OFFICER BY POSITION
 clubSchema.methods.getOfficerByPosition = function (position) {
     return this.officers.find(officer =>
         officer.position.toLowerCase().includes(position.toLowerCase())
     );
 };
 
-// 📧 GET CONTACT INFO
+// GET CONTACT INFO
 clubSchema.methods.getContactInfo = function () {
     const primaryContact = this.primaryContact;
     return {
@@ -261,7 +265,7 @@ clubSchema.methods.getContactInfo = function () {
 // STATIC METHODS
 // =============================================================================
 
-// 🔍 ENHANCED SEARCH WITH NEW FIELDS
+// ENHANCED SEARCH WITH NEW FIELDS
 clubSchema.statics.searchClubs = function (query, options = {}) {
     const {
         category,
@@ -311,7 +315,7 @@ clubSchema.statics.searchClubs = function (query, options = {}) {
         .skip(skip);
 };
 
-// 📊 GET CLUBS BY CATEGORY
+// GET CLUBS BY CATEGORY
 clubSchema.statics.getClubsByCategory = function (category) {
     return this.find({
         isActive: true,
@@ -319,7 +323,7 @@ clubSchema.statics.getClubsByCategory = function (category) {
     }).sort({ memberCount: -1 });
 };
 
-// 🏷️ GET ALL UNIQUE TAGS WITH COUNTS
+// GET ALL UNIQUE TAGS WITH COUNTS
 clubSchema.statics.getAllTags = function () {
     return this.aggregate([
         { $match: { isActive: true } },
@@ -330,7 +334,7 @@ clubSchema.statics.getAllTags = function () {
     ]);
 };
 
-// 🎯 GET ALL FOCUS AREAS
+// GET ALL FOCUS AREAS
 clubSchema.statics.getAllFocusAreas = function () {
     return this.aggregate([
         { $match: { isActive: true } },
@@ -341,7 +345,7 @@ clubSchema.statics.getAllFocusAreas = function () {
     ]);
 };
 
-// 📊 GET CLUB STATISTICS
+// GET CLUB STATISTICS
 clubSchema.statics.getClubStats = function () {
     return this.aggregate([
         { $match: { isActive: true } },

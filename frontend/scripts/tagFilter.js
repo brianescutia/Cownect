@@ -4,34 +4,34 @@
 // This file enables users to filter tech clubs by clicking on tag buttons
 // Example: Click "#AI" tag -> Show only clubs that have AI-related content
 
-// 🎯 WAIT FOR PAGE TO LOAD - Ensure all HTML elements are ready
+//  WAIT FOR PAGE TO LOAD - Ensure all HTML elements are ready
 document.addEventListener('DOMContentLoaded', () => {
 
-    // 🏷️ FIND ALL FILTER TAGS - These are the clickable tag buttons
+    //  FIND ALL FILTER TAGS - These are the clickable tag buttons
     // Example tags: "#AI", "#hardware", "#design", "#software", "#webdev"
     const tags = document.querySelectorAll('.tag');
 
-    // 🎴 FIND ALL CLUB CARDS - These are what we'll show/hide based on tag selection
+    //  FIND ALL CLUB CARDS - These are what we'll show/hide based on tag selection
     const clubCards = document.querySelectorAll('.club-card');
 
-    // 🎧 ADD CLICK LISTENERS to each tag button
+    //  ADD CLICK LISTENERS to each tag button
     tags.forEach(tag => {
         tag.addEventListener('click', () => {
 
-            // 📝 GET THE CLICKED TAG TEXT
+            //  GET THE CLICKED TAG TEXT
             // Extract tag name and convert to lowercase for comparison
             // "#AI" becomes "#ai", "#WebDev" becomes "#webdev"
             const clickedTag = tag.textContent.toLowerCase();
 
-            // 🔄 LOOP THROUGH EACH CLUB CARD to check if it matches the filter
+            //  LOOP THROUGH EACH CLUB CARD to check if it matches the filter
             clubCards.forEach(card => {
 
-                // 🏷️ GET THIS CARD'S TAGS
+                //  GET THIS CARD'S TAGS
                 // Find the tags section in each club card
                 // Example: "#software #webdev #collaboration" -> "#software #webdev #collaboration"
                 const cardTags = card.querySelector('.club-tags').textContent.toLowerCase();
 
-                // 🎯 CHECK IF CARD'S TAGS INCLUDE THE CLICKED TAG
+                //  CHECK IF CARD'S TAGS INCLUDE THE CLICKED TAG
                 // Uses .includes() to see if the clicked tag appears in the card's tag list
                 // Example: 
                 // - Clicked tag: "#ai"
@@ -58,17 +58,17 @@ document.addEventListener('DOMContentLoaded', () => {
 //    
 //    Card 1: "AI Student Collective"
 //    - Tags: "#ai #ml #python" 
-//    - Contains "#ai"? YES ✅
+//    - Contains "#ai"? YES 
 //    - Action: Show card
 //    
 //    Card 2: "#include"  
 //    - Tags: "#software #webdev #collaboration"
-//    - Contains "#ai"? NO ❌
+//    - Contains "#ai"? NO 
 //    - Action: Hide card
 //    
 //    Card 3: "Aggie Sports Analytics"
 //    - Tags: "#design #ux #figma"
-//    - Contains "#ai"? NO ❌  
+//    - Contains "#ai"? NO ❌ 
 //    - Action: Hide card
 //
 // 5. Result: Only AI-related clubs are visible!
@@ -77,17 +77,17 @@ document.addEventListener('DOMContentLoaded', () => {
 // FUTURE ENHANCEMENTS (Week 3-4):
 // =============================================================================
 //
-// 🔄 Multiple Tag Selection:
+//  Multiple Tag Selection:
 // - Allow users to select multiple tags simultaneously
 // - Show clubs that match ANY selected tag (OR logic)
 // - Or show clubs that match ALL selected tags (AND logic)
 //
-// 🎨 Visual Feedback:
+//  Visual Feedback:
 // - Highlight selected tag buttons
 // - Show count of filtered results
 // - Add "Clear Filters" button
 //
-// 💾 State Persistence:
+//  State Persistence:
 // - Remember selected filters when user navigates away
 // - URL parameters to share filtered views
 //

@@ -16,9 +16,9 @@ const CalendarState = {
     currentUser: null
 };
 
-// 🎯 WAIT FOR PAGE TO LOAD
+//  WAIT FOR PAGE TO LOAD
 document.addEventListener('DOMContentLoaded', async () => {
-    console.log('🚀 Initializing Events Calendar...');
+    console.log(' Initializing Events Calendar...');
 
     try {
         // Check authentication
@@ -34,9 +34,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         // Render calendar
         renderCalendar();
 
-        console.log('✅ Events calendar initialized successfully');
+        console.log(' Events calendar initialized successfully');
     } catch (error) {
-        console.error('💥 Error initializing calendar:', error);
+        console.error(' Error initializing calendar:', error);
         showError('Failed to load events calendar');
     }
 });
@@ -54,17 +54,17 @@ async function checkAuthentication() {
             CalendarState.currentUser = userData;
 
             if (!userData.isLoggedIn) {
-                console.log('❌ User not authenticated');
+                console.log(' User not authenticated');
                 window.location.href = '/login';
                 return;
             }
 
-            console.log('✅ User authenticated:', userData.email);
+            console.log(' User authenticated:', userData.email);
         } else {
             throw new Error('Authentication failed');
         }
     } catch (error) {
-        console.error('❌ Auth check failed:', error);
+        console.error(' Auth check failed:', error);
         window.location.href = '/login';
     }
 }
@@ -81,14 +81,14 @@ async function initializeCalendar() {
         await loadCalendarData();
 
         showLoading(false);
-        console.log('✅ Calendar initialized with events data');
+        console.log(' Calendar initialized with events data');
     } catch (error) {
-        console.error('💥 Error loading calendar data:', error);
+        console.error(' Error loading calendar data:', error);
         showLoading(false);
 
         // Use fallback data if API fails
         CalendarState.eventsData = getFallbackEventsData();
-        console.log('⚠️ Using fallback events data');
+        console.log(' Using fallback events data');
     }
 }
 
@@ -97,7 +97,7 @@ async function loadCalendarData() {
         const year = CalendarState.currentDate.getFullYear();
         const month = CalendarState.currentDate.getMonth() + 1;
 
-        console.log(`📊 Loading calendar data for ${year}-${month}`);
+        console.log(` Loading calendar data for ${year}-${month}`);
 
         const response = await fetch(`/api/events/calendar/${year}/${month}`);
 
@@ -106,7 +106,7 @@ async function loadCalendarData() {
         }
 
         const calendarData = await response.json();
-        console.log('📊 Raw calendar data:', calendarData);
+        console.log(' Raw calendar data:', calendarData);
 
         // Process the calendar data
         CalendarState.eventsData = {};
@@ -119,11 +119,11 @@ async function loadCalendarData() {
             });
         }
 
-        console.log(`✅ Processed calendar data for ${Object.keys(CalendarState.eventsData).length} days`);
-        console.log('📅 Events data:', CalendarState.eventsData);
+        console.log(` Processed calendar data for ${Object.keys(CalendarState.eventsData).length} days`);
+        console.log(' Events data:', CalendarState.eventsData);
 
     } catch (error) {
-        console.error('💥 Error loading calendar data:', error);
+        console.error(' Error loading calendar data:', error);
 
         // If calendar API fails, try to load all events and group them by date
         await loadAllEventsAsFallback();
@@ -132,13 +132,13 @@ async function loadCalendarData() {
 
 async function loadAllEventsAsFallback() {
     try {
-        console.log('🔄 Attempting to load all events as fallback...');
+        console.log(' Attempting to load all events as fallback...');
 
         const response = await fetch('/api/events?upcoming=false&limit=100');
         if (!response.ok) throw new Error('Events API failed');
 
         const events = await response.json();
-        console.log('📅 Loaded events for fallback:', events);
+        console.log(' Loaded events for fallback:', events);
 
         // Group events by date
         CalendarState.eventsData = {};
@@ -160,23 +160,23 @@ async function loadAllEventsAsFallback() {
             });
         });
 
-        console.log('✅ Fallback events grouped by date:', Object.keys(CalendarState.eventsData).length, 'days');
+        console.log(' Fallback events grouped by date:', Object.keys(CalendarState.eventsData).length, 'days');
 
     } catch (error) {
-        console.error('💥 Fallback events loading failed:', error);
+        console.error(' Fallback events loading failed:', error);
         CalendarState.eventsData = getFallbackEventsData();
     }
 }
 
 async function loadFeaturedEvents() {
     try {
-        console.log('🌟 Loading featured events...');
+        console.log(' Loading featured events...');
 
         const response = await fetch('/api/events/featured');
 
         if (response.ok) {
             CalendarState.featuredEvents = await response.json();
-            console.log(`✅ Loaded ${CalendarState.featuredEvents.length} featured events`);
+            console.log(` Loaded ${CalendarState.featuredEvents.length} featured events`);
         } else {
             throw new Error('Featured events API failed');
         }
@@ -204,7 +204,7 @@ function setupEventListeners() {
     // Sidebar close button
     document.getElementById('closeSidebar')?.addEventListener('click', closeSidebar);
 
-    console.log('🎧 Calendar event listeners set up');
+    console.log(' Calendar event listeners set up');
 }
 
 // =============================================================================
@@ -212,7 +212,7 @@ function setupEventListeners() {
 // =============================================================================
 
 function renderCalendar() {
-    console.log('🎨 Rendering calendar...');
+    console.log(' Rendering calendar...');
 
     if (CalendarState.currentView === 'month') {
         renderMonthView();
@@ -223,13 +223,13 @@ function renderCalendar() {
     updatePeriodTitle();
     updateViewButtons();
 
-    console.log('✅ Calendar rendered');
+    console.log(' Calendar rendered');
 }
 
 function renderMonthView() {
     const grid = document.getElementById('calendarGrid');
     if (!grid) {
-        console.error('❌ Calendar grid element not found');
+        console.error(' Calendar grid element not found');
         return;
     }
 
@@ -289,7 +289,7 @@ function renderMonthView() {
         grid.appendChild(nextMonthDay);
     }
 
-    console.log('📅 Month view rendered with events');
+    console.log(' Month view rendered with events');
 }
 
 function renderWeekView() {
@@ -351,7 +351,7 @@ function createDayContent(date, isOtherMonth) {
 
         content += '</div>';
 
-        console.log(`📍 Day ${dayNumber} has ${events.length} events`);
+        console.log(` Day ${dayNumber} has ${events.length} events`);
     }
 
     return content;
@@ -366,12 +366,12 @@ function renderFeaturedEvents() {
     const template = document.getElementById('eventCardTemplate');
 
     if (!grid) {
-        console.error('❌ Featured events grid not found');
+        console.error(' Featured events grid not found');
         return;
     }
 
     if (!template) {
-        console.error('❌ Event card template not found');
+        console.error(' Event card template not found');
         return;
     }
 
@@ -423,7 +423,7 @@ function renderFeaturedEvents() {
         grid.appendChild(eventCard);
     });
 
-    console.log(`📅 Rendered ${CalendarState.featuredEvents.length} featured event cards`);
+    console.log(` Rendered ${CalendarState.featuredEvents.length} featured event cards`);
 }
 
 // =============================================================================
@@ -431,7 +431,7 @@ function renderFeaturedEvents() {
 // =============================================================================
 
 async function selectDate(date) {
-    console.log(`📅 Selected date: ${date.toDateString()}`);
+    console.log(` Selected date: ${date.toDateString()}`);
 
     CalendarState.selectedDate = date;
 
@@ -473,17 +473,17 @@ async function loadEventsForDate(date) {
                 if (response.ok) {
                     const apiEvents = await response.json();
                     CalendarState.selectedDateEvents = apiEvents;
-                    console.log(`📡 Loaded ${apiEvents.length} events from API for ${dateKey}`);
+                    console.log(` Loaded ${apiEvents.length} events from API for ${dateKey}`);
                 }
             } catch (apiError) {
-                console.log('📡 API call failed, using loaded data');
+                console.log(' API call failed, using loaded data');
             }
         }
 
-        console.log(`✅ Final events for ${dateKey}:`, CalendarState.selectedDateEvents.length);
+        console.log(` Final events for ${dateKey}:`, CalendarState.selectedDateEvents.length);
 
     } catch (error) {
-        console.error('💥 Error loading events for date:', error);
+        console.error(' Error loading events for date:', error);
         CalendarState.selectedDateEvents = [];
     }
 }
@@ -585,7 +585,7 @@ function closeSidebar() {
 
 async function handleEventJoin(eventId) {
     try {
-        console.log(`🎟️ Joining event: ${eventId}`);
+        console.log(` Joining event: ${eventId}`);
 
         const response = await fetch(`/api/events/${eventId}/join`, {
             method: 'POST'
@@ -597,33 +597,33 @@ async function handleEventJoin(eventId) {
         }
 
         const result = await response.json();
-        console.log('✅ Successfully joined event:', result);
+        console.log(' Successfully joined event:', result);
 
-        alert(`✅ Successfully joined the event!\n\nYou'll receive more details via email.`);
+        alert(` Successfully joined the event!\n\nYou'll receive more details via email.`);
 
     } catch (error) {
-        console.error('💥 Error joining event:', error);
-        alert(`❌ Failed to join event: ${error.message}`);
+        console.error(' Error joining event:', error);
+        alert(` Failed to join event: ${error.message}`);
     }
 }
 
 async function handleEventBookmark(eventId) {
     try {
-        console.log(`🔖 Bookmarking event: ${eventId}`);
+        console.log(` Bookmarking event: ${eventId}`);
         alert('Event bookmarked! (Feature coming soon)');
     } catch (error) {
-        console.error('💥 Error bookmarking event:', error);
+        console.error(' Error bookmarking event:', error);
         alert('Failed to bookmark event');
     }
 }
 
 function addToGoogleCalendar(event) {
     try {
-        console.log(`📅 Adding to Google Calendar: ${event.title}`);
+        console.log(` Adding to Google Calendar: ${event.title}`);
 
         // Validate event object
         if (!event || !event.title) {
-            console.error('❌ Invalid event object:', event);
+            console.error(' Invalid event object:', event);
             showNotification('Invalid event data', 'error');
             return;
         }
@@ -642,11 +642,11 @@ function addToGoogleCalendar(event) {
                 eventDate = new Date();
             }
         } catch (dateError) {
-            console.error('❌ Date parsing error:', dateError);
+            console.error(' Date parsing error:', dateError);
             eventDate = new Date(); // Fallback to today
         }
 
-        console.log('📅 Parsed event date:', eventDate);
+        console.log(' Parsed event date:', eventDate);
 
         // Parse time with fallback
         let startTime, endTime;
@@ -663,7 +663,7 @@ function addToGoogleCalendar(event) {
                 endTime.setHours(20, 0, 0, 0); // 8 PM
             }
         } catch (timeError) {
-            console.error('❌ Time parsing error:', timeError);
+            console.error(' Time parsing error:', timeError);
             // Fallback times
             startTime = new Date(eventDate);
             startTime.setHours(18, 0, 0, 0);
@@ -671,11 +671,11 @@ function addToGoogleCalendar(event) {
             endTime.setHours(20, 0, 0, 0);
         }
 
-        console.log('🕐 Start time:', startTime, 'End time:', endTime);
+        console.log(' Start time:', startTime, 'End time:', endTime);
 
         // Validate times before proceeding
         if (isNaN(startTime.getTime()) || isNaN(endTime.getTime())) {
-            console.error('❌ Invalid times generated');
+            console.error(' Invalid times generated');
             showNotification('Failed to parse event time', 'error');
             return;
         }
@@ -695,15 +695,15 @@ function addToGoogleCalendar(event) {
         const newWindow = window.open(calendarUrl, '_blank', 'noopener,noreferrer');
 
         if (newWindow) {
-            console.log('✅ Opened Google Calendar');
+            console.log(' Opened Google Calendar');
             showNotification('Event added to Google Calendar! 📅', 'success');
         } else {
-            console.error('❌ Failed to open new window');
+            console.error(' Failed to open new window');
             showNotification('Please allow popups to add events', 'error');
         }
 
     } catch (error) {
-        console.error('💥 Error adding to Google Calendar:', error);
+        console.error(' Error adding to Google Calendar:', error);
         showNotification(`Calendar error: ${error.message}`, 'error');
     }
 }
@@ -763,7 +763,7 @@ function buildCalendarUrl({ title, description, location, startTime, endTime }) 
         const endUTC = endTime.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
         params.set('dates', `${startUTC}/${endUTC}`);
     } catch (error) {
-        console.error('❌ Error formatting dates:', error);
+        console.error(' Error formatting dates:', error);
         throw new Error('Failed to format dates for calendar');
     }
 
@@ -787,7 +787,7 @@ function switchView(view) {
     CalendarState.currentView = view;
     renderCalendar();
     updateViewButtons();
-    console.log(`🔄 Switched to ${view} view`);
+    console.log(` Switched to ${view} view`);
 }
 
 function navigatePeriod(direction) {
@@ -918,7 +918,7 @@ function showError(message) {
         eventsContainer.style.display = 'none';
     }
 
-    console.error('💥 Calendar Error:', message);
+    console.error(' Calendar Error:', message);
 }
 
 // =============================================================================
@@ -926,7 +926,7 @@ function showError(message) {
 // =============================================================================
 
 function getFallbackEventsData() {
-    console.log('🔄 Using fallback events data');
+    console.log(' Using fallback events data');
 
     const today = new Date();
     const nextWeek = new Date(today.getTime() + 7 * 24 * 60 * 60 * 1000);
@@ -998,12 +998,12 @@ function renderFeaturedEvents() {
     const template = document.getElementById('eventCardTemplate');
 
     if (!grid) {
-        console.error('❌ Featured events grid not found');
+        console.error(' Featured events grid not found');
         return;
     }
 
     if (!template) {
-        console.error('❌ Event card template not found');
+        console.error(' Event card template not found');
         return;
     }
 
@@ -1091,7 +1091,7 @@ function renderFeaturedEvents() {
         grid.appendChild(eventCard);
     });
 
-    console.log(`📅 Rendered ${CalendarState.featuredEvents.length} featured event cards with responsive design`);
+    console.log(` Rendered ${CalendarState.featuredEvents.length} featured event cards with responsive design`);
 }
 
 // =============================================================================
@@ -1100,7 +1100,7 @@ function renderFeaturedEvents() {
 
 async function handleEventJoin(eventId, buttonElement) {
     try {
-        console.log(`🎟️ Joining event: ${eventId}`);
+        console.log(` Joining event: ${eventId}`);
 
         // Update button to loading state
         const originalText = buttonElement.textContent;
@@ -1117,7 +1117,7 @@ async function handleEventJoin(eventId, buttonElement) {
         }
 
         const result = await response.json();
-        console.log('✅ Successfully joined event:', result);
+        console.log(' Successfully joined event:', result);
 
         // Update button to success state
         buttonElement.textContent = 'Joined ✓';
@@ -1127,7 +1127,7 @@ async function handleEventJoin(eventId, buttonElement) {
         showNotification('Successfully joined event! 🎉', 'success');
 
     } catch (error) {
-        console.error('💥 Error joining event:', error);
+        console.error(' Error joining event:', error);
 
         // Reset button
         buttonElement.textContent = originalText;
@@ -1139,7 +1139,7 @@ async function handleEventJoin(eventId, buttonElement) {
 
 async function handleEventBookmark(eventId, bookmarkElement) {
     try {
-        console.log(`🔖 Toggling bookmark for event: ${eventId}`);
+        console.log(` Toggling bookmark for event: ${eventId}`);
 
         const isBookmarked = bookmarkElement.classList.contains('bookmarked');
 
@@ -1161,7 +1161,7 @@ async function handleEventBookmark(eventId, bookmarkElement) {
         showNotification(message, 'info');
 
     } catch (error) {
-        console.error('💥 Error bookmarking event:', error);
+        console.error(' Error bookmarking event:', error);
 
         // Revert optimistic update
         if (bookmarkElement.classList.contains('bookmarked')) {
@@ -1176,7 +1176,7 @@ async function handleEventBookmark(eventId, bookmarkElement) {
 
 function selectEventDate(event) {
     const eventDate = new Date(event.date);
-    console.log(`📅 Selecting date from featured event: ${eventDate.toDateString()}`);
+    console.log(` Selecting date from featured event: ${eventDate.toDateString()}`);
 
     // Update the calendar to show this date
     CalendarState.currentDate = new Date(eventDate.getFullYear(), eventDate.getMonth(), 1);
@@ -1305,7 +1305,7 @@ function showNotification(message, type = 'info') {
 // Add this to your existing events-calendar.js file after the existing functions
 // or replace the renderFeaturedEvents function with the one above
 
-console.log('✅ Updated Events Calendar script for new design loaded');
+console.log(' Updated Events Calendar script for new design loaded');
 // =============================================================================
 // GLOBAL FUNCTIONS (for window scope)
 // =============================================================================

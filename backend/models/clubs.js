@@ -12,7 +12,7 @@ const mongoose = require('mongoose');
 // Think of this as the "template" for what club data looks like
 
 const clubSchema = new mongoose.Schema({
-    // 📛 BASIC CLUB INFORMATION
+    // BASIC CLUB INFORMATION
     name: {
         type: String,
         required: true,              // Must have a name
@@ -28,7 +28,7 @@ const clubSchema = new mongoose.Schema({
         trim: true
     },
 
-    // 🏷️ TAGS FOR FILTERING AND SEARCH
+    // TAGS FOR FILTERING AND SEARCH
     tags: [{
         type: String,
         lowercase: true,             // Consistent lowercase for searching
@@ -36,7 +36,7 @@ const clubSchema = new mongoose.Schema({
         maxlength: 20                // Individual tag length limit
     }],
 
-    // 📂 CATEGORY FOR ORGANIZATION
+    // CATEGORY FOR ORGANIZATION
     category: {
         type: String,
         enum: [                      // Only allow specific categories
@@ -52,14 +52,14 @@ const clubSchema = new mongoose.Schema({
         index: true                  // Index for faster category filtering
     },
 
-    // 🖼️ VISUAL ELEMENTS
+    // VISUAL ELEMENTS
     logoUrl: {
         type: String,
         default: '/assets/default-club-logo.png',  // Fallback logo
         trim: true
     },
 
-    // 📊 METADATA AND STATUS
+    // METADATA AND STATUS
     isActive: {
         type: Boolean,
         default: true,               // New clubs are active by default
@@ -72,7 +72,7 @@ const clubSchema = new mongoose.Schema({
         min: 0                       // Can't have negative members
     },
 
-    // 📅 TIMESTAMPS
+    // TIMESTAMPS
     createdAt: {
         type: Date,
         default: Date.now,           // When club was added to database
@@ -94,7 +94,7 @@ const clubSchema = new mongoose.Schema({
 // SCHEMA MIDDLEWARE
 // =============================================================================
 
-// 🔄 UPDATE TIMESTAMP - Runs before saving updates
+// UPDATE TIMESTAMP - Runs before saving updates
 clubSchema.pre('save', function (next) {
     // Only update 'updatedAt' if document was modified
     if (this.isModified() && !this.isNew) {
@@ -103,7 +103,7 @@ clubSchema.pre('save', function (next) {
     next();
 });
 
-// 🏷️ TAG VALIDATION - Ensure tags are properly formatted
+// TAG VALIDATION - Ensure tags are properly formatted
 clubSchema.pre('save', function (next) {
     // Clean up tags: remove empty strings, duplicates
     if (this.tags && this.tags.length > 0) {
@@ -116,7 +116,7 @@ clubSchema.pre('save', function (next) {
 // INSTANCE METHODS
 // =============================================================================
 
-// 🔍 CHECK IF CLUB MATCHES SEARCH QUERY
+// CHECK IF CLUB MATCHES SEARCH QUERY
 clubSchema.methods.matchesQuery = function (query) {
     const searchText = query.toLowerCase();
 
@@ -126,7 +126,7 @@ clubSchema.methods.matchesQuery = function (query) {
         this.tags.some(tag => tag.includes(searchText));
 };
 
-// 📊 GET DISPLAY-FRIENDLY TAG STRING
+// GET DISPLAY-FRIENDLY TAG STRING
 clubSchema.methods.getTagString = function () {
     // Convert tags array to "#tag1 #tag2 #tag3" format
     return this.tags.map(tag => `#${tag}`).join(' ');
@@ -136,7 +136,7 @@ clubSchema.methods.getTagString = function () {
 // STATIC METHODS (available on the Club model itself)
 // =============================================================================
 
-// 🔍 SEARCH CLUBS BY QUERY
+// SEARCH CLUBS BY QUERY
 clubSchema.statics.searchClubs = function (query, options = {}) {
     const {
         category,
@@ -174,14 +174,14 @@ clubSchema.statics.searchClubs = function (query, options = {}) {
         .skip(skip);
 };
 
-// 📊 GET POPULAR CLUBS (by member count)
+// GET POPULAR CLUBS (by member count)
 clubSchema.statics.getPopularClubs = function (limit = 10) {
     return this.find({ isActive: true })
         .sort({ memberCount: -1 })  // Highest member count first
         .limit(limit);
 };
 
-// 🏷️ GET ALL UNIQUE TAGS
+// GET ALL UNIQUE TAGS
 clubSchema.statics.getAllTags = function () {
     return this.aggregate([
         { $match: { isActive: true } },

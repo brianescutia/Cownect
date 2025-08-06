@@ -7,7 +7,7 @@ const bcrypt = require('bcrypt');
 const crypto = require('crypto');
 
 const userSchema = new mongoose.Schema({
-    // 📧 EMAIL FIELD - User's login identifier
+    // EMAIL FIELD - User's login identifier
     email: {
         type: String,
         required: true,
@@ -17,20 +17,20 @@ const userSchema = new mongoose.Schema({
         match: [/^[^\s@]+@[^\s@]+\.[^\s@]+$/, 'Please enter a valid email address']
     },
 
-    // 🔒 PASSWORD FIELD - Hashed before storage
+    // PASSWORD FIELD - Hashed before storage
     password: {
         type: String,
         required: true,
         minlength: 6
     },
 
-    // 🔖 BOOKMARKED CLUBS - NEW! Array of club IDs
+    // BOOKMARKED CLUBS - NEW! Array of club IDs
     bookmarkedClubs: [{
         type: mongoose.Schema.Types.ObjectId,  // References Club _id
         ref: 'Club'  // Tells Mongoose this refers to Club model
     }],
 
-    // 📅 TIMESTAMP - Track when user account was created
+    // TIMESTAMP - Track when user account was created
     createdAt: {
         type: Date,
         default: Date.now
@@ -100,7 +100,7 @@ userSchema.methods.comparePassword = async function (candidatePassword) {
 // NEW: BOOKMARK METHODS
 // =============================================================================
 
-// 🔖 ADD BOOKMARK - Add club to user's bookmarks
+// ADD BOOKMARK - Add club to user's bookmarks
 userSchema.methods.addBookmark = async function (clubId) {
     // Check if already bookmarked
     if (!this.bookmarkedClubs.includes(clubId)) {
@@ -127,12 +127,12 @@ userSchema.methods.removeBookmark = async function (clubId) {
     return false;
 };
 
-// 🔍 CHECK IF BOOKMARKED - Check if user has bookmarked a specific club
+// CHECK IF BOOKMARKED - Check if user has bookmarked a specific club
 userSchema.methods.hasBookmarked = function (clubId) {
     return this.bookmarkedClubs.some(id => id.equals(clubId));
 };
 
-// 📊 GET BOOKMARK COUNT - Get total number of bookmarks
+// GET BOOKMARK COUNT - Get total number of bookmarks
 userSchema.methods.getBookmarkCount = function () {
     return this.bookmarkedClubs.length;
 };
@@ -141,7 +141,7 @@ userSchema.methods.getBookmarkCount = function () {
 // STATIC METHODS - Available on User model itself
 // =============================================================================
 
-// 📊 GET USER WITH POPULATED BOOKMARKS - Get user with full club details
+// GET USER WITH POPULATED BOOKMARKS - Get user with full club details
 userSchema.statics.findWithBookmarks = function (userId) {
     return this.findById(userId)
         .populate('bookmarkedClubs')  // Get full club objects, not just IDs
