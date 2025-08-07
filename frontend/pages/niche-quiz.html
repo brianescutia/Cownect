@@ -156,8 +156,26 @@
                 <div class="match-percentage">
                     <div class="percentage-circle">
                         <svg class="progress-ring" width="120" height="120">
-                            <circle class="progress-ring__circle" stroke="#5F96C5" stroke-width="8" fill="transparent" r="52" cx="60" cy="60"/>
-                        </svg>
+    <!-- Background circle (unfilled area) -->
+    <circle 
+        cx="60" 
+        cy="60" 
+        r="52" 
+        stroke="rgba(255, 255, 255, 0.8)" 
+        stroke-width="8" 
+        fill="transparent"
+    />
+    <!-- Foreground circle (filled area) -->
+    <circle 
+        class="progress-ring__circle" 
+        cx="60" 
+        cy="60" 
+        r="52" 
+        stroke="#f5a700" 
+        stroke-width="8" 
+        fill="transparent"
+    />
+</svg>
                         <div class="percentage-text" id="matchPercentage">85%</div>
                     </div>
                 </div>
