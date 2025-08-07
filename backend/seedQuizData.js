@@ -936,37 +936,6 @@ const questionsData = [
     },
 
     {
-        questionText: "What type of technical risk do you find most acceptable?",
-        questionLevel: "advanced",
-        questionType: "ranking",
-        category: "values",
-        order: 4,
-        researchSource: "Risk management in software engineering - ACM Computing Reviews + startup vs enterprise risk tolerance studies",
-        options: [
-            {
-                text: "Adopting cutting-edge but unproven technologies",
-                description: "Being an early adopter of new frameworks, languages, or platforms",
-                weights: { research: 8, creative: 8, risk: 8, technical: 8, pace: 7, social: 4, leadership: 5, structure: 3 }
-            },
-            {
-                text: "Building custom solutions instead of using existing tools",
-                description: "Creating bespoke systems when off-the-shelf solutions don't meet specific needs",
-                weights: { technical: 9, creative: 7, risk: 7, research: 6, structure: 5, social: 4, leadership: 5, pace: 4 }
-            },
-            {
-                text: "Scaling systems beyond their current capacity limits",
-                description: "Pushing existing infrastructure to handle much larger loads and user bases",
-                weights: { technical: 8, structure: 8, research: 7, risk: 6, pace: 6, creative: 5, social: 4, leadership: 5 }
-            },
-            {
-                text: "Refactoring legacy systems while maintaining operations",
-                description: "Modernizing critical systems without disrupting ongoing business operations",
-                weights: { technical: 8, structure: 9, risk: 5, research: 6, pace: 4, creative: 5, social: 5, leadership: 6 }
-            }
-        ]
-    },
-
-    {
         questionText: "How do you prefer to drive innovation in your team?",
         questionLevel: "advanced",
         questionType: "ranking",
@@ -985,7 +954,47 @@ const questionsData = [
                 weights: { social: 9, leadership: 8, creative: 7, pace: 6, technical: 5, research: 6, risk: 6, structure: 6 }
             },
             {
-            }]
+                text: "Systematic research and evidence-based innovation",
+                description: "Using scientific methods and user research to guide innovation decisions",
+                weights: { research: 9, structure: 8, technical: 7, creative: 6, leadership: 6, social: 5, pace: 4, risk: 4 }
+            },
+            {
+                text: "Rapid prototyping and iterative development",
+                description: "Building quick proof-of-concepts and iterating based on feedback",
+                weights: { pace: 8, creative: 8, technical: 7, risk: 7, leadership: 6, research: 5, social: 5, structure: 4 }
+            }
+        ]
+    },
+
+    {
+        questionText: "What motivates you most when leading technical initiatives?",
+        questionLevel: "advanced",
+        questionType: "ranking",
+        category: "leadership",
+        order: 6,
+        researchSource: "Tech leadership motivation - Harvard Business Review + Stanford Leadership Development research 2024",
+        options: [
+            {
+                text: "Solving complex technical challenges that others can't",
+                description: "Tackling the hardest problems and pushing the boundaries of what's possible",
+                weights: { technical: 9, research: 8, creative: 7, risk: 6, structure: 6, leadership: 5, social: 4, pace: 5 }
+            },
+            {
+                text: "Building and mentoring high-performing teams",
+                description: "Developing people and creating teams that consistently deliver excellence",
+                weights: { leadership: 9, social: 9, structure: 7, creative: 6, technical: 6, research: 5, pace: 6, risk: 5 }
+            },
+            {
+                text: "Creating products that impact millions of users",
+                description: "Building technology that scales and improves lives for large numbers of people",
+                weights: { social: 8, creative: 7, technical: 7, leadership: 7, pace: 7, research: 6, risk: 6, structure: 6 }
+            },
+            {
+                text: "Advancing the entire field through research and innovation",
+                description: "Contributing new knowledge and pushing the industry forward through breakthrough work",
+                weights: { research: 10, technical: 8, creative: 8, risk: 7, leadership: 6, social: 5, pace: 5, structure: 6 }
+            }
+        ]
     }
 ]
 

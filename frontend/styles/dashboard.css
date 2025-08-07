@@ -1,287 +1,709 @@
 /* =============================================================================
-   DASHBOARD PAGE STYLING
+   UPDATED DASHBOARD CSS - Exact Specifications for 1728x1117
    =============================================================================
-   Styles for the user dashboard/profile page
-   Modern card-based layout with glassmorphism effects
+   Save as frontend/styles/dashboard.css (replace existing file)
 */
 
+/* Reset and base styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: 'Rethink Sans', sans-serif;
+    background: #f5fcff;
+    position: relative;
+    overflow-x: hidden;
+    min-height: 100vh;
+}
+
+/* Background blur decorations - same as tech-clubs */
+.blur-decoration-left {
+    position: fixed;
+    top: -1em;
+    left: -20em;
+    transform: translateY(-50%) rotate(91deg);
+    width: 75%;
+    height: 75%;
+    background: radial-gradient(circle, rgba(95, 150, 197, 0.3) 0%, transparent 70%);
+    opacity: 0.6;
+    z-index: -1;
+}
+
+.blur-decoration-right {
+    position: fixed;
+    top: 10em;
+    right: -26em;
+    transform: translateY(-50%) rotate(270deg);
+    width: 75%;
+    height: 75%;
+    background: radial-gradient(circle, rgba(95, 150, 197, 0.3) 0%, transparent 70%);
+    opacity: 0.6;
+    z-index: -1;
+}
+
 /* =============================================================================
-   MAIN DASHBOARD CONTAINER
+   NAVBAR - Same as tech-clubs.css
+   =============================================================================
+*/
+
+.navbar {
+    display: flex;
+    justify-content: center;
+    border-radius: 25px;
+    margin: 1rem auto;
+    padding: 0.75rem 2rem;
+    max-width: 1130px;
+    width: 90%;
+    height: clamp(50px, 8vw, 68px);
+}
+
+.navbar-container {
+    background-color: rgba(183, 183, 183, 0.30);
+    border-radius: 25px;
+    width: 65.5vw;
+    height: 4.2vw;
+    max-width: 1129px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 3rem;
+}
+
+.logo-title {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-weight: bold;
+    font-size: 1.2rem;
+    margin-left: -1rem;
+}
+
+.logo {
+    height: 40px;
+}
+
+.nav-links {
+    list-style: none;
+    display: flex;
+    gap: 4.5rem;
+    align-items: center;
+    margin: 0;
+}
+
+.nav-links a {
+    font-weight: 500;
+    font-size: 1rem;
+    text-decoration: none;
+    color: inherit;
+}
+
+.account-btn {
+    background-color: #5F96C5;
+    color: white;
+    padding: 0.4rem 0.9rem;
+    border-radius: 20px;
+}
+
+/* =============================================================================
+   DASHBOARD LAYOUT - New Layout: Left Half & Right Half Split
    =============================================================================
 */
 
 .dashboard-container {
-    max-width: 1200px;
+    max-width: 1728px;
     margin: 0 auto;
     padding: 2rem;
-    min-height: calc(100vh - 200px);
-    /* Account for navbar */
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    /* Left half, Right half */
+    grid-template-rows: auto auto auto;
+    /* 3 rows */
+    gap: 2rem;
+    grid-template-areas:
+        "user-profile saved-clubs"
+        "user-profile upcoming-events"
+        "test-results empty-space";
+    justify-content: center;
 }
 
 /* =============================================================================
-   DASHBOARD HEADER
+   USER PROFILE CARD - Left Half (spans 2 rows)
    =============================================================================
 */
 
-.dashboard-header {
-    text-align: center;
-    margin-bottom: 3rem;
+.user-profile-card {
+    grid-area: user-profile;
+    width: 100%;
+    height: auto;
+    /* Let it span naturally across 2 rows */
+    min-height: 500px;
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    border-radius: 20px;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    position: relative;
 }
 
-.dashboard-header h1 {
-    font-size: 2.5rem;
-    font-weight: 700;
+.profile-image-container {
+    position: relative;
+}
+
+.profile-image {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #5F96C5, #4a8bc2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 3rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    overflow: hidden;
+    position: relative;
+}
+
+.profile-image:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 25px rgba(95, 150, 197, 0.3);
+}
+
+.profile-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.profile-info {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    width: 100%;
+}
+
+.user-major {
+    font-size: 1.4rem;
+    font-weight: 600;
     color: #2c3e50;
     margin-bottom: 0.5rem;
 }
 
-.dashboard-subtitle {
+.user-email {
     font-size: 1.1rem;
     color: #7f8c8d;
-    font-weight: 400;
+    margin-bottom: 1rem;
+}
+
+.edit-profile-btn {
+    background: linear-gradient(135deg, #5F96C5, #4a8bc2);
+    color: white;
+    border: none;
+    padding: 1rem 2rem;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 100%;
+    max-width: 200px;
+}
+
+.edit-profile-btn:hover {
+    background: linear-gradient(135deg, #4a8bc2, #3d7bb5);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(95, 150, 197, 0.3);
 }
 
 /* =============================================================================
-   DASHBOARD GRID LAYOUT
+   SAVED CLUBS CARD - Right Half, Top (Improved Spacing)
    =============================================================================
 */
 
-.dashboard-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-    gap: 2rem;
-    position: relative;
-}
-
-/* =============================================================================
-   DASHBOARD CARDS - Glassmorphism Design
-   =============================================================================
-*/
-
-.dashboard-card {
-    background: rgba(255, 255, 255, 0.25);
+.saved-clubs-card {
+    grid-area: saved-clubs;
+    width: 100%;
+    height: 350px;
+    /* Increased height to reduce squishing */
+    background: rgba(255, 255, 255, 0.7);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.8);
     border-radius: 20px;
-    padding: 2rem;
+    padding: 1.5rem;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    overflow: hidden;
 }
 
-.dashboard-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
-}
-
-.dashboard-card h2 {
-    font-size: 1.4rem;
+.saved-clubs-card h2 {
+    font-size: 1.5rem;
     font-weight: 600;
-    margin-bottom: 1.5rem;
     color: #2c3e50;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
+    margin-bottom: 1rem;
 }
 
-/* =============================================================================
-   PROFILE CARD STYLING
-   =============================================================================
-*/
-
-.profile-info {
+.saved-clubs-grid {
     display: flex;
-    flex-direction: column;
     gap: 1rem;
+    overflow-x: auto;
+    height: calc(100% - 3rem);
+    padding-bottom: 0.5rem;
+    align-items: flex-start;
 }
 
-.info-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0.75rem 0;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+.saved-clubs-grid::-webkit-scrollbar {
+    height: 6px;
 }
 
-.info-item:last-child {
-    border-bottom: none;
+.saved-clubs-grid::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 3px;
 }
 
-.info-label {
-    font-weight: 500;
-    color: #5f6368;
-    font-size: 0.95rem;
+.saved-clubs-grid::-webkit-scrollbar-thumb {
+    background: #5F96C5;
+    border-radius: 3px;
 }
 
-.info-value {
-    font-weight: 600;
-    color: #2c3e50;
-    font-size: 0.95rem;
-}
-
-.status-active {
-    color: #27ae60 !important;
-    background: rgba(39, 174, 96, 0.1);
-    padding: 0.25rem 0.75rem;
-    border-radius: 20px;
-    font-size: 0.85rem;
-}
-
-/* =============================================================================
-   BOOKMARKS CARD STYLING
-   =============================================================================
-*/
-
-.bookmarks-preview {
-    text-align: center;
-}
-
-.bookmark-count {
-    margin-bottom: 1.5rem;
-}
-
-.count-number {
-    display: block;
-    font-size: 3rem;
-    font-weight: 700;
-    color: #5F96C5;
-    line-height: 1;
-}
-
-.count-label {
-    font-size: 0.9rem;
-    color: #7f8c8d;
-    font-weight: 500;
-}
-
-.bookmark-list {
-    margin: 1.5rem 0;
-    min-height: 100px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.placeholder-text {
-    color: #95a5a6;
-    font-style: italic;
-    text-align: center;
-    line-height: 1.5;
-}
-
-/* =============================================================================
-   ACTION BUTTONS STYLING
-   =============================================================================
-*/
-
-.action-buttons {
+.mini-club-card {
+    flex: 0 0 200px;
+    /* Fixed width for better appearance */
+    height: 220px;
+    /* Fixed height to prevent squishing */
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 12px;
+    padding: 1.25rem;
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.5);
 }
 
-.action-btn {
+.mini-club-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+    background: rgba(255, 255, 255, 1);
+}
+
+.mini-club-logo {
+    width: 50px;
+    height: 50px;
+    border-radius: 10px;
+    background: #5F96C5;
+    background-size: cover;
+    background-position: center;
+    margin-bottom: 0.5rem;
+    flex-shrink: 0;
+}
+
+.mini-club-name {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 0.5rem;
+    line-height: 1.2;
+}
+
+.mini-club-description {
+    font-size: 0.85rem;
+    color: #7f8c8d;
+    line-height: 1.4;
+    flex: 1;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+}
+
+.mini-club-tags {
+    font-size: 0.75rem;
+    color: #5F96C5;
+    font-weight: 500;
+    margin-top: auto;
+}
+
+.view-all-card {
+    border: 2px dashed #5F96C5;
+    background: rgba(95, 150, 197, 0.05);
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 0.5rem;
-    padding: 0.75rem 1.5rem;
-    border-radius: 12px;
-    text-decoration: none;
-    font-weight: 500;
-    font-size: 0.95rem;
-    transition: all 0.3s ease;
-    border: none;
-    cursor: pointer;
+    text-align: center;
 }
 
-.action-btn.primary {
-    background: linear-gradient(135deg, #5F96C5, #4a8bc2);
-    color: white;
-}
-
-.action-btn.primary:hover {
-    background: linear-gradient(135deg, #4a8bc2, #3d7bb5);
-    transform: translateY(-2px);
-}
-
-.action-btn.secondary {
+.view-all-card:hover {
     background: rgba(95, 150, 197, 0.1);
-    color: #5F96C5;
-    border: 1px solid rgba(95, 150, 197, 0.3);
+    border-color: #4a8bc2;
 }
 
-.action-btn.secondary:hover {
-    background: rgba(95, 150, 197, 0.2);
-    transform: translateY(-2px);
+.saved-clubs-card h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 1rem;
 }
 
-.action-btn.danger {
-    background: rgba(231, 76, 60, 0.1);
-    color: #e74c3c;
-    border: 1px solid rgba(231, 76, 60, 0.3);
+.saved-clubs-grid {
+    display: flex;
+    gap: 1rem;
+    overflow-x: auto;
+    height: calc(100% - 3rem);
+    padding-bottom: 0.5rem;
 }
 
-.action-btn.danger:hover {
-    background: rgba(231, 76, 60, 0.2);
-    transform: translateY(-2px);
+.saved-clubs-grid::-webkit-scrollbar {
+    height: 6px;
 }
 
-.action-button {
-    display: inline-block;
+.saved-clubs-grid::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 3px;
+}
+
+.saved-clubs-grid::-webkit-scrollbar-thumb {
     background: #5F96C5;
-    color: white;
-    padding: 0.75rem 1.5rem;
-    border-radius: 12px;
-    text-decoration: none;
-    font-weight: 500;
-    transition: all 0.3s ease;
+    border-radius: 3px;
 }
 
-.action-button:hover {
-    background: #4a8bc2;
-    transform: translateY(-2px);
+.mini-club-card {
+    flex: 0 0 180px;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 12px;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+.mini-club-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    background: rgba(255, 255, 255, 1);
+}
+
+.mini-club-logo {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    background: #5F96C5;
+    background-size: cover;
+    background-position: center;
+    margin-bottom: 0.5rem;
+}
+
+.mini-club-name {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 0.25rem;
+}
+
+.mini-club-description {
+    font-size: 0.8rem;
+    color: #7f8c8d;
+    line-height: 1.3;
+    margin-bottom: 0.5rem;
+    flex: 1;
+}
+
+.mini-club-tags {
+    font-size: 0.75rem;
+    color: #5F96C5;
+    font-weight: 500;
+}
+
+.view-all-card {
+    border: 2px dashed #5F96C5;
+    background: rgba(95, 150, 197, 0.05);
+}
+
+.view-all-card:hover {
+    background: rgba(95, 150, 197, 0.1);
+    border-color: #4a8bc2;
 }
 
 /* =============================================================================
-   STATS CARD STYLING
+   UPCOMING EVENTS CARD - Right Half, Middle (Improved Spacing)
    =============================================================================
 */
 
-.stats-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1.5rem;
-    margin-bottom: 1.5rem;
+.upcoming-events-card {
+    grid-area: upcoming-events;
+    width: 100%;
+    height: 350px;
+    /* Increased height */
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    border-radius: 20px;
+    padding: 1.5rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
 }
 
-.stat-item {
-    text-align: center;
-    padding: 1rem;
-    background: rgba(255, 255, 255, 0.3);
+.upcoming-events-card h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 1rem;
+}
+
+.events-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    height: calc(100% - 3rem);
+    overflow-y: auto;
+}
+
+.events-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.events-list::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 3px;
+}
+
+.events-list::-webkit-scrollbar-thumb {
+    background: #5F96C5;
+    border-radius: 3px;
+}
+
+.event-item {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    padding: 1.25rem;
+    background: rgba(255, 255, 255, 0.9);
     border-radius: 12px;
-    border: 1px solid rgba(255, 255, 255, 0.4);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    min-height: 80px;
 }
 
-.stat-number {
-    display: block;
-    font-size: 2rem;
-    font-weight: 700;
-    color: #5F96C5;
+.event-item:hover {
+    transform: translateX(8px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+    background: rgba(255, 255, 255, 1);
+}
+
+.event-date {
+    background: linear-gradient(135deg, #5F96C5, #4a8bc2);
+    color: white;
+    border-radius: 12px;
+    padding: 1rem;
+    text-align: center;
+    min-width: 80px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.event-date-day {
+    font-size: 1.5rem;
+    font-weight: bold;
     line-height: 1;
 }
 
-.stat-label {
-    font-size: 0.85rem;
-    color: #7f8c8d;
-    font-weight: 500;
+.event-date-month {
+    font-size: 0.8rem;
+    opacity: 0.9;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-top: 0.25rem;
 }
 
-.stats-note {
+.event-details {
+    flex: 1;
+    min-width: 0;
+    /* Prevent text overflow */
+}
+
+.event-name {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 0.5rem;
+    line-height: 1.3;
+}
+
+.event-club {
+    font-size: 0.9rem;
+    color: #7f8c8d;
+    line-height: 1.2;
+}
+
+/* =============================================================================
+   TEST RESULTS CARD - Left Half, Bottom (Improved Spacing)
+   =============================================================================
+*/
+
+.test-results-card {
+    grid-area: test-results;
+    width: 100%;
+    height: 350px;
+    /* Increased height */
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    border-radius: 20px;
+    padding: 1.5rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.test-results-card h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 1rem;
+}
+
+.test-results-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    height: calc(100% - 3rem);
+    overflow-y: auto;
+}
+
+.test-results-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.test-results-list::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 3px;
+}
+
+.test-results-list::-webkit-scrollbar-thumb {
+    background: #5F96C5;
+    border-radius: 3px;
+}
+
+.test-result-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.25rem;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    min-height: 80px;
+}
+
+.test-result-item:hover {
+    transform: translateX(8px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+    background: rgba(255, 255, 255, 1);
+}
+
+.test-info {
+    flex: 1;
+}
+
+.test-name {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 0.5rem;
+    line-height: 1.2;
+}
+
+.test-date {
+    font-size: 0.9rem;
+    color: #7f8c8d;
+}
+
+.test-score {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #5F96C5;
+    background: rgba(95, 150, 197, 0.1);
+    padding: 0.5rem 1rem;
+    border-radius: 25px;
+    min-width: 70px;
     text-align: center;
-    font-size: 0.85rem;
-    color: #95a5a6;
-    font-style: italic;
+    flex-shrink: 0;
+}
+
+/* =============================================================================
+   EMPTY SPACE CARD - Right Half, Bottom (intentionally minimal styling)
+   =============================================================================
+*/
+
+.empty-space-card {
+    grid-area: empty-space;
+    width: 100%;
+    height: 300px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 20px;
+    /* Intentionally left mostly empty as requested */
+}
+
+/* =============================================================================
+   EMPTY STATES
+   =============================================================================
+*/
+
+.empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    color: #7f8c8d;
+    text-align: center;
+    padding: 1rem;
+}
+
+.empty-state-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    opacity: 0.6;
+}
+
+.empty-state-text {
+    font-size: 1.1rem;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    color: #5f6368;
+}
+
+.empty-state-subtext {
+    font-size: 0.9rem;
+    opacity: 0.8;
+    line-height: 1.4;
 }
 
 /* =============================================================================
@@ -295,7 +717,7 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(245, 252, 255, 0.9);
+    background: rgba(245, 252, 255, 0.95);
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -304,18 +726,14 @@
     backdrop-filter: blur(5px);
 }
 
-.loading-overlay.hidden {
-    display: none;
-}
-
 .loading-spinner {
-    width: 50px;
-    height: 50px;
+    width: 60px;
+    height: 60px;
     border: 4px solid rgba(95, 150, 197, 0.3);
     border-top: 4px solid #5F96C5;
     border-radius: 50%;
     animation: spin 1s linear infinite;
-    margin-bottom: 1rem;
+    margin-bottom: 1.5rem;
 }
 
 @keyframes spin {
@@ -328,136 +746,166 @@
     }
 }
 
-.loading-overlay p {
+.loading-text {
     color: #5F96C5;
     font-weight: 500;
     font-size: 1.1rem;
 }
 
 /* =============================================================================
-   RESPONSIVE DESIGN
+   RESPONSIVE DESIGN - Adapted for New Layout
    =============================================================================
 */
 
-@media (max-width: 768px) {
+@media (max-width: 1728px) {
     .dashboard-container {
+        max-width: 95%;
         padding: 1rem;
-    }
-
-    .dashboard-header h1 {
-        font-size: 2rem;
-    }
-
-    .dashboard-grid {
-        grid-template-columns: 1fr;
         gap: 1.5rem;
     }
+}
 
-    .dashboard-card {
-        padding: 1.5rem;
+@media (max-width: 1200px) {
+    .dashboard-container {
+        grid-template-columns: 1fr;
+        grid-template-areas:
+            "user-profile"
+            "saved-clubs"
+            "upcoming-events"
+            "test-results"
+            "empty-space";
     }
 
-    .stats-grid {
-        grid-template-columns: 1fr;
+    .navbar-container {
+        width: 90%;
+        padding: 0 2rem;
+    }
+
+    .nav-links {
+        gap: 2rem;
+    }
+
+    .user-profile-card {
+        min-height: 400px;
+    }
+
+    .saved-clubs-card,
+    .upcoming-events-card,
+    .test-results-card {
+        height: auto;
+        min-height: 250px;
+    }
+
+    .empty-space-card {
+        height: 150px;
+        /* Smaller on mobile */
+    }
+}
+
+@media (max-width: 768px) {
+    .dashboard-container {
+        padding: 0.5rem;
         gap: 1rem;
+    }
+
+    .navbar-container {
+        width: 90%;
+        padding: 0 2rem;
+    }
+
+    .nav-links {
+        gap: 2rem;
+    }
+
+    .profile-image {
+        width: 120px;
+        height: 120px;
+        font-size: 2.5rem;
+    }
+
+    .user-major {
+        font-size: 1.2rem;
+    }
+
+    .user-email {
+        font-size: 1rem;
+    }
+
+    .mini-club-card {
+        flex: 0 0 160px;
     }
 }
 
 @media (max-width: 480px) {
     .dashboard-container {
-        padding: 0.5rem;
+        padding: 0.25rem;
     }
 
-    .dashboard-card {
+    .nav-links {
+        gap: 1rem;
+    }
+
+    .nav-links a {
+        font-size: 0.9rem;
+    }
+
+    .user-profile-card,
+    .saved-clubs-card,
+    .upcoming-events-card,
+    .test-results-card,
+    .empty-space-card {
         padding: 1rem;
         border-radius: 15px;
     }
 
-    .count-number {
-        font-size: 2.5rem;
-    }
-
-    .stat-number {
-        font-size: 1.5rem;
+    .empty-space-card {
+        height: 100px;
+        /* Even smaller on very small screens */
     }
 }
 
+/* =============================================================================
+   PROFILE EDIT MODAL STYLES
+   =============================================================================
+*/
 
-/* Mini Club Cards in Bookmarks */
-.bookmark-clubs-grid {
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-    max-height: 200px;
-    overflow-y: auto;
+.profile-edit-modal input:focus {
+    border-color: #5F96C5 !important;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(95, 150, 197, 0.1);
 }
 
-.mini-club-card {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0.75rem;
-    background: rgba(255, 255, 255, 0.3);
-    border-radius: 8px;
-    cursor: pointer;
-    transition: transform 0.2s ease;
+.profile-edit-modal button:hover {
+    transform: translateY(-1px);
 }
 
-.mini-club-card:hover {
-    transform: translateY(-2px);
-    background: rgba(255, 255, 255, 0.4);
+/* =============================================================================
+   UTILITIES
+   =============================================================================
+*/
+
+.dashboard-message {
+    font-family: 'Rethink Sans', sans-serif;
+    line-height: 1.4;
 }
 
-.mini-club-info {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
+/* Hide scrollbars on webkit browsers for a cleaner look */
+.saved-clubs-grid::-webkit-scrollbar,
+.events-list::-webkit-scrollbar,
+.test-results-list::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
 }
 
-.mini-club-logo {
-    width: 30px;
-    height: 30px;
-    border-radius: 6px;
-    object-fit: cover;
+.saved-clubs-grid::-webkit-scrollbar-thumb,
+.events-list::-webkit-scrollbar-thumb,
+.test-results-list::-webkit-scrollbar-thumb {
+    background: rgba(95, 150, 197, 0.5);
+    border-radius: 2px;
 }
 
-.mini-club-details {
-    display: flex;
-    flex-direction: column;
-}
-
-.mini-club-name {
-    font-weight: 600;
-    font-size: 0.9rem;
-    color: #2c3e50;
-}
-
-.mini-club-category {
-    font-size: 0.75rem;
-    color: #7f8c8d;
-}
-
-.mini-club-tags {
-    display: flex;
-    gap: 0.25rem;
-}
-
-.mini-tag {
-    font-size: 0.7rem;
-    background: #5F96C5;
-    color: white;
-    padding: 0.15rem 0.4rem;
-    border-radius: 4px;
-}
-
-.view-all-btn {
-    display: inline-block;
-    margin-top: 1rem;
-    padding: 0.5rem 1rem;
-    background: #5F96C5;
-    color: white;
-    text-decoration: none;
-    border-radius: 6px;
-    font-size: 0.9rem;
-    text-align: center;
+.saved-clubs-grid::-webkit-scrollbar-thumb:hover,
+.events-list::-webkit-scrollbar-thumb:hover,
+.test-results-list::-webkit-scrollbar-thumb:hover {
+    background: rgba(95, 150, 197, 0.8);
 }

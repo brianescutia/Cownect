@@ -585,6 +585,99 @@ app.post('/api/events', requireAuth, async (req, res) => {
   }
 });
 
+// =============================================================================
+// EVENT BOOKMARK API ENDPOINTS
+// Add these to your main backend file (app.js or routes file)
+// =============================================================================
+
+// ADD EVENT BOOKMARK
+app.post('/api/events/:eventId/bookmark', requireAuth, async (req, res) => {
+  try {
+    const { eventId } = req.params;
+    const userId = req.session.userId;
+
+    console.log(`📌 User ${req.session.userEmail} bookmarking event ${eventId}`);
+
+    // Check if event exists
+    const event = await Event.findById(eventId);
+    if (!event) {
+      return res.status(404).json({ error: 'Event not found' });
+    }
+
+    // Get user and add bookmark
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    const wasAdded = await user.addEventBookmark(eventId);
+
+    res.json({
+      success: true,
+      message: wasAdded ? 'Event bookmarked successfully' : 'Event already bookmarked',
+      eventTitle: event.title,
+      isBookmarked: true,
+      eventId: eventId
+    });
+
+  } catch (error) {
+    console.error('💥 Error bookmarking event:', error);
+    res.status(500).json({ error: 'Failed to bookmark event' });
+  }
+});
+
+// REMOVE EVENT BOOKMARK
+app.delete('/api/events/:eventId/bookmark', requireAuth, async (req, res) => {
+  try {
+    const { eventId } = req.params;
+    const userId = req.session.userId;
+
+    console.log(`🗑️ User ${req.session.userEmail} removing event bookmark ${eventId}`);
+
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    const wasRemoved = await user.removeEventBookmark(eventId);
+
+    res.json({
+      success: true,
+      message: wasRemoved ? 'Event bookmark removed' : 'Event was not bookmarked',
+      isBookmarked: false,
+      eventId: eventId
+    });
+
+  } catch (error) {
+    console.error('💥 Error removing event bookmark:', error);
+    res.status(500).json({ error: 'Failed to remove event bookmark' });
+  }
+});
+
+// GET EVENT BOOKMARKS
+app.get('/api/event-bookmarks', requireAuth, async (req, res) => {
+  try {
+    console.log(`📋 Fetching event bookmarks for user: ${req.session.userEmail}`);
+
+    const user = await User.findWithEventBookmarks(req.session.userId);
+
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    console.log(`✅ Found ${user.bookmarkedEvents.length} event bookmarks`);
+
+    res.json({
+      bookmarks: user.bookmarkedEvents,
+      totalBookmarks: user.bookmarkedEvents.length
+    });
+
+  } catch (error) {
+    console.error('💥 Error fetching event bookmarks:', error);
+    res.status(500).json({ error: 'Failed to fetch event bookmarks' });
+  }
+});
+
 // UPDATE CLUB IMAGES - Add this route
 app.put('/api/clubs/:id/images', requireAuth, async (req, res) => {
   try {
@@ -2177,17 +2270,24 @@ function getDefaultMarketData(careerName) {
 // GET USER'S QUIZ HISTORY
 // =============================================================================
 
-app.get('/api/quiz/results/:userId', requireAuth, async (req, res) => {
+app.get('/api/quiz/results', requireAuth, async (req, res) => {
   try {
-    const results = await QuizResult.find({ user: req.session.userId })
-      .populate('topMatch.field')
-      .populate('topMatch.recommendedClubs')
-      .sort({ createdAt: -1 })
-      .limit(10);
+    const { limit = 5, recent = 'true' } = req.query;
+    console.log(`🧠 Fetching quiz results for user: ${req.session.userEmail}, limit: ${limit}`);
 
-    res.json({ results });
+    let query = { user: req.session.userId };
+
+    const results = await QuizResult.find(query)
+      .populate('careerMatches.field') // If you have this reference
+      .sort({ createdAt: -1 })
+      .limit(parseInt(limit))
+      .lean();
+
+    console.log(`✅ Found ${results.length} quiz results`);
+    res.json(results); // Return array directly, not wrapped in object
+
   } catch (error) {
-    console.error('Error fetching quiz results:', error);
+    console.error('💥 Error fetching quiz results:', error);
     res.status(500).json({ error: 'Failed to fetch quiz results' });
   }
 });

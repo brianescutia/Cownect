@@ -384,6 +384,8 @@ function renderFeaturedEvents() {
 
     CalendarState.featuredEvents.forEach(event => {
         const eventCard = template.content.cloneNode(true);
+        eventCard.querySelector('.event-card').setAttribute('data-event-id', event._id || event.id);
+
 
         // Update card content
         const img = eventCard.querySelector('.event-image');
@@ -1017,6 +1019,8 @@ function renderFeaturedEvents() {
 
     CalendarState.featuredEvents.forEach((event, index) => {
         const eventCard = template.content.cloneNode(true);
+        eventCard.querySelector('.event-card').setAttribute('data-event-id', event._id || event.id);
+
 
         // Update event image
         const img = eventCard.querySelector('.event-image');
@@ -1057,11 +1061,6 @@ function renderFeaturedEvents() {
         dateMonth.textContent = eventDate.toLocaleDateString('en-US', { month: 'short' }).toUpperCase();
 
         // Update bookmark button
-        const bookmark = eventCard.querySelector('.event-bookmark');
-        bookmark.addEventListener('click', (e) => {
-            e.stopPropagation();
-            handleEventBookmark(event._id || event.id, bookmark);
-        });
 
         // Update event content
         eventCard.querySelector('.event-title').textContent = event.title;

@@ -5,18 +5,22 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Dashboard | Cownect</title>
-  <link rel="stylesheet" href="/styles/tech-clubs.css" />
-  <link rel="stylesheet" href="/styles/dashboard.css" />
   <link href="https://fonts.googleapis.com/css2?family=Rethink+Sans&display=swap" rel="stylesheet" />
-
+  <link rel="stylesheet" href="/styles/dashboard.css" />
+  
   <!-- Scripts -->
-  <script src="/scripts/navbar.js" defer></script>
+  <script src="/scripts/bookmark.js" defer></script>
+  <script src="/scripts/events-calendar.js" defer></script>
+  <script src="/scripts/events.js" defer></script>
   <script src="/scripts/dashboard.js" defer></script>
 </head>
 
 <body>
+  <!-- Background blur decorations -->
+  <div class="blur-decoration-left"></div>
+  <div class="blur-decoration-right"></div>
 
-  <!-- Navbar - Same as tech-clubs page -->
+  <!-- Navbar - copied from tech-clubs -->
   <nav class="navbar">
     <div class="navbar-container">
       <div class="logo-title">
@@ -33,104 +37,129 @@
     </div>
   </nav>
 
-  <!-- Dashboard Content -->
+  <!-- Dashboard Container with New Layout -->
   <main class="dashboard-container">
+    
+    <!-- User Profile Card - Left Half, Top -->
+    <section class="user-profile-card">
+      <div class="profile-image-container">
+        <div class="profile-image" id="profileImage" onclick="document.getElementById('imageUpload').click()">
+          <span id="profileInitials">JD</span>
+          <input type="file" id="imageUpload" accept="image/*" style="display: none;" onchange="handleImageUpload(event)">
+        </div>
+      </div>
+      <div class="profile-info">
+        <div class="user-major" id="userMajor">Computer Science</div>
+        <div class="user-email" id="userEmail">john.doe@ucdavis.edu</div>
+        <button class="edit-profile-btn" onclick="editProfile()">Edit Profile</button>
+      </div>
+    </section>
 
-    <!-- Page Header -->
-    <header class="dashboard-header">
-      <h1>My Dashboard</h1>
-      <p class="dashboard-subtitle">Manage your Cownect profile and preferences</p>
-    </header>
+    <!-- Saved Clubs Card - Right Half, Top -->
+    <section class="saved-clubs-card">
+      <h2>Saved Clubs</h2>
+      <div class="saved-clubs-grid" id="savedClubsGrid">
+        <!-- Sample saved clubs -->
+        <div class="mini-club-card">
+          <div class="mini-club-logo"></div>
+          <div class="mini-club-name">#include</div>
+          <div class="mini-club-description">Build real-world coding projects</div>
+          <div class="mini-club-tags">#software #webdev</div>
+        </div>
+        <div class="mini-club-card">
+          <div class="mini-club-logo"></div>
+          <div class="mini-club-name">AI Student Collective</div>
+          <div class="mini-club-description">Machine learning and NLP</div>
+          <div class="mini-club-tags">#AI #ML #Python</div>
+        </div>
+        <div class="mini-club-card">
+          <div class="mini-club-logo"></div>
+          <div class="mini-club-name">AggieWorks</div>
+          <div class="mini-club-description">Electronics and microcontrollers</div>
+          <div class="mini-club-tags">#hardware #arduino</div>
+        </div>
+      </div>
+    </section>
 
-    <!-- Dashboard Grid -->
-    <div class="dashboard-grid">
-
-      <!-- User Profile Card -->
-      <section class="dashboard-card profile-card">
-        <h2>👤 Profile Information</h2>
-        <div class="profile-info">
-          <div class="info-item">
-            <span class="info-label">Email:</span>
-            <span class="info-value" id="userEmail">Loading...</span>
+    <!-- Upcoming Events Card - Right Half, Middle -->
+    <section class="upcoming-events-card">
+      <h2>My Upcoming Events</h2>
+      <div class="events-list" id="eventsList">
+        <!-- Sample events -->
+        <div class="event-item">
+          <div class="event-date">
+            <div class="event-date-day">15</div>
+            <div class="event-date-month">Aug</div>
           </div>
-          <div class="info-item">
-            <span class="info-label">Member Since:</span>
-            <span class="info-value" id="joinDate">Loading...</span>
-          </div>
-          <div class="info-item">
-            <span class="info-label">Account Status:</span>
-            <span class="info-value status-active">Active</span>
+          <div class="event-details">
+            <div class="event-name">Weekly Coding Workshop</div>
+            <div class="event-club">#include - 6:00 PM</div>
           </div>
         </div>
-      </section>
-
-      <!-- Bookmarks Preview Card -->
-      <section class="dashboard-card bookmarks-card">
-        <h2>🔖 My Bookmarked Clubs</h2>
-        <div class="bookmarks-preview">
-          <div class="bookmark-count">
-            <span class="count-number" id="bookmarkCount">0</span>
-            <span class="count-label">clubs saved</span>
+        <div class="event-item">
+          <div class="event-date">
+            <div class="event-date-day">18</div>
+            <div class="event-date-month">Aug</div>
           </div>
-          <div class="bookmark-list" id="bookmarkList">
-            <p class="placeholder-text">No bookmarks yet. Start exploring clubs to save your favorites!</p>
-          </div>
-          <a href="/tech-clubs" class="action-button">Browse Clubs</a>
-        </div>
-      </section>
-
-      <!-- Quick Actions Card -->
-      <section class="dashboard-card actions-card">
-        <h2>⚡ Quick Actions</h2>
-        <div class="action-buttons">
-          <a href="/tech-clubs" class="action-btn primary">
-            🏛️ Browse Tech Clubs
-          </a>
-          <a href="#" class="action-btn secondary" onclick="alert('Coming in Week 5!')">
-            📅 View Events
-          </a>
-          <a href="#" class="action-btn secondary" onclick="alert('Coming in Week 6!')">
-            🧪 Take Niche Test
-          </a>
-          <a href="/logout" class="action-btn danger">
-            🚪 Logout
-          </a>
-        </div>
-      </section>
-
-      <!-- Account Stats Card -->
-      <section class="dashboard-card stats-card">
-        <h2>📊 Your Activity</h2>
-        <div class="stats-grid">
-          <div class="stat-item">
-            <span class="stat-number" id="clubsViewed">--</span>
-            <span class="stat-label">Clubs Viewed</span>
-          </div>
-          <div class="stat-item">
-            <span class="stat-number" id="eventsInterested">--</span>
-            <span class="stat-label">Events Interested</span>
-          </div>
-          <div class="stat-item">
-            <span class="stat-number" id="daysActive">--</span>
-            <span class="stat-label">Days Active</span>
-          </div>
-          <div class="stat-item">
-            <span class="stat-number" id="searchesPerformed">--</span>
-            <span class="stat-label">Searches Made</span>
+          <div class="event-details">
+            <div class="event-name">AI Research Presentation</div>
+            <div class="event-club">AI Student Collective - 4:30 PM</div>
           </div>
         </div>
-        <p class="stats-note">💡 More detailed analytics coming soon!</p>
-      </section>
+        <div class="event-item">
+          <div class="event-date">
+            <div class="event-date-day">22</div>
+            <div class="event-date-month">Aug</div>
+          </div>
+          <div class="event-details">
+            <div class="event-name">Hardware Demo Day</div>
+            <div class="event-club">AggieWorks - 3:00 PM</div>
+          </div>
+        </div>
+      </div>
+    </section>
 
-    </div>
+    <!-- Test Results Card - Left Half, Bottom -->
+    <section class="test-results-card">
+      <h2>Recent Test Results</h2>
+      <div class="test-results-list" id="testResultsList">
+        <!-- Sample test results -->
+        <div class="test-result-item">
+          <div class="test-info">
+            <div class="test-name">Career Interest Assessment</div>
+            <div class="test-date">July 28, 2025</div>
+          </div>
+          <div class="test-score">85%</div>
+        </div>
+        <div class="test-result-item">
+          <div class="test-info">
+            <div class="test-name">Technical Skills Evaluation</div>
+            <div class="test-date">July 20, 2025</div>
+          </div>
+          <div class="test-score">92%</div>
+        </div>
+        <div class="test-result-item">
+          <div class="test-info">
+            <div class="test-name">Leadership Style Quiz</div>
+            <div class="test-date">July 15, 2025</div>
+          </div>
+          <div class="test-score">78%</div>
+        </div>
+      </div>
+    </section>
 
-    <!-- Loading State -->
-    <div class="loading-overlay" id="loadingOverlay">
-      <div class="loading-spinner"></div>
-      <p>Loading your dashboard...</p>
-    </div>
+    <!-- Empty Space - Right Half, Bottom (intentionally blank) -->
+    <section class="empty-space-card">
+      <!-- Intentionally left blank as requested -->
+    </section>
 
   </main>
+
+  <!-- Loading State -->
+  <div class="loading-overlay" id="loadingOverlay" style="display: none;">
+    <div class="loading-spinner"></div>
+    <div class="loading-text">Loading your dashboard...</div>
+  </div>
 
 </body>
 

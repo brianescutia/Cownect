@@ -316,36 +316,51 @@ button {
 
 /* Bookmark Button - Top Right */
 .event-bookmark {
+    /* Add these positioning styles if needed */
     position: absolute;
     top: 12px;
     right: 12px;
-    width: 36px;
-    height: 36px;
-    background: rgba(255, 255, 255, 0.95);
+    z-index: 10;
+
+    /* Keep the visual fixes */
+    background: rgba(255, 255, 255, 0.9);
     border: none;
     border-radius: 50%;
+    width: 36px;
+    height: 36px;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
     transition: all 0.3s ease;
-    z-index: 10;
-    color: #666;
-    backdrop-filter: blur(10px);
+}
+
+.event-bookmark svg {
+    width: 18px;
+    height: 18px;
+    stroke: #666;
+    fill: none;
+    transition: all 0.3s ease;
 }
 
 .event-bookmark:hover {
-    background: white;
-    transform: scale(1.1);
-    color: #5F96C5;
-    /* Tech-clubs color */
+    background: rgba(255, 255, 255, 1);
+}
+
+.event-bookmark:hover svg {
+    stroke: #5F96C5;
 }
 
 .event-bookmark.bookmarked {
-    background: #5F96C5;
-    /* Tech-clubs color */
-    color: white;
+    background: rgba(255, 255, 255, 0.95);
+    transform: scale(1.1);
 }
+
+.event-bookmark.bookmarked svg {
+    stroke: #5F96C5;
+    fill: #5F96C5;
+}
+
 
 /* Event Image - Upper Half */
 .event-image-container {
@@ -396,6 +411,10 @@ button {
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     flex-grow: 1;
+}
+
+.event-bookmark:focus {
+    outline: none;
 }
 
 /* Event Details (Location and Time) */

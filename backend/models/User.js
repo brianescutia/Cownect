@@ -1,5 +1,5 @@
 // =============================================================================
-// UPDATED USER MODEL - Now with Bookmarks Support
+// UPDATED USER MODEL - Now with Club AND Event Bookmarks Support
 // =============================================================================
 
 const mongoose = require('mongoose');
@@ -24,10 +24,16 @@ const userSchema = new mongoose.Schema({
         minlength: 6
     },
 
-    // BOOKMARKED CLUBS - NEW! Array of club IDs
+    // BOOKMARKED CLUBS - Array of club IDs
     bookmarkedClubs: [{
         type: mongoose.Schema.Types.ObjectId,  // References Club _id
         ref: 'Club'  // Tells Mongoose this refers to Club model
+    }],
+
+    // BOOKMARKED EVENTS - NEW! Array of event IDs
+    bookmarkedEvents: [{
+        type: mongoose.Schema.Types.ObjectId,  // References Event _id
+        ref: 'Event'  // Tells Mongoose this refers to Event model
     }],
 
     // TIMESTAMP - Track when user account was created
@@ -36,7 +42,7 @@ const userSchema = new mongoose.Schema({
         default: Date.now
     },
 
-    //New Email Verification Fields
+    //Email Verification Fields
     isVerified: {
         type: Boolean,
         default: false
@@ -75,7 +81,7 @@ userSchema.methods.generatePasswordResetToken = function () {
 };
 
 // =============================================================================
-// PASSWORD HASHING MIDDLEWARE - Same as before
+// PASSWORD HASHING MIDDLEWARE
 // =============================================================================
 userSchema.pre('save', async function (next) {
     if (!this.isModified('password')) return next();
@@ -90,62 +96,118 @@ userSchema.pre('save', async function (next) {
 });
 
 // =============================================================================
-// PASSWORD COMPARISON METHOD - Same as before
+// PASSWORD COMPARISON METHOD
 // =============================================================================
 userSchema.methods.comparePassword = async function (candidatePassword) {
     return bcrypt.compare(candidatePassword, this.password);
 };
 
 // =============================================================================
-// NEW: BOOKMARK METHODS
+// CLUB BOOKMARK METHODS
 // =============================================================================
 
-// ADD BOOKMARK - Add club to user's bookmarks
+// ADD CLUB BOOKMARK - Add club to user's bookmarks
 userSchema.methods.addBookmark = async function (clubId) {
     // Check if already bookmarked
     if (!this.bookmarkedClubs.includes(clubId)) {
         this.bookmarkedClubs.push(clubId);
         await this.save();
-        console.log(`✅ Added bookmark: ${clubId} for user ${this.email}`);
+        console.log(`✅ Added club bookmark: ${clubId} for user ${this.email}`);
         return true;
     }
     console.log(`⚠️ Club ${clubId} already bookmarked by ${this.email}`);
     return false;
 };
 
-// 🗑️ REMOVE BOOKMARK - Remove club from user's bookmarks
+// REMOVE CLUB BOOKMARK - Remove club from user's bookmarks
 userSchema.methods.removeBookmark = async function (clubId) {
     const initialLength = this.bookmarkedClubs.length;
     this.bookmarkedClubs = this.bookmarkedClubs.filter(id => !id.equals(clubId));
 
     if (this.bookmarkedClubs.length < initialLength) {
         await this.save();
-        console.log(`✅ Removed bookmark: ${clubId} for user ${this.email}`);
+        console.log(`✅ Removed club bookmark: ${clubId} for user ${this.email}`);
         return true;
     }
     console.log(`⚠️ Club ${clubId} was not bookmarked by ${this.email}`);
     return false;
 };
 
-// CHECK IF BOOKMARKED - Check if user has bookmarked a specific club
+// CHECK IF CLUB BOOKMARKED - Check if user has bookmarked a specific club
 userSchema.methods.hasBookmarked = function (clubId) {
     return this.bookmarkedClubs.some(id => id.equals(clubId));
 };
 
-// GET BOOKMARK COUNT - Get total number of bookmarks
+// GET CLUB BOOKMARK COUNT - Get total number of club bookmarks
 userSchema.methods.getBookmarkCount = function () {
     return this.bookmarkedClubs.length;
+};
+
+// =============================================================================
+// EVENT BOOKMARK METHODS - NEW!
+// =============================================================================
+
+// ADD EVENT BOOKMARK - Add event to user's bookmarks
+userSchema.methods.addEventBookmark = async function (eventId) {
+    // Check if already bookmarked
+    if (!this.bookmarkedEvents.includes(eventId)) {
+        this.bookmarkedEvents.push(eventId);
+        await this.save();
+        console.log(`✅ Added event bookmark: ${eventId} for user ${this.email}`);
+        return true;
+    }
+    console.log(`⚠️ Event ${eventId} already bookmarked by ${this.email}`);
+    return false;
+};
+
+// REMOVE EVENT BOOKMARK - Remove event from user's bookmarks
+userSchema.methods.removeEventBookmark = async function (eventId) {
+    const initialLength = this.bookmarkedEvents.length;
+    this.bookmarkedEvents = this.bookmarkedEvents.filter(id => !id.equals(eventId));
+
+    if (this.bookmarkedEvents.length < initialLength) {
+        await this.save();
+        console.log(`✅ Removed event bookmark: ${eventId} for user ${this.email}`);
+        return true;
+    }
+    console.log(`⚠️ Event ${eventId} was not bookmarked by ${this.email}`);
+    return false;
+};
+
+// CHECK IF EVENT BOOKMARKED - Check if user has bookmarked a specific event
+userSchema.methods.hasEventBookmarked = function (eventId) {
+    return this.bookmarkedEvents.some(id => id.equals(eventId));
+};
+
+// GET EVENT BOOKMARK COUNT - Get total number of event bookmarks
+userSchema.methods.getEventBookmarkCount = function () {
+    return this.bookmarkedEvents.length;
 };
 
 // =============================================================================
 // STATIC METHODS - Available on User model itself
 // =============================================================================
 
-// GET USER WITH POPULATED BOOKMARKS - Get user with full club details
+// GET USER WITH POPULATED BOOKMARKS - Get user with full club AND event details
 userSchema.statics.findWithBookmarks = function (userId) {
     return this.findById(userId)
-        .populate('bookmarkedClubs')  // Get full club objects, not just IDs
-        .select('-password');         // Exclude password from result
+        .populate('bookmarkedClubs')   // Get full club objects, not just IDs
+        .populate('bookmarkedEvents')  // Get full event objects, not just IDs
+        .select('-password');          // Exclude password from result
+};
+
+// GET USER WITH ONLY CLUB BOOKMARKS
+userSchema.statics.findWithClubBookmarks = function (userId) {
+    return this.findById(userId)
+        .populate('bookmarkedClubs')
+        .select('-password');
+};
+
+// GET USER WITH ONLY EVENT BOOKMARKS
+userSchema.statics.findWithEventBookmarks = function (userId) {
+    return this.findById(userId)
+        .populate('bookmarkedEvents')
+        .select('-password');
 };
 
 module.exports = mongoose.model('User', userSchema);
@@ -154,24 +216,21 @@ module.exports = mongoose.model('User', userSchema);
 // USAGE EXAMPLES:
 // =============================================================================
 //
-// Add bookmark:
+// CLUB BOOKMARKS:
 // await user.addBookmark(clubId);
-//
-// Remove bookmark:
 // await user.removeBookmark(clubId);
+// const isClubBookmarked = user.hasBookmarked(clubId);
+// const clubCount = user.getBookmarkCount();
 //
-// Check if bookmarked:
-// const isBookmarked = user.hasBookmarked(clubId);
+// EVENT BOOKMARKS:
+// await user.addEventBookmark(eventId);
+// await user.removeEventBookmark(eventId);
+// const isEventBookmarked = user.hasEventBookmarked(eventId);
+// const eventCount = user.getEventBookmarkCount();
 //
-// Get user with bookmarks:
-// const userWithBookmarks = await User.findWithBookmarks(userId);
+// GET USER WITH BOOKMARKS:
+// const userWithAllBookmarks = await User.findWithBookmarks(userId);
+// const userWithClubs = await User.findWithClubBookmarks(userId);
+// const userWithEvents = await User.findWithEventBookmarks(userId);
 //
-// =============================================================================
-
-// =============================================================================
-//User Email Verification System
-// =============================================================================
-
-
-module.exports = mongoose.model('User', userSchema);
 // =============================================================================
