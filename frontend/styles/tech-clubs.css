@@ -163,6 +163,41 @@ button {
     filter: brightness(0.8);
 }
 
+/* Make filter button background transparent */
+.filter-toggle {
+    background: transparent !important;
+    border: none;
+    padding: 0.5rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.filter-toggle:hover {
+    background: transparent !important;
+    transform: scale(1.1);
+}
+
+.filter-toggle:focus {
+    outline: none;
+    background: transparent !important;
+}
+
+/* Keep the icon styling */
+.filter-toggle .search-icon {
+    height: 2vw;
+    width: 2vw;
+    max-height: 32px;
+    max-width: 32px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.filter-toggle:hover .search-icon {
+    filter: brightness(0.8) drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+    transform: scale(1.05);
+}
+
+
 
 .filter-tags {
     display: flex;

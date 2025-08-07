@@ -177,11 +177,15 @@ function updateContactInfo(club) {
     contactHTML += '<div class="social-links">';
 
     if (club.websiteUrl) {
-        contactHTML += `<a href="${club.websiteUrl}" target="_blank" class="social-link">🌐 Website</a>`;
+        contactHTML += `<a href="${club.websiteUrl}" target="_blank" class="social-link">🌐</a>`;
     }
 
     if (club.instagramUrl) {
-        contactHTML += `<a href="${club.instagramUrl}" target="_blank" class="social-link">📱 Instagram</a>`;
+        contactHTML += `<a href="${club.instagramUrl}" target="_blank" class="social-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect x="2" y="2" width="20" height="20" rx="5" ry="5" stroke="currentColor" stroke-width="2"/>
+  <path d="m16 11.37a4 4 0 1 1-7.91-1.1 4 4 0 0 1 7.91 1.1z" stroke="currentColor" stroke-width="2"/>
+  <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" stroke="currentColor" stroke-width="2"/>
+</svg> </a>`;
     }
 
     // Add default links if none available
@@ -192,21 +196,6 @@ function updateContactInfo(club) {
             <a href="#" class="social-link">📱 Instagram</a>
         `;
     }
-
-    contactHTML += '</div>';
-
-    // Add action buttons
-    contactHTML += `
-        <div class="action-buttons">
-            <button class="bookmark-btn" id="heroBookmarkBtn">
-                <img src="../assets/bookmark.png" alt="Bookmark" class="bookmark-icon" />
-                <span>Save Club</span>
-            </button>
-            <button class="join-btn">
-                <span>Join Club</span>
-            </button>
-        </div>
-    `;
 
     contactsBox.innerHTML = contactHTML;
 }
