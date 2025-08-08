@@ -227,16 +227,6 @@ button {
 
 
 /* Club Grid */
-.clubs-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    /* 3 cards per row */
-    gap: 2rem;
-    padding: 1rem;
-    justify-content: center;
-    max-width: 1200px;
-    margin: 0 auto;
-}
 
 
 /* Club Card */
@@ -648,12 +638,14 @@ button {
 .clubs-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    /* 3 cards per row */
-    gap: 2rem;
+    column-gap: 2rem;
+    row-gap: 2rem;
     padding: 1rem;
     justify-content: center;
-    max-width: 1200px;
+    max-width: 900px;
+    /* SMALLER container = cards closer together */
     margin: 0 auto;
+    /* Keep for testing */
 }
 
 /* Hide cards beyond the 6th */
