@@ -172,7 +172,7 @@ button {
 .events-container {
     max-width: 1600px;
     margin: 0 auto;
-    padding: 2rem;
+    padding: 1.5rem;
 }
 
 /* =============================================================================
@@ -204,7 +204,8 @@ button {
    ============================================================================= */
 
 .featured-events-section {
-    min-height: 500px;
+    min-height: auto;
+    margin-bottom: 1rem;
 }
 
 .featured-events-section h2 {
@@ -223,7 +224,10 @@ button {
     margin: 0 auto;
     padding: 0 1rem;
     justify-items: center;
+    margin-bottom: 0;
+    /* ADDED: Ensure no extra bottom margin */
 }
+
 
 /* Force 3 columns on larger screens */
 @media (min-width: 1200px) {
@@ -530,14 +534,18 @@ button {
 
 .calendar-section {
     background-color: rgba(255, 255, 255, 0.7);
-    /* Same as tech-clubs cards */
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     border: 1px solid rgba(255, 255, 255, 0.8);
     border-radius: 15px;
     padding: 2rem;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-    margin-top: 0.5rem;
+    margin-top: 1rem !important;
+    /* CHANGED: Override the 3rem margin from calendar CSS */
+    margin-bottom: 0;
+    max-width: 1400px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 /* =============================================================================
@@ -634,7 +642,7 @@ button {
 
 @media (max-width: 1440px) {
     .events-container {
-        padding: 1.5rem;
+        padding: 1rem;
     }
 
     .featured-events-grid {
@@ -701,7 +709,7 @@ button {
     }
 
     .events-container {
-        padding: 1rem;
+        padding: 0.75rem;
     }
 
     .events-header h1 {
