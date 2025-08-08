@@ -1197,3 +1197,417 @@
 template {
     display: none;
 }
+
+
+/* =============================================================================
+   QUIZ RESULTS - COLLAPSIBLE CARDS AND HORIZONTAL CLUBS
+   Add this to your niche-quiz.css file
+   =============================================================================
+*/
+
+/* =============================================================================
+   COLLAPSIBLE CARD FUNCTIONALITY
+   =============================================================================
+*/
+
+.collapsible-card {
+    background: #FFFFFF;
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 24px;
+    margin-bottom: 2rem;
+    box-shadow:
+        0 8px 32px rgba(0, 0, 0, 0.1),
+        0 4px 16px rgba(0, 0, 0, 0.05),
+        inset 0 1px 0 rgba(255, 255, 255, 0.6);
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
+
+.collapsible-card:hover {
+    transform: translateY(-4px);
+    box-shadow:
+        0 12px 40px rgba(0, 0, 0, 0.15),
+        0 6px 20px rgba(0, 0, 0, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.6);
+}
+
+.card-header {
+    background: rgba(95, 150, 197, 0.08);
+    padding: 1.5rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-bottom: 1px solid rgba(95, 150, 197, 0.15);
+}
+
+.card-header:hover {
+    background: rgba(95, 150, 197, 0.12);
+}
+
+.section-header-collapsible {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.section-header-collapsible .section-icon {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+}
+
+.section-header-collapsible .section-title {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #2c3e50;
+    margin: 0;
+}
+
+.collapse-btn {
+    background: rgba(95, 150, 197, 0.15);
+    border: none;
+    color: #5F96C5;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    font-size: 1.4rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.collapse-btn:hover {
+    background: rgba(95, 150, 197, 0.25);
+    transform: scale(1.1);
+}
+
+.collapse-btn.collapsed {
+    transform: rotate(180deg);
+}
+
+.card-content {
+    padding: 2rem;
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
+
+.card-content.collapsed {
+    max-height: 0;
+    padding: 0 2rem;
+    opacity: 0;
+}
+
+/* =============================================================================
+   HORIZONTAL CLUBS LAYOUT (3 clubs side by side)
+   =============================================================================
+*/
+
+.recommended-clubs {
+    background: #FFFFFF;
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 24px;
+    padding: 2.5rem;
+    margin-bottom: 2rem;
+    box-shadow:
+        0 8px 32px rgba(0, 0, 0, 0.1),
+        0 4px 16px rgba(0, 0, 0, 0.05),
+        inset 0 1px 0 rgba(255, 255, 255, 0.6);
+    transition: all 0.3s ease;
+}
+
+.recommended-clubs:hover {
+    transform: translateY(-4px);
+    box-shadow:
+        0 12px 40px rgba(0, 0, 0, 0.15),
+        0 6px 20px rgba(0, 0, 0, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.6);
+}
+
+.clubs-grid-horizontal {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    width: 100%;
+}
+
+.recommended-club-card-horizontal {
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    border-radius: 20px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    height: 380px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.recommended-club-card-horizontal:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15);
+    background: rgba(255, 255, 255, 1);
+}
+
+.club-image-container-horizontal {
+    height: 45%;
+    overflow: hidden;
+    position: relative;
+    background: #f8f9fa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+}
+
+.club-image-horizontal {
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+    border-radius: 15px;
+    background: white;
+    padding: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.club-content-horizontal {
+    height: 55%;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.club-name-horizontal {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 0.75rem;
+    line-height: 1.2;
+}
+
+.club-description-horizontal {
+    font-size: 0.95rem;
+    color: #666;
+    line-height: 1.4;
+    margin-bottom: 1rem;
+    flex-grow: 1;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+}
+
+.club-tags-horizontal {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+}
+
+.tag-horizontal {
+    background: rgba(95, 150, 197, 0.1);
+    color: #5F96C5;
+    padding: 0.25rem 0.75rem;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.club-actions-horizontal {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: auto;
+}
+
+.join-club-btn-horizontal {
+    background: #5F96C5;
+    color: white;
+    border: none;
+    padding: 0.75rem 1.25rem;
+    border-radius: 12px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    flex: 1;
+}
+
+.join-club-btn-horizontal:hover {
+    background: #4a8bc2;
+    transform: translateY(-1px);
+}
+
+.bookmark-club-btn-horizontal {
+    background: rgba(255, 193, 7, 0.1);
+    color: #ffc107;
+    border: 1px solid rgba(255, 193, 7, 0.3);
+    padding: 0.75rem;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.bookmark-club-btn-horizontal:hover {
+    background: rgba(255, 193, 7, 0.2);
+    transform: translateY(-1px);
+}
+
+/* =============================================================================
+   RESPONSIVE DESIGN FOR HORIZONTAL CLUBS
+   =============================================================================
+*/
+
+@media (max-width: 1200px) {
+    .clubs-grid-horizontal {
+        gap: 1.5rem;
+    }
+
+    .recommended-club-card-horizontal {
+        height: 360px;
+    }
+}
+
+@media (max-width: 968px) {
+    .clubs-grid-horizontal {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+
+    .recommended-club-card-horizontal {
+        height: auto;
+        min-height: 250px;
+    }
+
+    .club-image-container-horizontal {
+        height: 120px;
+        padding: 1rem;
+    }
+
+    .club-content-horizontal {
+        height: auto;
+        padding: 1rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .recommended-clubs {
+        padding: 1.5rem;
+    }
+
+    .clubs-grid-horizontal {
+        gap: 1rem;
+    }
+
+    .collapsible-card .card-header {
+        padding: 1rem 1.5rem;
+    }
+
+    .collapsible-card .card-content {
+        padding: 1.5rem;
+    }
+
+    .section-header-collapsible .section-title {
+        font-size: 1.1rem;
+    }
+
+    .collapse-btn {
+        width: 35px;
+        height: 35px;
+        font-size: 1.2rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .recommended-clubs {
+        padding: 1rem;
+    }
+
+    .section-header-collapsible {
+        gap: 0.75rem;
+    }
+
+    .section-header-collapsible .section-icon {
+        width: 28px;
+        height: 28px;
+    }
+
+    .section-header-collapsible .section-title {
+        font-size: 1rem;
+    }
+
+    .collapsible-card .card-header {
+        padding: 1rem;
+    }
+
+    .collapsible-card .card-content {
+        padding: 1rem;
+    }
+
+    .club-actions-horizontal {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .bookmark-club-btn-horizontal {
+        width: 100%;
+    }
+}
+
+/* =============================================================================
+   ANIMATIONS FOR COLLAPSIBLE CARDS
+   =============================================================================
+*/
+
+@keyframes expandCard {
+    from {
+        max-height: 0;
+        opacity: 0;
+    }
+
+    to {
+        max-height: 1000px;
+        opacity: 1;
+    }
+}
+
+@keyframes collapseCard {
+    from {
+        max-height: 1000px;
+        opacity: 1;
+    }
+
+    to {
+        max-height: 0;
+        opacity: 0;
+    }
+}
+
+.card-content:not(.collapsed) {
+    animation: expandCard 0.3s ease-out;
+}
+
+.card-content.collapsed {
+    animation: collapseCard 0.3s ease-out;
+}
+
+/* =============================================================================
+   KEEP ALL EXISTING STYLES FROM YOUR ORIGINAL CSS
+   =============================================================================
+*/
+
+/* This is in addition to your existing niche-quiz.css styles */
+/* The above styles will work alongside your existing card, section-header, etc. styles */

@@ -20,14 +20,8 @@ const careerFieldsData = [
         description: "Build responsive websites and web applications using modern frameworks and technologies. Focus on frontend, backend, or full-stack development.",
         category: "Engineering",
         skillWeights: {
-            technical: 8,
-            creative: 7,
-            social: 5,
-            leadership: 4,
-            research: 3,
-            pace: 7,
-            risk: 5,
-            structure: 6
+            technical: 8, creative: 8, social: 4, leadership: 3,
+            research: 3, pace: 8, risk: 6, structure: 5
         },
         progression: [
             {
@@ -41,6 +35,12 @@ const careerFieldsData = [
                 roles: ["Frontend Developer", "Full-Stack Developer"],
                 yearsExperience: "2-5 years",
                 avgSalary: { min: 85, max: 120 }
+            },
+            {
+                level: "Senior",
+                roles: ["Senior Developer", "Lead Frontend Engineer"],
+                yearsExperience: "5+ years",
+                avgSalary: { min: 120, max: 160 }
             }
         ],
         marketData: {
@@ -56,14 +56,8 @@ const careerFieldsData = [
         description: "Extract insights from data using statistical analysis, machine learning, and visualization tools. Solve business problems through data-driven approaches.",
         category: "Data",
         skillWeights: {
-            technical: 9,
-            creative: 6,
-            social: 4,
-            leadership: 5,
-            research: 9,
-            pace: 6,
-            risk: 4,
-            structure: 7
+            technical: 9, creative: 4, social: 3, leadership: 4,
+            research: 9, pace: 5, risk: 4, structure: 8
         },
         progression: [
             {
@@ -71,6 +65,18 @@ const careerFieldsData = [
                 roles: ["Data Analyst", "Junior Data Scientist"],
                 yearsExperience: "0-2 years",
                 avgSalary: { min: 70, max: 95 }
+            },
+            {
+                level: "Mid",
+                roles: ["Data Scientist", "ML Engineer"],
+                yearsExperience: "2-5 years",
+                avgSalary: { min: 95, max: 140 }
+            },
+            {
+                level: "Senior",
+                roles: ["Senior Data Scientist", "Data Science Manager"],
+                yearsExperience: "5+ years",
+                avgSalary: { min: 140, max: 200 }
             }
         ],
         marketData: {
@@ -86,14 +92,8 @@ const careerFieldsData = [
         description: "Create intuitive and beautiful user experiences for digital products. Combine user research, visual design, and usability principles.",
         category: "Design",
         skillWeights: {
-            technical: 6,
-            creative: 10,
-            social: 7,
-            leadership: 5,
-            research: 7,
-            pace: 6,
-            risk: 5,
-            structure: 5
+            technical: 4, creative: 10, social: 7, leadership: 5,
+            research: 6, pace: 6, risk: 6, structure: 4
         },
         progression: [
             {
@@ -101,6 +101,18 @@ const careerFieldsData = [
                 roles: ["Junior UX Designer", "UI Designer"],
                 yearsExperience: "0-2 years",
                 avgSalary: { min: 60, max: 80 }
+            },
+            {
+                level: "Mid",
+                roles: ["UX Designer", "Product Designer"],
+                yearsExperience: "2-5 years",
+                avgSalary: { min: 80, max: 120 }
+            },
+            {
+                level: "Senior",
+                roles: ["Senior UX Designer", "Design Lead"],
+                yearsExperience: "5+ years",
+                avgSalary: { min: 120, max: 170 }
             }
         ],
         marketData: {
@@ -116,14 +128,8 @@ const careerFieldsData = [
         description: "Bridge the gap between technical teams and business objectives. Define product strategy, prioritize features, and guide development from concept to launch.",
         category: "Product",
         skillWeights: {
-            technical: 5,
-            creative: 8,
-            social: 9,
-            leadership: 9,
-            research: 6,
-            pace: 8,
-            risk: 7,
-            structure: 7
+            technical: 4, creative: 8, social: 9, leadership: 8,
+            research: 5, pace: 8, risk: 7, structure: 6
         },
         progression: [
             {
@@ -131,7 +137,20 @@ const careerFieldsData = [
                 roles: ["Associate Product Manager", "Business Analyst"],
                 yearsExperience: "0-2 years",
                 avgSalary: { min: 75, max: 100 }
+            },
+            {
+                level: "Mid",
+                roles: ["Product Manager", "Senior Product Analyst"],
+                yearsExperience: "2-5 years",
+                avgSalary: { min: 100, max: 150 }
+            },
+            {
+                level: "Senior",
+                roles: ["Senior PM", "Director of Product"],
+                yearsExperience: "5+ years",
+                avgSalary: { min: 150, max: 250 }
             }
+
         ],
         marketData: {
             jobGrowthRate: "+19% (2021-2031)",
@@ -146,14 +165,8 @@ const careerFieldsData = [
         description: "Protect organizations from digital threats through security analysis, incident response, and risk assessment.",
         category: "Security",
         skillWeights: {
-            technical: 9,
-            creative: 4,
-            social: 5,
-            leadership: 6,
-            research: 8,
-            pace: 7,
-            risk: 3,
-            structure: 8
+            technical: 9, creative: 3, social: 4, leadership: 5,
+            research: 8, pace: 6, risk: 2, structure: 9
         },
         progression: [
             {
@@ -161,6 +174,18 @@ const careerFieldsData = [
                 roles: ["Security Analyst", "Junior Security Engineer"],
                 yearsExperience: "0-2 years",
                 avgSalary: { min: 70, max: 90 }
+            },
+            {
+                level: "Mid",
+                roles: ["Security Engineer", "Penetration Tester"],
+                yearsExperience: "2-5 years",
+                avgSalary: { min: 90, max: 130 }
+            },
+            {
+                level: "Senior",
+                roles: ["Senior Security Engineer", "Security Architect"],
+                yearsExperience: "5+ years",
+                avgSalary: { min: 130, max: 180 }
             }
         ],
         marketData: {
@@ -176,14 +201,8 @@ const careerFieldsData = [
         description: "Streamline software development and deployment through automation, infrastructure management, and continuous integration/delivery practices.",
         category: "Engineering",
         skillWeights: {
-            technical: 9,
-            creative: 5,
-            social: 6,
-            leadership: 6,
-            research: 6,
-            pace: 8,
-            risk: 6,
-            structure: 8
+            technical: 9, creative: 4, social: 5, leadership: 6,
+            research: 6, pace: 8, risk: 6, structure: 9
         },
         progression: [
             {
@@ -191,6 +210,18 @@ const careerFieldsData = [
                 roles: ["Junior DevOps Engineer", "Build Engineer"],
                 yearsExperience: "0-2 years",
                 avgSalary: { min: 75, max: 95 }
+            },
+            {
+                level: "Mid",
+                roles: ["DevOps Engineer", "Site Reliability Engineer"],
+                yearsExperience: "2-5 years",
+                avgSalary: { min: 95, max: 140 }
+            },
+            {
+                level: "Senior",
+                roles: ["Senior DevOps Engineer", "DevOps Manager"],
+                yearsExperience: "5+ years",
+                avgSalary: { min: 140, max: 190 }
             }
         ],
         marketData: {

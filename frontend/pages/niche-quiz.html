@@ -142,8 +142,7 @@
 
 <section class="quiz-results" id="quizResults" style="display: none;">
     
-
-    <!-- Top Match Card - Add 'card' class -->
+    <!-- Top Match Card - NOT collapsible -->
     <div class="top-match-card card">
         <div class="match-layout">
             <div class="match-left">
@@ -156,26 +155,26 @@
                 <div class="match-percentage">
                     <div class="percentage-circle">
                         <svg class="progress-ring" width="120" height="120">
-    <!-- Background circle (unfilled area) -->
-    <circle 
-        cx="60" 
-        cy="60" 
-        r="52" 
-        stroke="rgba(255, 255, 255, 0.8)" 
-        stroke-width="8" 
-        fill="transparent"
-    />
-    <!-- Foreground circle (filled area) -->
-    <circle 
-        class="progress-ring__circle" 
-        cx="60" 
-        cy="60" 
-        r="52" 
-        stroke="#f5a700" 
-        stroke-width="8" 
-        fill="transparent"
-    />
-</svg>
+                            <!-- Background circle (unfilled area) -->
+                            <circle 
+                                cx="60" 
+                                cy="60" 
+                                r="52" 
+                                stroke="rgba(255, 255, 255, 0.8)" 
+                                stroke-width="8" 
+                                fill="transparent"
+                            />
+                            <!-- Foreground circle (filled area) -->
+                            <circle 
+                                class="progress-ring__circle" 
+                                cx="60" 
+                                cy="60" 
+                                r="52" 
+                                stroke="#f5a700" 
+                                stroke-width="8" 
+                                fill="transparent"
+                            />
+                        </svg>
                         <div class="percentage-text" id="matchPercentage">85%</div>
                     </div>
                 </div>
@@ -183,85 +182,100 @@
         </div>
     </div>
 
-    <!-- Two Column Layout -->
+    <!-- Recommended Clubs - Full Width, 3 Horizontal (NOT collapsible) -->
+    <div class="recommended-clubs card">
+        <div class="section-header">
+            <img src="/assets/clubs.png" alt="Recommended clubs" class="section-icon">
+            <h3 class="section-title">Recommended UC Davis Clubs</h3>
+        </div>
+        <div class="clubs-grid-horizontal" id="recommendedClubsGrid">
+            <!-- 3 Horizontal Club Cards will be populated here -->
+        </div>
+    </div>
+
+    <!-- Two Column Layout with Collapsible Cards -->
     <div class="results-two-column">
         <div class="results-left-column">
-            <!-- Career Progression - Add 'card' class and section-header -->
-            <div class="career-progression card">
-                <div class="section-header">
-                    <!-- Replace this src with your custom image path -->
-                    <img src="/assets/career-progression.png" alt="Career progression" class="section-icon">
-                    <h3 class="section-title">Career Progression Path</h3>
+            <!-- Career Progression - COLLAPSIBLE -->
+            <div class="career-progression card collapsible-card">
+                <div class="card-header" onclick="toggleQuizCard('career-progression')">
+                    <div class="section-header-collapsible">
+                        <img src="/assets/career-progression.png" alt="Career progression" class="section-icon">
+                        <h3 class="section-title">Career Progression Path</h3>
+                    </div>
+                    <button class="collapse-btn" id="career-progression-btn">−</button>
                 </div>
-                <div class="progression-timeline" id="progressionTimeline">
-                    <!-- Timeline will be populated dynamically -->
+                <div class="card-content" id="career-progression-content">
+                    <div class="progression-timeline" id="progressionTimeline">
+                        <!-- Timeline will be populated dynamically -->
+                    </div>
                 </div>
             </div>
 
-            <!-- Next Steps - Add 'card' class and section-header -->
-            <div class="next-steps card">
-                <div class="section-header">
-                    <!-- Replace this src with your custom image path -->
-                    <img src="/assets/next-steps.png" alt="Next steps" class="section-icon">
-                    <h3 class="section-title">Your Next Steps</h3>
+            <!-- Next Steps - COLLAPSIBLE -->
+            <div class="next-steps card collapsible-card">
+                <div class="card-header" onclick="toggleQuizCard('next-steps')">
+                    <div class="section-header-collapsible">
+                        <img src="/assets/next-steps.png" alt="Next steps" class="section-icon">
+                        <h3 class="section-title">Your Next Steps</h3>
+                    </div>
+                    <button class="collapse-btn" id="next-steps-btn">−</button>
                 </div>
-                <div class="steps-list" id="nextStepsList">
-                    <!-- Steps will be populated dynamically -->
+                <div class="card-content" id="next-steps-content">
+                    <div class="steps-list" id="nextStepsList">
+                        <!-- Steps will be populated dynamically -->
+                    </div>
                 </div>
             </div>
         </div>
 
         <div class="results-right-column">
-            <!-- All Matches - Add 'card' class and section-header -->
-            <div class="all-matches card">
-                <div class="section-header">
-                    <!-- Replace this src with your custom image path -->
-                    <img src="/assets/target.png" alt="All matches" class="section-icon">
-                    <h3 class="section-title">All Career Matches</h3>
-                </div>
-                <div class="matches-chart" id="matchesChart">
-                    <!-- Career match bars will be populated here -->
-                </div>
-            </div>
-
-            <!-- Market Data - Add 'card' class and section-header -->
-            <div class="market-data card">
-                <div class="section-header">
-                    <!-- Replace this src with your custom image path -->
-                    <img src="/assets/market-insights.png" alt="Market insights" class="section-icon">
-                    <h3 class="section-title">Market Insights</h3>
-                </div>
-                <div class="data-grid">
-                    <div class="data-item">
-                        <span class="data-label">Average Salary</span>
-                        <span class="data-value" id="avgSalary">$95k - $140k</span>
+            <!-- All Matches - COLLAPSIBLE -->
+            <div class="all-matches card collapsible-card">
+                <div class="card-header" onclick="toggleQuizCard('all-matches')">
+                    <div class="section-header-collapsible">
+                        <img src="/assets/target.png" alt="All matches" class="section-icon">
+                        <h3 class="section-title">All Career Matches</h3>
                     </div>
-                    <div class="data-item">
-                        <span class="data-label">Job Growth</span>
-                        <span class="data-value" id="jobGrowth">+13% (2021-2031)</span>
-                    </div>
-                    <div class="data-item">
-                        <span class="data-label">Annual Openings</span>
-                        <span class="data-value" id="annualOpenings">28,900</span>
-                    </div>
-                    <div class="data-item">
-                        <span class="data-label">Work-Life Balance</span>
-                        <span class="data-value" id="workLifeBalance">7.5/10</span>
+                    <button class="collapse-btn" id="all-matches-btn">−</button>
+                </div>
+                <div class="card-content" id="all-matches-content">
+                    <div class="matches-chart" id="matchesChart">
+                        <!-- Career match bars will be populated here -->
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
 
-    <!-- Recommended Clubs - Add 'card' class and section-header -->
-    <div class="recommended-clubs card">
-        <div class="section-header">
-            <!-- Replace this src with your custom image path -->
-            <img src="/assets/clubs.png" alt="Recommended clubs" class="section-icon">
-            <h3 class="section-title">Recommended UC Davis Clubs</h3>
-        </div>
-        <div class="clubs-grid" id="recommendedClubsGrid">
-            <!-- Club cards will be populated here -->
+            <!-- Market Data - COLLAPSIBLE -->
+            <div class="market-data card collapsible-card">
+                <div class="card-header" onclick="toggleQuizCard('market-data')">
+                    <div class="section-header-collapsible">
+                        <img src="/assets/market-insights.png" alt="Market insights" class="section-icon">
+                        <h3 class="section-title">Market Insights</h3>
+                    </div>
+                    <button class="collapse-btn" id="market-data-btn">−</button>
+                </div>
+                <div class="card-content" id="market-data-content">
+                    <div class="data-grid">
+                        <div class="data-item">
+                            <span class="data-label">Average Salary</span>
+                            <span class="data-value" id="avgSalary">$95k - $140k</span>
+                        </div>
+                        <div class="data-item">
+                            <span class="data-label">Job Growth</span>
+                            <span class="data-value" id="jobGrowth">+13% (2021-2031)</span>
+                        </div>
+                        <div class="data-item">
+                            <span class="data-label">Annual Openings</span>
+                            <span class="data-value" id="annualOpenings">28,900</span>
+                        </div>
+                        <div class="data-item">
+                            <span class="data-label">Work-Life Balance</span>
+                            <span class="data-value" id="workLifeBalance">7.5/10</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 

@@ -1,17 +1,11 @@
 // =============================================================================
-// NICHE QUIZ FRONTEND ENGINE
-// =============================================================================
-// Save as frontend/scripts/niche-quiz.js
-
-//  GLOBAL STATE MANAGEMENT
-// =============================================================================
-// NICHE QUIZ FRONTEND ENGINE - COMPLETE VERSION WITH ALL FUNCTIONS
+// NICHE QUIZ FRONTEND ENGINE - DYNAMIC RESULTS VERSION
 // =============================================================================
 // Save as frontend/scripts/niche-quiz.js
 
 //  GLOBAL STATE MANAGEMENT
 const QuizState = {
-    currentScreen: 'intro', // 'intro', 'questions', 'loading', 'results'
+    currentScreen: 'intro',
     selectedLevel: null,
     questions: [],
     currentQuestionIndex: 0,
@@ -24,14 +18,14 @@ const QuizState = {
 
 //  WAIT FOR PAGE TO LOAD
 document.addEventListener('DOMContentLoaded', async () => {
-    console.log(' Initializing Niche Quiz...');
+    console.log('🚀 Initializing Niche Quiz...');
 
     try {
         await initializeQuiz();
         setupEventListeners();
-        console.log(' Quiz initialized successfully');
+        console.log('✅ Quiz initialized successfully');
     } catch (error) {
-        console.error(' Quiz initialization error:', error);
+        console.error('💥 Quiz initialization error:', error);
         showError('Failed to initialize quiz. Please refresh the page.');
     }
 });
@@ -41,22 +35,18 @@ document.addEventListener('DOMContentLoaded', async () => {
 // =============================================================================
 
 async function initializeQuiz() {
-    // Load quiz introduction data
     try {
         const response = await fetch('/api/quiz/intro');
-        if (!response.ok) throw new Error('Failed to load quiz data');
-
-        const introData = await response.json();
-        populateIntroData(introData);
-
+        if (response.ok) {
+            const introData = await response.json();
+            populateIntroData(introData);
+        }
     } catch (error) {
-        console.error(' Error loading intro data:', error);
-        // Continue with default data if API fails
+        console.warn('⚠️ Could not load intro data, using defaults:', error);
     }
 }
 
 function populateIntroData(data) {
-    // Update level cards with real data if available
     if (data.levels) {
         data.levels.forEach(levelData => {
             const levelCard = document.querySelector(`[data-level="${levelData.level}"]`);
@@ -71,22 +61,19 @@ function populateIntroData(data) {
 }
 
 function setupEventListeners() {
-    // Level selection buttons
     document.querySelectorAll('.select-level-btn').forEach(btn => {
         btn.addEventListener('click', handleLevelSelection);
     });
 
-    // Navigation buttons
     document.getElementById('previousBtn')?.addEventListener('click', previousQuestion);
     document.getElementById('nextBtn')?.addEventListener('click', nextQuestion);
 
-    // Result action buttons
     document.getElementById('shareResultsBtn')?.addEventListener('click', shareResults);
     document.getElementById('retakeQuizBtn')?.addEventListener('click', retakeQuiz);
     document.getElementById('exploreClubsBtn')?.addEventListener('click', exploreClubs);
     document.getElementById('saveToDashboardBtn')?.addEventListener('click', saveToDashboard);
 
-    console.log(' Event listeners set up');
+    console.log('🔗 Event listeners set up');
 }
 
 // =============================================================================
@@ -97,45 +84,43 @@ async function handleLevelSelection(event) {
     const levelCard = event.target.closest('.level-card');
     const level = levelCard.dataset.level;
 
-    console.log(` Selected level: ${level}`);
+    console.log(`📚 Selected level: ${level}`);
 
     QuizState.selectedLevel = level;
     QuizState.startTime = Date.now();
 
     // Visual feedback
     levelCard.style.transform = 'scale(0.95)';
-    setTimeout(() => {
-        levelCard.style.transform = '';
-    }, 150);
+    setTimeout(() => levelCard.style.transform = '', 150);
 
     try {
         showLoading('Loading quiz questions...');
         await loadQuizQuestions(level);
         startQuiz();
     } catch (error) {
-        console.error(' Error starting quiz:', error);
+        console.error('💥 Error starting quiz:', error);
         showError('Failed to load quiz questions. Please try again.');
         hideLoading();
     }
 }
 
 async function loadQuizQuestions(level) {
-    console.log(` Loading questions for level: ${level}`);
+    console.log(`📝 Loading questions for level: ${level}`);
 
     const response = await fetch(`/api/quiz/questions/${level}`);
     if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        throw new Error(`Failed to load questions: ${response.status}`);
     }
 
     const data = await response.json();
     QuizState.questions = data.questions;
     QuizState.answers = Array(data.questions.length).fill(null);
 
-    console.log(` Loaded ${QuizState.questions.length} questions`);
+    console.log(`✅ Loaded ${QuizState.questions.length} questions`);
 }
 
 function startQuiz() {
-    console.log(' Starting quiz...');
+    console.log('🎯 Starting quiz...');
 
     hideLoading();
     switchScreen('questions');
@@ -151,29 +136,19 @@ function startQuiz() {
 function displayCurrentQuestion() {
     const question = QuizState.questions[QuizState.currentQuestionIndex];
     if (!question) {
-        console.error(' No question found at index:', QuizState.currentQuestionIndex);
+        console.error('❌ No question found at index:', QuizState.currentQuestionIndex);
         return;
     }
 
-    console.log(` Displaying question ${QuizState.currentQuestionIndex + 1}: ${question.questionText}`);
+    console.log(`📋 Displaying question ${QuizState.currentQuestionIndex + 1}: ${question.questionText}`);
 
-    // Update question text
     document.getElementById('questionText').textContent = question.questionText;
-
-    // Update progress
     document.getElementById('currentQuestion').textContent = QuizState.currentQuestionIndex + 1;
     document.getElementById('totalQuestions').textContent = QuizState.questions.length;
 
-    // Create sortable options
     createSortableOptions(question.options);
-
-    // Update navigation buttons
     updateNavigationButtons();
-
-    // Start question timer
     startQuestionTimer();
-
-    // Store question start time
     QuizState.questionStartTime = Date.now();
 }
 
@@ -181,16 +156,13 @@ function createSortableOptions(options) {
     const container = document.getElementById('sortableOptions');
     const template = document.getElementById('optionTemplate');
 
-    // Clear existing options
     container.innerHTML = '';
 
-    // Destroy existing sortable instances
     QuizState.sortableInstances.forEach(instance => {
         if (instance.destroy) instance.destroy();
     });
     QuizState.sortableInstances = [];
 
-    // Create shuffled options to avoid bias
     const shuffledOptions = [...options].sort(() => Math.random() - 0.5);
 
     shuffledOptions.forEach((option, index) => {
@@ -206,13 +178,10 @@ function createSortableOptions(options) {
             optionDiv.querySelector('.option-description').style.display = 'none';
         }
 
-        // Initial rank number
         optionDiv.querySelector('.rank-number').textContent = index + 1;
-
         container.appendChild(optionElement);
     });
 
-    // Initialize Sortable.js
     const sortableInstance = new Sortable(container, {
         animation: 300,
         ghostClass: 'sortable-ghost',
@@ -220,15 +189,12 @@ function createSortableOptions(options) {
         onUpdate: function (evt) {
             updateRankNumbers();
             updateNavigationButtons();
-
-            // Enable next button after first interaction
             document.getElementById('nextBtn').disabled = false;
         }
     });
 
     QuizState.sortableInstances.push(sortableInstance);
-
-    console.log(` Created ${shuffledOptions.length} sortable options`);
+    console.log(`✅ Created ${shuffledOptions.length} sortable options`);
 }
 
 function updateRankNumbers() {
@@ -237,14 +203,13 @@ function updateRankNumbers() {
         const rankElement = option.querySelector('.rank-number');
         rankElement.textContent = index + 1;
 
-        // Update visual styling based on rank
         const rankDiv = option.querySelector('.option-rank');
         if (index === 0) {
-            rankDiv.style.background = 'linear-gradient(135deg, #27ae60, #2ecc71)'; // Green for top
+            rankDiv.style.background = 'linear-gradient(135deg, #27ae60, #2ecc71)';
         } else if (index === options.length - 1) {
-            rankDiv.style.background = 'linear-gradient(135deg, #e74c3c, #f39c12)'; // Red for bottom
+            rankDiv.style.background = 'linear-gradient(135deg, #e74c3c, #f39c12)';
         } else {
-            rankDiv.style.background = 'linear-gradient(135deg, #5F96C5, #4a8bc2)'; // Default blue
+            rankDiv.style.background = 'linear-gradient(135deg, #5F96C5, #4a8bc2)';
         }
     });
 }
@@ -253,15 +218,12 @@ function updateNavigationButtons() {
     const prevBtn = document.getElementById('previousBtn');
     const nextBtn = document.getElementById('nextBtn');
 
-    // Previous button
     prevBtn.disabled = QuizState.currentQuestionIndex === 0;
 
-    // Next button - enable if options have been rearranged or question has been answered
     const hasAnswer = QuizState.answers[QuizState.currentQuestionIndex] !== null;
     const hasRanking = document.querySelectorAll('.sortable-option').length > 0;
     nextBtn.disabled = !hasAnswer && !hasRanking;
 
-    // Update button text for last question
     if (QuizState.currentQuestionIndex === QuizState.questions.length - 1) {
         nextBtn.textContent = 'Finish Quiz →';
         nextBtn.classList.add('finish-btn');
@@ -308,7 +270,6 @@ function stopQuestionTimer() {
 // =============================================================================
 
 function nextQuestion() {
-    // Save current answer
     saveCurrentAnswer();
 
     if (QuizState.currentQuestionIndex < QuizState.questions.length - 1) {
@@ -316,7 +277,6 @@ function nextQuestion() {
         displayCurrentQuestion();
         updateProgress();
     } else {
-        // Quiz completed
         finishQuiz();
     }
 }
@@ -327,8 +287,6 @@ function previousQuestion() {
         QuizState.currentQuestionIndex--;
         displayCurrentQuestion();
         updateProgress();
-
-        // Restore previous answer if it exists
         restorePreviousAnswer();
     }
 }
@@ -353,18 +311,15 @@ function restorePreviousAnswer() {
     const previousAnswer = QuizState.answers[QuizState.currentQuestionIndex];
     if (!previousAnswer) return;
 
-    // Reorder options based on previous ranking
     const container = document.getElementById('sortableOptions');
     const options = Array.from(container.children);
 
-    // Sort options by the previous ranking
     const sortedOptions = options.sort((a, b) => {
         const aIndex = previousAnswer.ranking.indexOf(parseInt(a.dataset.optionId));
         const bIndex = previousAnswer.ranking.indexOf(parseInt(b.dataset.optionId));
         return aIndex - bIndex;
     });
 
-    // Re-append in correct order
     sortedOptions.forEach(option => container.appendChild(option));
     updateRankNumbers();
 
@@ -372,32 +327,28 @@ function restorePreviousAnswer() {
 }
 
 // =============================================================================
-// QUIZ COMPLETION & SUBMISSION
+// QUIZ COMPLETION & SUBMISSION - UPDATED FOR DYNAMIC RESULTS
 // =============================================================================
 
 async function finishQuiz() {
     console.log('🏁 Finishing quiz...');
 
-    // Save final answer
     saveCurrentAnswer();
     stopQuestionTimer();
 
-    // Calculate total completion time
-    const completionTime = Math.round((Date.now() - QuizState.startTime) / 1000 / 60); // minutes
+    const completionTime = Math.round((Date.now() - QuizState.startTime) / 1000 / 60);
 
-    // Show loading screen
     switchScreen('loading');
     animateLoading();
 
     try {
-        // Submit quiz to backend
         const submission = {
             level: QuizState.selectedLevel,
             answers: QuizState.answers.filter(answer => answer !== null),
             completionTime: completionTime
         };
 
-        console.log('📤 Submitting quiz:', submission);
+        console.log('📤 Submitting quiz for dynamic scoring:', submission);
 
         const response = await fetch('/api/quiz/submit', {
             method: 'POST',
@@ -408,14 +359,19 @@ async function finishQuiz() {
         });
 
         if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
+            const errorText = await response.text();
+            throw new Error(`Server error (${response.status}): ${errorText}`);
         }
 
-        const results = await response.json();
-        QuizState.results = results.results;
+        const data = await response.json();
 
-        console.log('📊 Quiz results received:', QuizState.results);
+        if (!data.success || !data.results) {
+            throw new Error('Invalid response format from server');
+        }
+
+        QuizState.results = data.results;
+
+        console.log('🎉 Received dynamic quiz results:', QuizState.results);
 
         // Small delay for better UX
         await new Promise(resolve => setTimeout(resolve, 2000));
@@ -425,47 +381,13 @@ async function finishQuiz() {
     } catch (error) {
         console.error('💥 Error submitting quiz:', error);
 
-        // Instead of showing error, show mock results for testing
-        console.log('🔄 Using fallback results for testing...');
-        QuizState.results = {
-            topMatch: {
-                career: "Full-Stack Web Development",
-                description: "Build complete web applications from user interface to server infrastructure.",
-                percentage: 85,
-                category: "Engineering",
-                careerProgression: [
-                    {
-                        level: "Entry",
-                        roles: ["Junior Developer", "Web Developer"],
-                        timeline: "0-2 years",
-                        salary: { min: 70, max: 95 }
-                    }
-                ],
-                marketData: {
-                    jobGrowthRate: "+13% (2022-2032)",
-                    annualOpenings: 25800,
-                    workLifeBalance: "7.8/10",
-                    avgSalary: "$70k - $175k"
-                },
-                nextSteps: [
-                    "Master JavaScript fundamentals",
-                    "Build portfolio projects",
-                    "Join UC Davis tech clubs"
-                ],
-                recommendedClubs: []
-            },
-            allMatches: [
-                { career: "Web Development", category: "Engineering", percentage: 85 },
-                { career: "Data Science", category: "Data", percentage: 72 }
-            ],
-            skillBreakdown: {
-                technical: 8.5,
-                creative: 7.2,
-                social: 6.8
-            }
-        };
+        // Show error message instead of fallback data
+        showError(`Failed to calculate results: ${error.message}. Please try again.`);
 
-        displayResults();
+        // Return to quiz intro after a delay
+        setTimeout(() => {
+            retakeQuiz();
+        }, 3000);
     }
 }
 
@@ -492,11 +414,11 @@ function animateLoading() {
 }
 
 // =============================================================================
-// RESULTS DISPLAY - ALL MISSING FUNCTIONS IMPLEMENTED
+// RESULTS DISPLAY - UPDATED FOR DYNAMIC DATA
 // =============================================================================
 
 function displayResults() {
-    console.log('🎉 Displaying quiz results');
+    console.log('🎉 Displaying dynamic quiz results');
 
     switchScreen('results');
 
@@ -505,25 +427,12 @@ function displayResults() {
         return;
     }
 
-    // Display top match
     displayTopMatch();
-
-    // Display career progression
     displayCareerProgression();
-
-    // Display market data
     displayMarketData();
-
-    // Display all matches
     displayAllMatches();
-
-    // Display next steps
     displayNextSteps();
-
-    // Display recommended clubs
     displayRecommendedClubs();
-
-    // Animate elements
     animateResults();
 }
 
@@ -531,23 +440,22 @@ function displayTopMatch() {
     const topMatch = QuizState.results.topMatch;
     if (!topMatch) return;
 
-    // Update top match information
+    console.log(`🥇 Displaying top match: ${topMatch.career} (${topMatch.percentage}%)`);
+
     document.getElementById('topCareerName').textContent = topMatch.career;
     document.getElementById('topCareerDescription').textContent = topMatch.description;
     document.getElementById('matchPercentage').textContent = `${topMatch.percentage}%`;
 
-    // Update confidence badge
     const confidenceBadge = document.getElementById('confidenceBadge');
-    confidenceBadge.textContent = `${getConfidenceText(topMatch.percentage)} Confidence`;
-    confidenceBadge.className = `confidence-badge confidence-${getConfidenceLevel(topMatch.percentage)}`;
+    confidenceBadge.textContent = `${topMatch.confidence} Confidence`;
+    confidenceBadge.className = `confidence-badge confidence-${topMatch.confidence.toLowerCase()}`;
 
-    // Animate percentage circle
     animatePercentageCircle(topMatch.percentage);
 }
 
 function displayCareerProgression() {
     const progression = QuizState.results.topMatch.careerProgression;
-    if (!progression) return;
+    if (!progression || !Array.isArray(progression)) return;
 
     const timeline = document.getElementById('progressionTimeline');
     timeline.innerHTML = '';
@@ -558,53 +466,48 @@ function displayCareerProgression() {
         stepDiv.innerHTML = `
             <div class="step-level">${step.level}</div>
             <div class="step-content">
-                <h4 class="step-roles">${step.roles.join(', ')}</h4>
-                <p class="step-timeline">${step.timeline}</p>
-                ${step.salary ? `<p class="step-salary">$${step.salary.min}k - $${step.salary.max}k</p>` : ''}
+                <h4 class="step-roles">${Array.isArray(step.roles) ? step.roles.join(', ') : step.roles}</h4>
+                <p class="step-timeline">${step.timeline || step.yearsExperience}</p>
+                ${step.salary || step.avgSalary ?
+                `<p class="step-salary">$${(step.salary?.min || step.avgSalary?.min)}k - $${(step.salary?.max || step.avgSalary?.max)}k</p>` : ''}
             </div>
         `;
         timeline.appendChild(stepDiv);
     });
+
+    console.log(`✅ Displayed ${progression.length} progression steps`);
 }
 
 function displayMarketData() {
     const marketData = QuizState.results.topMatch.marketData;
     if (!marketData) return;
 
-    const avgSalaryEl = document.getElementById('avgSalary');
-    const jobGrowthEl = document.getElementById('jobGrowth');
-    const annualOpeningsEl = document.getElementById('annualOpenings');
-    const workLifeBalanceEl = document.getElementById('workLifeBalance');
+    const elements = {
+        avgSalary: marketData.avgSalary || `$${marketData.salary?.min || 70}k - $${marketData.salary?.max || 120}k`,
+        jobGrowth: marketData.jobGrowthRate || marketData.growthRate,
+        annualOpenings: marketData.annualOpenings ? marketData.annualOpenings.toLocaleString() : 'N/A',
+        workLifeBalance: marketData.workLifeBalance || (marketData.workLifeBalance ? `${marketData.workLifeBalance}/10` : 'N/A')
+    };
 
-    if (avgSalaryEl && marketData.avgSalary) {
-        avgSalaryEl.textContent = marketData.avgSalary;
-    }
+    Object.entries(elements).forEach(([key, value]) => {
+        const element = document.getElementById(key);
+        if (element && value) {
+            element.textContent = value;
+        }
+    });
 
-    if (jobGrowthEl && marketData.jobGrowthRate) {
-        jobGrowthEl.textContent = marketData.jobGrowthRate;
-    }
-
-    if (annualOpeningsEl && marketData.annualOpenings) {
-        annualOpeningsEl.textContent = marketData.annualOpenings.toLocaleString();
-    }
-
-    if (workLifeBalanceEl && marketData.workLifeBalance) {
-        workLifeBalanceEl.textContent = marketData.workLifeBalance;
-    }
+    console.log('💼 Displayed market data');
 }
 
 function displayAllMatches() {
     const matches = QuizState.results.allMatches;
     if (!matches || !Array.isArray(matches)) {
-        console.log('No career matches data available');
+        console.warn('⚠️ No career matches data available');
         return;
     }
 
     const chart = document.getElementById('matchesChart');
-    if (!chart) {
-        console.log('Matches chart container not found');
-        return;
-    }
+    if (!chart) return;
 
     chart.innerHTML = '';
 
@@ -625,27 +528,23 @@ function displayAllMatches() {
 
         chart.appendChild(barDiv);
 
-        // Animate bars with delay
         setTimeout(() => {
             barDiv.style.animation = 'slideInLeft 0.5s ease-out';
         }, index * 100);
     });
 
-    console.log(`✅ Displayed ${matches.length} career matches`);
+    console.log(`✅ Displayed ${matches.length} career matches with dynamic percentages`);
 }
 
 function displayNextSteps() {
     const nextSteps = QuizState.results.topMatch.nextSteps;
     if (!nextSteps || !Array.isArray(nextSteps)) {
-        console.log('No next steps data available');
+        console.warn('⚠️ No next steps data available');
         return;
     }
 
     const stepsList = document.getElementById('nextStepsList');
-    if (!stepsList) {
-        console.log('Next steps container not found');
-        return;
-    }
+    if (!stepsList) return;
 
     stepsList.innerHTML = '';
 
@@ -662,15 +561,14 @@ function displayNextSteps() {
         stepsList.appendChild(stepDiv);
     });
 
-    console.log(`✅ Displayed ${nextSteps.length} next steps`);
+    console.log(`✅ Displayed ${nextSteps.length} personalized next steps`);
 }
 
 function displayRecommendedClubs() {
-    // For testing, let's add some default clubs if none are provided
     let clubs = QuizState.results.topMatch.recommendedClubs;
 
+    // Fallback clubs for UC Davis - only if no clubs are provided
     if (!clubs || clubs.length === 0) {
-        // Add default UC Davis tech clubs for testing
         clubs = [
             {
                 name: "#include",
@@ -694,10 +592,7 @@ function displayRecommendedClubs() {
     }
 
     const clubsGrid = document.getElementById('recommendedClubsGrid');
-    if (!clubsGrid) {
-        console.log('Clubs grid container not found');
-        return;
-    }
+    if (!clubsGrid) return;
 
     clubsGrid.innerHTML = '';
 
@@ -717,98 +612,7 @@ function displayRecommendedClubs() {
 
     console.log(`✅ Displayed ${clubs.length} recommended clubs`);
 }
-// 📤 SUBMIT QUIZ RESULTS - Add this route to your backend/app.js
-app.post('/api/quiz/submit', requireAuth, async (req, res) => {
-    try {
-        const { level, answers, completionTime } = req.body;
-        const userId = req.session.userId;
 
-        console.log(`📝 Processing quiz submission for user: ${req.session.userEmail}`);
-
-        // Validate input
-        if (!level || !answers || !Array.isArray(answers)) {
-            return res.status(400).json({ error: 'Invalid submission data' });
-        }
-
-        // For now, return mock results - you can implement real scoring later
-        const mockResults = {
-            topMatch: {
-                career: "Web Development",
-                description: "Build responsive websites and web applications using modern frameworks and technologies.",
-                percentage: Math.floor(Math.random() * 30) + 70, // 70-100%
-                category: "Engineering",
-                careerProgression: [
-                    {
-                        level: "Entry",
-                        roles: ["Junior Frontend Developer", "Web Developer"],
-                        timeline: "0-2 years",
-                        salary: { min: 65, max: 85 }
-                    },
-                    {
-                        level: "Mid",
-                        roles: ["Frontend Developer", "Full-Stack Developer"],
-                        timeline: "2-5 years",
-                        salary: { min: 85, max: 120 }
-                    },
-                    {
-                        level: "Senior",
-                        roles: ["Senior Developer", "Lead Engineer"],
-                        timeline: "5+ years",
-                        salary: { min: 120, max: 160 }
-                    }
-                ],
-                marketData: {
-                    jobGrowthRate: "+13% (2021-2031)",
-                    annualOpenings: 28900,
-                    workLifeBalance: "7.5/10",
-                    avgSalary: "$85k - $140k"
-                },
-                nextSteps: [
-                    "Master JavaScript fundamentals",
-                    "Build a portfolio with 3+ projects",
-                    "Join UC Davis coding clubs",
-                    "Apply for frontend internships"
-                ],
-                recommendedClubs: [] // Could populate with real club data
-            },
-            allMatches: [
-                { career: "Web Development", category: "Engineering", percentage: 85 },
-                { career: "Data Science", category: "Data", percentage: 72 },
-                { career: "UX/UI Design", category: "Design", percentage: 68 },
-                { career: "Product Management", category: "Product", percentage: 61 }
-            ],
-            skillBreakdown: {
-                technical: 8.5,
-                creative: 7.2,
-                social: 6.8,
-                leadership: 5.4,
-                research: 6.1
-            }
-        };
-
-        // Save result to database (optional)
-        const QuizResult = require('./models/nicheQuizModels').QuizResult;
-        const newResult = new QuizResult({
-            user: userId,
-            quizLevel: level,
-            answers: answers,
-            completionTime: completionTime,
-            // Add the calculated results here
-        });
-
-        await newResult.save();
-        console.log('✅ Quiz result saved to database');
-
-        res.json({
-            success: true,
-            results: mockResults
-        });
-
-    } catch (error) {
-        console.error('💥 Quiz submission error:', error);
-        res.status(500).json({ error: 'Failed to process quiz submission' });
-    }
-});
 // =============================================================================
 // ANIMATION FUNCTIONS
 // =============================================================================
@@ -824,7 +628,6 @@ function animatePercentageCircle(percentage) {
     circle.style.strokeDasharray = `${circumference} ${circumference}`;
     circle.style.strokeDashoffset = circumference;
 
-    // Animate to final position
     setTimeout(() => {
         circle.style.transition = 'stroke-dashoffset 1s ease-out';
         circle.style.strokeDashoffset = offset;
@@ -855,20 +658,7 @@ function animateResults() {
 // UTILITY FUNCTIONS
 // =============================================================================
 
-function getConfidenceLevel(percentage) {
-    if (percentage >= 80) return 'high';
-    if (percentage >= 60) return 'medium';
-    return 'low';
-}
-
-function getConfidenceText(percentage) {
-    if (percentage >= 80) return 'High';
-    if (percentage >= 60) return 'Medium';
-    return 'Low';
-}
-
 function switchScreen(screenName) {
-    // Hide all screens
     const screens = ['quizIntro', 'quizQuestions', 'quizLoading', 'quizResults'];
     screens.forEach(screen => {
         const element = document.getElementById(screen);
@@ -877,7 +667,6 @@ function switchScreen(screenName) {
         }
     });
 
-    // Show target screen
     const targetScreen = document.getElementById(`quiz${screenName.charAt(0).toUpperCase() + screenName.slice(1)}`);
     if (targetScreen) {
         targetScreen.style.display = 'block';
@@ -901,7 +690,7 @@ function hideLoading() {
 
 function showError(message) {
     console.error('❌ Quiz Error:', message);
-    alert(`Error: ${message}`); // Simple error handling - could be enhanced with a proper modal
+    alert(`Error: ${message}`);
 }
 
 // =============================================================================
@@ -925,7 +714,6 @@ function shareResults() {
     if (navigator.share) {
         navigator.share(shareData).catch(err => console.log('Share cancelled'));
     } else {
-        // Fallback: copy to clipboard
         const shareText = `${shareData.text} ${shareData.url}`;
         navigator.clipboard.writeText(shareText).then(() => {
             alert('Results copied to clipboard!');
@@ -938,16 +726,12 @@ function shareResults() {
 function retakeQuiz() {
     console.log('🔄 Retaking quiz...');
 
-    // Reset state
     QuizState.currentQuestionIndex = 0;
     QuizState.answers = [];
     QuizState.results = null;
     QuizState.startTime = null;
 
-    // Clean up timers
     stopQuestionTimer();
-
-    // Return to intro
     switchScreen('intro');
 }
 
@@ -958,20 +742,16 @@ function exploreClubs() {
 
 function saveToDashboard() {
     console.log('💾 Saving to dashboard...');
-
-    // This would typically save the results to user's dashboard
-    // For now, just show success message
     alert('Results saved to your dashboard! You can view them anytime from your account.');
 }
 
 // =============================================================================
-// ERROR HANDLING & RECOVERY
+// ERROR HANDLING & KEYBOARD SHORTCUTS
 // =============================================================================
 
 window.addEventListener('error', (event) => {
     console.error('🚨 Global error:', event.error);
 
-    // If quiz is in progress, try to recover
     if (QuizState.currentScreen === 'questions' && QuizState.answers.length > 0) {
         const shouldRecover = confirm('An error occurred. Would you like to try recovering your progress?');
         if (shouldRecover) {
@@ -985,10 +765,6 @@ window.addEventListener('error', (event) => {
         }
     }
 });
-
-// =============================================================================
-// KEYBOARD SHORTCUTS
-// =============================================================================
 
 document.addEventListener('keydown', (event) => {
     if (QuizState.currentScreen !== 'questions') return;
@@ -1014,10 +790,6 @@ document.addEventListener('keydown', (event) => {
     }
 });
 
-// =============================================================================
-// BROWSER NAVIGATION HANDLING
-// =============================================================================
-
 window.addEventListener('beforeunload', (event) => {
     if (QuizState.currentScreen === 'questions' && QuizState.answers.some(a => a !== null)) {
         event.preventDefault();
@@ -1027,31 +799,7 @@ window.addEventListener('beforeunload', (event) => {
 });
 
 // =============================================================================
-// ANALYTICS & TRACKING (Optional)
-// =============================================================================
-
-function trackQuizEvent(eventName, data = {}) {
-    console.log(`📊 Quiz Event: ${eventName}`, data);
-
-    // Integration point for analytics services
-    // Example: Google Analytics, Mixpanel, etc.
-
-    if (window.gtag) {
-        gtag('event', eventName, {
-            event_category: 'Quiz',
-            event_label: QuizState.selectedLevel,
-            ...data
-        });
-    }
-}
-
-// Track key events
-document.addEventListener('DOMContentLoaded', () => {
-    trackQuizEvent('quiz_loaded');
-});
-
-// =============================================================================
-// DEBUG FUNCTIONS (Development Only)
+// DEBUG FUNCTIONS
 // =============================================================================
 
 window.debugQuiz = function () {
@@ -1064,33 +812,4 @@ window.debugQuiz = function () {
     console.log('  Quiz state:', QuizState);
 };
 
-window.skipToResults = function () {
-    console.log('⚡ Skipping to results (debug mode)');
-
-    // Fill in dummy answers
-    QuizState.answers = QuizState.questions.map((q, index) => ({
-        questionId: q.id,
-        ranking: [0, 1, 2, 3].slice(0, q.options.length),
-        timeTaken: 30
-    }));
-
-    finishQuiz();
-};
-
-// =============================================================================
-// EXPORT FOR TESTING
-// =============================================================================
-
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = {
-        QuizState,
-        initializeQuiz,
-        handleLevelSelection,
-        displayCurrentQuestion,
-        nextQuestion,
-        previousQuestion,
-        finishQuiz
-    };
-}
-
-console.log('✅ Niche Quiz Engine loaded successfully');
+console.log('✅ Niche Quiz Engine loaded with dynamic results support');
