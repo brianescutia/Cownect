@@ -205,7 +205,7 @@ button {
 
 .featured-events-section {
     min-height: auto;
-    margin-bottom: 1rem;
+    margin-bottom: 2.5rem;
 }
 
 .featured-events-section h2 {
@@ -261,14 +261,13 @@ button {
     width: 100%;
     max-width: 450px;
     min-width: 320px;
-    height: 300px;
+    height: 350px;
+    /* INCREASED: From 300px to 350px */
     background-color: rgba(255, 255, 255, 0.7);
-    /* Same as tech-clubs cards */
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     border: 1px solid rgba(255, 255, 255, 0.8);
     border-radius: 15px;
-    /* Same as tech-clubs */
     overflow: hidden;
     position: relative;
     transition: all 0.3s ease;
@@ -276,7 +275,6 @@ button {
     display: flex;
     flex-direction: column;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-    /* Same as tech-clubs */
 }
 
 .event-card:hover {
@@ -368,7 +366,7 @@ button {
 
 /* Event Image - Upper Half */
 .event-image-container {
-    height: 60%;
+    height: 50%;
     overflow: hidden;
     position: relative;
 }

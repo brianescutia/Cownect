@@ -315,7 +315,7 @@
     gap: 0;
     /* Remove gap since we only have one button */
     flex-wrap: wrap;
-    margin-top: 1rem;
+    margin-top: 2rem;
     /* Add some space above the button */
 }
 
