@@ -26,26 +26,25 @@
 
   <!-- Navbar -->
   <nav class="navbar">
-    <div class="navbar-container">
-      <div class="logo-title">
-        <img src="../assets/cowLogo.png" alt="Cownect Logo" class="logo" />
-        <span class="logo-text">Cownect</span>
-      </div>
-      <ul class="nav-links">
-        <li><a href="/tech-clubs">Tech Clubs</a></li>
-        <li><a href="/events" class="nav-link">Events</a></li> <!-- Coming soon -->
-        <li><a href="/niche-landing">Niche Test</a></li> <!-- Coming soon -->
-        <li><a href="#">Mentor Matching</a></li> <!-- Coming soon -->
-        <li><a class="account-btn" href="/login">Account</a></li>
-      </ul>
+  <div class="navbar-container">
+    <div class="logo-title">
+      <img src="../assets/cowLogo.png" alt="Cownect Logo" class="logo" />
+      <span class="logo-text">Cownect</span>
     </div>
-  </nav>
+    <ul class="nav-links">
+      <li><a href="/tech-clubs">Tech Clubs</a></li>
+      <li><a href="/events" class="nav-link">Events</a></li>
+      <li><a href="/niche-landing">Niche Test</a></li>
+      <li><a href="#">Mentor Matching</a></li>
+    </ul>
+  </div>
+  <!-- Move the profile circle here, outside the gray container -->
+  <div class="navbar-profile-circle" id="navbarProfileCircle" onclick="goToDashboard()" title="Go to Dashboard">
+    <span id="navbarProfileInitials">JD</span>
+  </div>
+</nav>
 
   <!-- Search Bar -->
-
-
-  <!-- Replace your current search section with this structure -->
-
   <div class="search-wrapper">
     <input type="text" class="search-bar" id="clubSearch" placeholder="Search for your club here..." />
     <!-- Updated filter button with proper ID and icon -->
@@ -66,7 +65,6 @@
     <span class="tag" data-filter="robotics" tabindex="0" role="button" aria-pressed="false">#Robotics</span>
     <span class="tag" data-filter="cybersecurity" tabindex="0" role="button" aria-pressed="false">#Cybersecurity</span>
   </div>
-
 
   <!-- Club Cards Grid -->
   <section class="clubs-grid">
@@ -143,7 +141,6 @@
     </div>
   </section>
 
-
   <!-- Pagination -->
   <section class="pagination">
     <button>&laquo;</button>
@@ -153,8 +150,7 @@
     <button>&raquo;</button>
   </section>
 
-
-
+  <script src="/scripts/navbar-profile.js" defer></script>
 
 </body>
 

@@ -72,7 +72,6 @@ button {
     padding: 0 3rem;
 }
 
-
 .logo-title {
     display: flex;
     align-items: center;
@@ -106,6 +105,92 @@ button {
     border-radius: 20px;
 }
 
+/* =============================================================================
+   NAVBAR PROFILE CIRCLE - New Styles
+   =============================================================================
+*/
+
+.navbar-profile-circle {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #5F96C5, #4a8bc2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 2px 8px rgba(95, 150, 197, 0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+.navbar-profile-circle:hover {
+    transform: scale(1.1);
+    box-shadow: 0 4px 15px rgba(95, 150, 197, 0.5);
+    border-color: rgba(255, 255, 255, 0.6);
+}
+
+.navbar-profile-circle:active {
+    transform: scale(1.05);
+}
+
+#navbarProfileInitials {
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Add a subtle pulse animation on hover */
+.navbar-profile-circle::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    opacity: 0;
+    transform: scale(0.8);
+    transition: all 0.3s ease;
+}
+
+.navbar-profile-circle:hover::before {
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* Responsive adjustments for profile circle */
+@media (max-width: 768px) {
+    .navbar-profile-circle {
+        width: 40px;
+        height: 40px;
+        font-size: 0.9rem;
+    }
+
+    .nav-links {
+        gap: 2rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .navbar-profile-circle {
+        width: 35px;
+        height: 35px;
+        font-size: 0.8rem;
+    }
+
+    .nav-links {
+        gap: 1rem;
+    }
+}
+
 /* Search Section */
 .search-section {
     display: flex;
@@ -121,7 +206,6 @@ button {
     background: transparent;
     outline: none;
 }
-
 
 .search-container {
     display: flex;
@@ -197,8 +281,6 @@ button {
     transform: scale(1.05);
 }
 
-
-
 .filter-tags {
     display: flex;
     flex-wrap: wrap;
@@ -225,9 +307,7 @@ button {
     display: none;
 }
 
-
 /* Club Grid */
-
 
 /* Club Card */
 
@@ -249,8 +329,6 @@ button {
     /* the blur effect */
     -webkit-backdrop-filter: blur(12px);
 
-
-
     border: 1px solid rgbargba(255, 255, 255, 0.8);
     /* light border for definition */
     border-radius: 15px;
@@ -262,7 +340,6 @@ button {
     transition: box-shadow 0.2s ease;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 }
-
 
 .club-card:hover {
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
@@ -328,7 +405,6 @@ button {
     transform: scale(1.15);
     filter: brightness(1.1);
 }
-
 
 /* Pagination */
 .pagination {
@@ -547,6 +623,598 @@ button {
 
 /* Overlay that appears on hover */
 
+.clickable-card:hover .club-card-overlay {
+    opacity: 1;
+}
+
+.view-details {
+    color: white;
+    font-size: 1.1rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 1rem 2rem;
+    border: 2px solid white;
+    border-radius: 25px;
+    transition: all 0.3s ease;
+}
+
+.clickable-card:hover .view-details {
+    transform: scale(1.05);
+    box-shadow: 0 4px 15px rgba(255, 255, 255, 0.3);
+}
+
+/* Ensure bookmark icon stays on top */
+.bookmark-icon {
+    position: relative;
+    z-index: 10;
+    transition: transform 0.3s ease;
+}
+
+.bookmark-icon:hover {
+    transform: scale(1.1);
+}
+
+/* Subtle animation for card content */
+.clickable-card:hover .club-name {
+    color: #2c3e50;
+    transform: translateY(-2px);
+    transition: all 0.3s ease;
+}
+
+.clickable-card:hover .club-description {
+    color: #4a5568;
+    transform: translateY(-1px);
+    transition: all 0.3s ease;
+}
+
+.clickable-card:hover .club-tags {
+    color: #5F96C5;
+    transform: translateY(-1px);
+    transition: all 0.3s ease;
+}
+
+/* Add a subtle glow effect */
+.clickable-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 15px;
+    background: linear-gradient(45deg, transparent, rgba(95, 150, 197, 0.1), transparent);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+.clickable-card:hover::before {
+    opacity: 1;
+}
+
+/* Mobile responsiveness for clickable cards */
+@media (max-width: 768px) {
+    .clickable-card:hover {
+        transform: translateY(-4px);
+    }
+
+    .club-card-overlay {
+        opacity: 0.95;
+        background: rgba(95, 150, 197, 0.95);
+    }
+
+    .clickable-card:active .club-card-overlay {
+        opacity: 1;
+    }
+}
+
+/* Reset + base */
+body {
+    margin: 0;
+    font-family: 'Rethink Sans', sans-serif;
+    background: #f5fcff;
+    position: relative;
+    overflow-x: hidden;
+}
+
+/* Background blur decorations */
+.blur-decoration-left {
+    position: fixed;
+    top: -1em;
+    left: -20em;
+    transform: translateY(-50%);
+    width: 75%;
+    height: 75%;
+    background-image: url('../assets/blueBlur.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+    opacity: 0.6;
+    z-index: -1;
+    transform: rotate(91deg);
+}
+
+.blur-decoration-right {
+    position: fixed;
+    top: 10em;
+    right: -26em;
+    transform: translateY(-50%);
+    width: 75%;
+    height: 75%;
+    background-image: url('../assets/blueBlur.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+    opacity: 0.6;
+    z-index: -1;
+    transform: rotate(270deg);
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+button {
+    cursor: pointer;
+}
+
+/* Navbar */
+.navbar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 25px;
+    margin: 1rem auto;
+    padding: 0.75rem 2rem;
+    max-width: 1130px;
+    width: 90%;
+    height: clamp(50px, 8vw, 68px);
+    gap: 2rem;
+    /* Gap between gray container and profile circle */
+}
+
+.navbar-container {
+    background-color: rgba(183, 183, 183, 0.30);
+    border-radius: 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 3rem;
+    flex: 1;
+    /* Take up available space */
+    max-width: 750px;
+    /* Limit the gray background width */
+}
+
+.logo-title {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-weight: bold;
+    font-size: 1.2rem;
+    margin-left: -1rem;
+}
+
+.logo {
+    height: 40px;
+}
+
+.nav-links {
+    list-style: none;
+    display: flex;
+    gap: 4.5rem;
+    align-items: center;
+    margin: 0;
+}
+
+.nav-links a {
+    font-weight: 500;
+    font-size: 1rem;
+}
+
+.account-btn {
+    background-color: #5F96C5;
+    color: white;
+    padding: 0.4rem 0.9rem;
+    border-radius: 20px;
+}
+
+/* =============================================================================
+   NAVBAR PROFILE CIRCLE - Updated positioning outside gray background
+   =============================================================================
+*/
+
+.navbar-profile-circle {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #5F96C5, #4a8bc2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 2px 8px rgba(95, 150, 197, 0.3);
+    position: relative;
+    overflow: hidden;
+    flex-shrink: 0;
+    /* Don't shrink */
+}
+
+.navbar-profile-circle:hover {
+    transform: scale(1.1);
+    box-shadow: 0 4px 15px rgba(95, 150, 197, 0.5);
+    border-color: rgba(255, 255, 255, 0.6);
+}
+
+.navbar-profile-circle:active {
+    transform: scale(1.05);
+}
+
+#navbarProfileInitials {
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Add a subtle pulse animation on hover */
+.navbar-profile-circle::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    opacity: 0;
+    transform: scale(0.8);
+    transition: all 0.3s ease;
+}
+
+.navbar-profile-circle:hover::before {
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* Responsive adjustments for profile circle */
+@media (max-width: 768px) {
+    .navbar {
+        gap: 1rem;
+        /* Smaller gap on mobile */
+    }
+
+    .navbar-profile-circle {
+        width: 40px;
+        height: 40px;
+        font-size: 0.9rem;
+    }
+
+    .nav-links {
+        gap: 2rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .navbar {
+        gap: 0.5rem;
+        /* Even smaller gap on very small screens */
+        padding: 0.5rem 1rem;
+    }
+
+    .navbar-container {
+        padding: 0 2rem;
+    }
+
+    .navbar-profile-circle {
+        width: 35px;
+        height: 35px;
+        font-size: 0.8rem;
+    }
+
+    .nav-links {
+        gap: 1rem;
+    }
+}
+
+/* Search Section */
+.search-section {
+    display: flex;
+    justify-content: center;
+    margin: 2rem 0;
+}
+
+.search-bar {
+    flex: 1;
+    height: 100%;
+    font-size: 1rem;
+    border: none;
+    background: transparent;
+    outline: none;
+}
+
+.search-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    width: 73.5vw;
+    max-width: 1129px;
+    height: 6vw;
+    max-height: 68px;
+    margin: auto;
+}
+
+.search-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 65.5vw;
+    /* Match .navbar-container */
+    height: 4.2vw;
+    /* Match navbar height */
+    max-width: 1129px;
+    background-color: rgba(183, 183, 183, 0.30);
+    border-radius: 25px;
+    margin: 0 auto 2rem auto;
+    /* Center and add spacing below */
+    padding: 0 1.5rem;
+}
+
+.search-icon {
+    height: 2vw;
+    width: 2vw;
+    max-height: 32px;
+    max-width: 32px;
+    cursor: pointer;
+}
+
+.search-icon:hover {
+    filter: brightness(0.8);
+}
+
+/* Make filter button background transparent */
+.filter-toggle {
+    background: transparent !important;
+    border: none;
+    padding: 0.5rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.filter-toggle:hover {
+    background: transparent !important;
+    transform: scale(1.1);
+}
+
+.filter-toggle:focus {
+    outline: none;
+    background: transparent !important;
+}
+
+/* Keep the icon styling */
+.filter-toggle .search-icon {
+    height: 2vw;
+    width: 2vw;
+    max-height: 32px;
+    max-width: 32px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.filter-toggle:hover .search-icon {
+    filter: brightness(0.8) drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+    transform: scale(1.05);
+}
+
+.filter-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    max-width: 65.5vw;
+    margin: 0 auto 1rem auto;
+    padding: 0.75rem 1rem;
+    background-color: rgba(183, 183, 183, 0.2);
+    border-radius: 15px;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.tag {
+    background-color: #5F96C5;
+    color: white;
+    padding: 0.4rem 0.8rem;
+    border-radius: 12px;
+    font-size: 0.9rem;
+    cursor: pointer;
+}
+
+.hidden {
+    display: none;
+}
+
+/* Responsive blur decorations */
+@media (max-width: 1200px) {
+
+    .blur-decoration-left,
+    .blur-decoration-right {
+        width: 250px;
+        height: 250px;
+    }
+}
+
+@media (max-width: 1100px) {
+    .clubs-grid {
+        grid-template-columns: repeat(2, 1fr);
+        /* 2 per row */
+    }
+}
+
+@media (max-width: 768px) {
+
+    .blur-decoration-left,
+    .blur-decoration-right {
+        width: 200px;
+        height: 200px;
+    }
+}
+
+@media (max-width: 700px) {
+    .clubs-grid {
+        grid-template-columns: 1fr;
+        /* 1 per row */
+    }
+}
+
+@media (max-width: 480px) {
+
+    .blur-decoration-left,
+    .blur-decoration-right {
+        width: 150px;
+        height: 150px;
+    }
+}
+
+/* Loading and Error States */
+.loading-state,
+.error-state {
+    grid-column: 1 / -1;
+    /* Span all columns */
+    text-align: center;
+    padding: 3rem;
+}
+
+.loading-spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid rgba(95, 150, 197, 0.3);
+    border-top: 4px solid #5F96C5;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 1rem;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.retry-button {
+    background: #5F96C5;
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+/* Search Results Info */
+.search-results-info {
+    max-width: 1200px;
+    margin: 0 auto 1rem auto;
+    padding: 1rem;
+}
+
+.results-summary {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    background: rgba(95, 150, 197, 0.1);
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+}
+
+.results-count {
+    font-weight: 600;
+    color: #5F96C5;
+}
+
+.search-term {
+    font-style: italic;
+    color: #666;
+}
+
+.clear-all-btn,
+.clear-filters-btn {
+    background: #5F96C5;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+.active-filter {
+    background-color: #e74c3c !important;
+    color: white !important;
+}
+
+.no-results {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 3rem;
+    color: #666;
+}
+
+/* Bookmark Visual States */
+.bookmark.bookmarked {
+    filter: hue-rotate(120deg) brightness(1.2);
+    transform: scale(1.1);
+}
+
+.bookmark-feedback {
+    font-weight: 500;
+    font-size: 0.95rem;
+}
+
+/* Add this to hide filters by default */
+.filter-tags {
+    display: none;
+    /* Hide by default */
+}
+
+.filter-tags:not(.hidden) {
+    display: flex;
+    /* Show when not hidden */
+}
+
+.filter-tags.hidden {
+    display: none !important;
+    /* Force hide when hidden class is present */
+}
+
+/* =============================================================================
+   CLICKABLE CLUB CARDS - ADD TO tech-clubs.css
+   =============================================================================
+   Enhanced styling for interactive club cards
+*/
+
+/* Make club cards clickable */
+.clickable-card {
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.clickable-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15);
+}
+
+/* Overlay that appears on hover */
 
 .clickable-card:hover .club-card-overlay {
     opacity: 1;

@@ -20,7 +20,7 @@
   <div class="blur-decoration-left"></div>
   <div class="blur-decoration-right"></div>
 
-  <!-- Navbar - copied from tech-clubs -->
+  <!-- Navbar - updated with profile circle outside gray background -->
   <nav class="navbar">
     <div class="navbar-container">
       <div class="logo-title">
@@ -32,10 +32,25 @@
         <li><a href="/events" class="nav-link">Events</a></li>
         <li><a href="/niche-landing">Niche Test</a></li>
         <li><a href="#">Mentor Matching</a></li>
-        <li><a class="account-btn" href="../pages/login.html">Account</a></li>
       </ul>
     </div>
+    <!-- Profile circle outside of the gray background -->
+    <div class="navbar-profile-circle" id="navbarProfileCircle" onclick="goToDashboard()" title="Dashboard">
+      <span id="navbarProfileInitials">JD</span>
+    </div>
   </nav>
+
+  <!-- Logout Button - positioned in top right -->
+  <div class="logout-button-container">
+    <button class="logout-btn" onclick="logoutUser()" title="Logout">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+        <polyline points="16,17 21,12 16,7"/>
+        <line x1="21" y1="12" x2="9" y2="12"/>
+      </svg>
+      Logout
+    </button>
+  </div>
 
   <!-- Dashboard Container with New Layout -->
   <main class="dashboard-container">
@@ -51,7 +66,9 @@
       <div class="profile-info">
         <div class="user-major" id="userMajor">Computer Science</div>
         <div class="user-email" id="userEmail">john.doe@ucdavis.edu</div>
-        <button class="edit-profile-btn" onclick="editProfile()">Edit Profile</button>
+        <div class="profile-actions">
+          <button class="edit-profile-btn" onclick="editProfile()">Edit Profile</button>
+        </div>
       </div>
     </section>
 
@@ -160,6 +177,56 @@
     <div class="loading-spinner"></div>
     <div class="loading-text">Loading your dashboard...</div>
   </div>
+
+  <script>
+    // Function to handle user logout
+    function logoutUser() {
+      if (confirm('Are you sure you want to logout?')) {
+        console.log('🚪 User logging out...');
+        
+        // Show loading state
+        const loadingOverlay = document.getElementById('loadingOverlay');
+        if (loadingOverlay) {
+          loadingOverlay.style.display = 'flex';
+        }
+        
+        // Redirect to logout endpoint
+        window.location.href = '/logout';
+      }
+    }
+
+    // Function to navigate to dashboard (for navbar profile circle)
+    function goToDashboard() {
+      // Already on dashboard, just scroll to top
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Initialize navbar profile on dashboard
+    document.addEventListener('DOMContentLoaded', async () => {
+      try {
+        const response = await fetch('/api/user');
+        if (response.ok) {
+          const userData = await response.json();
+          
+          if (userData.isLoggedIn) {
+            // Update navbar profile initials
+            const navbarInitials = document.getElementById('navbarProfileInitials');
+            if (navbarInitials && userData.email) {
+              const emailPrefix = userData.email.split('@')[0];
+              const initials = emailPrefix.substring(0, 2).toUpperCase();
+              navbarInitials.textContent = initials;
+            }
+          }
+        }
+      } catch (error) {
+        console.error('Error loading user data for navbar:', error);
+      }
+    });
+
+    // Global functions for HTML onclick handlers
+    window.logoutUser = logoutUser;
+    window.goToDashboard = goToDashboard;
+  </script>
 
 </body>
 

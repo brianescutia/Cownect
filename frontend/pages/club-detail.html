@@ -15,21 +15,24 @@
 <body>
 
   <!-- Navbar -->
-  <nav class="navbar">
-    <div class="navbar-container">
-      <div class="logo-title">
-        <img src="../assets/cowLogo.png" alt="Cownect Logo" class="logo" />
-        <span class="logo-text">Cownect</span>
-      </div>
-      <ul class="nav-links">
-        <li><a href="/tech-clubs">Tech Clubs</a></li>
-        <li><a href="/events" class="nav-link">Events</a></li>
-        <li><a href="/niche-landing">Niche Test</a></li>
-        <li><a href="#">Mentor Matching</a></li>
-        <li><a class="account-btn" href="/login">Account</a></li>
-      </ul>
+   <nav class="navbar">
+  <div class="navbar-container">
+    <div class="logo-title">
+      <img src="../assets/cowLogo.png" alt="Cownect Logo" class="logo" />
+      <span class="logo-text">Cownect</span>
     </div>
-  </nav>
+    <ul class="nav-links">
+      <li><a href="/tech-clubs">Tech Clubs</a></li>
+      <li><a href="/events" class="nav-link">Events</a></li>
+      <li><a href="/niche-landing">Niche Test</a></li>
+      <li><a href="#">Mentor Matching</a></li>
+    </ul>
+  </div>
+  <!-- Move the profile circle here, outside the gray container -->
+  <div class="navbar-profile-circle" id="navbarProfileCircle" onclick="goToDashboard()" title="Go to Dashboard">
+    <span id="navbarProfileInitials">JD</span>
+  </div>
+</nav>
 
   <!-- Loading State -->
   <div class="loading-overlay" id="loadingOverlay">

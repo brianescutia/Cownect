@@ -1,5 +1,5 @@
 /* =============================================================================
-   UPDATED DASHBOARD CSS - Exact Specifications for 1728x1117
+   UPDATED DASHBOARD CSS - With Logout Button and Profile Circle
    =============================================================================
    Save as frontend/styles/dashboard.css (replace existing file)
 */
@@ -46,7 +46,7 @@ body {
 }
 
 /* =============================================================================
-   NAVBAR - Same as tech-clubs.css
+   NAVBAR - Same as tech-clubs.css + Profile Circle
    =============================================================================
 */
 
@@ -106,6 +106,116 @@ body {
     color: white;
     padding: 0.4rem 0.9rem;
     border-radius: 20px;
+}
+
+/* =============================================================================
+   NAVBAR PROFILE CIRCLE - Same as tech-clubs
+   =============================================================================
+*/
+
+.navbar-profile-circle {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #5F96C5, #4a8bc2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 2px 8px rgba(95, 150, 197, 0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+.navbar-profile-circle:hover {
+    transform: scale(1.1);
+    box-shadow: 0 4px 15px rgba(95, 150, 197, 0.5);
+    border-color: rgba(255, 255, 255, 0.6);
+}
+
+.navbar-profile-circle:active {
+    transform: scale(1.05);
+}
+
+#navbarProfileInitials {
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Add a subtle pulse animation on hover */
+.navbar-profile-circle::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    opacity: 0;
+    transform: scale(0.8);
+    transition: all 0.3s ease;
+}
+
+.navbar-profile-circle:hover::before {
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* =============================================================================
+   LOGOUT BUTTON - New Styles
+   =============================================================================
+*/
+
+.logout-button-container {
+    position: fixed;
+    top: 2rem;
+    right: 2rem;
+    z-index: 999;
+}
+
+.logout-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(231, 76, 60, 0.9);
+    color: white;
+    border: none;
+    padding: 0.75rem 1.25rem;
+    border-radius: 12px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3);
+}
+
+.logout-btn:hover {
+    background: rgba(231, 76, 60, 1);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(231, 76, 60, 0.4);
+}
+
+.logout-btn:active {
+    transform: translateY(0);
+}
+
+.logout-btn svg {
+    transition: transform 0.3s ease;
+}
+
+.logout-btn:hover svg {
+    transform: translateX(2px);
 }
 
 /* =============================================================================
@@ -208,6 +318,14 @@ body {
     font-size: 1.1rem;
     color: #7f8c8d;
     margin-bottom: 1rem;
+}
+
+.profile-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    width: 100%;
+    align-items: center;
 }
 
 .edit-profile-btn {
@@ -346,95 +464,6 @@ body {
     align-items: center;
     justify-content: center;
     text-align: center;
-}
-
-.view-all-card:hover {
-    background: rgba(95, 150, 197, 0.1);
-    border-color: #4a8bc2;
-}
-
-.saved-clubs-card h2 {
-    font-size: 1.5rem;
-    font-weight: 600;
-    color: #2c3e50;
-    margin-bottom: 1rem;
-}
-
-.saved-clubs-grid {
-    display: flex;
-    gap: 1rem;
-    overflow-x: auto;
-    height: calc(100% - 3rem);
-    padding-bottom: 0.5rem;
-}
-
-.saved-clubs-grid::-webkit-scrollbar {
-    height: 6px;
-}
-
-.saved-clubs-grid::-webkit-scrollbar-track {
-    background: #f1f1f1;
-    border-radius: 3px;
-}
-
-.saved-clubs-grid::-webkit-scrollbar-thumb {
-    background: #5F96C5;
-    border-radius: 3px;
-}
-
-.mini-club-card {
-    flex: 0 0 180px;
-    background: rgba(255, 255, 255, 0.9);
-    border-radius: 12px;
-    padding: 1rem;
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    border: 1px solid rgba(255, 255, 255, 0.5);
-}
-
-.mini-club-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    background: rgba(255, 255, 255, 1);
-}
-
-.mini-club-logo {
-    width: 40px;
-    height: 40px;
-    border-radius: 8px;
-    background: #5F96C5;
-    background-size: cover;
-    background-position: center;
-    margin-bottom: 0.5rem;
-}
-
-.mini-club-name {
-    font-size: 0.95rem;
-    font-weight: 600;
-    color: #2c3e50;
-    margin-bottom: 0.25rem;
-}
-
-.mini-club-description {
-    font-size: 0.8rem;
-    color: #7f8c8d;
-    line-height: 1.3;
-    margin-bottom: 0.5rem;
-    flex: 1;
-}
-
-.mini-club-tags {
-    font-size: 0.75rem;
-    color: #5F96C5;
-    font-weight: 500;
-}
-
-.view-all-card {
-    border: 2px dashed #5F96C5;
-    background: rgba(95, 150, 197, 0.05);
 }
 
 .view-all-card:hover {
@@ -776,8 +805,11 @@ body {
             "empty-space";
     }
 
+    .navbar {
+        gap: 1.5rem;
+    }
+
     .navbar-container {
-        width: 90%;
         padding: 0 2rem;
     }
 
@@ -800,6 +832,11 @@ body {
         height: 150px;
         /* Smaller on mobile */
     }
+
+    .logout-button-container {
+        top: 1rem;
+        right: 1rem;
+    }
 }
 
 @media (max-width: 768px) {
@@ -808,8 +845,12 @@ body {
         gap: 1rem;
     }
 
+    .navbar {
+        gap: 1rem;
+        /* Smaller gap on mobile */
+    }
+
     .navbar-container {
-        width: 90%;
         padding: 0 2rem;
     }
 
@@ -834,11 +875,32 @@ body {
     .mini-club-card {
         flex: 0 0 160px;
     }
+
+    .navbar-profile-circle {
+        width: 40px;
+        height: 40px;
+        font-size: 0.9rem;
+    }
+
+    .logout-btn {
+        padding: 0.6rem 1rem;
+        font-size: 0.8rem;
+    }
 }
 
 @media (max-width: 480px) {
     .dashboard-container {
         padding: 0.25rem;
+    }
+
+    .navbar {
+        gap: 0.5rem;
+        /* Even smaller gap on very small screens */
+        padding: 0.5rem 1rem;
+    }
+
+    .navbar-container {
+        padding: 0 2rem;
     }
 
     .nav-links {
@@ -861,6 +923,28 @@ body {
     .empty-space-card {
         height: 100px;
         /* Even smaller on very small screens */
+    }
+
+    .navbar-profile-circle {
+        width: 35px;
+        height: 35px;
+        font-size: 0.8rem;
+    }
+
+    .logout-button-container {
+        top: 0.5rem;
+        right: 0.5rem;
+    }
+
+    .logout-btn {
+        padding: 0.5rem 0.8rem;
+        font-size: 0.75rem;
+        gap: 0.3rem;
+    }
+
+    .logout-btn svg {
+        width: 16px;
+        height: 16px;
     }
 }
 
