@@ -29,26 +29,34 @@ app.use(express.json());                                       // Parse JSON dat
 
 // SESSION CONFIGURATION - Like setting up a wristband system at a concert
 app.use(session({
-  // This is the "ink" used to create secure wristbands - keep it secret!
   secret: process.env.SESSION_SECRET || 'change-this-in-production',
-
-  // Don't save empty sessions (saves database space)
   resave: false,
   saveUninitialized: false,
-
-  // Store sessions in MongoDB (like a filing cabinet for wristbands)
   store: MongoStore.create({
     mongoUrl: process.env.MONGO_URI,
-    collectionName: 'sessions'  // Creates a 'sessions' collection in your DB
+    collectionName: 'sessions',
+    ttl: 24 * 60 * 60 // 24 hours in seconds
   }),
-
-  // Wristband settings
   cookie: {
-    secure: isProduction,      // Set to true when using HTTPS in production
-    httpOnly: true,     // Prevents JavaScript from accessing the cookie (security)
-    maxAge: 1000 * 60 * 60 * 24  // 24 hours (wristband expires after 1 day)
-  }
+    secure: false, // Set to false for now (even in production) to test
+    httpOnly: true,
+    maxAge: 1000 * 60 * 60 * 24, // 24 hours
+    sameSite: 'lax' // Add this for better compatibility
+  },
+  name: 'cownect.sid' // Custom session name
 }));
+
+// Add session debugging middleware RIGHT AFTER session middleware
+app.use((req, res, next) => {
+  console.log('🔍 Session Debug:', {
+    sessionID: req.sessionID,
+    userId: req.session?.userId,
+    userEmail: req.session?.userEmail,
+    path: req.path,
+    method: req.method
+  });
+  next();
+});
 
 // Connect to MongoDB Atlas
 mongoose.connect(process.env.MONGO_URI, {
@@ -61,12 +69,28 @@ mongoose.connect(process.env.MONGO_URI, {
 // AUTHENTICATION MIDDLEWARE - Our "bouncer" function
 // This checks if someone has a valid wristband before letting them into protected areas
 const requireAuth = (req, res, next) => {
-  if (req.session.userId) {
-    // They have a wristband with a valid userId! Let them in
-    next();
+  console.log('🔒 RequireAuth check for:', req.path);
+  console.log('🔍 Session check:', {
+    sessionID: req.sessionID,
+    hasSession: !!req.session,
+    userId: req.session?.userId,
+    userEmail: req.session?.userEmail,
+    sessionAge: req.session?.cookie?.maxAge
+  });
+
+  // Check if session exists and has userId
+  if (req.session && req.session.userId) {
+    console.log('✅ Authentication successful for:', req.session.userEmail);
+    return next();
   } else {
-    // No wristband? Send them to get one (login page)
-    res.redirect('/login');
+    console.log('❌ Authentication failed - redirecting to login');
+    console.log('🔍 Session state:', {
+      sessionExists: !!req.session,
+      hasUserId: !!req.session?.userId,
+      sessionData: req.session
+    });
+
+    return res.redirect('/login');
   }
 };
 
@@ -77,6 +101,29 @@ function redirectLoggedInUsers(req, res, next) {
   }
   next();
 }
+
+app.use('/assets', express.static(path.join(__dirname, '../frontend/assets'), {
+  maxAge: '1d', // Cache for 1 day
+  etag: false,
+  setHeaders: (res, path) => {
+    console.log('📁 Serving static file:', path);
+  }
+}));
+
+// Serve all frontend files
+app.use(express.static(path.join(__dirname, '../frontend'), {
+  maxAge: '1d'
+}));
+
+// Add a catch-all for missing assets (for debugging)
+app.get('/assets/*', (req, res) => {
+  console.log('❌ Missing asset requested:', req.path);
+  res.status(404).json({
+    error: 'Asset not found',
+    path: req.path,
+    suggestion: 'Check if the file exists in frontend/assets/'
+  });
+});
 
 // =============================================================================
 // ROUTES
@@ -100,35 +147,53 @@ app.post('/login', async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    // Step 1: Find user by email (convert to lowercase for consistency)
+    console.log('🔐 Login attempt for:', email);
+
+    // Step 1: Find user by email
     const user = await User.findOne({ email: email.toLowerCase() });
 
     if (!user) {
+      console.log('❌ User not found:', email);
       return res.redirect('/login?error=invalid');
     }
 
-    // Step 2: Use our secure password comparison (the ID checker!)
+    // Step 2: Check password
     const isPasswordValid = await user.comparePassword(password);
 
     if (!isPasswordValid) {
+      console.log('❌ Invalid password for:', email);
       return res.redirect('/login?error=invalid');
     }
 
-    //Check EMAIL Verification
+    // Step 3: Check email verification
     if (!user.isVerified) {
-      console.log(` User ${user.email} is not verified. Redirecting to verification page.`);
+      console.log('❌ User not verified:', email);
       return res.redirect(`/verify-email-prompt?email=${encodeURIComponent(user.email)}&error=not_verified`);
     }
 
-    // Step 3: ISSUE THE WRISTBAND! Store user info in session
+    // Step 4: Create session with explicit save
     req.session.userId = user._id;
     req.session.userEmail = user.email;
 
-    console.log('Login successful, session created for:', user.email);
-    res.redirect('/tech-clubs');
+    console.log('✅ Session data set:', {
+      userId: req.session.userId,
+      userEmail: req.session.userEmail,
+      sessionID: req.sessionID
+    });
+
+    // Step 5: EXPLICITLY save the session before redirecting
+    req.session.save((err) => {
+      if (err) {
+        console.error('💥 Session save error:', err);
+        return res.redirect('/login?error=server');
+      }
+
+      console.log('✅ Session saved successfully, redirecting to tech-clubs');
+      res.redirect('/tech-clubs');
+    });
 
   } catch (err) {
-    console.error('Login error:', err);
+    console.error('💥 Login error:', err);
     res.redirect('/login?error=server');
   }
 });
@@ -322,6 +387,36 @@ app.get('/logout', (req, res) => {
   });
 });
 
+
+// Add this TEMPORARY test route to debug sessions
+// Remove after fixing the issue
+
+app.get('/api/test-session', (req, res) => {
+  console.log('🧪 Session test route accessed');
+
+  const sessionInfo = {
+    sessionID: req.sessionID,
+    sessionExists: !!req.session,
+    userId: req.session?.userId,
+    userEmail: req.session?.userEmail,
+    sessionData: req.session,
+    cookies: req.headers.cookie,
+    userAgent: req.headers['user-agent']
+  };
+
+  console.log('📊 Session info:', sessionInfo);
+
+  res.json({
+    success: true,
+    message: 'Session test route',
+    sessionInfo: sessionInfo,
+    isAuthenticated: !!(req.session && req.session.userId),
+    timestamp: new Date().toISOString()
+  });
+});
+
+// Have your friend visit this after logging in:
+// https://your-app.railway.app/api/test-session
 // =============================================================================
 // PROTECTED ROUTES - Only for users with valid wristbands!
 // =============================================================================
