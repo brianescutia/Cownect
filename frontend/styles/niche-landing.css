@@ -356,3 +356,147 @@ body {
         padding: 1rem;
     }
 }
+
+
+.navbar {
+    display: flex;
+    justify-content: center;
+    border-radius: 25px;
+    margin: 1rem auto;
+    padding: 0.75rem 2rem;
+    max-width: 970px;
+    width: 90%;
+    height: clamp(50px, 8vw, 68px);
+}
+
+.navbar-container {
+    background-color: rgba(183, 183, 183, 0.30);
+    border-radius: 25px;
+    width: 65.5vw;
+    /* match homepage width */
+    height: 4.2vw;
+    max-width: 1129px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 3rem;
+}
+
+.logo-title {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-weight: bold;
+    font-size: 1.2rem;
+    margin-left: -1rem;
+}
+
+.logo {
+    height: 40px;
+}
+
+.nav-links {
+    list-style: none;
+    display: flex;
+    gap: 4.5rem;
+    align-items: center;
+    margin: 0;
+}
+
+.nav-links a {
+    font-weight: 500;
+    font-size: 1rem;
+}
+
+.account-btn {
+    background-color: #5F96C5;
+    color: white;
+    padding: 0.4rem 0.9rem;
+    border-radius: 20px;
+}
+
+/* =============================================================================
+   NAVBAR PROFILE CIRCLE - New Styles
+   =============================================================================
+*/
+
+.navbar-profile-circle {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #5F96C5, #4a8bc2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 2px 8px rgba(95, 150, 197, 0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+.navbar-profile-circle:hover {
+    transform: scale(1.1);
+    box-shadow: 0 4px 15px rgba(95, 150, 197, 0.5);
+    border-color: rgba(255, 255, 255, 0.6);
+}
+
+.navbar-profile-circle:active {
+    transform: scale(1.05);
+}
+
+#navbarProfileInitials {
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Add a subtle pulse animation on hover */
+.navbar-profile-circle::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    opacity: 0;
+    transform: scale(0.8);
+    transition: all 0.3s ease;
+}
+
+.navbar-profile-circle:hover::before {
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* Responsive adjustments for profile circle */
+@media (max-width: 768px) {
+    .navbar-profile-circle {
+        width: 40px;
+        height: 40px;
+        font-size: 0.9rem;
+    }
+
+    .nav-links {
+        gap: 2rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .navbar-profile-circle {
+        width: 35px;
+        height: 35px;
+        font-size: 0.8rem;
+    }
+
+    .nav-links {
+        gap: 1rem;
+    }
+}
