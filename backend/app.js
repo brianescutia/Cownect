@@ -14,7 +14,9 @@ const { sendVerificationEmail, sendPasswordResetEmail } = require('./emailServic
 dotenv.config();
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
+const isProduction = process.env.NODE_ENV === 'production';
+
 
 // =============================================================================
 // MIDDLEWARE SETUP
@@ -42,7 +44,7 @@ app.use(session({
 
   // Wristband settings
   cookie: {
-    secure: false,      // Set to true when using HTTPS in production
+    secure: isProduction,      // Set to true when using HTTPS in production
     httpOnly: true,     // Prevents JavaScript from accessing the cookie (security)
     maxAge: 1000 * 60 * 60 * 24  // 24 hours (wristband expires after 1 day)
   }
@@ -2621,13 +2623,6 @@ app.post('/api/resend-verification', async (req, res) => {
 // START SERVER
 // =============================================================================
 
-app.listen(port, () => {
-  console.log(`🚀 Cownect server running at http://localhost:${port}`);
-  console.log(`📊 Database: MongoDB Atlas`);
-  console.log(`🔐 Authentication: bcrypt + sessions`);
-  console.log(`🎯 Quiz system: Ready!`);
-
-});
 
 // 🧪 SIMPLE TEST ROUTE - Add this right before app.listen
 app.get('/api/test/hello', (req, res) => {
@@ -2644,9 +2639,10 @@ app.get('/api/test/bulk-update', (req, res) => {
 // =============================================================================
 // START SERVER
 // =============================================================================
-app.listen(port, () => {
-  console.log(` Cownect server running at http://localhost:${port}`);
-  console.log(` Database: MongoDB Atlas`);
-  console.log(` Authentication: bcrypt + sessions`);
-  console.log(` Quiz system: Ready!`);
+app.listen(port, '0.0.0.0', () => {
+  console.log(`🚀 Cownect server running at port ${port}`);
+  console.log(`🌍 Environment: ${isProduction ? 'Production' : 'Development'}`);
+  console.log(`📊 Database: MongoDB Atlas`);
+  console.log(`🔐 Authentication: bcrypt + sessions`);
+  console.log(`🎯 Quiz system: Ready!`);
 });
