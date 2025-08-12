@@ -169,7 +169,7 @@ app.get('/verify-email-prompt', (req, res) => {
 app.post('/signup', async (req, res) => {
   const { email, password } = req.body;
 
-  console.log(' JSON Signup attempt for:', email);
+  console.log('📝 Signup attempt for:', email);
 
   try {
     // Step 1: Basic validation
@@ -180,27 +180,16 @@ app.post('/signup', async (req, res) => {
       });
     }
 
-    // Step 2: Check if user already exists
-    const existingUser = await User.findOne({ email: email.toLowerCase() });
-    if (existingUser) {
-      console.log(' User already exists:', email);
-      return res.status(409).json({
-        success: false,
-        error: 'An account with this email already exists',
-        redirectTo: '/login'
-      });
-    }
-
-    // Step 3: Validate UC Davis email domain
+    // Step 2: Validate UC Davis email domain
     if (!email.toLowerCase().endsWith('@ucdavis.edu')) {
-      console.log(' Invalid email domain:', email);
+      console.log('❌ Invalid email domain:', email);
       return res.status(400).json({
         success: false,
         error: 'Please use your UC Davis email address (@ucdavis.edu)'
       });
     }
 
-    // Step 4: Validate password
+    // Step 3: Validate password
     if (password.length < 6) {
       return res.status(400).json({
         success: false,
@@ -208,8 +197,46 @@ app.post('/signup', async (req, res) => {
       });
     }
 
-    // Step 5: Create new user
-    console.log(' Creating new user...');
+    // Step 4: Check if user already exists
+    const existingUser = await User.findOne({ email: email.toLowerCase() });
+
+    if (existingUser) {
+      // 🔄 IMPROVED: Handle unverified existing accounts
+      if (!existingUser.isVerified) {
+        console.log('🔄 Found unverified account, resending verification...');
+
+        // Update password in case they changed it
+        existingUser.password = password;
+        const verificationToken = existingUser.generateVerificationToken();
+        await existingUser.save();
+
+        // Try to send verification email
+        const { sendVerificationEmail } = require('./emailService');
+        const emailResult = await sendVerificationEmail(existingUser.email, verificationToken);
+
+        return res.status(200).json({
+          success: true,
+          message: 'Account found but not verified. New verification email sent!',
+          user: {
+            email: existingUser.email,
+            isVerified: false
+          },
+          emailSent: emailResult.success,
+          redirectTo: `/verify-email-prompt?email=${encodeURIComponent(existingUser.email)}`
+        });
+      } else {
+        // Account exists and is verified
+        console.log('❌ Verified account already exists:', email);
+        return res.status(409).json({
+          success: false,
+          error: 'An account with this email already exists and is verified',
+          redirectTo: '/login'
+        });
+      }
+    }
+
+    // Step 5: Create new user (existing logic)
+    console.log('✅ Creating new user...');
     const newUser = new User({
       email: email.toLowerCase(),
       password: password,
@@ -217,15 +244,15 @@ app.post('/signup', async (req, res) => {
     });
 
     // Step 6: Generate verification token
-    console.log(' Generating verification token...');
+    console.log('🔑 Generating verification token...');
     const verificationToken = newUser.generateVerificationToken();
 
     // Step 7: Save user to database  
     await newUser.save();
-    console.log(' User saved to database');
+    console.log('💾 User saved to database');
 
     // Step 8: Send verification email
-    console.log('Attempting to send verification email...');
+    console.log('📧 Attempting to send verification email...');
     let emailSent = false;
 
     try {
@@ -234,16 +261,16 @@ app.post('/signup', async (req, res) => {
       emailSent = emailResult.success;
 
       if (emailSent) {
-        console.log(' Verification email sent successfully');
+        console.log('✅ Verification email sent successfully');
       } else {
-        console.error(' Failed to send verification email:', emailResult.error);
+        console.error('❌ Failed to send verification email:', emailResult.error);
       }
     } catch (emailError) {
-      console.error(' Email service error:', emailError);
+      console.error('💥 Email service error:', emailError);
     }
 
-    // Step 9: Return success response with redirect info
-    console.log(' Signup successful, sending JSON response');
+    // Step 9: Return success response
+    console.log('🎉 Signup successful, sending JSON response');
     return res.status(201).json({
       success: true,
       message: 'Account created successfully! Please check your email.',
@@ -256,7 +283,7 @@ app.post('/signup', async (req, res) => {
     });
 
   } catch (err) {
-    console.error(' Signup error:', err);
+    console.error('💥 Signup error:', err);
 
     // Handle MongoDB duplicate key error
     if (err.code === 11000) {
@@ -2617,6 +2644,24 @@ app.post('/api/resend-verification', async (req, res) => {
   } catch (error) {
     console.error('Resend verification error:', error);
     res.status(500).json({ error: 'Server error' });
+  }
+});
+
+// Add this route for testing
+app.get('/api/test/db', async (req, res) => {
+  try {
+    const User = require('./models/User');
+    const userCount = await User.countDocuments();
+    res.json({
+      database: 'connected',
+      userCount: userCount,
+      mongoUri: process.env.MONGO_URI ? 'set' : 'missing'
+    });
+  } catch (error) {
+    res.json({
+      database: 'failed',
+      error: error.message
+    });
   }
 });
 // =============================================================================
