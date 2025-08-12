@@ -34,7 +34,7 @@
         <div id="messageContainer"></div>
 
         <!-- Login Form -->
-        <form method="POST" action="/login" id="loginForm">
+        <form method="POST" action="/signup" id="signupForm">
           <div class="form-group">
             <label for="email">Email</label>
             <input type="email" id="email" name="email" required placeholder="user@ucdavis.edu">
@@ -44,7 +44,7 @@
             <div class="password-header">
               <label for="password">Password</label>
             </div>
-            <input type="password" id="password" name="password" required placeholder="••••••••">
+            <input type="password" id="password" name="password" required placeholder="••••••••" minlength="6">
           </div>
 
           <button type="submit" class="sign-in-btn">Sign up</button>
@@ -52,6 +52,7 @@
 
         <!-- Sign up link -->
         <div class="signup-link">
+          Already have an account? <a href="../pages/login.html">Sign in</a>
         </div>
       </div>
     </div>
@@ -81,14 +82,17 @@
     if (showError) {
       let errorMessage = "";
       switch (showError) {
-        case 'unverified':
-          errorMessage = "Please verify your email before logging in.";
+        case 'exists':
+          errorMessage = "An account with this email already exists. Please sign in instead.";
           break;
-        case 'verification_required':
-          errorMessage = "Please check your email for verification link.";
+        case 'email':
+          errorMessage = "Please use your UC Davis email address (@ucdavis.edu).";
+          break;
+        case 'server':
+          errorMessage = "Server error occurred. Please try again later.";
           break;
         default:
-          errorMessage = "Incorrect email or password. Please try again.";
+          errorMessage = "An error occurred during signup. Please try again.";
       }
       showMessage("❌ " + errorMessage, 'error');
     }
