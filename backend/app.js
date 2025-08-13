@@ -125,6 +125,58 @@ app.get('/assets/*', (req, res) => {
   });
 });
 
+console.log('🔍 Starting route validation...');
+
+// Wrap your route definitions to catch errors
+const originalGet = app.get;
+const originalPost = app.post;
+const originalPut = app.put;
+const originalDelete = app.delete;
+
+app.get = function (path, ...handlers) {
+  try {
+    console.log('✅ Registering GET route:', path);
+    return originalGet.call(this, path, ...handlers);
+  } catch (error) {
+    console.error('❌ Error registering GET route:', path);
+    console.error('💥 Error details:', error.message);
+    throw error;
+  }
+};
+
+app.post = function (path, ...handlers) {
+  try {
+    console.log('✅ Registering POST route:', path);
+    return originalPost.call(this, path, ...handlers);
+  } catch (error) {
+    console.error('❌ Error registering POST route:', path);
+    console.error('💥 Error details:', error.message);
+    throw error;
+  }
+};
+
+app.put = function (path, ...handlers) {
+  try {
+    console.log('✅ Registering PUT route:', path);
+    return originalPut.call(this, path, ...handlers);
+  } catch (error) {
+    console.error('❌ Error registering PUT route:', path);
+    console.error('💥 Error details:', error.message);
+    throw error;
+  }
+};
+
+app.delete = function (path, ...handlers) {
+  try {
+    console.log('✅ Registering DELETE route:', path);
+    return originalDelete.call(this, path, ...handlers);
+  } catch (error) {
+    console.error('❌ Error registering DELETE route:', path);
+    console.error('💥 Error details:', error.message);
+    throw error;
+  }
+};
+
 // =============================================================================
 // ROUTES
 // =============================================================================
@@ -165,30 +217,25 @@ app.post('/login', async (req, res) => {
       return res.redirect('/login?error=invalid');
     }
 
-    // Step 3: Check email verification
+    // Step 3: Check email verification - IMPROVED
     if (!user.isVerified) {
       console.log('❌ User not verified:', email);
+      // Redirect to verification prompt with user's email
       return res.redirect(`/verify-email-prompt?email=${encodeURIComponent(user.email)}&error=not_verified`);
     }
 
-    // Step 4: Create session with explicit save
+    // Step 4: Create session
     req.session.userId = user._id;
     req.session.userEmail = user.email;
 
-    console.log('✅ Session data set:', {
-      userId: req.session.userId,
-      userEmail: req.session.userEmail,
-      sessionID: req.sessionID
-    });
-
-    // Step 5: EXPLICITLY save the session before redirecting
+    // Step 5: Save session and redirect
     req.session.save((err) => {
       if (err) {
         console.error('💥 Session save error:', err);
         return res.redirect('/login?error=server');
       }
 
-      console.log('✅ Session saved successfully, redirecting to tech-clubs');
+      console.log('✅ Login successful, redirecting to tech-clubs');
       res.redirect('/tech-clubs');
     });
 
@@ -266,27 +313,49 @@ app.post('/signup', async (req, res) => {
     const existingUser = await User.findOne({ email: email.toLowerCase() });
 
     if (existingUser) {
-      // 🔄 IMPROVED: Handle unverified existing accounts
+      // ✅ IMPROVED: Handle unverified existing accounts better
       if (!existingUser.isVerified) {
-        console.log('🔄 Found unverified account, resending verification...');
+        console.log('🔄 Found unverified account, updating and resending verification...');
 
-        // Update password in case they changed it
+        // Update the password (in case they want to change it)
         existingUser.password = password;
+
+        // Generate NEW verification token (old one might be expired)
         const verificationToken = existingUser.generateVerificationToken();
+
+        // Save the updated user
         await existingUser.save();
+        console.log('💾 Updated existing unverified user');
 
         // Try to send verification email
-        const { sendVerificationEmail } = require('./emailService');
-        const emailResult = await sendVerificationEmail(existingUser.email, verificationToken);
+        let emailSent = false;
+        try {
+          const { sendVerificationEmail } = require('./emailService');
+          const emailResult = await sendVerificationEmail(existingUser.email, verificationToken);
+          emailSent = emailResult.success;
 
+          if (emailSent) {
+            console.log('✅ New verification email sent successfully');
+          } else {
+            console.error('❌ Failed to send verification email:', emailResult.error);
+          }
+        } catch (emailError) {
+          console.error('💥 Email service error:', emailError);
+          emailSent = false;
+        }
+
+        // Return success response with instructions
         return res.status(200).json({
           success: true,
-          message: 'Account found but not verified. New verification email sent!',
+          message: 'We found your account! A new verification email has been sent.',
           user: {
             email: existingUser.email,
             isVerified: false
           },
-          emailSent: emailResult.success,
+          emailSent: emailSent,
+          instructions: emailSent
+            ? 'Check your email for the verification link.'
+            : 'There was an issue sending the email. Please try again or contact support.',
           redirectTo: `/verify-email-prompt?email=${encodeURIComponent(existingUser.email)}`
         });
       } else {
@@ -294,13 +363,13 @@ app.post('/signup', async (req, res) => {
         console.log('❌ Verified account already exists:', email);
         return res.status(409).json({
           success: false,
-          error: 'An account with this email already exists and is verified',
+          error: 'An account with this email already exists and is verified. Please sign in instead.',
           redirectTo: '/login'
         });
       }
     }
 
-    // Step 5: Create new user (existing logic)
+    // Step 5: Create new user (if no existing user found)
     console.log('✅ Creating new user...');
     const newUser = new User({
       email: email.toLowerCase(),
@@ -314,7 +383,7 @@ app.post('/signup', async (req, res) => {
 
     // Step 7: Save user to database  
     await newUser.save();
-    console.log('💾 User saved to database');
+    console.log('💾 New user saved to database');
 
     // Step 8: Send verification email
     console.log('📧 Attempting to send verification email...');
@@ -332,18 +401,22 @@ app.post('/signup', async (req, res) => {
       }
     } catch (emailError) {
       console.error('💥 Email service error:', emailError);
+      emailSent = false;
     }
 
     // Step 9: Return success response
     console.log('🎉 Signup successful, sending JSON response');
     return res.status(201).json({
       success: true,
-      message: 'Account created successfully! Please check your email.',
+      message: 'Account created successfully!',
       user: {
         email: newUser.email,
         isVerified: newUser.isVerified
       },
       emailSent: emailSent,
+      instructions: emailSent
+        ? 'Please check your email and click the verification link.'
+        : 'There was an issue sending the verification email. You can request a new one.',
       redirectTo: `/verify-email-prompt?email=${encodeURIComponent(newUser.email)}`
     });
 
@@ -374,6 +447,7 @@ app.post('/signup', async (req, res) => {
     });
   }
 });
+
 
 //  LOGOUT ROUTE
 app.get('/logout', (req, res) => {
@@ -1653,8 +1727,8 @@ app.get('/api/clubs/metadata', async (req, res) => {
 // Insert these routes after your existing club routes
 
 //  CLUB DETAIL PAGE - Serve the club detail HTML
-app.get('/club/:id', requireAuth, (req, res) => {
-  console.log('Club detail page accessed for ID:', req.params.id);
+app.get('/club/:clubId([0-9a-fA-F]{24})', requireAuth, (req, res) => {
+  console.log('Club detail page accessed for ID:', req.params.clubId);
   res.sendFile(path.join(__dirname, '../frontend/pages/club-detail.html'));
 });
 
@@ -2673,37 +2747,52 @@ app.get('/verify-email', async (req, res) => {
     const { token } = req.query;
 
     if (!token) {
+      console.log('❌ Missing verification token');
       return res.redirect('/verify-email-prompt?error=missing_token');
     }
 
-    // Find user with this verification token
+    console.log('🔍 Verifying token...');
+
+    // Find user with this verification token that hasn't expired
     const user = await User.findOne({
       verificationToken: token,
       verificationTokenExpires: { $gt: Date.now() }
     });
 
     if (!user) {
+      console.log('❌ Invalid or expired token');
       return res.redirect('/verify-email-prompt?error=invalid_token');
     }
 
-    // Mark user as verified
+    // ✅ Mark user as verified
     user.isVerified = true;
     user.verificationToken = null;
     user.verificationTokenExpires = null;
     await user.save();
 
+    console.log('✅ Email verified successfully for:', user.email);
+
     // Auto-login the verified user
     req.session.userId = user._id;
     req.session.userEmail = user.email;
 
-    console.log(' Email verified and user logged in:', user.email);
-    res.redirect('/tech-clubs?verified=true');
+    // Save session explicitly
+    req.session.save((err) => {
+      if (err) {
+        console.error('❌ Session save error after verification:', err);
+        return res.redirect('/login?verified=true');
+      }
+
+      console.log('✅ User auto-logged in after verification');
+      res.redirect('/tech-clubs?verified=true');
+    });
 
   } catch (error) {
-    console.error('Email verification error:', error);
+    console.error('💥 Email verification error:', error);
     res.redirect('/verify-email-prompt?error=server');
   }
 });
+
 
 // Resend verification email
 app.post('/api/resend-verification', async (req, res) => {
@@ -2711,34 +2800,65 @@ app.post('/api/resend-verification', async (req, res) => {
     const { email } = req.body;
 
     if (!email) {
-      return res.status(400).json({ error: 'Email is required' });
+      return res.status(400).json({
+        success: false,
+        error: 'Email is required'
+      });
     }
 
+    console.log('📤 Resending verification for:', email);
+
+    // Find unverified user
     const user = await User.findOne({
       email: email.toLowerCase(),
       isVerified: false
     });
 
     if (!user) {
-      return res.status(404).json({ error: 'User not found or already verified' });
+      return res.status(404).json({
+        success: false,
+        error: 'User not found or already verified'
+      });
     }
 
-    // Generate new verification token
+    // Generate NEW verification token
     const verificationToken = user.generateVerificationToken();
     await user.save();
 
-    // Send new verification email
-    const emailResult = await sendVerificationEmail(user.email, verificationToken);
+    console.log('🔑 Generated new verification token');
 
-    if (emailResult.success) {
-      res.json({ message: 'Verification email sent successfully' });
-    } else {
-      res.status(500).json({ error: 'Failed to send verification email' });
+    // Send new verification email
+    try {
+      const { sendVerificationEmail } = require('./emailService');
+      const emailResult = await sendVerificationEmail(user.email, verificationToken);
+
+      if (emailResult.success) {
+        console.log('✅ Verification email resent successfully');
+        res.json({
+          success: true,
+          message: 'Verification email sent successfully!'
+        });
+      } else {
+        console.error('❌ Failed to resend verification email:', emailResult.error);
+        res.status(500).json({
+          success: false,
+          error: 'Failed to send verification email. Please try again.'
+        });
+      }
+    } catch (emailError) {
+      console.error('💥 Email service error:', emailError);
+      res.status(500).json({
+        success: false,
+        error: 'Email service error. Please try again later.'
+      });
     }
 
   } catch (error) {
-    console.error('Resend verification error:', error);
-    res.status(500).json({ error: 'Server error' });
+    console.error('💥 Resend verification error:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Server error occurred. Please try again.'
+    });
   }
 });
 
