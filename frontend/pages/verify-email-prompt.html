@@ -10,16 +10,15 @@
     <link rel="stylesheet" href="../styles/emailVerification.css">
 </head>
 
-<body>
-    <main class="background">
-        <div class="verification-container">
-            <header>
-                <h1>
-                    <img src="../assets/COW.png" alt="Cow Logo" class="logo" />
-                    Cownect
-                </h1>
-            </header>
+<body class="background">
+    <!-- Header Logo -->
+    <div class="header-logo">
+        <img src="../assets/COW.png" alt="Cownect Logo featuring a cow">
+        <h1>Cownect</h1>
+    </div>
 
+    <main class="main-container">
+        <div class="verification-container">
             <div class="verification-icon">📧</div>
             <h2 class="verification-title">Check Your Email!</h2>
 
@@ -51,24 +50,56 @@
                 <div id="resendTimer" style="margin-top: 0.5rem; font-size: 0.8rem; color: #6b7280;"></div>
             </div>
 
-            <a href="../pages/login.html" class="back-link">← Back to Login</a>
+            <div class="action-links">
+                <a href="/login" class="back-link">← Back to Login</a>
+                <a href="/signup" class="back-link">← Try Different Email</a>
+            </div>
         </div>
     </main>
 
     <script>
-        // Get email from URL parameters
+        // Get parameters from URL
         const urlParams = new URLSearchParams(window.location.search);
         const email = urlParams.get('email');
+        const status = urlParams.get('status');
         const error = urlParams.get('error');
 
         // Display email
         if (email) {
             document.getElementById('userEmail').textContent = decodeURIComponent(email);
+        } else {
+            document.getElementById('userEmail').textContent = 'your UC Davis email';
         }
 
-        // Show error messages
+        // Show appropriate status messages
+        if (status) {
+            showStatusMessage(status);
+        }
+
         if (error) {
             showAlert(getErrorMessage(error), 'error');
+        }
+
+        function showStatusMessage(status) {
+            let message = '';
+            let type = 'success';
+
+            switch (status) {
+                case 'sent':
+                    message = '✅ Account created! Verification email sent successfully.';
+                    break;
+                case 'resent':
+                    message = '✅ We found your account! New verification email sent.';
+                    break;
+                case 'email_error':
+                    message = '⚠️ Account created, but there was an issue sending the email. You can request a new one below.';
+                    type = 'warning';
+                    break;
+                default:
+                    return;
+            }
+
+            showAlert(message, type);
         }
 
         // Resend functionality
@@ -144,11 +175,13 @@
             alertContainer.innerHTML = '';
             alertContainer.appendChild(alertDiv);
 
-            // Auto-hide success messages after 5 seconds
+            // Auto-hide success messages after 7 seconds
             if (type === 'success') {
                 setTimeout(() => {
-                    alertDiv.remove();
-                }, 5000);
+                    if (alertDiv.parentNode) {
+                        alertDiv.remove();
+                    }
+                }, 7000);
             }
         }
 
@@ -156,7 +189,8 @@
             const messages = {
                 'missing_token': 'Verification link is missing. Please try signing up again.',
                 'invalid_token': 'Verification link is invalid or expired. Please request a new one.',
-                'server': 'Server error occurred. Please try again later.'
+                'server': 'Server error occurred. Please try again later.',
+                'not_verified': 'Your account is not yet verified. Please check your email for the verification link.'
             };
             return messages[error] || 'An unknown error occurred.';
         }

@@ -8,7 +8,6 @@
   <link rel="stylesheet" href="../styles/signup.css">
   <link href="https://fonts.googleapis.com/css2?family=Rethink+Sans:wght@400;500;600&display=swap" rel="stylesheet">
   <script src="../scripts/login.js" defer></script>
-  <script src="../scripts/themeToggle.js" defer></script>
 </head>
 
 <body>
@@ -18,13 +17,13 @@
   </div>
 
   <div class="main-container">
-    <!-- Left Side - Login Form -->
+    <!-- Left Side - Signup Form -->
     <div class="left-side">
       <div class="login-form-container">
         <!-- Welcome Text -->
         <div class="welcome-text">
-          <h2>Get Started </h2>
-          <p>Welcome to Cownect, Let’s create your account!</p>
+          <h2>Join Cownect!</h2>
+          <p>Create your account to discover UC Davis tech clubs</p>
         </div>
 
         <!-- Separator Line -->
@@ -33,26 +32,26 @@
         <!-- Error/Success Messages -->
         <div id="messageContainer"></div>
 
-        <!-- Login Form -->
+        <!-- Signup Form -->
         <form method="POST" action="/signup" id="signupForm">
           <div class="form-group">
-            <label for="email">Email</label>
-            <input type="email" id="email" name="email" required placeholder="user@ucdavis.edu">
+            <label for="email">UC Davis Email</label>
+            <input type="email" id="email" name="email" required placeholder="yourname@ucdavis.edu">
+            <small style="color: #666; font-size: 0.8rem;">Must be a valid @ucdavis.edu email address</small>
           </div>
 
           <div class="form-group">
-            <div class="password-header">
-              <label for="password">Password</label>
-            </div>
-            <input type="password" id="password" name="password" required placeholder="••••••••" minlength="6">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" required placeholder="••••••••">
+            <small style="color: #666; font-size: 0.8rem;">Minimum 6 characters</small>
           </div>
 
-          <button type="submit" class="sign-in-btn">Sign up</button>
+          <button type="submit" class="sign-in-btn">Create Account</button>
         </form>
 
-        <!-- Sign up link -->
+        <!-- Login link -->
         <div class="signup-link">
-          Already have an account? <a href="../pages/login.html">Sign in</a>
+          Already have an account? <a href="/login">Sign in</a>
         </div>
       </div>
     </div>
@@ -66,50 +65,35 @@
   </div>
 
   <script>
-    // Handle URL parameters for error/success messages
+    // Handle URL parameters for error messages
     const urlParams = new URLSearchParams(window.location.search);
     const showError = urlParams.get('error');
-    const email = urlParams.get('email');
-    const verified = urlParams.get('verified');
     const messageContainer = document.getElementById('messageContainer');
-
-    // Show success message if just verified
-    if (verified === 'true') {
-      showMessage("✅ Email verified successfully! You can now log in.", 'success');
-    }
 
     // Show various error messages
     if (showError) {
       let errorMessage = "";
       switch (showError) {
-        case 'exists':
-          errorMessage = "An account with this email already exists. Please sign in instead.";
+        case 'missing_fields':
+          errorMessage = "Please fill in all required fields.";
           break;
-        case 'email':
+        case 'invalid_domain':
           errorMessage = "Please use your UC Davis email address (@ucdavis.edu).";
           break;
-        case 'server':
+        case 'weak_password':
+          errorMessage = "Password must be at least 6 characters long.";
+          break;
+        case 'account_exists':
+          errorMessage = "An account with this email already exists. Please log in instead.";
+          break;
+        case 'validation_error':
+          errorMessage = "Please check your information and try again.";
+          break;
+        case 'server_error':
           errorMessage = "Server error occurred. Please try again later.";
           break;
         default:
-          errorMessage = "An error occurred during signup. Please try again.";
-      }
-      showMessage("❌ " + errorMessage, 'error');
-    }
-
-    // Handle verification errors
-    const verificationError = urlParams.get('verification_error');
-    if (verificationError) {
-      let errorMessage = "";
-      switch (verificationError) {
-        case 'missing_token':
-          errorMessage = "Invalid verification link. Please request a new one.";
-          break;
-        case 'invalid_token':
-          errorMessage = "Verification link has expired. Please request a new one.";
-          break;
-        default:
-          errorMessage = "Verification error. Please try again.";
+          errorMessage = "An error occurred. Please try again.";
       }
       showMessage("❌ " + errorMessage, 'error');
     }
@@ -119,13 +103,30 @@
       messageDiv.className = type === 'success' ? 'success-message' : 'error-message';
       messageDiv.textContent = message;
       messageContainer.appendChild(messageDiv);
+
+      // Auto-hide after 7 seconds
+      setTimeout(() => {
+        if (messageDiv.parentNode) {
+          messageDiv.remove();
+        }
+      }, 7000);
     }
 
-    // Handle form submission (keep existing login functionality)
-    document.getElementById('loginForm').addEventListener('submit', function(e) {
-      // Your existing login submission logic can go here
-      // For now, let the form submit normally
-    });
+    // Pre-fill email field if redirected back with error
+    const emailInput = document.getElementById('email');
+    const savedEmail = urlParams.get('email');
+    if (savedEmail && emailInput) {
+      emailInput.value = decodeURIComponent(savedEmail);
+    }
+
+    // Focus appropriate field
+    if (showError === 'weak_password') {
+      document.getElementById('password').focus();
+    } else if (!emailInput.value) {
+      emailInput.focus();
+    } else {
+      document.getElementById('password').focus();
+    }
   </script>
 </body>
 

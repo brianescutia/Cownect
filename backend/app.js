@@ -116,7 +116,7 @@ app.use(express.static(path.join(__dirname, '../frontend'), {
 }));
 
 // Add a catch-all for missing assets (for debugging)
-app.get('/assets/*', (req, res) => {
+app.get('/assets/*filename', (req, res) => {
   console.log('❌ Missing asset requested:', req.path);
   res.status(404).json({
     error: 'Asset not found',
@@ -278,6 +278,8 @@ app.get('/verify-email-prompt', (req, res) => {
   res.sendFile(path.join(__dirname, '../frontend/pages/verify-email-prompt.html'));
 });
 
+// Replace your existing /signup POST route in backend/app.js with this:
+
 app.post('/signup', async (req, res) => {
   const { email, password } = req.body;
 
@@ -286,27 +288,18 @@ app.post('/signup', async (req, res) => {
   try {
     // Step 1: Basic validation
     if (!email || !password) {
-      return res.status(400).json({
-        success: false,
-        error: 'Email and password are required'
-      });
+      return res.redirect('/signup?error=missing_fields');
     }
 
     // Step 2: Validate UC Davis email domain
     if (!email.toLowerCase().endsWith('@ucdavis.edu')) {
       console.log('❌ Invalid email domain:', email);
-      return res.status(400).json({
-        success: false,
-        error: 'Please use your UC Davis email address (@ucdavis.edu)'
-      });
+      return res.redirect('/signup?error=invalid_domain');
     }
 
     // Step 3: Validate password
     if (password.length < 6) {
-      return res.status(400).json({
-        success: false,
-        error: 'Password must be at least 6 characters long'
-      });
+      return res.redirect('/signup?error=weak_password');
     }
 
     // Step 4: Check if user already exists
@@ -344,28 +337,14 @@ app.post('/signup', async (req, res) => {
           emailSent = false;
         }
 
-        // Return success response with instructions
-        return res.status(200).json({
-          success: true,
-          message: 'We found your account! A new verification email has been sent.',
-          user: {
-            email: existingUser.email,
-            isVerified: false
-          },
-          emailSent: emailSent,
-          instructions: emailSent
-            ? 'Check your email for the verification link.'
-            : 'There was an issue sending the email. Please try again or contact support.',
-          redirectTo: `/verify-email-prompt?email=${encodeURIComponent(existingUser.email)}`
-        });
+        // Redirect to verification prompt with success message
+        const emailParam = encodeURIComponent(existingUser.email);
+        const statusParam = emailSent ? 'resent' : 'email_error';
+        return res.redirect(`/verify-email-prompt?email=${emailParam}&status=${statusParam}`);
       } else {
         // Account exists and is verified
         console.log('❌ Verified account already exists:', email);
-        return res.status(409).json({
-          success: false,
-          error: 'An account with this email already exists and is verified. Please sign in instead.',
-          redirectTo: '/login'
-        });
+        return res.redirect('/signup?error=account_exists');
       }
     }
 
@@ -404,47 +383,27 @@ app.post('/signup', async (req, res) => {
       emailSent = false;
     }
 
-    // Step 9: Return success response
-    console.log('🎉 Signup successful, sending JSON response');
-    return res.status(201).json({
-      success: true,
-      message: 'Account created successfully!',
-      user: {
-        email: newUser.email,
-        isVerified: newUser.isVerified
-      },
-      emailSent: emailSent,
-      instructions: emailSent
-        ? 'Please check your email and click the verification link.'
-        : 'There was an issue sending the verification email. You can request a new one.',
-      redirectTo: `/verify-email-prompt?email=${encodeURIComponent(newUser.email)}`
-    });
+    // Step 9: Redirect to verification page (instead of JSON response)
+    console.log('🎉 Signup successful, redirecting to verification page');
+    const emailParam = encodeURIComponent(newUser.email);
+    const statusParam = emailSent ? 'sent' : 'email_error';
+    return res.redirect(`/verify-email-prompt?email=${emailParam}&status=${statusParam}`);
 
   } catch (err) {
     console.error('💥 Signup error:', err);
 
     // Handle MongoDB duplicate key error
     if (err.code === 11000) {
-      return res.status(409).json({
-        success: false,
-        error: 'An account with this email already exists',
-        redirectTo: '/login'
-      });
+      return res.redirect('/signup?error=account_exists');
     }
 
     // Handle validation errors
     if (err.name === 'ValidationError') {
-      return res.status(400).json({
-        success: false,
-        error: 'Invalid user data: ' + err.message
-      });
+      return res.redirect('/signup?error=validation_error');
     }
 
     // Handle other errors
-    return res.status(500).json({
-      success: false,
-      error: 'Server error occurred. Please try again later.'
-    });
+    return res.redirect('/signup?error=server_error');
   }
 });
 
@@ -1727,7 +1686,7 @@ app.get('/api/clubs/metadata', async (req, res) => {
 // Insert these routes after your existing club routes
 
 //  CLUB DETAIL PAGE - Serve the club detail HTML
-app.get('/club/:clubId([0-9a-fA-F]{24})', requireAuth, (req, res) => {
+app.get('/club/:clubId', requireAuth, (req, res) => {
   console.log('Club detail page accessed for ID:', req.params.clubId);
   res.sendFile(path.join(__dirname, '../frontend/pages/club-detail.html'));
 });
