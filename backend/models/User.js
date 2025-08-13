@@ -13,58 +13,40 @@ const userSchema = new mongoose.Schema({
         required: true,
         unique: true,
         lowercase: true,
-        trim: true,
-        match: [/^[^\s@]+@[^\s@]+\.[^\s@]+$/, 'Please enter a valid email address']
+        trim: true
     },
 
-    // PASSWORD FIELD - Hashed before storage
-    password: {
+    googleId: {
         type: String,
-        required: true,
-        minlength: 6
+        unique: true,
+        sparse: true // Allows null values to be non-unique
+    },
+    name: {
+        type: String,
+        trim: true
     },
 
-    // BOOKMARKED CLUBS - Array of club IDs
+    isVerified: {
+        type: Boolean,
+        default: true // Google accounts are pre-verified
+    },
+
+    // Keep your existing bookmark fields
     bookmarkedClubs: [{
-        type: mongoose.Schema.Types.ObjectId,  // References Club _id
-        ref: 'Club'  // Tells Mongoose this refers to Club model
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Club'
     }],
 
-    // BOOKMARKED EVENTS - NEW! Array of event IDs
     bookmarkedEvents: [{
-        type: mongoose.Schema.Types.ObjectId,  // References Event _id
-        ref: 'Event'  // Tells Mongoose this refers to Event model
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Event'
     }],
 
-    // TIMESTAMP - Track when user account was created
     createdAt: {
         type: Date,
         default: Date.now
-    },
-
-    //Email Verification Fields
-    isVerified: {
-        type: Boolean,
-        default: false
-    },
-    verificationToken: {
-        type: String,
-        default: null
-    },
-    verificationTokenExpires: {
-        type: Date,
-        default: null
-    },
-    passwordResetToken: {
-        type: String,
-        default: null
-    },
-    passwordResetExpires: {
-        type: Date,
-        default: null
-    },
+    }
 });
-
 userSchema.methods.generateVerificationToken = function () {
     const token = crypto.randomBytes(32).toString('hex');
     this.verificationToken = token;

@@ -325,3 +325,137 @@ body {
 #themeToggle:hover {
     background-color: #2563eb;
 }
+
+
+.google-signin-container {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.google-signin-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    width: 100%;
+    max-width: 300px;
+    padding: 0.875rem 1.5rem;
+    background: white;
+    border: 2px solid #dadce0;
+    border-radius: 8px;
+    text-decoration: none;
+    color: #3c4043;
+    font-weight: 500;
+    font-size: 0.95rem;
+    transition: all 0.2s ease;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.google-signin-btn:hover {
+    background: #f8f9fa;
+    border-color: #c1c7cd;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    transform: translateY(-1px);
+}
+
+.google-logo {
+    width: 20px;
+    height: 20px;
+}
+
+.signin-note {
+    margin-top: 1rem;
+    font-size: 0.9rem;
+    color: #666;
+    background: #f0f9ff;
+    padding: 0.75rem;
+    border-radius: 6px;
+    border-left: 3px solid #3b82f6;
+}
+
+.benefits-section {
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid #e5e7eb;
+}
+
+.benefits-section h3 {
+    font-size: 1.1rem;
+    color: #374151;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.benefits-list {
+    list-style: none;
+    padding: 0;
+    space-y: 0.5rem;
+}
+
+.benefits-list li {
+    display: flex;
+    align-items: center;
+    font-size: 0.9rem;
+    color: #6b7280;
+    margin-bottom: 0.5rem;
+}
+
+.help-section {
+    margin-top: 2rem;
+}
+
+.help-details {
+    background: #f9fafb;
+    border-radius: 8px;
+    padding: 1rem;
+}
+
+.help-details summary {
+    cursor: pointer;
+    font-weight: 500;
+    color: #374151;
+    list-style: none;
+}
+
+.help-details summary::-webkit-details-marker {
+    display: none;
+}
+
+.help-details summary::before {
+    content: '❓ ';
+    margin-right: 0.5rem;
+}
+
+.help-content {
+    margin-top: 1rem;
+    font-size: 0.9rem;
+    color: #6b7280;
+    line-height: 1.5;
+}
+
+.help-content ul {
+    margin-top: 0.5rem;
+    padding-left: 1.5rem;
+}
+
+.help-content li {
+    margin-bottom: 0.25rem;
+}
+
+.help-content code {
+    background: #e5e7eb;
+    padding: 0.125rem 0.25rem;
+    border-radius: 3px;
+    font-size: 0.85rem;
+}
+
+@media (max-width: 768px) {
+    .benefits-list li {
+        font-size: 0.85rem;
+    }
+
+    .google-signin-btn {
+        font-size: 0.9rem;
+        padding: 0.75rem 1rem;
+    }
+}
