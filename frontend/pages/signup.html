@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cownect - Join Us</title>
+  <link rel="stylesheet" href="../styles/signup.css">
+  <link href="https://fonts.googleapis.com/css2?family=Rethink+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+
+<body>
+  <!-- Header Logo -->
+  <div class="header-logo">
+    <img src="../assets/COW.png" alt="Cownect Logo featuring a cow">
+  </div>
+
+  <div class="main-container">
+    <!-- Left Side - Google Auth -->
+    <div class="left-side">
+      <div class="login-form-container">
+        <!-- Welcome Text -->
+        <div class="welcome-text">
+          <h2>Join Cownect!</h2>
+          <p>Sign up with your UC Davis Google account to discover amazing tech clubs</p>
+        </div>
+
+        <!-- Separator Line -->
+        <div class="separator"></div>
+
+        <!-- Error/Success Messages -->
+        <div id="messageContainer"></div>
+
+        <!-- Google OAuth Section -->
+        <div class="google-auth-container">
+          <a href="/auth/google" class="google-signin-btn" id="googleSignupBtn">
+            <svg class="google-icon" viewBox="0 0 24 24" width="24" height="24">
+              <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+              <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+              <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+              <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+            </svg>
+            Sign up with Google
+          </a>
+          
+          <div class="security-notice">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+              <path d="M8 0a8 8 0 100 16A8 8 0 008 0zM7 3a1 1 0 112 0v5a1 1 0 11-2 0V3zm1 8a1 1 0 100 2 1 1 0 000-2z"/>
+            </svg>
+            Only UC Davis (@ucdavis.edu) accounts are allowed
+          </div>
+        </div>
+
+        <!-- What you get section -->
+        <div class="benefits-section">
+          <h3>What you'll get:</h3>
+          <ul>
+            <li>🎯 Personalized club recommendations</li>
+            <li>📚 Access to 50+ UC Davis tech clubs</li>
+            <li>🔖 Bookmark your favorite clubs</li>
+            <li>📅 Never miss events and meetings</li>
+            <li>🧪 Take our niche quiz to find your perfect fit</li>
+            <li>🤝 Connect with like-minded students</li>
+          </ul>
+        </div>
+
+        <!-- Login link -->
+        <div class="signup-link">
+          Already have an account? <a href="/login">Sign in</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Side - Blue Border with Laptop Image -->
+    <div class="right-side">
+      <div class="border-container">
+        <img src="../assets/clay.png" alt="Laptop design" class="clay-image">
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Handle URL parameters for error/success messages
+    const urlParams = new URLSearchParams(window.location.search);
+    const showError = urlParams.get('error');
+    const googleAuth = urlParams.get('google_auth');
+    const messageContainer = document.getElementById('messageContainer');
+
+    // Show Google auth success
+    if (googleAuth === 'success') {
+      showMessage("🎉 Welcome to Cownect! Account created successfully!", 'success');
+      // Redirect after a brief delay
+      setTimeout(() => {
+        window.location.href = '/tech-clubs?new_user=true';
+      }, 1500);
+    }
+
+    // Show various error messages
+    if (showError) {
+      let errorMessage = "";
+      switch (showError) {
+        case 'google_auth_failed':
+          errorMessage = "Google authentication failed. Please try again.";
+          break;
+        case 'invalid_domain':
+          errorMessage = "Please use your UC Davis email address (@ucdavis.edu).";
+          break;
+        case 'access_denied':
+          errorMessage = "Access denied. Please allow permissions and try again.";
+          break;
+        case 'account_exists':
+          errorMessage = "An account with this email already exists. Please sign in instead.";
+          break;
+        case 'server_error':
+          errorMessage = "Server error occurred. Please try again later.";
+          break;
+        default:
+          errorMessage = "Authentication error. Please try again.";
+      }
+      showMessage("❌ " + errorMessage, 'error');
+      
+      // If account exists, suggest login
+      if (showError === 'account_exists') {
+        setTimeout(() => {
+          showMessage("💡 Try clicking 'Sign in' below instead.", 'info');
+        }, 3000);
+      }
+    }
+
+    function showMessage(message, type) {
+      const messageDiv = document.createElement('div');
+      messageDiv.className = type === 'success' ? 'success-message' : 
+                             type === 'info' ? 'info-message' : 'error-message';
+      messageDiv.textContent = message;
+      messageContainer.appendChild(messageDiv);
+
+      // Auto-hide after 5 seconds (except info messages)
+      if (type !== 'info') {
+        setTimeout(() => {
+          if (messageDiv.parentNode) {
+            messageDiv.remove();
+          }
+        }, 5000);
+      }
+    }
+
+    // Add loading state to Google button
+    document.getElementById('googleSignupBtn').addEventListener('click', function() {
+      const button = this;
+      const originalContent = button.innerHTML;
+      
+      button.style.opacity = '0.8';
+      button.style.pointerEvents = 'none';
+      button.innerHTML = `
+        <div class="loading-spinner-inline"></div>
+        Connecting to Google...
+      `;
+
+      // Reset button if user comes back to page (e.g., cancels auth)
+      setTimeout(() => {
+        button.style.opacity = '1';
+        button.style.pointerEvents = 'auto';
+        button.innerHTML = originalContent;
+      }, 10000);
+    });
+
+    // Auto-focus on Google button for accessibility
+    document.getElementById('googleSignupBtn').focus();
+  </script>
+</body>
+
+</html>

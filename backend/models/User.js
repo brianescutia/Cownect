@@ -1,5 +1,6 @@
 // =============================================================================
-// UPDATED USER MODEL - Now with Club AND Event Bookmarks Support
+// UPDATED USER MODEL - backend/models/User.js
+// Replace your existing User model with this enhanced version
 // =============================================================================
 
 const mongoose = require('mongoose');
@@ -7,68 +8,109 @@ const bcrypt = require('bcrypt');
 const crypto = require('crypto');
 
 const userSchema = new mongoose.Schema({
-    // EMAIL FIELD - User's login identifier
+    // EMAIL FIELD - UC DAVIS ONLY
     email: {
         type: String,
         required: true,
         unique: true,
         lowercase: true,
-        trim: true
+        trim: true,
+        validate: {
+            validator: function (email) {
+                // ✅ ENFORCE UC DAVIS EMAIL AT DATABASE LEVEL
+                return email && email.endsWith('@ucdavis.edu');
+            },
+            message: 'Only UC Davis email addresses (@ucdavis.edu) are allowed'
+        },
+        match: [/^[a-zA-Z0-9._%+-]+@ucdavis\.edu$/, 'Please enter a valid UC Davis email address']
     },
 
+    // PASSWORD FIELD - Optional for Google users
+    password: {
+        type: String,
+        required: function () {
+            return !this.googleId;  // Only required if not a Google user
+        },
+        minlength: 6
+    },
+
+    // ✅ NEW: Google OAuth fields
     googleId: {
         type: String,
         unique: true,
-        sparse: true // Allows null values to be non-unique
+        sparse: true  // Allows null values to be non-unique
     },
-    name: {
+    provider: {
         type: String,
-        trim: true
+        enum: ['local', 'google'],
+        default: 'google'
     },
 
-    isVerified: {
-        type: Boolean,
-        default: true // Google accounts are pre-verified
+    lastLoginAt: {
+        type: Date,
+        default: null
     },
 
-    // Keep your existing bookmark fields
+    authMethod: {
+        type: String,
+        enum: ['email', 'google', 'both'],
+        default: 'email'
+    },
+
+    // BOOKMARKED CLUBS - Array of club IDs
     bookmarkedClubs: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Club'
     }],
 
+    // BOOKMARKED EVENTS - Array of event IDs
     bookmarkedEvents: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Event'
     }],
 
+    // TIMESTAMP - Track when user account was created
     createdAt: {
         type: Date,
         default: Date.now
-    }
-});
-userSchema.methods.generateVerificationToken = function () {
-    const token = crypto.randomBytes(32).toString('hex');
-    this.verificationToken = token;
-    this.verificationTokenExpires = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours
-    return token;
-};
+    },
 
-// Generate password reset token
-userSchema.methods.generatePasswordResetToken = function () {
-    const token = crypto.randomBytes(32).toString('hex');
-    this.passwordResetToken = token;
-    this.passwordResetExpires = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
-    return token;
-};
+    // ✅ EMAIL VERIFICATION FIELDS (apply to ALL users, including Google)
+    isVerified: {
+        type: Boolean,
+        default: false
+    },
+    verificationToken: {
+        type: String,
+        default: null
+    },
+    verificationTokenExpires: {
+        type: Date,
+        default: null
+    },
+    passwordResetToken: {
+        type: String,
+        default: null
+    },
+    passwordResetExpires: {
+        type: Date,
+        default: null
+    },
+});
 
 // =============================================================================
-// PASSWORD HASHING MIDDLEWARE
+// PASSWORD HASHING MIDDLEWARE (only for email users)
 // =============================================================================
 userSchema.pre('save', async function (next) {
     if (!this.isModified('password')) return next();
 
     try {
+        // Skip hashing for Google OAuth placeholder passwords
+        if (this.password.startsWith('google-oauth-')) {
+            return next();
+        }
+
+        // Hash regular passwords (if you ever add them back)
         const hashedPassword = await bcrypt.hash(this.password, 12);
         this.password = hashedPassword;
         next();
@@ -78,19 +120,66 @@ userSchema.pre('save', async function (next) {
 });
 
 // =============================================================================
-// PASSWORD COMPARISON METHOD
+// AUTHENTICATION METHODS
 // =============================================================================
+
+// Password comparison (for email users)
 userSchema.methods.comparePassword = async function (candidatePassword) {
+    if (!this.password) {
+        throw new Error('This account uses Google authentication');
+    }
     return bcrypt.compare(candidatePassword, this.password);
 };
 
+// Check if user can use email/password login
+userSchema.methods.canUsePasswordAuth = function () {
+    return this.password && (this.authMethod === 'email' || this.authMethod === 'both');
+};
+
+// Check if user can use Google login
+userSchema.methods.canUseGoogleAuth = function () {
+    return this.googleId && (this.authMethod === 'google' || this.authMethod === 'both');
+};
+
+// Update authentication method when linking accounts
+userSchema.methods.linkGoogleAccount = function (googleId) {
+    this.googleId = googleId;
+    this.authMethod = this.password ? 'both' : 'google';
+    this.lastLoginAt = new Date();
+};
+
+userSchema.methods.linkEmailPassword = function (password) {
+    this.password = password;
+    this.authMethod = this.googleId ? 'both' : 'email';
+};
+
 // =============================================================================
-// CLUB BOOKMARK METHODS
+// VERIFICATION TOKEN METHODS (apply to all users)
 // =============================================================================
 
-// ADD CLUB BOOKMARK - Add club to user's bookmarks
+userSchema.methods.generateVerificationToken = function () {
+    const token = crypto.randomBytes(32).toString('hex');
+    this.verificationToken = token;
+    this.verificationTokenExpires = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours
+    return token;
+};
+
+// Generate password reset token
+userSchema.methods.generatePasswordResetToken = function () {
+    if (!this.canUsePasswordAuth()) {
+        throw new Error('This account uses Google authentication');
+    }
+    const token = crypto.randomBytes(32).toString('hex');
+    this.passwordResetToken = token;
+    this.passwordResetExpires = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
+    return token;
+};
+
+// =============================================================================
+// CLUB BOOKMARK METHODS (unchanged)
+// =============================================================================
+
 userSchema.methods.addBookmark = async function (clubId) {
-    // Check if already bookmarked
     if (!this.bookmarkedClubs.includes(clubId)) {
         this.bookmarkedClubs.push(clubId);
         await this.save();
@@ -101,7 +190,6 @@ userSchema.methods.addBookmark = async function (clubId) {
     return false;
 };
 
-// REMOVE CLUB BOOKMARK - Remove club from user's bookmarks
 userSchema.methods.removeBookmark = async function (clubId) {
     const initialLength = this.bookmarkedClubs.length;
     this.bookmarkedClubs = this.bookmarkedClubs.filter(id => !id.equals(clubId));
@@ -115,23 +203,19 @@ userSchema.methods.removeBookmark = async function (clubId) {
     return false;
 };
 
-// CHECK IF CLUB BOOKMARKED - Check if user has bookmarked a specific club
 userSchema.methods.hasBookmarked = function (clubId) {
     return this.bookmarkedClubs.some(id => id.equals(clubId));
 };
 
-// GET CLUB BOOKMARK COUNT - Get total number of club bookmarks
 userSchema.methods.getBookmarkCount = function () {
     return this.bookmarkedClubs.length;
 };
 
 // =============================================================================
-// EVENT BOOKMARK METHODS - NEW!
+// EVENT BOOKMARK METHODS (unchanged)
 // =============================================================================
 
-// ADD EVENT BOOKMARK - Add event to user's bookmarks
 userSchema.methods.addEventBookmark = async function (eventId) {
-    // Check if already bookmarked
     if (!this.bookmarkedEvents.includes(eventId)) {
         this.bookmarkedEvents.push(eventId);
         await this.save();
@@ -142,7 +226,6 @@ userSchema.methods.addEventBookmark = async function (eventId) {
     return false;
 };
 
-// REMOVE EVENT BOOKMARK - Remove event from user's bookmarks
 userSchema.methods.removeEventBookmark = async function (eventId) {
     const initialLength = this.bookmarkedEvents.length;
     this.bookmarkedEvents = this.bookmarkedEvents.filter(id => !id.equals(eventId));
@@ -156,63 +239,85 @@ userSchema.methods.removeEventBookmark = async function (eventId) {
     return false;
 };
 
-// CHECK IF EVENT BOOKMARKED - Check if user has bookmarked a specific event
 userSchema.methods.hasEventBookmarked = function (eventId) {
     return this.bookmarkedEvents.some(id => id.equals(eventId));
 };
 
-// GET EVENT BOOKMARK COUNT - Get total number of event bookmarks
 userSchema.methods.getEventBookmarkCount = function () {
     return this.bookmarkedEvents.length;
 };
 
 // =============================================================================
-// STATIC METHODS - Available on User model itself
+// STATIC METHODS (unchanged)
 // =============================================================================
 
-// GET USER WITH POPULATED BOOKMARKS - Get user with full club AND event details
 userSchema.statics.findWithBookmarks = function (userId) {
     return this.findById(userId)
-        .populate('bookmarkedClubs')   // Get full club objects, not just IDs
-        .populate('bookmarkedEvents')  // Get full event objects, not just IDs
-        .select('-password');          // Exclude password from result
+        .populate('bookmarkedClubs')
+        .populate('bookmarkedEvents')
+        .select('-password');
 };
 
-// GET USER WITH ONLY CLUB BOOKMARKS
 userSchema.statics.findWithClubBookmarks = function (userId) {
     return this.findById(userId)
         .populate('bookmarkedClubs')
         .select('-password');
 };
 
-// GET USER WITH ONLY EVENT BOOKMARKS
 userSchema.statics.findWithEventBookmarks = function (userId) {
     return this.findById(userId)
         .populate('bookmarkedEvents')
         .select('-password');
 };
 
+// =============================================================================
+// NEW STATIC METHODS FOR OAUTH
+// =============================================================================
+
+// Find user by email or Google ID
+userSchema.statics.findByEmailOrGoogleId = function (email, googleId) {
+    const query = {
+        $or: [
+            { email: email.toLowerCase() },
+            ...(googleId ? [{ googleId: googleId }] : [])
+        ]
+    };
+    return this.findOne(query);
+};
+
+// Get user's authentication methods
+userSchema.statics.getAuthMethods = function (email) {
+    return this.findOne({ email: email.toLowerCase() })
+        .select('authMethod googleId password')
+        .then(user => {
+            if (!user) return null;
+            return {
+                hasPassword: !!user.password,
+                hasGoogle: !!user.googleId,
+                authMethod: user.authMethod
+            };
+        });
+};
+
 module.exports = mongoose.model('User', userSchema);
 
 // =============================================================================
-// USAGE EXAMPLES:
+// MIGRATION SCRIPT (run once to update existing users)
 // =============================================================================
-//
-// CLUB BOOKMARKS:
-// await user.addBookmark(clubId);
-// await user.removeBookmark(clubId);
-// const isClubBookmarked = user.hasBookmarked(clubId);
-// const clubCount = user.getBookmarkCount();
-//
-// EVENT BOOKMARKS:
-// await user.addEventBookmark(eventId);
-// await user.removeEventBookmark(eventId);
-// const isEventBookmarked = user.hasEventBookmarked(eventId);
-// const eventCount = user.getEventBookmarkCount();
-//
-// GET USER WITH BOOKMARKS:
-// const userWithAllBookmarks = await User.findWithBookmarks(userId);
-// const userWithClubs = await User.findWithClubBookmarks(userId);
-// const userWithEvents = await User.findWithEventBookmarks(userId);
-//
-// =============================================================================
+/*
+Run this script once to update existing users:
+
+async function migrateExistingUsers() {
+    const User = require('./models/User');
+    
+    // Update existing users without authMethod
+    await User.updateMany(
+        { authMethod: { $exists: false } },
+        { authMethod: 'email' }
+    );
+    
+    console.log('Migration completed');
+}
+
+// Run: node -e "require('./backend/models/User.js'); migrateExistingUsers();"
+*/

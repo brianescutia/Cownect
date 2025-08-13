@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cownect - Sign In</title>
+  <title>Cownect - Log In</title>
   <link rel="stylesheet" href="../styles/login.css">
   <link href="https://fonts.googleapis.com/css2?family=Rethink+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 </head>
@@ -16,13 +16,13 @@
   </div>
 
   <div class="main-container">
-    <!-- Left Side - Login Options -->
+    <!-- Left Side - Google Auth -->
     <div class="left-side">
       <div class="login-form-container">
         <!-- Welcome Text -->
         <div class="welcome-text">
-          <h2>Welcome to Cownect!</h2>
-          <p>Sign in with your UC Davis Google account to discover tech clubs</p>
+          <h2>Welcome back!</h2>
+          <p>Sign in with your UC Davis Google account to continue</p>
         </div>
 
         <!-- Separator Line -->
@@ -31,43 +31,40 @@
         <!-- Error/Success Messages -->
         <div id="messageContainer"></div>
 
-        <!-- Google Sign-In Button -->
-        <div class="google-signin-container">
-          <a href="/auth/google" class="google-signin-btn">
-            <img src="https://developers.google.com/identity/images/g-logo.png" alt="Google" class="google-logo">
-            <span>Continue with Google</span>
+        <!-- Google OAuth Section -->
+        <div class="google-auth-container">
+          <a href="/auth/google" class="google-signin-btn" id="googleLoginBtn">
+            <svg class="google-icon" viewBox="0 0 24 24" width="24" height="24">
+              <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+              <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+              <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+              <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+            </svg>
+            Sign in with Google
           </a>
           
-          <p class="signin-note">
-            🎓 Use your <strong>@ucdavis.edu</strong> email address
-          </p>
+          <div class="security-notice">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+              <path d="M8 0a8 8 0 100 16A8 8 0 008 0zM7 3a1 1 0 112 0v5a1 1 0 11-2 0V3zm1 8a1 1 0 100 2 1 1 0 000-2z"/>
+            </svg>
+            Only UC Davis (@ucdavis.edu) accounts are allowed
+          </div>
         </div>
 
-        <!-- Benefits Section -->
-        <div class="benefits-section">
-          <h3>Why use Google Sign-In?</h3>
-          <ul class="benefits-list">
-            <li>✅ <strong>Secure:</strong> No passwords to remember</li>
-            <li>🚀 <strong>Fast:</strong> One-click authentication</li>
-            <li>🔒 <strong>Safe:</strong> Protected by Google's security</li>
-            <li>🎯 <strong>Simple:</strong> Use your existing UC Davis account</li>
+        <!-- Additional Info -->
+        <div class="info-section">
+          <h3>Why Google Sign-In?</h3>
+          <ul>
+            <li>✅ Secure authentication through UC Davis</li>
+            <li>✅ No need to remember another password</li>
+            <li>✅ Instant access to all club features</li>
+            <li>✅ Your UC Davis identity is already verified</li>
           </ul>
         </div>
 
-        <!-- Help Section -->
-        <div class="help-section">
-          <details class="help-details">
-            <summary>Need Help?</summary>
-            <div class="help-content">
-              <p><strong>Can't sign in?</strong></p>
-              <ul>
-                <li>Make sure you're using your <code>@ucdavis.edu</code> email</li>
-                <li>Check that you're signed into the correct Google account</li>
-                <li>Try signing out of Google and signing back in</li>
-                <li>Contact support if you're still having issues</li>
-              </ul>
-            </div>
-          </details>
+        <!-- Support link -->
+        <div class="support-link">
+          Need help? <a href="mailto:support@cownect.com">Contact Support</a>
         </div>
       </div>
     </div>
@@ -84,29 +81,42 @@
     // Handle URL parameters for error/success messages
     const urlParams = new URLSearchParams(window.location.search);
     const showError = urlParams.get('error');
+    const googleAuth = urlParams.get('google_auth');
     const verified = urlParams.get('verified');
     const messageContainer = document.getElementById('messageContainer');
 
-    // Show success message if just verified or signed up
+    // Show Google auth success
+    if (googleAuth === 'success') {
+      showMessage("✅ Successfully signed in with Google!", 'success');
+      // Redirect after a brief delay
+      setTimeout(() => {
+        window.location.href = '/tech-clubs';
+      }, 1000);
+    }
+
+    // Show success message if just verified
     if (verified === 'true') {
-      showMessage("✅ Account verified successfully!", 'success');
+      showMessage("✅ Email verified successfully! Please sign in below.", 'success');
     }
 
     // Show various error messages
     if (showError) {
       let errorMessage = "";
       switch (showError) {
-        case 'oauth_failed':
-          errorMessage = "Sign-in failed. Please try again or make sure you're using your UC Davis email.";
+        case 'google_auth_failed':
+          errorMessage = "Google authentication failed. Please try again.";
+          break;
+        case 'invalid_domain':
+          errorMessage = "Please use your UC Davis email address (@ucdavis.edu).";
           break;
         case 'access_denied':
-          errorMessage = "Sign-in was cancelled. Please try again to access Cownect.";
+          errorMessage = "Access denied. Please allow permissions and try again.";
           break;
-        case 'invalid_email':
-          errorMessage = "Please use your UC Davis email address (@ucdavis.edu) to sign in.";
+        case 'server_error':
+          errorMessage = "Server error occurred. Please try again later.";
           break;
         default:
-          errorMessage = "An error occurred during sign-in. Please try again.";
+          errorMessage = "Authentication error. Please try again.";
       }
       showMessage("❌ " + errorMessage, 'error');
     }
@@ -117,31 +127,36 @@
       messageDiv.textContent = message;
       messageContainer.appendChild(messageDiv);
 
-      // Auto-hide after 7 seconds
+      // Auto-hide after 5 seconds
       setTimeout(() => {
         if (messageDiv.parentNode) {
           messageDiv.remove();
         }
-      }, 7000);
+      }, 5000);
     }
 
-    // Add loading state to Google sign-in button
-    const googleBtn = document.querySelector('.google-signin-btn');
-    googleBtn.addEventListener('click', function() {
-      this.style.opacity = '0.8';
-      this.style.cursor = 'wait';
+    // Add loading state to Google button
+    document.getElementById('googleLoginBtn').addEventListener('click', function() {
+      const button = this;
+      const originalContent = button.innerHTML;
       
-      const span = this.querySelector('span');
-      const originalText = span.textContent;
-      span.textContent = 'Redirecting to Google...';
-      
-      // Reset after 5 seconds in case user comes back
+      button.style.opacity = '0.8';
+      button.style.pointerEvents = 'none';
+      button.innerHTML = `
+        <div class="loading-spinner-inline"></div>
+        Connecting to Google...
+      `;
+
+      // Reset button if user comes back to page (e.g., cancels auth)
       setTimeout(() => {
-        this.style.opacity = '1';
-        this.style.cursor = 'pointer';
-        span.textContent = originalText;
-      }, 5000);
+        button.style.opacity = '1';
+        button.style.pointerEvents = 'auto';
+        button.innerHTML = originalContent;
+      }, 10000);
     });
+
+    // Auto-focus on Google button for accessibility
+    document.getElementById('googleLoginBtn').focus();
   </script>
 </body>
 

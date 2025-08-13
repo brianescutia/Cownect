@@ -1,7 +1,10 @@
+require('dotenv').config();
 const express = require('express');
 const path = require('path');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
+dotenv.config();
+
 const session = require('express-session');  // For user session management
 const MongoStore = require('connect-mongo');  // Store sessions in MongoDB
 const User = require('../backend/models/User');        // Import our User model
@@ -10,9 +13,11 @@ const { CareerField, QuizQuestion, QuizResult } = require('./models/nicheQuizMod
 const Event = require('./models/eventModel'); // Import Event model for events API
 // Add this with your other imports (around line 10)
 const passport = require('passport');
+require('./googleAuth');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 
-dotenv.config();
+
+
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -70,10 +75,18 @@ mongoose.connect(process.env.MONGO_URI, {
 // AUTHENTICATION MIDDLEWARE - Our "bouncer" function
 // This checks if someone has a valid wristband before letting them into protected areas
 const requireAuth = (req, res, next) => {
-  if (req.isAuthenticated()) {
+  console.log('🔒 Auth check for:', req.path);
+  console.log('🔍 Session:', {
+    sessionID: req.sessionID,
+    userId: req.session?.userId,
+    userEmail: req.session?.userEmail
+  });
+
+  if (req.session && req.session.userId) {
+    console.log('✅ User authenticated:', req.session.userEmail);
     return next();
   } else {
-    console.log('❌ Authentication required - redirecting to login');
+    console.log('❌ User not authenticated, redirecting to login');
     return res.redirect('/login');
   }
 };
@@ -161,48 +174,7 @@ app.delete = function (path, ...handlers) {
   }
 };
 
-passport.use(new GoogleStrategy({
-  clientID: process.env.GOOGLE_CLIENT_ID,
-  clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-  callbackURL: "/auth/google/callback"
-}, async (accessToken, refreshToken, profile, done) => {
-  try {
-    console.log('📧 Google OAuth user:', profile.emails[0].value);
 
-    // Check if it's a UC Davis email
-    const email = profile.emails[0].value;
-    if (!email.endsWith('@ucdavis.edu')) {
-      return done(null, false, { message: 'Must use UC Davis email' });
-    }
-
-    // Find or create user in your database
-    let user = await User.findOne({ email: email.toLowerCase() });
-
-    if (!user) {
-      // Create new user (no password needed!)
-      user = new User({
-        email: email.toLowerCase(),
-        googleId: profile.id,
-        isVerified: true, // Google emails are already verified!
-        name: profile.displayName
-      });
-      await user.save();
-      console.log('✅ Created new Google user:', email);
-    } else {
-      // Update existing user with Google ID if they don't have it
-      if (!user.googleId) {
-        user.googleId = profile.id;
-        user.isVerified = true; // Mark as verified since it's Google
-        await user.save();
-      }
-    }
-
-    return done(null, user);
-  } catch (error) {
-    console.error('💥 Google OAuth error:', error);
-    return done(error, null);
-  }
-}));
 
 // 4. PASSPORT SERIALIZATION
 passport.serializeUser((user, done) => {
@@ -224,25 +196,58 @@ app.use(passport.session());
 
 // 6. REPLACE YOUR AUTH ROUTES WITH THESE:
 
+app.get('/login', (req, res) => {
+  // Redirect if already logged in
+  if (req.session && req.session.userId) {
+    return res.redirect('/tech-clubs');
+  }
+  res.sendFile(path.join(__dirname, '../frontend/pages/login.html'));
+});
+
+// Signup page (Google-only)
+app.get('/signup', (req, res) => {
+  // Redirect if already logged in
+  if (req.session && req.session.userId) {
+    return res.redirect('/tech-clubs');
+  }
+  res.sendFile(path.join(__dirname, '../frontend/pages/signup.html'));
+});
+
+app.get('/', (req, res) => {
+  if (req.session && req.session.userId) {
+    res.redirect('/tech-clubs');
+  } else {
+    res.redirect('/login');
+  }
+});
+
 // Google OAuth login route
 app.get('/auth/google',
-  passport.authenticate('google', {
-    scope: ['profile', 'email']
-  })
+  passport.authenticate('google', { scope: ['profile', 'email'] })
 );
 
-// Google OAuth callback
 app.get('/auth/google/callback',
-  passport.authenticate('google', {
-    failureRedirect: '/login?error=oauth_failed'
-  }),
+  passport.authenticate('google', { failureRedirect: '/login?error=google_auth_failed' }),
   (req, res) => {
-    // Successful authentication
-    console.log('✅ Google OAuth successful for:', req.user.email);
-    res.redirect('/tech-clubs');
+    console.log('✅ Google OAuth success for:', req.user.email);
+
+    // Check if user is verified (should be true for Google users)
+    if (!req.user.isVerified) {
+      console.log('❌ Google user not verified (unexpected):', req.user.email);
+      return res.redirect('/verify-email-prompt?email=' + encodeURIComponent(req.user.email));
+    }
+
+    // Set session
+    req.session.userId = req.user._id;
+    req.session.userEmail = req.user.email;
+
+    console.log('🎉 Google OAuth login successful, redirecting to tech-clubs');
+    res.redirect('/tech-clubs?google_auth=success');
   }
 );
 
+
+// In your backend directory
 
 // =============================================================================
 // ROUTES
@@ -257,60 +262,15 @@ app.get('/', redirectLoggedInUsers, (req, res) => {
 // AUTHENTICATION ROUTES
 // =============================================================================
 
+
+
+
 // LOGIN ROUTES
 app.get('/login', redirectLoggedInUsers, (req, res) => {
   res.sendFile(path.join(__dirname, '../frontend/pages/login.html'));
 });
 
-app.post('/login', async (req, res) => {
-  const { email, password } = req.body;
 
-  try {
-    console.log('🔐 Login attempt for:', email);
-
-    // Step 1: Find user by email
-    const user = await User.findOne({ email: email.toLowerCase() });
-
-    if (!user) {
-      console.log('❌ User not found:', email);
-      return res.redirect('/login?error=invalid');
-    }
-
-    // Step 2: Check password
-    const isPasswordValid = await user.comparePassword(password);
-
-    if (!isPasswordValid) {
-      console.log('❌ Invalid password for:', email);
-      return res.redirect('/login?error=invalid');
-    }
-
-    // Step 3: Check email verification - IMPROVED
-    if (!user.isVerified) {
-      console.log('❌ User not verified:', email);
-      // Redirect to verification prompt with user's email
-      return res.redirect(`/verify-email-prompt?email=${encodeURIComponent(user.email)}&error=not_verified`);
-    }
-
-    // Step 4: Create session
-    req.session.userId = user._id;
-    req.session.userEmail = user.email;
-
-    // Step 5: Save session and redirect
-    req.session.save((err) => {
-      if (err) {
-        console.error('💥 Session save error:', err);
-        return res.redirect('/login?error=server');
-      }
-
-      console.log('✅ Login successful, redirecting to tech-clubs');
-      res.redirect('/tech-clubs');
-    });
-
-  } catch (err) {
-    console.error('💥 Login error:', err);
-    res.redirect('/login?error=server');
-  }
-});
 
 // SIGNUP ROUTES
 app.use((err, req, res, next) => {
@@ -349,12 +309,12 @@ app.get('/signup', redirectLoggedInUsers, (req, res) => {
 
 //  LOGOUT ROUTE
 app.get('/logout', (req, res) => {
-  req.logout((err) => {
+  req.session.destroy((err) => {
     if (err) {
       console.error('Logout error:', err);
     }
     console.log('User logged out');
-    res.redirect('/login');
+    res.redirect('/login?logged_out=true');
   });
 });
 
@@ -1786,7 +1746,8 @@ app.get('/api/user', (req, res) => {
       isLoggedIn: true,
       email: req.user.email,
       name: req.user.name,
-      userId: req.user._id
+      userId: req.user._id,
+      isVerified: req.user.isVerified
     });
   } else {
     res.json({ isLoggedIn: false });
