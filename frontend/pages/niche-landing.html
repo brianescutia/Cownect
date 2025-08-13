@@ -8,31 +8,32 @@
   <link rel="stylesheet" href="../styles/tech-clubs.css" />
   <link rel="stylesheet" href="../styles/niche-landing.css" />
   <link href="https://fonts.googleapis.com/css2?family=Rethink+Sans:wght@800&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Playfair+Display:ital@1&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Playfair+Display:ital@1&display=swap"
+    rel="stylesheet">
   <link rel="stylesheet" href="../styles/dark.css">
 </head>
 
 <body>
   <!-- Navbar -->
   <!-- Navbar -->
-<nav class="navbar">
-  <div class="navbar-container">
-    <div class="logo-title">
-      <img src="../assets/cowLogo.png" alt="Cownect Logo" class="logo" />
-      <span class="logo-text">Cownect</span>
+  <nav class="navbar">
+    <div class="navbar-container">
+      <div class="logo-title">
+        <img src="../assets/cowLogo.png" alt="Cownect Logo" class="logo" />
+        <span class="logo-text">Cownect</span>
+      </div>
+      <ul class="nav-links">
+        <li><a href="/tech-clubs">Tech Clubs</a></li>
+        <li><a href="/events" class="nav-link">Events</a></li>
+        <li><a href="/niche-landing">Niche Test</a></li>
+        <li><a href="#">Mentor Matching</a></li>
+      </ul>
     </div>
-    <ul class="nav-links">
-      <li><a href="/tech-clubs">Tech Clubs</a></li>
-      <li><a href="/events" class="nav-link">Events</a></li>
-      <li><a href="/niche-landing">Niche Test</a></li>
-      <li><a href="#">Mentor Matching</a></li>
-    </ul>
-  </div>
-  <!-- Profile circle outside of the gray background -->
-  <div class="navbar-profile-circle" id="navbarProfileCircle" onclick="goToDashboard()" title="Go to Dashboard">
-    <span id="navbarProfileInitials">JD</span>
-  </div>
-</nav>
+    <!-- Profile circle outside of the gray background -->
+    <div class="navbar-profile-circle" id="navbarProfileCircle" onclick="goToDashboard()" title="Go to Dashboard">
+      <span id="navbarProfileInitials"></span>
+    </div>
+  </nav>
 
   <main class="niche-main">
     <!-- Trust Badge -->
@@ -44,11 +45,11 @@
     <section class="niche-hero">
       <div class="hero-content">
         <h1><span class="gradient-text">Find your tech path </span></h1>
-        
+
         <p>A research-backed career quiz for UC Davis students. Get personalized recommendations in 10 minutes.</p>
-        
+
         <a href="/niche-quiz" class="start-quiz-btn">Start Your Quiz</a>
-        
+
         <div class="quiz-details">
           Free • 8-12 questions • Instant results
         </div>
@@ -63,13 +64,13 @@
           <h4>Research-Backed</h4>
           <p>Based on industry data from BLS, Glassdoor, and LinkedIn</p>
         </div>
-        
+
         <div class="feature-card">
           <div class="feature-icon">🎯</div>
           <h4>Personalized Results</h4>
           <p>Get specific career paths and next steps tailored to you</p>
         </div>
-        
+
         <div class="feature-card">
           <div class="feature-icon">🏫</div>
           <h4>UC Davis Integration</h4>
@@ -78,6 +79,9 @@
       </div>
     </div>
   </main>
+
+  <script src="/scripts/navbar-profile.js" defer></script>
+
 
 </body>
 
