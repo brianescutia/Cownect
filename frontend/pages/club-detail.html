@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -7,32 +8,33 @@
   <link rel="stylesheet" href="/styles/tech-clubs.css" />
   <link rel="stylesheet" href="/styles/club-detail.css" />
   <link href="https://fonts.googleapis.com/css2?family=Rethink+Sans&display=swap" rel="stylesheet" />
-  
+
   <script src="/scripts/navbar.js" defer></script>
   <script src="/scripts/club-detail.js" defer></script>
   <script src="/scripts/bookmark.js" defer></script>
 </head>
+
 <body>
 
   <!-- Navbar -->
-   <nav class="navbar">
-  <div class="navbar-container">
-    <div class="logo-title">
-      <img src="../assets/cowLogo.png" alt="Cownect Logo" class="logo" />
-      <span class="logo-text">Cownect</span>
+  <nav class="navbar">
+    <div class="navbar-container">
+      <div class="logo-title">
+        <img src="../assets/cowLogo.png" alt="Cownect Logo" class="logo" />
+        <span class="logo-text">Cownect</span>
+      </div>
+      <ul class="nav-links">
+        <li><a href="/tech-clubs">Tech Clubs</a></li>
+        <li><a href="/events" class="nav-link">Events</a></li>
+        <li><a href="/niche-landing">Niche Test</a></li>
+        <li><a href="#">Mentor Matching</a></li>
+      </ul>
     </div>
-    <ul class="nav-links">
-      <li><a href="/tech-clubs">Tech Clubs</a></li>
-      <li><a href="/events" class="nav-link">Events</a></li>
-      <li><a href="/niche-landing">Niche Test</a></li>
-      <li><a href="#">Mentor Matching</a></li>
-    </ul>
-  </div>
-  <!-- Move the profile circle here, outside the gray container -->
-  <div class="navbar-profile-circle" id="navbarProfileCircle" onclick="goToDashboard()" title="Go to Dashboard">
-    <span id="navbarProfileInitials">JD</span>
-  </div>
-</nav>
+    <!-- Move the profile circle here, outside the gray container -->
+    <div class="navbar-profile-circle" id="navbarProfileCircle" onclick="goToDashboard()" title="Go to Dashboard">
+      <span id="navbarProfileInitials"></span>
+    </div>
+  </nav>
 
   <!-- Loading State -->
   <div class="loading-overlay" id="loadingOverlay">
@@ -42,7 +44,7 @@
 
   <!-- Club Detail Container -->
   <main class="club-detail-main" id="clubDetailContainer" style="display: none;">
-    
+
     <!-- Club Hero Image -->
     <section class="club-hero-image">
       <img id="clubHeroImage" src="../assets/default-club-hero.jpg" alt="Club Hero Image" />
@@ -58,19 +60,19 @@
 
     <!-- Content Grid -->
     <div class="content-grid">
-      
+
       <!-- Left Column -->
       <div class="left-column">
-        
+
         <!-- About Box -->
         <section class="about-box">
           <div class="about-header">
             <h2>About</h2>
             <img src="../assets/about-symbol.png" alt="About Symbol" class="about-symbol" />
-            </div>
+          </div>
 
           <p id="clubDescription" class="club-description">Loading club description...</p>
-          
+
         </section>
 
         <!-- Two Side-by-Side Boxes -->
@@ -88,12 +90,12 @@
               <li>Research Projects</li>
             </ul>
           </div>
-          
+
           <div class="info-box">
-              <div class="how-to-join-header">
-            <h3>Events</h3>
-            <img src="../assets/how-to-join.png" alt="Focus Symbol" class="joining-symbol" />
-                </div>
+            <div class="how-to-join-header">
+              <h3>Events</h3>
+              <img src="../assets/how-to-join.png" alt="Focus Symbol" class="joining-symbol" />
+            </div>
             <div class="meeting-info">
               <p><strong>Location:</strong> Kemper Hall 1131</p>
               <p><strong>Time:</strong> Thursday 6:00 PM</p>
@@ -109,12 +111,12 @@
             <h2>Upcoming Events</h2>
             <p>Join us for these exciting activities</p>
           </div>
-          
+
           <!-- Events Carousel -->
           <div class="events-carousel-container">
             <button class="carousel-btn prev-btn" id="prevBtn">‹</button>
             <div class="events-carousel" id="eventsCarousel">
-              
+
               <div class="event-card">
                 <div class="event-image">
                   <img src="/assets/events/ai-workshop.jpg" alt="AI Workshop Event" />
@@ -208,24 +210,24 @@
 
       <!-- Right Column -->
       <div class="right-column">
-        
+
         <!-- Contacts Box -->
         <section class="contacts-box">
           <h2>📧 Contact & Links</h2>
-          
+
           <div class="contact-info">
             <div class="contact-item">
               <strong>President:</strong>
               <p>Sarah Chen</p>
               <p>president@aiclub.ucdavis.edu</p>
             </div>
-            
+
             <div class="contact-item">
               <strong>Vice President:</strong>
               <p>Mike Johnson</p>
               <p>vp@aiclub.ucdavis.edu</p>
             </div>
-            
+
             <div class="contact-item">
               <strong>General Email:</strong>
               <p>info@aiclub.ucdavis.edu</p>
@@ -260,5 +262,8 @@
     </div>
   </div>
 
+  <script src="/scripts/navbar-profile.js" defer></script>
+
 </body>
+
 </html>
