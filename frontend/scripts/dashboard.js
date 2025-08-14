@@ -575,7 +575,6 @@ async function loadPotentialMatches() {
 // =============================================================================
 // UPDATE DISPLAY FUNCTIONS
 // =============================================================================
-
 function updateSavedClubsDisplay() {
     const savedClubsGrid = document.getElementById('savedClubsGrid');
     if (!savedClubsGrid) return;
@@ -591,11 +590,28 @@ function updateSavedClubsDisplay() {
         return;
     }
 
+    // ✅ CLEAN SCROLLING - 2 cards side by side
     savedClubsGrid.innerHTML = '';
-    dashboardState.bookmarkedClubs.slice(0, 3).forEach(club => {
+
+    // Create container for scrollable clubs - exactly 2 columns
+    const clubsContainer = document.createElement('div');
+    clubsContainer.className = 'saved-clubs-container';
+    clubsContainer.style.cssText = `
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+        max-height: 400px;
+        overflow-y: auto;
+        padding-right: 8px;
+    `;
+
+    // ✅ SHOW ALL BOOKMARKED CLUBS
+    dashboardState.bookmarkedClubs.forEach(club => {
         const clubCard = createMiniClubCard(club);
-        savedClubsGrid.appendChild(clubCard);
+        clubsContainer.appendChild(clubCard);
     });
+
+    savedClubsGrid.appendChild(clubsContainer);
 }
 
 function updateUpcomingEventsDisplay() {
