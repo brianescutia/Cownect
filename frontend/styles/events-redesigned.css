@@ -476,6 +476,8 @@ button {
 }
 
 .join-event-btn {
+    display: none !important;
+
     background: linear-gradient(135deg, #27ae60, #2ecc71);
     /* GREEN theme */
     color: white;
@@ -517,25 +519,41 @@ button {
 }
 
 .add-calendar-btn {
-    background: rgba(52, 152, 219, 0.1);
-    /* SUBTLE BLUE */
-    color: #3498db;
-    border: 1px solid rgba(52, 152, 219, 0.3);
-    padding: 0.6rem;
+    background: linear-gradient(135deg, #27ae60, #2ecc71);
+    /* GREEN */
+    color: white;
+    border: none;
+    padding: 0.6rem 1.2rem;
     border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
-    width: 38px;
-    height: 38px;
-    display: flex;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
+    gap: 6px;
+    /* space between icon and text */
 }
 
 .add-calendar-btn:hover {
-    background: rgba(52, 152, 219, 0.2);
+    background: linear-gradient(135deg, #229954, #27ae60);
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(52, 152, 219, 0.2);
+    box-shadow: 0 4px 12px rgba(39, 174, 96, 0.3);
+}
+
+/* Joined state */
+.add-calendar-btn.joined {
+    background: linear-gradient(135deg, #3498db, #2980b9);
+    /* BLUE */
+}
+
+.add-calendar-btn.joined:hover {
+    background: linear-gradient(135deg, #2980b9, #2471a3);
+}
+
+.add-calendar-btn::before {
+    content: "Join Event";
 }
 
 .calendar-options {
