@@ -15,24 +15,26 @@
 <body>
   <!-- Navbar -->
   <!-- Navbar -->
-<nav class="navbar">
-  <div class="navbar-container">
-    <div class="logo-title">
-      <img src="../assets/cowLogo.png" alt="Cownect Logo" class="logo" />
-      <span class="logo-text">Cownect</span>
+<!-- Navbar -->
+  <nav class="navbar">
+    <div class="navbar-container">
+      <!-- MAKE LOGO CLICKABLE -->
+      <a href="/dashboard" class="logo-title" style="text-decoration: none; color: inherit;">
+        <img src="../assets/cowLogo.png" alt="Cownect Logo" class="logo" />
+        <span class="logo-text">Cownect</span>
+      </a>
+      <ul class="nav-links">
+        <li><a href="/tech-clubs">Tech Clubs</a></li>
+        <li><a href="/events" class="nav-link">Events</a></li>
+        <li><a href="/niche-landing">Niche Test</a></li>
+        <li><a href="#">Mentor Matching</a></li>
+      </ul>
     </div>
-    <ul class="nav-links">
-      <li><a href="/tech-clubs">Tech Clubs</a></li>
-      <li><a href="/events" class="nav-link">Events</a></li>
-      <li><a href="/niche-landing">Niche Test</a></li>
-      <li><a href="#">Mentor Matching</a></li>
-    </ul>
-  </div>
-  <!-- Profile circle outside of the gray background -->
-  <div class="navbar-profile-circle" id="navbarProfileCircle" onclick="goToDashboard()" title="Go to Dashboard">
-    <span id="navbarProfileInitials">JD</span>
-  </div>
-</nav>
+    <!-- Profile circle outside of the gray background -->
+    <div class="navbar-profile-circle" id="navbarProfileCircle" onclick="goToDashboard()" title="Go to Dashboard">
+      <span id="navbarProfileInitials">--</span> <!-- CHANGED FROM JD -->
+    </div>
+  </nav>
 
   <main class="niche-main">
     <!-- Trust Badge -->

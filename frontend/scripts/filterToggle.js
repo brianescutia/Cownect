@@ -1,412 +1,411 @@
 // =============================================================================
-// FILTER TOGGLE FUNCTIONALITY
+// ENHANCED FILTER TOGGLE SYSTEM - FIXES PERSISTENT FILTER BUG
 // =============================================================================
-// This file controls the visibility of the filter tags section
-// Users click the filter icon to show/hide tag buttons for a cleaner interface
 
-// 🎯 WAIT FOR PAGE TO LOAD - Ensure DOM elements are ready
-// =============================================================================
-// ENHANCED FILTER TOGGLE FUNCTIONALITY
-// =============================================================================
-// Replace or update your existing filterToggle.js with this enhanced version
+console.log('🔍 Enhanced Filter Toggle script loading...');
 
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('🎯 Setting up enhanced filter toggle...');
+    console.log('🚀 Initializing enhanced filter system...');
 
-    // Find filter controls
-    const filterIcon = document.getElementById('filterToggle');
+    // GET FILTER ELEMENTS
+    const filterToggle = document.getElementById('filterToggle');
     const filterTags = document.getElementById('filterTags');
+    const clubSearch = document.getElementById('clubSearch');
+    const allTags = document.querySelectorAll('.tag');
+    const allCards = document.querySelectorAll('.club-card');
 
-    // Ensure filters are hidden on page load
-    if (filterTags) {
-        filterTags.classList.add('hidden');
-        console.log(' Filter tags initially hidden');
+    // FILTER STATE
+    let activeFilters = new Set();
+    let searchTerm = '';
+
+    if (!filterToggle || !filterTags) {
+        console.warn('⚠️ Filter elements not found');
+        return;
     }
 
-    // Add click listener to filter icon
-    if (filterIcon && filterTags) {
-        filterIcon.addEventListener('click', (e) => {
-            e.preventDefault();
-            e.stopPropagation();
+    // =============================================================================
+    // TOGGLE FILTER VISIBILITY
+    // =============================================================================
 
-            // Toggle visibility
-            const isHidden = filterTags.classList.contains('hidden');
+    filterToggle.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
 
-            if (isHidden) {
-                // Show filters
-                filterTags.classList.remove('hidden');
-                filterIcon.style.color = '#5F96C5'; // Change color to indicate active
-                console.log('👁️ Filter tags shown');
+        console.log('🔄 Toggling filter visibility');
 
-                // Add visual feedback to filter button
-                filterIcon.style.transform = 'scale(1.1)';
-                filterIcon.style.backgroundColor = 'rgba(95, 150, 197, 0.1)';
+        const isHidden = filterTags.classList.contains('hidden');
 
-            } else {
-                // Hide filters
-                filterTags.classList.add('hidden');
-                filterIcon.style.color = ''; // Reset color
-                console.log('🙈 Filter tags hidden');
-
-                // Reset filter button styling
-                filterIcon.style.transform = '';
-                filterIcon.style.backgroundColor = '';
-            }
-
-            // Update ARIA attributes for accessibility
-            filterIcon.setAttribute('aria-expanded', !isHidden);
-            filterTags.setAttribute('aria-hidden', isHidden);
-        });
-
-        console.log(' Filter toggle event listener attached');
-    } else {
-        console.error(' Filter elements not found:', {
-            filterIcon: !!filterIcon,
-            filterTags: !!filterTags
-        });
-    }
-
-    // Add keyboard support (Enter or Space to toggle)
-    if (filterIcon) {
-        filterIcon.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                filterIcon.click();
-            }
-        });
-
-        // Make filter icon focusable for keyboard navigation
-        filterIcon.setAttribute('tabindex', '0');
-        filterIcon.setAttribute('role', 'button');
-        filterIcon.setAttribute('aria-label', 'Toggle filter options');
-
-        console.log(' Keyboard support added to filter toggle');
-    }
-
-    // Close filters when clicking outside
-    document.addEventListener('click', (e) => {
-        if (filterTags && !filterTags.classList.contains('hidden')) {
-            // Check if click is outside filter area
-            const isClickInsideFilter = filterTags.contains(e.target) ||
-                filterIcon.contains(e.target);
-
-            if (!isClickInsideFilter) {
-                filterTags.classList.add('hidden');
-                if (filterIcon) {
-                    filterIcon.style.color = '';
-                    filterIcon.style.transform = '';
-                    filterIcon.style.backgroundColor = '';
-                    filterIcon.setAttribute('aria-expanded', 'false');
-                }
-                filterTags.setAttribute('aria-hidden', 'true');
-                console.log(' Filters closed by outside click');
-            }
+        if (isHidden) {
+            filterTags.classList.remove('hidden');
+            filterTags.setAttribute('aria-hidden', 'false');
+            filterToggle.setAttribute('aria-expanded', 'true');
+            console.log('✅ Filters shown');
+        } else {
+            filterTags.classList.add('hidden');
+            filterTags.setAttribute('aria-hidden', 'true');
+            filterToggle.setAttribute('aria-expanded', 'false');
+            console.log('✅ Filters hidden');
         }
     });
 
-    // Enhanced tag functionality
-    setupTagInteractions();
-});
+    // =============================================================================
+    // TAG CLICK HANDLERS
+    // =============================================================================
 
-// =============================================================================
-// TAG INTERACTION FUNCTIONALITY
-// =============================================================================
-
-function setupTagInteractions() {
-    const tagButtons = document.querySelectorAll('.filter-tags .tag');
-    let activeFilters = new Set();
-
-    tagButtons.forEach(tag => {
-        // Make tags focusable and accessible
-        tag.setAttribute('tabindex', '0');
-        tag.setAttribute('role', 'button');
-
-        // Click handler
+    allTags.forEach(tag => {
         tag.addEventListener('click', (e) => {
             e.preventDefault();
-            e.stopPropagation();
-
-            const tagText = tag.textContent.toLowerCase();
-
-            // Toggle active state
-            if (activeFilters.has(tagText)) {
-                // Remove filter
-                activeFilters.delete(tagText);
-                tag.classList.remove('active-filter');
-                tag.setAttribute('aria-pressed', 'false');
-                console.log(` Removed filter: ${tagText}`);
-            } else {
-                // Add filter
-                activeFilters.add(tagText);
-                tag.classList.add('active-filter');
-                tag.setAttribute('aria-pressed', 'true');
-                console.log(` Added filter: ${tagText}`);
-            }
-
-            // Apply filters to clubs
-            applyTagFilters(Array.from(activeFilters));
-
-            // Visual feedback
-            tag.style.transform = 'scale(0.95)';
-            setTimeout(() => {
-                tag.style.transform = '';
-            }, 150);
+            handleTagClick(tag);
         });
 
-        // Keyboard handler
+        // Keyboard support
         tag.addEventListener('keydown', (e) => {
             if (e.key === 'Enter' || e.key === ' ') {
                 e.preventDefault();
-                tag.click();
+                handleTagClick(tag);
             }
         });
-
-        // Initialize ARIA attributes
-        tag.setAttribute('aria-pressed', 'false');
     });
 
-    console.log(` Set up ${tagButtons.length} tag interactions`);
-}
+    function handleTagClick(tag) {
+        const filter = tag.getAttribute('data-filter');
+        if (!filter) return;
 
-// =============================================================================
-// FILTER APPLICATION FUNCTIONALITY
-// =============================================================================
+        console.log(`🏷️ Tag clicked: ${filter}`);
 
-function applyTagFilters(activeFilters) {
-    const clubCards = document.querySelectorAll('.club-card');
-    let visibleCount = 0;
-
-    clubCards.forEach(card => {
-        const cardTags = card.querySelector('.club-tags')?.textContent.toLowerCase() || '';
-
-        if (activeFilters.length === 0) {
-            // No filters active - show all cards
-            card.style.display = 'flex';
-            visibleCount++;
+        // Toggle filter state
+        if (activeFilters.has(filter)) {
+            activeFilters.delete(filter);
+            tag.classList.remove('active-filter');
+            tag.setAttribute('aria-pressed', 'false');
+            console.log(`➖ Removed filter: ${filter}`);
         } else {
-            // Check if card matches any active filter
-            const matchesFilter = activeFilters.some(filter =>
-                cardTags.includes(filter.replace('#', ''))
-            );
+            activeFilters.add(filter);
+            tag.classList.add('active-filter');
+            tag.setAttribute('aria-pressed', 'true');
+            console.log(`➕ Added filter: ${filter}`);
+        }
 
-            if (matchesFilter) {
-                card.style.display = 'flex';
+        // Apply filters
+        applyFilters();
+        updateSearchResults();
+    }
+
+    // =============================================================================
+    // SEARCH FUNCTIONALITY
+    // =============================================================================
+
+    if (clubSearch) {
+        clubSearch.addEventListener('input', (e) => {
+            searchTerm = e.target.value.toLowerCase().trim();
+            console.log(`🔍 Search term: "${searchTerm}"`);
+
+            applyFilters();
+            updateSearchResults();
+
+            // Dispatch custom event for pagination
+            document.dispatchEvent(new CustomEvent('searchChanged'));
+        });
+    }
+
+    // =============================================================================
+    // APPLY FILTERS FUNCTION - ENHANCED
+    // =============================================================================
+
+    function applyFilters() {
+        console.log(`🔄 Applying filters: [${Array.from(activeFilters).join(', ')}] search: "${searchTerm}"`);
+
+        let visibleCount = 0;
+
+        allCards.forEach(card => {
+            let isVisible = true;
+
+            // CHECK SEARCH TERM
+            if (searchTerm) {
+                const cardText = (
+                    card.querySelector('.club-name')?.textContent?.toLowerCase() + ' ' +
+                    card.querySelector('.club-description')?.textContent?.toLowerCase() + ' ' +
+                    card.querySelector('.club-tags')?.textContent?.toLowerCase()
+                ) || '';
+
+                if (!cardText.includes(searchTerm)) {
+                    isVisible = false;
+                }
+            }
+
+            // CHECK ACTIVE FILTERS
+            if (isVisible && activeFilters.size > 0) {
+                const cardTags = card.querySelector('.club-tags')?.textContent?.toLowerCase() || '';
+
+                // Card must match ALL active filters (AND logic)
+                for (const filter of activeFilters) {
+                    if (!cardTags.includes(filter.toLowerCase())) {
+                        isVisible = false;
+                        break;
+                    }
+                }
+            }
+
+            // SHOW/HIDE CARD
+            if (isVisible) {
+                card.style.display = 'block';
                 visibleCount++;
-
-                // Add highlight animation
-                card.style.animation = 'none';
-                setTimeout(() => {
-                    card.style.animation = 'fadeIn 0.3s ease-in';
-                }, 10);
             } else {
                 card.style.display = 'none';
             }
+        });
+
+        console.log(`✅ ${visibleCount}/${allCards.length} cards visible`);
+
+        // Update pagination if it exists
+        if (window.pagination) {
+            window.pagination.updateVisibleCards();
         }
-    });
 
-    // Show results summary
-    showFilterResults(visibleCount, activeFilters);
-    console.log(`🔍 Filter applied: ${visibleCount} clubs visible`);
-}
-
-// =============================================================================
-// RESULTS DISPLAY
-// =============================================================================
-
-function showFilterResults(count, filters) {
-    // Remove existing results display
-    const existingResults = document.querySelector('.filter-results');
-    if (existingResults) {
-        existingResults.remove();
+        // Dispatch custom event
+        document.dispatchEvent(new CustomEvent('filtersChanged', {
+            detail: { visibleCount, totalCount: allCards.length }
+        }));
     }
 
-    // Create results display if filters are active
-    if (filters.length > 0) {
-        const resultsDiv = document.createElement('div');
-        resultsDiv.className = 'filter-results';
-        resultsDiv.innerHTML = `
-            <div style="
-                background: rgba(95, 150, 197, 0.1);
-                border: 1px solid rgba(95, 150, 197, 0.3);
-                border-radius: 10px;
-                padding: 1rem;
-                margin: 1rem auto;
-                max-width: 65.5vw;
-                text-align: center;
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-                flex-wrap: wrap;
-                gap: 1rem;
-            ">
-                <div>
-                    <strong style="color: #5F96C5;">${count} clubs found</strong>
-                    <span style="color: #666; margin-left: 0.5rem;">
-                        with ${filters.map(f => f).join(', ')}
-                    </span>
-                </div>
-                <button onclick="clearAllFilters()" style="
-                    background: #5F96C5;
-                    color: white;
-                    border: none;
-                    padding: 0.5rem 1rem;
-                    border-radius: 6px;
-                    cursor: pointer;
-                    font-weight: 500;
-                ">Clear Filters</button>
-            </div>
+    // =============================================================================
+    // UPDATE SEARCH RESULTS INFO
+    // =============================================================================
+
+    function updateSearchResults() {
+        const searchResultsInfo = document.getElementById('searchResultsInfo');
+        const resultsCount = document.getElementById('resultsCount');
+        const searchTermElement = document.getElementById('searchTerm');
+
+        if (!searchResultsInfo || !resultsCount) return;
+
+        const visibleCards = Array.from(allCards).filter(card =>
+            window.getComputedStyle(card).display !== 'none'
+        );
+
+        const hasActiveFilters = activeFilters.size > 0 || searchTerm;
+
+        if (hasActiveFilters) {
+            searchResultsInfo.style.display = 'block';
+            resultsCount.textContent = `${visibleCards.length} club${visibleCards.length !== 1 ? 's' : ''} found`;
+
+            if (searchTermElement && searchTerm) {
+                searchTermElement.textContent = `for "${searchTerm}"`;
+                searchTermElement.style.display = 'inline';
+            } else if (searchTermElement) {
+                searchTermElement.style.display = 'none';
+            }
+        } else {
+            searchResultsInfo.style.display = 'none';
+        }
+    }
+
+    // =============================================================================
+    // CLEAR FILTERS FUNCTIONALITY - FIXES PERSISTENT BUG
+    // =============================================================================
+
+    function clearAllFilters() {
+        console.log('🧹 Clearing all filters and search...');
+
+        // Clear search input
+        if (clubSearch) {
+            clubSearch.value = '';
+            searchTerm = '';
+        }
+
+        // Clear active filters
+        activeFilters.clear();
+
+        // Reset all tags
+        allTags.forEach(tag => {
+            tag.classList.remove('active-filter');
+            tag.setAttribute('aria-pressed', 'false');
+        });
+
+        // Show all cards
+        allCards.forEach(card => {
+            card.style.display = 'block';
+        });
+
+        // Update search results
+        updateSearchResults();
+
+        // Update pagination
+        if (window.pagination) {
+            window.pagination.updateVisibleCards();
+        }
+
+        // Hide filter tags
+        filterTags.classList.add('hidden');
+        filterTags.setAttribute('aria-hidden', 'true');
+        filterToggle.setAttribute('aria-expanded', 'false');
+
+        console.log('✅ All filters cleared successfully');
+    }
+
+    // =============================================================================
+    // CLEAR BUTTONS SETUP
+    // =============================================================================
+
+    // Add clear button to search results if it doesn't exist
+    const clearAllBtn = document.getElementById('clearAllBtn');
+    if (clearAllBtn) {
+        clearAllBtn.addEventListener('click', clearAllFilters);
+    }
+
+    // Add clear button to filter tags if it doesn't exist
+    if (!document.getElementById('clearFiltersBtn')) {
+        const clearBtn = document.createElement('button');
+        clearBtn.id = 'clearFiltersBtn';
+        clearBtn.textContent = 'Clear All';
+        clearBtn.className = 'clear-filters-btn';
+        clearBtn.style.cssText = `
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 0.4rem 0.8rem;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            margin-left: 1rem;
+            transition: all 0.2s ease;
         `;
 
-        // Insert before clubs grid
-        const clubsGrid = document.querySelector('.clubs-grid');
-        if (clubsGrid) {
-            clubsGrid.parentNode.insertBefore(resultsDiv, clubsGrid);
+        clearBtn.addEventListener('mouseenter', () => {
+            clearBtn.style.background = '#c0392b';
+        });
+
+        clearBtn.addEventListener('mouseleave', () => {
+            clearBtn.style.background = '#e74c3c';
+        });
+
+        clearBtn.addEventListener('click', clearAllFilters);
+        filterTags.appendChild(clearBtn);
+
+        console.log('✅ Added clear filters button');
+    }
+
+    // =============================================================================
+    // KEYBOARD SHORTCUTS
+    // =============================================================================
+
+    document.addEventListener('keydown', (e) => {
+        // Ctrl/Cmd + K to focus search
+        if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+            e.preventDefault();
+            if (clubSearch) {
+                clubSearch.focus();
+            }
+        }
+
+        // Escape to clear filters
+        if (e.key === 'Escape') {
+            if (activeFilters.size > 0 || searchTerm) {
+                clearAllFilters();
+            }
+        }
+    });
+
+    // =============================================================================
+    // URL PARAMETER SUPPORT - BONUS FEATURE
+    // =============================================================================
+
+    function updateURLParams() {
+        const url = new URL(window.location);
+
+        if (searchTerm) {
+            url.searchParams.set('search', searchTerm);
+        } else {
+            url.searchParams.delete('search');
+        }
+
+        if (activeFilters.size > 0) {
+            url.searchParams.set('filters', Array.from(activeFilters).join(','));
+        } else {
+            url.searchParams.delete('filters');
+        }
+
+        // Update URL without page reload
+        window.history.replaceState({}, '', url.toString());
+    }
+
+    function loadFromURLParams() {
+        const url = new URL(window.location);
+
+        // Load search term
+        const urlSearch = url.searchParams.get('search');
+        if (urlSearch && clubSearch) {
+            clubSearch.value = urlSearch;
+            searchTerm = urlSearch.toLowerCase().trim();
+        }
+
+        // Load filters
+        const urlFilters = url.searchParams.get('filters');
+        if (urlFilters) {
+            const filters = urlFilters.split(',');
+            filters.forEach(filter => {
+                const tag = document.querySelector(`[data-filter="${filter}"]`);
+                if (tag) {
+                    activeFilters.add(filter);
+                    tag.classList.add('active-filter');
+                    tag.setAttribute('aria-pressed', 'true');
+                }
+            });
+        }
+
+        // Apply loaded filters
+        if (activeFilters.size > 0 || searchTerm) {
+            applyFilters();
+            updateSearchResults();
         }
     }
-}
+
+    // Add listeners for URL updates
+    document.addEventListener('filtersChanged', updateURLParams);
+    document.addEventListener('searchChanged', updateURLParams);
+
+    // Load filters from URL on page load
+    loadFromURLParams();
+
+    // =============================================================================
+    // PUBLIC API
+    // =============================================================================
+
+    window.filterSystem = {
+        clearAll: clearAllFilters,
+        addFilter: (filter) => {
+            const tag = document.querySelector(`[data-filter="${filter}"]`);
+            if (tag) handleTagClick(tag);
+        },
+        removeFilter: (filter) => {
+            if (activeFilters.has(filter)) {
+                const tag = document.querySelector(`[data-filter="${filter}"]`);
+                if (tag) handleTagClick(tag);
+            }
+        },
+        search: (term) => {
+            if (clubSearch) {
+                clubSearch.value = term;
+                searchTerm = term.toLowerCase().trim();
+                applyFilters();
+                updateSearchResults();
+            }
+        },
+        getActiveFilters: () => Array.from(activeFilters),
+        getSearchTerm: () => searchTerm
+    };
+
+    console.log('✅ Enhanced filter system initialized');
+});
 
 // =============================================================================
-// UTILITY FUNCTIONS
+// DEBUG FUNCTIONS
 // =============================================================================
 
-function clearAllFilters() {
-    // Clear active filters
-    const activeFilterTags = document.querySelectorAll('.tag.active-filter');
-    activeFilterTags.forEach(tag => {
-        tag.classList.remove('active-filter');
-        tag.setAttribute('aria-pressed', 'false');
-    });
-
-    // Show all club cards
-    const clubCards = document.querySelectorAll('.club-card');
-    clubCards.forEach(card => {
-        card.style.display = 'flex';
-    });
-
-    // Remove results display
-    const resultsDisplay = document.querySelector('.filter-results');
-    if (resultsDisplay) {
-        resultsDisplay.remove();
-    }
-
-    console.log('🗑️ All filters cleared');
-}
-
-// Make clearAllFilters globally available
-window.clearAllFilters = clearAllFilters;
-
-// =============================================================================
-// ANIMATIONS
-// =============================================================================
-
-// Add CSS animations via JavaScript
-const style = document.createElement('style');
-style.textContent = `
-    @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(10px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
-    
-    .tag {
-        transition: all 0.3s ease;
-    }
-    
-    .tag:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(95, 150, 197, 0.3);
-    }
-`;
-document.head.appendChild(style);
-
-// =============================================================================
-// HOW THIS WORKS - User Experience Flow:
-// =============================================================================
-//
-// INITIAL STATE:
-// - Filter tags are hidden (have 'hidden' class)
-// - User sees clean search bar without cluttered tag buttons
-//
-// USER CLICKS FILTER ICON:
-// 1. Click event fires
-// 2. classList.toggle('hidden') runs
-// 3. 'hidden' class is removed from filterTags
-// 4. CSS reveals the tag buttons
-// 5. User can now click tags to filter clubs
-//
-// USER CLICKS FILTER ICON AGAIN:
-// 1. Click event fires again  
-// 2. classList.toggle('hidden') runs
-// 3. 'hidden' class is added back to filterTags
-// 4. CSS hides the tag buttons
-// 5. Interface returns to clean state
-//
-// =============================================================================
-// CSS INTEGRATION:
-// =============================================================================
-// This JavaScript works with CSS like this:
-//
-// ```css
-// .filter-tags {
-//     display: flex;
-//     gap: 0.5rem;
-//     /* Other styling for visible state */
-// }
-//
-// .filter-tags.hidden {
-//     display: none;
-//     /* Or: visibility: hidden; opacity: 0; etc. */
-// }
-// ```
-//
-// =============================================================================
-// ACCESSIBILITY CONSIDERATIONS:
-// =============================================================================
-// For better accessibility, you could enhance this with:
-//
-// ```javascript
-// filterIcon.addEventListener('click', () => {
-//     const isHidden = filterTags.classList.contains('hidden');
-//     
-//     filterTags.classList.toggle('hidden');
-//     
-//     // Update ARIA attributes for screen readers
-//     filterIcon.setAttribute('aria-expanded', !isHidden);
-//     filterTags.setAttribute('aria-hidden', !isHidden);
-//     
-//     // Update button text or icon
-//     filterIcon.textContent = isHidden ? 'Hide Filters' : 'Show Filters';
-// });
-// ```
-//
-// =============================================================================
-// FUTURE ENHANCEMENTS:
-// =============================================================================
-//
-// 🎨 Smooth Animations:
-// - CSS transitions for smooth show/hide
-// - Slide down/up animations
-// - Fade in/out effects
-//
-// 💾 State Persistence:
-// - Remember user's preference (show/hide filters)
-// - Save to localStorage
-// - Restore state on page reload
-//
-// 📱 Responsive Behavior:
-// - Auto-hide filters on mobile for space
-// - Different toggle behavior on different screen sizes
-//
-// Example with animation:
-// ```css
-// .filter-tags {
-//     max-height: 200px;
-//     overflow: hidden;
-//     transition: max-height 0.3s ease;
-// }
-//
-// .filter-tags.hidden {
-//     max-height: 0;
-// }
-// ```
-//
-// =============================================================================
+window.debugFilters = function () {
+    console.log('🐛 Filter Debug Info:');
+    console.log('  Active filters:', window.filterSystem?.getActiveFilters());
+    console.log('  Search term:', window.filterSystem?.getSearchTerm());
+    console.log('  Visible cards:', document.querySelectorAll('.club-card:not([style*="display: none"])').length);
+    console.log('  Total cards:', document.querySelectorAll('.club-card').length);
+};

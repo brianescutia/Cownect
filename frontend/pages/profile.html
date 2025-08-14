@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile | Cownect</title>
+    <link rel="stylesheet" href="/styles/dashboard.css">
+    <link href="https://fonts.googleapis.com/css2?family=Rethink+Sans&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Background decorations -->
+    <div class="blur-decoration-left"></div>
+    <div class="blur-decoration-right"></div>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <div class="logo-title">
+                <img src="../assets/cowLogo.png" alt="Cownect Logo" class="logo" />
+                <span class="logo-text">Cownect</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="/tech-clubs">Tech Clubs</a></li>
+                <li><a href="/events" class="nav-link">Events</a></li>
+                <li><a href="/niche-landing">Career Path</a></li>
+                <li><a href="#">Mentor Matching</a></li>
+            </ul>
+        </div>
+        <div class="navbar-profile-circle" id="navbarProfileCircle" title="Profile">
+            <span id="navbarProfileInitials">JD</span>
+        </div>
+    </nav>
+
+    <main class="profile-container">
+        <div class="profile-header">
+            <h1>My Profile</h1>
+        </div>
+
+        <!-- Profile Edit Form -->
+        <div class="profile-form-container">
+            <form id="profileForm" class="profile-form">
+                <!-- Profile Picture Section -->
+                <div class="profile-picture-section">
+                    <div class="profile-picture-container">
+                        <div class="profile-circle" id="profileCircle">
+                            <span id="profileInitials">JD</span>
+                        </div>
+                        <button type="button" class="change-picture-btn" id="changePictureBtn">
+                            Change Picture
+                        </button>
+                        <input type="file" id="profilePictureInput" accept="image/*" style="display: none;">
+                    </div>
+                </div>
+
+                <!-- Personal Information -->
+                <div class="form-section">
+                    <h3>Personal Information</h3>
+                    
+                    <div class="form-group">
+                        <label for="fullName">Full Name</label>
+                        <input type="text" id="fullName" name="fullName" 
+                               placeholder="Enter your full name" required>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="year">Year</label>
+                            <select id="year" name="year" required>
+                                <option value="">Select Year</option>
+                                <option value="freshman">Freshman</option>
+                                <option value="sophomore">Sophomore</option>
+                                <option value="junior">Junior</option>
+                                <option value="senior">Senior</option>
+                                <option value="graduate">Graduate</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="major">Major</label>
+                            <select id="major" name="major" required>
+                                <option value="">Select Major</option>
+                                <option value="computer-science">Computer Science</option>
+                                <option value="computer-engineering">Computer Engineering</option>
+                                <option value="electrical-engineering">Electrical Engineering</option>
+                                <option value="mechanical-engineering">Mechanical Engineering</option>
+                                <option value="data-science">Data Science</option>
+                                <option value="design">Design</option>
+                                <option value="business">Business</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- About Section -->
+                <div class="form-section">
+                    <h3>About</h3>
+                    
+                    <div class="form-group">
+                        <label for="bio">Bio</label>
+                        <textarea id="bio" name="bio" rows="4" 
+                                  placeholder="Tell us about yourself, your interests, and what you're passionate about..."></textarea>
+                        <small class="char-count"><span id="bioCount">0</span>/500 characters</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="hobbies">Hobbies & Interests</label>
+                        <input type="text" id="hobbies" name="hobbies" 
+                               placeholder="e.g., hiking, photography, coding, music, reading">
+                        <small class="helper-text">Separate multiple hobbies with commas</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="linkedinUrl">LinkedIn Profile</label>
+                        <input type="url" id="linkedinUrl" name="linkedinUrl" 
+                               placeholder="https://linkedin.com/in/your-profile">
+                        <small class="helper-text">Share your LinkedIn profile for mentor matching</small>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" id="cancelBtn">Cancel</button>
+                    <button type="submit" class="btn-primary" id="saveBtn">Save Changes</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Saved Clubs Section -->
+        <div class="saved-clubs-section">
+            <h3>Saved Clubs</h3>
+            <div class="saved-clubs-container" id="savedClubsContainer">
+                <div class="no-saved-clubs">
+                    <img src="../assets/bookmark.png" alt="No clubs" class="empty-state-icon">
+                    <p>No saved clubs yet</p>
+                    <small>Explore tech clubs and bookmark your favorites!</small>
+                    <a href="/tech-clubs" class="explore-clubs-btn">Explore Clubs</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Activity -->
+        <div class="recent-activity-section">
+            <h3>Recent Activity</h3>
+            <div class="activity-list" id="activityList">
+                <div class="activity-item">
+                    <div class="activity-icon">🎯</div>
+                    <div class="activity-content">
+                        <p>Completed Career Path Assessment</p>
+                        <small>2 days ago</small>
+                    </div>
+                </div>
+                <div class="activity-item">
+                    <div class="activity-icon">📅</div>
+                    <div class="activity-content">
+                        <p>Joined Tech Career Fair</p>
+                        <small>1 week ago</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="/scripts/enhanced-profile.js"></script>
+</body>
+</html>

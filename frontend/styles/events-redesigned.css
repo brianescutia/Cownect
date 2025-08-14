@@ -1,6 +1,5 @@
 /* =============================================================================
-   REDESIGNED EVENTS PAGE STYLES - CONSISTENT WITH TECH-CLUBS
-   Save as: frontend/styles/events-redesigned.css
+   IMPROVED EVENTS PAGE STYLES - REDUCED BLUE, BETTER COLOR BALANCE
    ============================================================================= */
 
 /* Reset and Base Styles */
@@ -12,58 +11,58 @@
 
 body {
     font-family: 'Rethink Sans', sans-serif;
-    background: #f5fcff;
-    /* Same as tech-clubs */
+    background: #f8fafb;
+    /* CHANGED: More neutral, less blue */
     min-height: 100vh;
     color: #2c3e50;
     position: relative;
     overflow-x: hidden;
 }
 
-/* Background blur decorations - Same as tech-clubs */
+/* Background blur decorations - REDUCED OPACITY */
 .blur-decoration-left {
     position: fixed;
     top: -1em;
     left: -20em;
-    transform: translateY(-50%);
+    transform: translateY(-50%) rotate(91deg);
     width: 75%;
     height: 75%;
     background-image: url('../assets/blueBlur.png');
     background-size: cover;
     background-repeat: no-repeat;
-    opacity: 0.6;
+    opacity: 0.3;
+    /* REDUCED: From 0.6 to 0.3 */
     z-index: -1;
-    transform: rotate(91deg);
 }
 
 .blur-decoration-left2 {
     position: fixed;
     top: 20em;
     left: -30em;
-    transform: translateY(-50%);
+    transform: translateY(-50%) rotate(45deg);
     width: 50%;
     height: 50%;
     background-image: url('../assets/blueBlur.png');
     background-size: cover;
     background-repeat: no-repeat;
-    opacity: 0.4;
+    opacity: 0.2;
+    /* REDUCED: From 0.4 to 0.2 */
     z-index: -1;
-    transform: rotate(45deg);
 }
 
 .blur-decoration-right {
     position: fixed;
     top: 10em;
     right: -26em;
-    transform: translateY(-50%);
+    transform: translateY(-50%) rotate(270deg);
     width: 75%;
     height: 75%;
     background-image: url('../assets/blueBlur.png');
     background-size: cover;
     background-repeat: no-repeat;
-    opacity: 0.6;
+    opacity: 0.3;
+    /* REDUCED: From 0.6 to 0.3 */
     z-index: -1;
-    transform: rotate(270deg);
 }
 
 a {
@@ -76,7 +75,7 @@ button {
 }
 
 /* =============================================================================
-   NAVBAR STYLES - EXACTLY LIKE TECH-CLUBS
+   NAVBAR STYLES - CONSISTENT WITH OTHER PAGES
    ============================================================================= */
 
 .navbar {
@@ -90,7 +89,6 @@ button {
     width: 90%;
     height: clamp(50px, 8vw, 68px);
     gap: 2rem;
-    /* Gap between gray container and profile circle */
 }
 
 .navbar-container {
@@ -101,9 +99,7 @@ button {
     align-items: center;
     padding: 0 3rem;
     flex: 1;
-    /* Take up available space */
-    max-width: 900px;
-    /* Limit the gray background width */
+    max-width: 750px;
 }
 
 .logo-title {
@@ -113,6 +109,12 @@ button {
     font-weight: bold;
     font-size: 1.2rem;
     margin-left: -1rem;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.logo-title:hover {
+    transform: scale(1.05);
 }
 
 .logo {
@@ -132,11 +134,13 @@ button {
     font-size: 1rem;
     text-decoration: none;
     color: inherit;
+    transition: color 0.2s ease;
 }
 
 .nav-links a:hover,
 .nav-links a.active {
-    color: #5F96C5;
+    color: #27ae60;
+    /* CHANGED: From blue to green for variety */
     transform: translateY(-1px);
 }
 
@@ -151,6 +155,40 @@ button {
 .account-btn:hover {
     background-color: #4a8bc2;
     transform: translateY(-1px);
+}
+
+/* NAVBAR PROFILE CIRCLE */
+.navbar-profile-circle {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #5F96C5, #4a8bc2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 2px 8px rgba(95, 150, 197, 0.3);
+    position: relative;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.navbar-profile-circle:hover {
+    transform: scale(1.1);
+    box-shadow: 0 4px 15px rgba(95, 150, 197, 0.5);
+    border-color: rgba(255, 255, 255, 0.6);
+}
+
+#navbarProfileInitials {
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 /* =============================================================================
@@ -169,31 +207,7 @@ button {
 }
 
 /* =============================================================================
-   PAGE HEADER
-   ============================================================================= */
-
-.events-header {
-    text-align: center;
-    margin-bottom: 3rem;
-    padding: 2rem 0;
-}
-
-.events-header h1 {
-    font-size: 2.5rem;
-    color: #2c3e50;
-    margin-bottom: 0.5rem;
-    font-weight: 700;
-}
-
-.events-header p {
-    font-size: 1.1rem;
-    color: #7f8c8d;
-    max-width: 600px;
-    margin: 0 auto;
-}
-
-/* =============================================================================
-   FEATURED EVENTS SECTION (Upper Half)
+   FEATURED EVENTS SECTION - IMPROVED COLORS
    ============================================================================= */
 
 .featured-events-section {
@@ -204,6 +218,7 @@ button {
 .featured-events-section h2 {
     font-size: 2rem;
     color: #2c3e50;
+    /* NEUTRAL: Dark gray instead of blue */
     margin-bottom: 2rem;
     text-align: left;
     font-weight: 600;
@@ -218,11 +233,9 @@ button {
     padding: 0 1rem;
     justify-items: center;
     margin-bottom: 0;
-    /* ADDED: Ensure no extra bottom margin */
 }
 
-
-/* Force 3 columns on larger screens */
+/* Force responsive columns */
 @media (min-width: 1200px) {
     .featured-events-grid {
         grid-template-columns: repeat(3, 1fr);
@@ -230,7 +243,6 @@ button {
     }
 }
 
-/* Force 2 columns on medium screens */
 @media (min-width: 768px) and (max-width: 1199px) {
     .featured-events-grid {
         grid-template-columns: repeat(2, 1fr);
@@ -238,7 +250,6 @@ button {
     }
 }
 
-/* Force 1 column only on very small screens */
 @media (max-width: 767px) {
     .featured-events-grid {
         grid-template-columns: 1fr;
@@ -247,19 +258,20 @@ button {
 }
 
 /* =============================================================================
-   EVENT CARDS - WITH TECH-CLUBS STYLING
+   EVENT CARDS - IMPROVED COLOR VARIETY
    ============================================================================= */
 
 .event-card {
     width: 100%;
     max-width: 450px;
     min-width: 320px;
-    height: 350px;
-    /* INCREASED: From 300px to 350px */
-    background-color: rgba(255, 255, 255, 0.7);
+    height: 380px;
+    /* INCREASED for better content fit */
+    background-color: rgba(255, 255, 255, 0.85);
+    /* IMPROVED: More opaque */
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.9);
     border-radius: 15px;
     overflow: hidden;
     position: relative;
@@ -267,22 +279,23 @@ button {
     cursor: pointer;
     display: flex;
     flex-direction: column;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    /* SOFTER shadow */
 }
 
 .event-card:hover {
     transform: translateY(-8px);
-    /* Same as tech-clubs hover */
-    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.12);
+    /* SOFTER hover shadow */
 }
 
-/* Date Badge - Top Left */
+/* Date Badge - VARIED COLORS */
 .event-date-badge {
     position: absolute;
     top: 12px;
     left: 12px;
-    background: rgba(95, 150, 197, 0.95);
-    /* Using tech-clubs color */
+    background: linear-gradient(135deg, #27ae60, #2ecc71);
+    /* GREEN instead of blue */
     color: white;
     padding: 8px 10px;
     border-radius: 8px;
@@ -291,6 +304,7 @@ button {
     z-index: 10;
     backdrop-filter: blur(10px);
     min-width: 50px;
+    box-shadow: 0 2px 8px rgba(39, 174, 96, 0.3);
 }
 
 .date-day {
@@ -309,16 +323,31 @@ button {
     opacity: 0.9;
 }
 
-/* Bookmark Button - Top Right */
+/* Category Badge - NEW FEATURE */
+.event-category-badge {
+    position: absolute;
+    top: 12px;
+    right: 60px;
+    /* Space for bookmark */
+    background: linear-gradient(135deg, #8e44ad, #9b59b6);
+    /* PURPLE */
+    color: white;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    z-index: 10;
+}
+
+/* Bookmark Button - IMPROVED DESIGN */
 .event-bookmark {
-    /* Add these positioning styles if needed */
     position: absolute;
     top: 12px;
     right: 12px;
     z-index: 10;
-
-    /* Keep the visual fixes */
-    background: rgba(255, 255, 255, 0.9);
+    background: rgba(255, 255, 255, 0.95);
     border: none;
     border-radius: 50%;
     width: 36px;
@@ -328,6 +357,7 @@ button {
     justify-content: center;
     cursor: pointer;
     transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .event-bookmark svg {
@@ -340,24 +370,26 @@ button {
 
 .event-bookmark:hover {
     background: rgba(255, 255, 255, 1);
+    transform: scale(1.1);
 }
 
 .event-bookmark:hover svg {
-    stroke: #5F96C5;
+    stroke: #f39c12;
+    /* ORANGE instead of blue */
 }
 
 .event-bookmark.bookmarked {
-    background: rgba(255, 255, 255, 0.95);
+    background: rgba(243, 156, 18, 0.1);
+    /* ORANGE theme */
     transform: scale(1.1);
 }
 
 .event-bookmark.bookmarked svg {
-    stroke: #5F96C5;
-    fill: #5F96C5;
+    stroke: #f39c12;
+    fill: #f39c12;
 }
 
-
-/* Event Image - Upper Half */
+/* Event Image */
 .event-image-container {
     height: 50%;
     overflow: hidden;
@@ -375,9 +407,9 @@ button {
     transform: scale(1.05);
 }
 
-/* Event Content - Lower Half */
+/* Event Content */
 .event-content {
-    height: 40%;
+    height: 45%;
     padding: 1rem;
     display: flex;
     flex-direction: column;
@@ -408,11 +440,7 @@ button {
     flex-grow: 1;
 }
 
-.event-bookmark:focus {
-    outline: none;
-}
-
-/* Event Details (Location and Time) */
+/* Event Details */
 .event-details {
     display: flex;
     gap: 1rem;
@@ -428,14 +456,19 @@ button {
     gap: 0.25rem;
 }
 
-.event-location svg,
-.event-time svg {
-    color: #5F96C5;
-    /* Tech-clubs color */
+.event-location svg {
+    color: #e74c3c;
+    /* RED for location */
     flex-shrink: 0;
 }
 
-/* Event Actions */
+.event-time svg {
+    color: #f39c12;
+    /* ORANGE for time */
+    flex-shrink: 0;
+}
+
+/* Event Actions - IMPROVED */
 .event-actions {
     display: flex;
     gap: 0.5rem;
@@ -443,43 +476,106 @@ button {
 }
 
 .join-event-btn {
-    background: #5F96C5;
-    /* Tech-clubs color */
+    background: linear-gradient(135deg, #27ae60, #2ecc71);
+    /* GREEN theme */
     color: white;
     border: none;
-    padding: 0.5rem 1rem;
+    padding: 0.6rem 1.2rem;
     border-radius: 8px;
     font-size: 0.85rem;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
     flex: 1;
+    position: relative;
+    overflow: hidden;
 }
 
 .join-event-btn:hover {
-    background: #4a8bc2;
-    /* Darker shade of tech-clubs color */
+    background: linear-gradient(135deg, #229954, #27ae60);
     transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(39, 174, 96, 0.3);
+}
+
+.join-event-btn.joined {
+    background: linear-gradient(135deg, #3498db, #2980b9);
+    /* BLUE when joined */
+}
+
+.join-event-btn.joined:hover {
+    background: linear-gradient(135deg, #e74c3c, #c0392b);
+    /* RED on hover to suggest "unjoin" */
+}
+
+.join-event-btn.joined:hover .joined-text::after {
+    content: ' → Leave';
+}
+
+/* Calendar Dropdown - NEW IMPROVED DESIGN */
+.calendar-dropdown {
+    position: relative;
 }
 
 .add-calendar-btn {
-    background: rgba(40, 167, 69, 0.1);
-    color: #28a745;
-    border: 1px solid rgba(40, 167, 69, 0.3);
-    padding: 0.5rem;
+    background: rgba(52, 152, 219, 0.1);
+    /* SUBTLE BLUE */
+    color: #3498db;
+    border: 1px solid rgba(52, 152, 219, 0.3);
+    padding: 0.6rem;
     border-radius: 8px;
     cursor: pointer;
     transition: all 0.3s ease;
-    width: 36px;
-    height: 36px;
+    width: 38px;
+    height: 38px;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
 .add-calendar-btn:hover {
-    background: rgba(40, 167, 69, 0.2);
+    background: rgba(52, 152, 219, 0.2);
     transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(52, 152, 219, 0.2);
+}
+
+.calendar-options {
+    display: none;
+    position: absolute;
+    bottom: 100%;
+    right: 0;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    z-index: 100;
+    min-width: 150px;
+    overflow: hidden;
+    margin-bottom: 5px;
+}
+
+.calendar-option {
+    display: block;
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: none;
+    background: white;
+    text-align: left;
+    cursor: pointer;
+    transition: background 0.2s ease;
+    font-size: 0.85rem;
+}
+
+.calendar-option:hover {
+    background: #f8f9fa;
+}
+
+.calendar-option:first-child {
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+}
+
+.calendar-option:last-child {
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
 }
 
 /* Loading Cards */
@@ -491,9 +587,8 @@ button {
     width: 100%;
     max-width: 450px;
     min-width: 320px;
-    height: 300px;
+    height: 380px;
     background-color: rgba(255, 255, 255, 0.7);
-    /* Same as tech-clubs */
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     border: 1px solid rgba(255, 255, 255, 0.8);
@@ -503,7 +598,7 @@ button {
     justify-content: center;
     color: #666;
     font-size: 1.1rem;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
     animation: pulse 2s ease-in-out infinite;
 }
 
@@ -520,27 +615,131 @@ button {
 }
 
 /* =============================================================================
-   CALENDAR SECTION (Lower Half)
+   CALENDAR SECTION - LESS BLUE
    ============================================================================= */
 
 .calendar-section {
-    background-color: rgba(255, 255, 255, 0.7);
+    background-color: rgba(255, 255, 255, 0.85);
+    /* MORE OPAQUE */
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.9);
     border-radius: 15px;
     padding: 2rem;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
     margin-top: 1rem !important;
-    /* CHANGED: Override the 3rem margin from calendar CSS */
     margin-bottom: 0;
     max-width: 1400px;
     margin-left: auto;
     margin-right: auto;
 }
 
+.calendar-header h2 {
+    color: #2c3e50;
+    /* NEUTRAL instead of blue */
+}
+
+.calendar-header p {
+    color: #7f8c8d;
+}
+
+.view-toggle .view-btn {
+    background: #ecf0f1;
+    /* NEUTRAL */
+    color: #2c3e50;
+    border: 1px solid #bdc3c7;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.view-toggle .view-btn.active {
+    background: linear-gradient(135deg, #27ae60, #2ecc71);
+    /* GREEN instead of blue */
+    color: white;
+    border-color: #27ae60;
+}
+
+.nav-btn {
+    background: #ecf0f1;
+    color: #2c3e50;
+    border: 1px solid #bdc3c7;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.nav-btn:hover {
+    background: #d5dbdb;
+}
+
 /* =============================================================================
-   LOADING AND ERROR STATES
+   TOAST NOTIFICATIONS - NEW FEATURE
+   ============================================================================= */
+
+.toast-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1001;
+    max-width: 300px;
+}
+
+.toast {
+    background: white;
+    padding: 1rem 1.5rem;
+    border-radius: 8px;
+    margin-bottom: 0.5rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    animation: slideIn 0.3s ease-out;
+    border-left: 4px solid #95a5a6;
+}
+
+.toast-success {
+    border-left-color: #27ae60;
+    background: rgba(39, 174, 96, 0.05);
+}
+
+.toast-error {
+    border-left-color: #e74c3c;
+    background: rgba(231, 76, 60, 0.05);
+}
+
+.toast-info {
+    border-left-color: #3498db;
+    background: rgba(52, 152, 219, 0.05);
+}
+
+.toast button {
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+    color: #666;
+    padding: 0;
+    line-height: 1;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* =============================================================================
+   LOADING AND ERROR STATES - LESS BLUE
    ============================================================================= */
 
 .loading-overlay {
@@ -549,8 +748,8 @@ button {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(245, 252, 255, 0.95);
-    /* Tech-clubs background */
+    background: rgba(248, 250, 251, 0.95);
+    /* NEUTRAL background */
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -562,9 +761,10 @@ button {
 .loading-spinner {
     width: 50px;
     height: 50px;
-    border: 4px solid rgba(95, 150, 197, 0.3);
-    /* Tech-clubs color */
-    border-top: 4px solid #5F96C5;
+    border: 4px solid rgba(149, 165, 166, 0.3);
+    /* NEUTRAL colors */
+    border-top: 4px solid #27ae60;
+    /* GREEN accent */
     border-radius: 50%;
     animation: spin 1s linear infinite;
     margin-bottom: 1rem;
@@ -581,8 +781,8 @@ button {
 }
 
 .loading-overlay p {
-    color: #5F96C5;
-    /* Tech-clubs color */
+    color: #2c3e50;
+    /* NEUTRAL text */
     font-weight: 500;
     font-size: 1.1rem;
 }
@@ -602,8 +802,8 @@ button {
 }
 
 .retry-btn {
-    background: #5F96C5;
-    /* Tech-clubs color */
+    background: #27ae60;
+    /* GREEN instead of blue */
     color: white;
     border: none;
     padding: 0.75rem 1.5rem;
@@ -615,96 +815,21 @@ button {
 }
 
 .retry-btn:hover {
-    background: #4a8bc2;
+    background: #229954;
 }
 
 /* =============================================================================
-   RESPONSIVE DESIGN - MATCHING TECH-CLUBS
+   RESPONSIVE DESIGN
    ============================================================================= */
 
-@media (min-width: 2560px) {
-
-    .blur-decoration-left,
-    .blur-decoration-right {
-        width: 250px;
-        height: 250px;
-    }
-}
-
-@media (max-width: 1440px) {
-    .events-container {
-        padding: 1rem;
-    }
-
-    .featured-events-grid {
-        gap: 1.5rem;
-    }
-
-    .event-card {
-        height: 280px;
-    }
-
-    .nav-links {
-        list-style: none;
-        display: flex;
-        gap: 1.5rem;
-        align-items: center;
-        margin: 0rem;
-    }
-
-    .account-btn {
-        background-color: #5F96C5;
-        color: white !important;
-        padding: 0.5rem 1rem;
-        border-radius: 20px;
-        transition: all 0.3s ease;
-    }
-}
-
-@media (max-width: 1024px) {
-    .events-container {
-        padding: 1.5rem;
-    }
-
-    .featured-events-grid {
-        gap: 1.5rem;
-    }
-
-    .event-card {
-        height: 280px;
-    }
-
-    .nav-links {
-        list-style: none;
-        display: flex;
-        gap: 1rem;
-        align-items: center;
-        margin: 2rem;
-    }
-
-    .account-btn {
-        background-color: #5F96C5;
-        color: white !important;
-        padding: 0.15rem 1rem;
-        border-radius: 20px;
-        transition: all 0.3s ease;
-    }
-}
-
 @media (max-width: 768px) {
-
-    .blur-decoration-left,
-    .blur-decoration-right {
-        width: 200px;
-        height: 200px;
-    }
-
     .events-container {
         padding: 0.75rem;
     }
 
-    .events-header h1 {
-        font-size: 2rem;
+    .featured-events-section h2 {
+        font-size: 1.75rem;
+        text-align: center;
     }
 
     .featured-events-grid {
@@ -713,229 +838,55 @@ button {
     }
 
     .event-card {
-        height: 280px;
+        height: 350px;
         min-width: 280px;
     }
 
     .navbar-container {
-        padding: 2rem 1.25rem;
-        display: flex;
-        margin-right: 11rem;
-        gap: 1rem;
-    }
-
-    .nav-links {
-        gap: 1rem;
-    }
-}
-
-@media (max-width: 426px) {
-    .navbar-container {
-        margin-left: 17rem;
-        padding: 1.5rem 1.5rem;
-        display: flex;
-        transform: scale(0.6);
-        width: 100rem;
-    }
-
-    .nav-links {
-        gap: 1rem;
-    }
-}
-
-
-/* =============================================================================
-   EVENT IMAGE FALLBACK SYSTEM
-   ============================================================================= */
-
-.event-image {
-    background: #5F96C5;
-    /* Tech-clubs color */
-}
-
-.event-image::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: #5F96C5;
-    /* Tech-clubs color */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-size: 1.2rem;
-    font-weight: 600;
-    z-index: 1;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-}
-
-.event-image[data-error="true"]::before {
-    opacity: 1;
-    content: '🎉 Event';
-}
-
-.event-image-loading {
-    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-    background-size: 200% 100%;
-    animation: loading 1.5s infinite;
-}
-
-@keyframes loading {
-    0% {
-        background-position: 200% 0;
-    }
-
-    100% {
-        background-position: -200% 0;
-    }
-}
-
-
-/* Navbar */
-/* Navbar */
-.navbar {
-    display: flex;
-    justify-content: center;
-    border-radius: 25px;
-    margin: 1rem auto;
-    padding: 0.75rem 2rem;
-    max-width: 970px;
-    width: 90%;
-    height: clamp(50px, 8vw, 68px);
-}
-
-.navbar-container {
-    background-color: rgba(183, 183, 183, 0.30);
-    border-radius: 25px;
-    width: 65.5vw;
-    /* match homepage width */
-    height: 4.2vw;
-    max-width: 1129px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 3rem;
-}
-
-.logo-title {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    font-weight: bold;
-    font-size: 1.2rem;
-    margin-left: -1rem;
-}
-
-.logo {
-    height: 40px;
-}
-
-.nav-links {
-    list-style: none;
-    display: flex;
-    gap: 4.5rem;
-    align-items: center;
-    margin: 0;
-}
-
-.nav-links a {
-    font-weight: 500;
-    font-size: 1rem;
-}
-
-.account-btn {
-    background-color: #5F96C5;
-    color: white;
-    padding: 0.4rem 0.9rem;
-    border-radius: 20px;
-}
-
-/* =============================================================================
-   NAVBAR PROFILE CIRCLE - New Styles
-   =============================================================================
-*/
-
-.navbar-profile-circle {
-    width: 45px;
-    height: 45px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, #5F96C5, #4a8bc2);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-size: 1rem;
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    border: 2px solid rgba(255, 255, 255, 0.3);
-    box-shadow: 0 2px 8px rgba(95, 150, 197, 0.3);
-    position: relative;
-    overflow: hidden;
-}
-
-.navbar-profile-circle:hover {
-    transform: scale(1.1);
-    box-shadow: 0 4px 15px rgba(95, 150, 197, 0.5);
-    border-color: rgba(255, 255, 255, 0.6);
-}
-
-.navbar-profile-circle:active {
-    transform: scale(1.05);
-}
-
-#navbarProfileInitials {
-    font-size: 0.9rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-/* Add a subtle pulse animation on hover */
-.navbar-profile-circle::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.2);
-    opacity: 0;
-    transform: scale(0.8);
-    transition: all 0.3s ease;
-}
-
-.navbar-profile-circle:hover::before {
-    opacity: 1;
-    transform: scale(1);
-}
-
-/* Responsive adjustments for profile circle */
-@media (max-width: 768px) {
-    .navbar-profile-circle {
-        width: 40px;
-        height: 40px;
-        font-size: 0.9rem;
+        padding: 0 2rem;
     }
 
     .nav-links {
         gap: 2rem;
     }
+
+    .navbar-profile-circle {
+        width: 40px;
+        height: 40px;
+        font-size: 0.9rem;
+    }
 }
 
 @media (max-width: 480px) {
+    .navbar {
+        gap: 0.5rem;
+        padding: 0.5rem 1rem;
+    }
+
+    .navbar-container {
+        padding: 0 1.5rem;
+    }
+
+    .nav-links {
+        gap: 1rem;
+    }
+
     .navbar-profile-circle {
         width: 35px;
         height: 35px;
         font-size: 0.8rem;
     }
 
-    .nav-links {
-        gap: 1rem;
+    .event-card {
+        min-width: 250px;
+        height: 320px;
+    }
+
+    .event-content {
+        padding: 0.75rem;
+    }
+
+    .calendar-section {
+        padding: 1rem;
     }
 }

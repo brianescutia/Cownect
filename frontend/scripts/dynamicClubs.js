@@ -165,22 +165,23 @@ function setupPaginationListeners() {
             e.preventDefault();
 
             const totalPages = Math.ceil(filteredClubs.length / CLUBS_PER_PAGE);
+            const buttonText = btn.textContent;
 
-            if (idx === 0) {
-                // Previous button (<<)
+            if (buttonText === '«') {
+                // Previous button
                 if (searchState.currentPage > 1) {
                     searchState.currentPage--;
                     performSearch();
                 }
-            } else if (idx === paginationButtons.length - 1) {
-                // Next button (>>)
+            } else if (buttonText === '»') {
+                // Next button
                 if (searchState.currentPage < totalPages) {
                     searchState.currentPage++;
                     performSearch();
                 }
             } else {
                 // Numbered page button
-                const pageNum = parseInt(btn.textContent);
+                const pageNum = parseInt(buttonText);
                 if (pageNum && pageNum !== searchState.currentPage) {
                     searchState.currentPage = pageNum;
                     performSearch();
@@ -189,7 +190,7 @@ function setupPaginationListeners() {
         });
     });
 
-    console.log(` Set up ${paginationButtons.length} pagination buttons`);
+    console.log(`✅ Set up ${paginationButtons.length} pagination buttons`);
 }
 
 function updatePaginationButtons() {
@@ -211,19 +212,39 @@ function updatePaginationButtons() {
     // Previous button
     paginationHTML += `<button ${searchState.currentPage === 1 ? 'disabled' : ''}>«</button>`;
 
-    // Page numbers
-    for (let i = 1; i <= Math.min(totalPages, 5); i++) {
-        const pageNum = i;
-        paginationHTML += `<button class="${pageNum === searchState.currentPage ? 'active' : ''}">${pageNum}</button>`;
-    }
+    // Smart pagination logic
+    const current = searchState.currentPage;
 
-    // Show ellipsis and last page if there are many pages
-    if (totalPages > 5) {
-        if (searchState.currentPage < totalPages - 2) {
-            paginationHTML += `<span>...</span>`;
+    if (totalPages <= 7) {
+        // Show all pages if 7 or fewer
+        for (let i = 1; i <= totalPages; i++) {
+            paginationHTML += `<button class="${i === current ? 'active' : ''}">${i}</button>`;
         }
-        if (searchState.currentPage !== totalPages) {
-            paginationHTML += `<button class="${totalPages === searchState.currentPage ? 'active' : ''}">${totalPages}</button>`;
+    } else {
+        // Complex pagination for 8+ pages
+        if (current <= 4) {
+            // Show: 1 2 3 4 5 ... last
+            for (let i = 1; i <= 5; i++) {
+                paginationHTML += `<button class="${i === current ? 'active' : ''}">${i}</button>`;
+            }
+            paginationHTML += `<span>...</span>`;
+            paginationHTML += `<button class="${totalPages === current ? 'active' : ''}">${totalPages}</button>`;
+        } else if (current >= totalPages - 3) {
+            // Show: 1 ... (last-4) (last-3) (last-2) (last-1) last
+            paginationHTML += `<button class="${1 === current ? 'active' : ''}">1</button>`;
+            paginationHTML += `<span>...</span>`;
+            for (let i = totalPages - 4; i <= totalPages; i++) {
+                paginationHTML += `<button class="${i === current ? 'active' : ''}">${i}</button>`;
+            }
+        } else {
+            // Show: 1 ... (current-1) current (current+1) ... last
+            paginationHTML += `<button class="${1 === current ? 'active' : ''}">1</button>`;
+            paginationHTML += `<span>...</span>`;
+            for (let i = current - 1; i <= current + 1; i++) {
+                paginationHTML += `<button class="${i === current ? 'active' : ''}">${i}</button>`;
+            }
+            paginationHTML += `<span>...</span>`;
+            paginationHTML += `<button class="${totalPages === current ? 'active' : ''}">${totalPages}</button>`;
         }
     }
 

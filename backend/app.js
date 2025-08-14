@@ -1412,14 +1412,22 @@ app.get('/dashboard', requireAuth, (req, res) => {
 //  GET ALL CLUBS - Replace static HTML cards
 app.get('/api/clubs', async (req, res) => {
   try {
-    const clubs = await Club.find({ isActive: true })
-      .sort({ name: 1 })
-      .limit(50);
+    const clubs = await Club.find({ isActive: true }).lean();
 
-    console.log(`📊 Serving ${clubs.length} clubs from database`);
-    res.json(clubs);
+    // Custom sorting: #include first, then alphabetical
+    const sortedClubs = clubs.sort((a, b) => {
+      // #include always comes first
+      if (a.name === '#include') return -1;
+      if (b.name === '#include') return 1;
+
+      // Then sort alphabetically (case-insensitive)
+      return a.name.toLowerCase().localeCompare(b.name.toLowerCase());
+    });
+
+    console.log(`📊 Serving ${sortedClubs.length} clubs (alphabetically sorted, #include first)`);
+    res.json(sortedClubs);
   } catch (error) {
-    console.error('Error fetching clubs:', error);
+    console.error('❌ Error fetching clubs:', error);
     res.status(500).json({ error: 'Failed to fetch clubs' });
   }
 });
@@ -1696,42 +1704,274 @@ app.get('/api/clubs/:id/events', async (req, res) => {
 //  ENHANCED USER API - More detailed user information for dashboard
 app.get('/api/user/profile', requireAuth, async (req, res) => {
   try {
-    // Find the user with populated bookmarks
-    const userWithBookmarks = await User.findWithBookmarks(req.session.userId);
+    console.log(`📋 Fetching profile for user: ${req.session.userEmail}`);
 
-    if (!userWithBookmarks) {
+    // Find user with all profile fields
+    const user = await User.findById(req.session.userId)
+      .select('-password -verificationToken -passwordResetToken')
+      .populate('bookmarkedClubs')
+      .populate('bookmarkedEvents');
+
+    if (!user) {
       return res.status(404).json({ error: 'User not found' });
     }
 
-    // Calculate additional stats
-    const bookmarkCount = userWithBookmarks.getBookmarkCount();
-    const joinDate = userWithBookmarks.createdAt;
-    const daysActive = Math.ceil((new Date() - joinDate) / (1000 * 60 * 60 * 24));
+    console.log(`✅ Profile loaded for: ${user.email}`);
 
-    console.log(` Dashboard data for ${userWithBookmarks.email}: ${bookmarkCount} bookmarks, ${daysActive} days active`);
-
-    // Return comprehensive user data for dashboard
+    // Return comprehensive user data
     res.json({
-      id: userWithBookmarks._id,
-      email: userWithBookmarks.email,
-      joinDate: joinDate,
+      id: user._id,
+      email: user.email,
+      name: user.name || '',
+      year: user.year || '',
+      major: user.major || '',
+      bio: user.bio || '',
+      hobbies: user.hobbies || '',
+      linkedinUrl: user.linkedinUrl || '',
+      profilePictureUrl: user.profilePictureUrl || '',
+      lookingFor: user.lookingFor || [],
+      skills: user.skills || [],
+      learningGoals: user.learningGoals || [],
+      availability: user.availability || '',
+      contactPreferences: user.contactPreferences || [],
+      joinDate: user.createdAt,
 
-      //  REAL BOOKMARK DATA
-      bookmarkedClubs: userWithBookmarks.bookmarkedClubs, // Full club objects
-      totalBookmarks: bookmarkCount,
+      // Computed fields
+      displayName: user.getDisplayName(),
+      profileCompleteness: user.getProfileCompleteness(),
 
-      //  CALCULATED STATS
-      daysActive: daysActive,
+      // Bookmarks
+      bookmarkedClubs: user.bookmarkedClubs || [],
+      bookmarkedEvents: user.bookmarkedEvents || [],
+      totalBookmarks: user.getBookmarkCount(),
 
-      //  FUTURE: Additional user stats
-      clubsViewed: 12,      // Placeholder - could track this later
-      eventsInterested: 3,  // Placeholder - for events feature
-      searchesPerformed: 8  // Placeholder - could track this later
+      // Stats
+      daysActive: Math.ceil((new Date() - user.createdAt) / (1000 * 60 * 60 * 24))
     });
 
   } catch (error) {
-    console.error('Profile API error:', error);
-    res.status(500).json({ error: 'Server error' });
+    console.error('💥 Error fetching profile:', error);
+    res.status(500).json({ error: 'Failed to fetch profile' });
+  }
+});
+
+// =============================================================================
+// PROFILE UPDATE API ENDPOINT - Add this to your backend/app.js
+// Place this after your existing /api/user/profile GET route
+// =============================================================================
+
+// UPDATE USER PROFILE - Enhanced version with new fields
+app.put('/api/user/profile', requireAuth, async (req, res) => {
+  try {
+    const {
+      name, year, major, bio, hobbies, linkedinUrl,
+      lookingFor, skills, learningGoals, availability, contactPreferences
+    } = req.body;
+    const userId = req.session.userId;
+
+    console.log(`📝 Updating profile for user: ${req.session.userEmail}`);
+    console.log('📊 Profile data received:', req.body);
+
+    // Find the user
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    // Validate LinkedIn URL if provided
+    if (linkedinUrl && linkedinUrl.trim()) {
+      const linkedinRegex = /^https?:\/\/(www\.)?linkedin\.com\/in\/[a-zA-Z0-9\-]+\/?$/;
+      if (!linkedinRegex.test(linkedinUrl.trim())) {
+        return res.status(400).json({
+          error: 'Please enter a valid LinkedIn profile URL (e.g., https://linkedin.com/in/yourname)'
+        });
+      }
+    }
+
+    // Update profile fields
+    const profileData = {
+      name: name?.trim() || '',
+      year: year || '',
+      major: major?.trim() || '',
+      bio: bio?.trim() || '',
+      hobbies: hobbies?.trim() || '',
+      linkedinUrl: linkedinUrl?.trim() || '',
+      lookingFor: Array.isArray(lookingFor) ? lookingFor : [],
+      skills: Array.isArray(skills) ? skills : [],
+      learningGoals: Array.isArray(learningGoals) ? learningGoals : [],
+      availability: availability?.trim() || '',
+      contactPreferences: Array.isArray(contactPreferences) ? contactPreferences : []
+    };
+
+    // Update the user profile using the model method
+    const updatedUser = await user.updateProfile(profileData);
+
+    console.log(`✅ Profile updated successfully for: ${user.email}`);
+
+    // Return updated user data
+    res.json({
+      success: true,
+      message: 'Profile updated successfully',
+      user: {
+        id: updatedUser._id,
+        email: updatedUser.email,
+        name: updatedUser.name,
+        year: updatedUser.year,
+        major: updatedUser.major,
+        bio: updatedUser.bio,
+        hobbies: updatedUser.hobbies,
+        linkedinUrl: updatedUser.linkedinUrl,
+        profilePictureUrl: updatedUser.profilePictureUrl,
+        lookingFor: updatedUser.lookingFor,
+        skills: updatedUser.skills,
+        learningGoals: updatedUser.learningGoals,
+        availability: updatedUser.availability,
+        contactPreferences: updatedUser.contactPreferences,
+        displayName: updatedUser.getDisplayName(),
+        profileCompleteness: updatedUser.getProfileCompleteness()
+      }
+    });
+
+  } catch (error) {
+    console.error('💥 Error updating profile:', error);
+
+    // Handle validation errors
+    if (error.name === 'ValidationError') {
+      const errorMessages = Object.values(error.errors).map(err => err.message);
+      return res.status(400).json({
+        error: 'Validation failed',
+        details: errorMessages
+      });
+    }
+
+    res.status(500).json({ error: 'Failed to update profile' });
+  }
+});
+
+app.post('/api/user/profile-picture', requireAuth, async (req, res) => {
+  try {
+    const { imageData } = req.body; // Base64 image data
+    const userId = req.session.userId;
+
+    console.log(`📷 Updating profile picture for user: ${req.session.userEmail}`);
+
+    // Find the user
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    // For now, store base64 data directly (in production, upload to cloud storage)
+    user.profilePictureUrl = imageData;
+    await user.save();
+
+    console.log(`✅ Profile picture updated for: ${user.email}`);
+
+    res.json({
+      success: true,
+      message: 'Profile picture updated successfully',
+      profilePictureUrl: user.profilePictureUrl
+    });
+
+  } catch (error) {
+    console.error('💥 Error updating profile picture:', error);
+    res.status(500).json({ error: 'Failed to update profile picture' });
+  }
+});
+
+app.get('/api/user/matches', requireAuth, async (req, res) => {
+  try {
+    const userId = req.session.userId;
+    const { limit = 10, lookingFor, major, year, skills } = req.query;
+
+    console.log(`🔍 Finding matches for user: ${req.session.userEmail}`);
+
+    // Build match criteria
+    let matchCriteria = {
+      _id: { $ne: userId }, // Exclude current user
+      isVerified: true
+    };
+
+    // Filter by what they're looking for
+    if (lookingFor) {
+      matchCriteria.lookingFor = { $in: [lookingFor] };
+    }
+
+    // Filter by major
+    if (major) {
+      matchCriteria.major = { $regex: major, $options: 'i' };
+    }
+
+    // Filter by year
+    if (year) {
+      matchCriteria.year = year;
+    }
+
+    // Filter by skills
+    if (skills) {
+      matchCriteria.skills = { $in: [skills] };
+    }
+
+    // Find potential matches
+    const matches = await User.find(matchCriteria)
+      .select('name year major bio hobbies skills lookingFor profilePictureUrl')
+      .limit(parseInt(limit))
+      .lean();
+
+    // Calculate match scores (simple algorithm)
+    const currentUser = await User.findById(userId);
+    const scoredMatches = matches.map(match => {
+      let score = 0;
+
+      // Same major = +30 points
+      if (match.major && currentUser.major &&
+        match.major.toLowerCase() === currentUser.major.toLowerCase()) {
+        score += 30;
+      }
+
+      // Same year = +20 points
+      if (match.year === currentUser.year) {
+        score += 20;
+      }
+
+      // Common skills = +10 points each
+      if (match.skills && currentUser.skills) {
+        const commonSkills = match.skills.filter(skill =>
+          currentUser.skills.includes(skill)
+        );
+        score += commonSkills.length * 10;
+      }
+
+      // Common interests in hobbies = +5 points each
+      if (match.hobbies && currentUser.hobbies) {
+        const matchHobbies = match.hobbies.toLowerCase().split(',').map(h => h.trim());
+        const userHobbies = currentUser.hobbies.toLowerCase().split(',').map(h => h.trim());
+        const commonHobbies = matchHobbies.filter(hobby =>
+          userHobbies.some(userHobby => userHobby.includes(hobby) || hobby.includes(userHobby))
+        );
+        score += commonHobbies.length * 5;
+      }
+
+      return {
+        ...match,
+        matchScore: score,
+        displayName: match.name || match.email?.split('@')[0] || 'UC Davis Student'
+      };
+    });
+
+    // Sort by match score
+    scoredMatches.sort((a, b) => b.matchScore - a.matchScore);
+
+    console.log(`✅ Found ${scoredMatches.length} potential matches`);
+
+    res.json({
+      matches: scoredMatches,
+      totalMatches: scoredMatches.length
+    });
+
+  } catch (error) {
+    console.error('💥 Error finding matches:', error);
+    res.status(500).json({ error: 'Failed to find matches' });
   }
 });
 

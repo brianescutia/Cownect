@@ -1,713 +1,7 @@
-/* Reset + base */
-body {
-    margin: 0;
-    font-family: 'Rethink Sans', sans-serif;
-    background: #f5fcff;
-    position: relative;
-    overflow-x: hidden;
-}
-
-/* Background blur decorations */
-.blur-decoration-left {
-    position: fixed;
-    top: -1em;
-    left: -20em;
-    transform: translateY(-50%);
-    width: 75%;
-    height: 75%;
-    background-image: url('../assets/blueBlur.png');
-    background-size: cover;
-    background-repeat: no-repeat;
-    opacity: 0.6;
-    z-index: -1;
-    transform: rotate(91deg);
-}
-
-.blur-decoration-right {
-    position: fixed;
-    top: 10em;
-    right: -26em;
-    transform: translateY(-50%);
-    width: 75%;
-    height: 75%;
-    background-image: url('../assets/blueBlur.png');
-    background-size: cover;
-    background-repeat: no-repeat;
-    opacity: 0.6;
-    z-index: -1;
-    transform: rotate(270deg);
-}
-
-a {
-    text-decoration: none;
-    color: inherit;
-}
-
-button {
-    cursor: pointer;
-}
-
-/* Navbar */
-.navbar {
-    display: flex;
-    justify-content: center;
-    border-radius: 25px;
-    margin: 1rem auto;
-    padding: 0.75rem 2rem;
-    max-width: 1130px;
-    width: 90%;
-    height: clamp(50px, 8vw, 68px);
-}
-
-.navbar-container {
-    background-color: rgba(183, 183, 183, 0.30);
-    border-radius: 25px;
-    width: 65.5vw;
-    /* match homepage width */
-    height: 4.2vw;
-    max-width: 1129px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 3rem;
-}
-
-.logo-title {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    font-weight: bold;
-    font-size: 1.2rem;
-    margin-left: -1rem;
-}
-
-.logo {
-    height: 40px;
-}
-
-.nav-links {
-    list-style: none;
-    display: flex;
-    gap: 4.5rem;
-    align-items: center;
-    margin: 0;
-}
-
-.nav-links a {
-    font-weight: 500;
-    font-size: 1rem;
-}
-
-.account-btn {
-    background-color: #5F96C5;
-    color: white;
-    padding: 0.4rem 0.9rem;
-    border-radius: 20px;
-}
-
 /* =============================================================================
-   NAVBAR PROFILE CIRCLE - New Styles
+   FIXED TECH CLUBS CSS - Tags at Bottom with Clear Defined Borders
    =============================================================================
 */
-
-.navbar-profile-circle {
-    width: 45px;
-    height: 45px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, #5F96C5, #4a8bc2);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-size: 1rem;
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    border: 2px solid rgba(255, 255, 255, 0.3);
-    box-shadow: 0 2px 8px rgba(95, 150, 197, 0.3);
-    position: relative;
-    overflow: hidden;
-}
-
-.navbar-profile-circle:hover {
-    transform: scale(1.1);
-    box-shadow: 0 4px 15px rgba(95, 150, 197, 0.5);
-    border-color: rgba(255, 255, 255, 0.6);
-}
-
-.navbar-profile-circle:active {
-    transform: scale(1.05);
-}
-
-#navbarProfileInitials {
-    font-size: 0.9rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-/* Add a subtle pulse animation on hover */
-.navbar-profile-circle::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.2);
-    opacity: 0;
-    transform: scale(0.8);
-    transition: all 0.3s ease;
-}
-
-.navbar-profile-circle:hover::before {
-    opacity: 1;
-    transform: scale(1);
-}
-
-/* Responsive adjustments for profile circle */
-@media (max-width: 768px) {
-    .navbar-profile-circle {
-        width: 40px;
-        height: 40px;
-        font-size: 0.9rem;
-    }
-
-    .nav-links {
-        gap: 2rem;
-    }
-}
-
-@media (max-width: 480px) {
-    .navbar-profile-circle {
-        width: 35px;
-        height: 35px;
-        font-size: 0.8rem;
-    }
-
-    .nav-links {
-        gap: 1rem;
-    }
-}
-
-/* Search Section */
-.search-section {
-    display: flex;
-    justify-content: center;
-    margin: 2rem 0;
-}
-
-.search-bar {
-    flex: 1;
-    height: 100%;
-    font-size: 1rem;
-    border: none;
-    background: transparent;
-    outline: none;
-}
-
-.search-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 1rem;
-    width: 73.5vw;
-    max-width: 1129px;
-    height: 6vw;
-    max-height: 68px;
-    margin: auto;
-}
-
-.search-wrapper {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 65.5vw;
-    /* Match .navbar-container */
-    height: 4.2vw;
-    /* Match navbar height */
-    max-width: 1129px;
-    background-color: rgba(183, 183, 183, 0.30);
-    border-radius: 25px;
-    margin: 0 auto 2rem auto;
-    /* Center and add spacing below */
-    padding: 0 1.5rem;
-}
-
-.search-icon {
-    height: 2vw;
-    width: 2vw;
-    max-height: 32px;
-    max-width: 32px;
-    cursor: pointer;
-}
-
-.search-icon:hover {
-    filter: brightness(0.8);
-}
-
-/* Make filter button background transparent */
-.filter-toggle {
-    background: transparent !important;
-    border: none;
-    padding: 0.5rem;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.filter-toggle:hover {
-    background: transparent !important;
-    transform: scale(1.1);
-}
-
-.filter-toggle:focus {
-    outline: none;
-    background: transparent !important;
-}
-
-/* Keep the icon styling */
-.filter-toggle .search-icon {
-    height: 2vw;
-    width: 2vw;
-    max-height: 32px;
-    max-width: 32px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.filter-toggle:hover .search-icon {
-    filter: brightness(0.8) drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
-    transform: scale(1.05);
-}
-
-.filter-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    max-width: 65.5vw;
-    margin: 0 auto 1rem auto;
-    padding: 0.75rem 1rem;
-    background-color: rgba(183, 183, 183, 0.2);
-    border-radius: 15px;
-    justify-content: center;
-    transition: all 0.3s ease;
-}
-
-.tag {
-    background-color: #5F96C5;
-    color: white;
-    padding: 0.4rem 0.8rem;
-    border-radius: 12px;
-    font-size: 0.9rem;
-    cursor: pointer;
-}
-
-.hidden {
-    display: none;
-}
-
-/* Club Grid */
-
-/* Club Card */
-
-.card-top {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.club-card {
-    width: 20.4vw;
-    /* ~352px on 1728px screen */
-    height: 32.3vh;
-    /* ~361px on 1117px screen */
-    max-width: 352px;
-    max-height: 361px;
-    background-color: rgba(255, 255, 255, 0.7);
-    backdrop-filter: blur(12px);
-    /* the blur effect */
-    -webkit-backdrop-filter: blur(12px);
-
-    border: 1px solid rgbargba(255, 255, 255, 0.8);
-    /* light border for definition */
-    border-radius: 15px;
-    padding: 1rem;
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-    position: relative;
-    transition: box-shadow 0.2s ease;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-}
-
-.club-card:hover {
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-}
-
-.club-logo {
-    height: 7.5vw;
-    width: 7.5vw;
-    object-fit: contain;
-    /* shows full image, even if transparent edges */
-    background-color: #ffffff;
-    /* or a matching color */
-    border: 1px solid #ccc;
-    /* optional */
-    border-radius: 10px;
-}
-
-.club-name {
-    font-size: 1.2rem;
-    font-weight: bold;
-    margin: 0 0 0.3rem 0;
-}
-
-.club-tags {
-    color: #5f96c5;
-    font-size: 0.9rem;
-    margin: 0;
-}
-
-.club-description {
-    font-size: 0.95rem;
-    color: #444;
-    margin: 0 0 0.4rem 0;
-    line-height: 1.4;
-}
-
-/* Bookmark Icon */
-.bookmark-icon {
-    position: relative;
-    z-index: 10;
-    transition: transform 0.3s ease;
-}
-
-.bookmark-icon img {
-    height: 5vw;
-    width: 6vw;
-    cursor: pointer;
-    max-height: 60px;
-    max-width: 60px;
-}
-
-.bookmark-icon:hover {
-    transform: scale(1.1);
-    color: #5f96c5;
-}
-
-.bookmark.bookmarked {
-    filter: hue-rotate(120deg) brightness(1.2);
-    transform: scale(1.1);
-}
-
-.bookmark-icon:hover img {
-    transform: scale(1.15);
-    filter: brightness(1.1);
-}
-
-/* Pagination */
-.pagination {
-    display: flex;
-    justify-content: center;
-    margin: 2rem 0;
-    gap: 0.5rem;
-}
-
-.pagination button {
-    padding: 0.5rem 0.9rem;
-    border: 1px solid #ccc;
-    background-color: white;
-    border-radius: 8px;
-    font-size: 1rem;
-    transition: background-color 0.2s;
-}
-
-.pagination button:hover {
-    background-color: #f0f0f0;
-}
-
-.pagination .active {
-    background-color: #5f96c5;
-    color: white;
-    border: none;
-}
-
-/* Pagination button states */
-.pagination button:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-    background-color: #f0f0f0;
-}
-
-.pagination button:disabled:hover {
-    background-color: #f0f0f0;
-    transform: none;
-}
-
-/* Responsive blur decorations */
-@media (max-width: 1200px) {
-
-    .blur-decoration-left,
-    .blur-decoration-right {
-        width: 250px;
-        height: 250px;
-    }
-}
-
-@media (max-width: 1100px) {
-    .clubs-grid {
-        grid-template-columns: repeat(2, 1fr);
-        /* 2 per row */
-    }
-}
-
-@media (max-width: 768px) {
-
-    .blur-decoration-left,
-    .blur-decoration-right {
-        width: 200px;
-        height: 200px;
-    }
-}
-
-@media (max-width: 700px) {
-    .clubs-grid {
-        grid-template-columns: 1fr;
-        /* 1 per row */
-    }
-}
-
-@media (max-width: 480px) {
-
-    .blur-decoration-left,
-    .blur-decoration-right {
-        width: 150px;
-        height: 150px;
-    }
-}
-
-/* Loading and Error States */
-.loading-state,
-.error-state {
-    grid-column: 1 / -1;
-    /* Span all columns */
-    text-align: center;
-    padding: 3rem;
-}
-
-.loading-spinner {
-    width: 40px;
-    height: 40px;
-    border: 4px solid rgba(95, 150, 197, 0.3);
-    border-top: 4px solid #5F96C5;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-    margin: 0 auto 1rem;
-}
-
-@keyframes spin {
-    0% {
-        transform: rotate(0deg);
-    }
-
-    100% {
-        transform: rotate(360deg);
-    }
-}
-
-.retry-button {
-    background: #5F96C5;
-    color: white;
-    border: none;
-    padding: 0.75rem 1.5rem;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 1rem;
-}
-
-/* Search Results Info */
-.search-results-info {
-    max-width: 1200px;
-    margin: 0 auto 1rem auto;
-    padding: 1rem;
-}
-
-.results-summary {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    background: rgba(95, 150, 197, 0.1);
-    padding: 0.75rem 1rem;
-    border-radius: 8px;
-}
-
-.results-count {
-    font-weight: 600;
-    color: #5F96C5;
-}
-
-.search-term {
-    font-style: italic;
-    color: #666;
-}
-
-.clear-all-btn,
-.clear-filters-btn {
-    background: #5F96C5;
-    color: white;
-    border: none;
-    padding: 0.5rem 1rem;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 0.9rem;
-}
-
-.active-filter {
-    background-color: #e74c3c !important;
-    color: white !important;
-}
-
-.no-results {
-    grid-column: 1 / -1;
-    text-align: center;
-    padding: 3rem;
-    color: #666;
-}
-
-/* Bookmark Visual States */
-.bookmark.bookmarked {
-    filter: hue-rotate(120deg) brightness(1.2);
-    transform: scale(1.1);
-}
-
-.bookmark-feedback {
-    font-weight: 500;
-    font-size: 0.95rem;
-}
-
-/* Add this to hide filters by default */
-.filter-tags {
-    display: none;
-    /* Hide by default */
-}
-
-.filter-tags:not(.hidden) {
-    display: flex;
-    /* Show when not hidden */
-}
-
-.filter-tags.hidden {
-    display: none !important;
-    /* Force hide when hidden class is present */
-}
-
-/* =============================================================================
-   CLICKABLE CLUB CARDS - ADD TO tech-clubs.css
-   =============================================================================
-   Enhanced styling for interactive club cards
-*/
-
-/* Make club cards clickable */
-.clickable-card {
-    cursor: pointer;
-    position: relative;
-    overflow: hidden;
-    transition: all 0.3s ease;
-}
-
-.clickable-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15);
-}
-
-/* Overlay that appears on hover */
-
-.clickable-card:hover .club-card-overlay {
-    opacity: 1;
-}
-
-.view-details {
-    color: white;
-    font-size: 1.1rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    padding: 1rem 2rem;
-    border: 2px solid white;
-    border-radius: 25px;
-    transition: all 0.3s ease;
-}
-
-.clickable-card:hover .view-details {
-    transform: scale(1.05);
-    box-shadow: 0 4px 15px rgba(255, 255, 255, 0.3);
-}
-
-/* Ensure bookmark icon stays on top */
-.bookmark-icon {
-    position: relative;
-    z-index: 10;
-    transition: transform 0.3s ease;
-}
-
-.bookmark-icon:hover {
-    transform: scale(1.1);
-}
-
-/* Subtle animation for card content */
-.clickable-card:hover .club-name {
-    color: #2c3e50;
-    transform: translateY(-2px);
-    transition: all 0.3s ease;
-}
-
-.clickable-card:hover .club-description {
-    color: #4a5568;
-    transform: translateY(-1px);
-    transition: all 0.3s ease;
-}
-
-.clickable-card:hover .club-tags {
-    color: #5F96C5;
-    transform: translateY(-1px);
-    transition: all 0.3s ease;
-}
-
-/* Add a subtle glow effect */
-.clickable-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    border-radius: 15px;
-    background: linear-gradient(45deg, transparent, rgba(95, 150, 197, 0.1), transparent);
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    pointer-events: none;
-}
-
-.clickable-card:hover::before {
-    opacity: 1;
-}
-
-/* Mobile responsiveness for clickable cards */
-@media (max-width: 768px) {
-    .clickable-card:hover {
-        transform: translateY(-4px);
-    }
-
-    .club-card-overlay {
-        opacity: 0.95;
-        background: rgba(95, 150, 197, 0.95);
-    }
-
-    .clickable-card:active .club-card-overlay {
-        opacity: 1;
-    }
-}
 
 /* Reset + base */
 body {
@@ -723,30 +17,24 @@ body {
     position: fixed;
     top: -1em;
     left: -20em;
-    transform: translateY(-50%);
+    transform: translateY(-50%) rotate(91deg);
     width: 75%;
     height: 75%;
-    background-image: url('../assets/blueBlur.png');
-    background-size: cover;
-    background-repeat: no-repeat;
+    background: radial-gradient(circle, rgba(95, 150, 197, 0.3) 0%, transparent 70%);
     opacity: 0.6;
     z-index: -1;
-    transform: rotate(91deg);
 }
 
 .blur-decoration-right {
     position: fixed;
     top: 10em;
     right: -26em;
-    transform: translateY(-50%);
+    transform: translateY(-50%) rotate(270deg);
     width: 75%;
     height: 75%;
-    background-image: url('../assets/blueBlur.png');
-    background-size: cover;
-    background-repeat: no-repeat;
+    background: radial-gradient(circle, rgba(95, 150, 197, 0.3) 0%, transparent 70%);
     opacity: 0.6;
     z-index: -1;
-    transform: rotate(270deg);
 }
 
 a {
@@ -770,7 +58,6 @@ button {
     width: 90%;
     height: clamp(50px, 8vw, 68px);
     gap: 2rem;
-    /* Gap between gray container and profile circle */
 }
 
 .navbar-container {
@@ -781,9 +68,7 @@ button {
     align-items: center;
     padding: 0 3rem;
     flex: 1;
-    /* Take up available space */
     max-width: 750px;
-    /* Limit the gray background width */
 }
 
 .logo-title {
@@ -812,18 +97,6 @@ button {
     font-size: 1rem;
 }
 
-.account-btn {
-    background-color: #5F96C5;
-    color: white;
-    padding: 0.4rem 0.9rem;
-    border-radius: 20px;
-}
-
-/* =============================================================================
-   NAVBAR PROFILE CIRCLE - Updated positioning outside gray background
-   =============================================================================
-*/
-
 .navbar-profile-circle {
     width: 45px;
     height: 45px;
@@ -842,17 +115,11 @@ button {
     position: relative;
     overflow: hidden;
     flex-shrink: 0;
-    /* Don't shrink */
 }
 
 .navbar-profile-circle:hover {
     transform: scale(1.1);
     box-shadow: 0 4px 15px rgba(95, 150, 197, 0.5);
-    border-color: rgba(255, 255, 255, 0.6);
-}
-
-.navbar-profile-circle:active {
-    transform: scale(1.05);
 }
 
 #navbarProfileInitials {
@@ -862,71 +129,18 @@ button {
     letter-spacing: 0.5px;
 }
 
-/* Add a subtle pulse animation on hover */
-.navbar-profile-circle::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.2);
-    opacity: 0;
-    transform: scale(0.8);
-    transition: all 0.3s ease;
-}
-
-.navbar-profile-circle:hover::before {
-    opacity: 1;
-    transform: scale(1);
-}
-
-/* Responsive adjustments for profile circle */
-@media (max-width: 768px) {
-    .navbar {
-        gap: 1rem;
-        /* Smaller gap on mobile */
-    }
-
-    .navbar-profile-circle {
-        width: 40px;
-        height: 40px;
-        font-size: 0.9rem;
-    }
-
-    .nav-links {
-        gap: 2rem;
-    }
-}
-
-@media (max-width: 480px) {
-    .navbar {
-        gap: 0.5rem;
-        /* Even smaller gap on very small screens */
-        padding: 0.5rem 1rem;
-    }
-
-    .navbar-container {
-        padding: 0 2rem;
-    }
-
-    .navbar-profile-circle {
-        width: 35px;
-        height: 35px;
-        font-size: 0.8rem;
-    }
-
-    .nav-links {
-        gap: 1rem;
-    }
-}
-
 /* Search Section */
-.search-section {
+.search-wrapper {
     display: flex;
-    justify-content: center;
-    margin: 2rem 0;
+    align-items: center;
+    justify-content: space-between;
+    width: 65.5vw;
+    height: 4.2vw;
+    max-width: 1129px;
+    background-color: rgba(183, 183, 183, 0.30);
+    border-radius: 25px;
+    margin: 0 auto 2rem auto;
+    padding: 0 1.5rem;
 }
 
 .search-bar {
@@ -938,47 +152,6 @@ button {
     outline: none;
 }
 
-.search-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 1rem;
-    width: 73.5vw;
-    max-width: 1129px;
-    height: 6vw;
-    max-height: 68px;
-    margin: auto;
-}
-
-.search-wrapper {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 65.5vw;
-    /* Match .navbar-container */
-    height: 4.2vw;
-    /* Match navbar height */
-    max-width: 1129px;
-    background-color: rgba(183, 183, 183, 0.30);
-    border-radius: 25px;
-    margin: 0 auto 2rem auto;
-    /* Center and add spacing below */
-    padding: 0 1.5rem;
-}
-
-.search-icon {
-    height: 2vw;
-    width: 2vw;
-    max-height: 32px;
-    max-width: 32px;
-    cursor: pointer;
-}
-
-.search-icon:hover {
-    filter: brightness(0.8);
-}
-
-/* Make filter button background transparent */
 .filter-toggle {
     background: transparent !important;
     border: none;
@@ -987,18 +160,7 @@ button {
     transition: all 0.3s ease;
 }
 
-.filter-toggle:hover {
-    background: transparent !important;
-    transform: scale(1.1);
-}
-
-.filter-toggle:focus {
-    outline: none;
-    background: transparent !important;
-}
-
-/* Keep the icon styling */
-.filter-toggle .search-icon {
+.search-icon {
     height: 2vw;
     width: 2vw;
     max-height: 32px;
@@ -1038,53 +200,366 @@ button {
     display: none;
 }
 
-/* Responsive blur decorations */
-@media (max-width: 1200px) {
+/* =============================================================================
+   UPDATED CLUB GRID - Exactly 3 Columns, 6 Cards Total (2 Rows of 3)
+   =============================================================================
+*/
 
-    .blur-decoration-left,
-    .blur-decoration-right {
-        width: 250px;
-        height: 250px;
+.clubs-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    /* Exactly 3 columns */
+    grid-template-rows: repeat(2, auto);
+    /* Exactly 2 rows */
+    gap: 2rem;
+    /* Good spacing between cards */
+    padding: 2rem;
+    justify-content: center;
+    max-width: 1200px;
+    /* Optimized for 3 columns */
+    margin: 0 auto;
+}
+
+/* Hide any cards beyond the 6th one (2 rows × 3 columns = 6 cards) */
+.club-card:nth-child(n+7) {
+    display: none;
+}
+
+/* =============================================================================
+   CLUB CARDS - Clear Defined Borders & Tags Back at Bottom
+   =============================================================================
+*/
+
+.club-card {
+    width: 100%;
+    height: 280px;
+    background-color: rgba(255, 255, 255, 0.9);
+    /* More opaque for better contrast */
+    backdrop-filter: blur(12px);
+
+    /* CLEAR DEFINED BORDERS */
+    border: 3px solid rgba(95, 150, 197, 0.3);
+    /* Prominent border */
+    box-shadow:
+        0 4px 20px rgba(0, 0, 0, 0.1),
+        /* Main shadow */
+        0 0 0 1px rgba(255, 255, 255, 0.8),
+        /* Inner light border */
+        inset 0 1px 0 rgba(255, 255, 255, 0.9);
+    /* Inner highlight */
+
+    border-radius: 15px;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    position: relative;
+    transition: all 0.3s ease;
+    cursor: pointer;
+
+    /* Ensure each card is clearly separated */
+    margin: 0.5rem;
+    /* Extra margin for clear separation */
+}
+
+.club-card:hover {
+    transform: translateY(-5px);
+    box-shadow:
+        0 8px 30px rgba(0, 0, 0, 0.15),
+        /* Enhanced main shadow */
+        0 0 0 3px rgba(95, 150, 197, 0.5),
+        /* Enhanced border on hover */
+        0 0 0 1px rgba(255, 255, 255, 1),
+        /* Inner light border */
+        inset 0 1px 0 rgba(255, 255, 255, 1);
+    /* Inner highlight */
+
+    border-color: rgba(95, 150, 197, 0.6);
+    /* More prominent border on hover */
+}
+
+.card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.club-logo {
+    height: 50px;
+    width: 50px;
+    object-fit: contain;
+    background-color: #ffffff;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+}
+
+.bookmark-icon {
+    position: relative;
+    z-index: 10;
+    transition: transform 0.3s ease;
+}
+
+.bookmark-icon img {
+    height: 35px;
+    width: 35px;
+    cursor: pointer;
+}
+
+.bookmark-icon:hover {
+    transform: scale(1.1);
+}
+
+.bookmark.bookmarked {
+    filter: hue-rotate(120deg) brightness(1.2);
+    transform: scale(1.1);
+}
+
+/* =============================================================================
+   CLUB CONTENT - Tags Back at Bottom (Normal Order)
+   =============================================================================
+*/
+
+.club-name {
+    font-size: 1.1rem;
+    font-weight: bold;
+    margin: 0 0 0.5rem 0;
+    line-height: 1.2;
+    color: #2c3e50;
+}
+
+.club-description {
+    font-size: 0.9rem;
+    color: #444;
+    margin: 0 0 0.75rem 0;
+    /* Bottom margin to separate from tags */
+    line-height: 1.4;
+    flex: 1;
+    /* Takes remaining space, pushing tags to bottom */
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* TAGS BACK AT BOTTOM - Removed the order property */
+.club-tags {
+    color: #5f96c5;
+    font-size: 0.85rem;
+    margin: 0;
+    /* No extra margin needed */
+    font-weight: 500;
+    margin-top: auto;
+    /* Pushes tags to bottom of flex container */
+}
+
+/* =============================================================================
+   ENHANCED CLICKABLE CARDS
+   =============================================================================
+*/
+
+.clickable-card {
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.clickable-card:hover .club-name {
+    color: #5F96C5;
+    transition: color 0.3s ease;
+}
+
+.clickable-card:hover .club-tags {
+    color: #4a8bc2;
+    transition: color 0.3s ease;
+}
+
+/* Enhanced glow effect on hover */
+.clickable-card::before {
+    content: '';
+    position: absolute;
+    top: -3px;
+    /* Account for border */
+    left: -3px;
+    right: -3px;
+    bottom: -3px;
+    border-radius: 18px;
+    /* Slightly larger than card border-radius */
+    background: linear-gradient(45deg,
+            transparent,
+            rgba(95, 150, 197, 0.1),
+            transparent,
+            rgba(95, 150, 197, 0.1),
+            transparent);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+    z-index: -1;
+}
+
+.clickable-card:hover::before {
+    opacity: 1;
+}
+
+/* =============================================================================
+   PAGINATION
+   =============================================================================
+*/
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin: 2rem 0;
+    gap: 0.5rem;
+}
+
+.pagination button {
+    padding: 0.5rem 0.9rem;
+    border: 1px solid #ccc;
+    background-color: white;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.pagination button:hover {
+    background-color: #f0f0f0;
+    transform: translateY(-1px);
+}
+
+.pagination .active {
+    background-color: #5f96c5;
+    color: white;
+    border: none;
+}
+
+.pagination button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background-color: #f0f0f0;
+}
+
+/* =============================================================================
+   RESPONSIVE DESIGN
+   =============================================================================
+*/
+
+@media (max-width: 1400px) {
+    .clubs-grid {
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        max-width: 1200px;
+        gap: 1.75rem;
     }
 }
 
 @media (max-width: 1100px) {
     .clubs-grid {
-        grid-template-columns: repeat(2, 1fr);
-        /* 2 per row */
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 1.5rem;
+    }
+
+    .club-card {
+        height: 260px;
+        margin: 0.25rem;
+        /* Slightly smaller margin on smaller screens */
     }
 }
 
 @media (max-width: 768px) {
+    .clubs-grid {
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1.5rem;
+        padding: 1.5rem;
+    }
 
-    .blur-decoration-left,
-    .blur-decoration-right {
-        width: 200px;
-        height: 200px;
+    .club-card {
+        height: 240px;
+        padding: 0.875rem;
+        margin: 0.25rem;
+        border-width: 2px;
+        /* Slightly thinner border on mobile */
+    }
+
+    .club-logo {
+        height: 40px;
+        width: 40px;
+    }
+
+    .bookmark-icon img {
+        height: 30px;
+        width: 30px;
+    }
+
+    .navbar-profile-circle {
+        width: 40px;
+        height: 40px;
+        font-size: 0.9rem;
+    }
+
+    .nav-links {
+        gap: 2rem;
     }
 }
 
-@media (max-width: 700px) {
+@media (max-width: 600px) {
     .clubs-grid {
         grid-template-columns: 1fr;
-        /* 1 per row */
+        gap: 1.5rem;
+        padding: 1rem;
+    }
+
+    .club-card {
+        height: 220px;
+        margin: 0;
+    }
+
+    .club-name {
+        font-size: 1rem;
+    }
+
+    .club-description {
+        font-size: 0.85rem;
+        -webkit-line-clamp: 3;
+    }
+
+    .club-tags {
+        font-size: 0.8rem;
+    }
+
+    .navbar {
+        gap: 1rem;
+        padding: 0.5rem 1rem;
+    }
+
+    .navbar-container {
+        padding: 0 2rem;
+    }
+
+    .navbar-profile-circle {
+        width: 35px;
+        height: 35px;
+        font-size: 0.8rem;
+    }
+
+    .nav-links {
+        gap: 1rem;
+    }
+
+    .nav-links a {
+        font-size: 0.9rem;
     }
 }
 
-@media (max-width: 480px) {
+/* =============================================================================
+   LOADING AND ERROR STATES
+   =============================================================================
+*/
 
-    .blur-decoration-left,
-    .blur-decoration-right {
-        width: 150px;
-        height: 150px;
-    }
-}
-
-/* Loading and Error States */
 .loading-state,
 .error-state {
     grid-column: 1 / -1;
-    /* Span all columns */
     text-align: center;
     padding: 3rem;
 }
@@ -1117,11 +592,21 @@ button {
     border-radius: 8px;
     cursor: pointer;
     font-size: 1rem;
+    transition: all 0.3s ease;
 }
 
-/* Search Results Info */
+.retry-button:hover {
+    background: #4a8bc2;
+    transform: translateY(-1px);
+}
+
+/* =============================================================================
+   SEARCH RESULTS AND FILTERS
+   =============================================================================
+*/
+
 .search-results-info {
-    max-width: 1200px;
+    max-width: 1400px;
     margin: 0 auto 1rem auto;
     padding: 1rem;
 }
@@ -1154,6 +639,12 @@ button {
     border-radius: 6px;
     cursor: pointer;
     font-size: 0.9rem;
+    transition: all 0.3s ease;
+}
+
+.clear-all-btn:hover,
+.clear-filters-btn:hover {
+    background: #4a8bc2;
 }
 
 .active-filter {
@@ -1166,157 +657,4 @@ button {
     text-align: center;
     padding: 3rem;
     color: #666;
-}
-
-/* Bookmark Visual States */
-.bookmark.bookmarked {
-    filter: hue-rotate(120deg) brightness(1.2);
-    transform: scale(1.1);
-}
-
-.bookmark-feedback {
-    font-weight: 500;
-    font-size: 0.95rem;
-}
-
-/* Add this to hide filters by default */
-.filter-tags {
-    display: none;
-    /* Hide by default */
-}
-
-.filter-tags:not(.hidden) {
-    display: flex;
-    /* Show when not hidden */
-}
-
-.filter-tags.hidden {
-    display: none !important;
-    /* Force hide when hidden class is present */
-}
-
-/* =============================================================================
-   CLICKABLE CLUB CARDS - ADD TO tech-clubs.css
-   =============================================================================
-   Enhanced styling for interactive club cards
-*/
-
-/* Make club cards clickable */
-.clickable-card {
-    cursor: pointer;
-    position: relative;
-    overflow: hidden;
-    transition: all 0.3s ease;
-}
-
-.clickable-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15);
-}
-
-/* Overlay that appears on hover */
-
-.clickable-card:hover .club-card-overlay {
-    opacity: 1;
-}
-
-.view-details {
-    color: white;
-    font-size: 1.1rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    padding: 1rem 2rem;
-    border: 2px solid white;
-    border-radius: 25px;
-    transition: all 0.3s ease;
-}
-
-.clickable-card:hover .view-details {
-    transform: scale(1.05);
-    box-shadow: 0 4px 15px rgba(255, 255, 255, 0.3);
-}
-
-/* Ensure bookmark icon stays on top */
-.bookmark-icon {
-    position: relative;
-    z-index: 10;
-    transition: transform 0.3s ease;
-}
-
-.bookmark-icon:hover {
-    transform: scale(1.1);
-}
-
-/* Subtle animation for card content */
-.clickable-card:hover .club-name {
-    color: #2c3e50;
-    transform: translateY(-2px);
-    transition: all 0.3s ease;
-}
-
-.clickable-card:hover .club-description {
-    color: #4a5568;
-    transform: translateY(-1px);
-    transition: all 0.3s ease;
-}
-
-.clickable-card:hover .club-tags {
-    color: #5F96C5;
-    transform: translateY(-1px);
-    transition: all 0.3s ease;
-}
-
-/* Add a subtle glow effect */
-.clickable-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    border-radius: 15px;
-    background: linear-gradient(45deg, transparent, rgba(95, 150, 197, 0.1), transparent);
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    pointer-events: none;
-}
-
-.clickable-card:hover::before {
-    opacity: 1;
-}
-
-/* Mobile responsiveness for clickable cards */
-@media (max-width: 768px) {
-    .clickable-card:hover {
-        transform: translateY(-4px);
-    }
-
-    .club-card-overlay {
-        opacity: 0.95;
-        background: rgba(95, 150, 197, 0.95);
-    }
-
-    .clickable-card:active .club-card-overlay {
-        opacity: 1;
-    }
-}
-
-/* Ensure only 6 cards are visible at once */
-.clubs-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    column-gap: 2rem;
-    row-gap: 2rem;
-    padding: 1rem;
-    justify-content: center;
-    max-width: 900px;
-    /* SMALLER container = cards closer together */
-    margin: 0 auto;
-    /* Keep for testing */
-}
-
-/* Hide cards beyond the 6th */
-.club-card:nth-child(n+7) {
-    display: none;
 }

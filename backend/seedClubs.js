@@ -17,7 +17,7 @@ dotenv.config();
 const clubData = [
     {
         name: "#include",
-        description: "A student-led organization focused on promoting diversity and inclusion in computing through mentorship, workshops, and community events.",
+        description: "A student-led organization promoting diversity and inclusion in technology through mentorship, workshops, and community events.",
         tags: ["diversity", "webdev", "mentorship", "programming", "projects", "collaboration", "workshops", "professional"],
         category: "Software",
         logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/include/logo/01JVQTV8FKBWV72CV6JXC5RR6D.png",
@@ -40,7 +40,7 @@ const clubData = [
     },
     {
         name: "Davis Filmmaking Society",
-        description: "Provides a creative space for students passionate about film to collaborate on scripts, shoots, and editing while building a strong portfolio.",
+        description: " Provides a collaborative space for students to create and develop films from script to final edit.",
         tags: ["creative", "media", "collaboration", "projects", "design", "presentation", "technical", "social"],
         category: "Design",
         logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/davisfilmmakingsociety/logo/01JVQSP5JQ1DK9D7GRFVJFK2J0.png",
@@ -63,7 +63,7 @@ const clubData = [
     },
     {
         name: "Davis Robotics Club",
-        description: "Welcomes students from all engineering backgrounds to design, build, and program robots for fun, learning, and competitions.",
+        description: "Brings together students to design, build, and program robots for learning, fun, and competition.",
         tags: ["robotics", "hardware", "programming", "engineering", "competition", "collaboration", "technical", "projects"],
         category: "Hardware",
         logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/davisroboticsclub/logo/01JVQTRFMKPY1MVTTKGWWFW1J5.png",
@@ -85,7 +85,7 @@ const clubData = [
     },
     {
         name: "Game Development and Arts Club",
-        description: "Brings together artists, programmers, and storytellers to collaborate on creating original video games and interactive digital experiences.",
+        description: "Unites artists, programmers, and storytellers to create original games and interactive experiences.",
         tags: ["gamedev", "programming", "creative", "design", "collaboration", "projects", "graphics", "technical"],
         category: "Software",
         logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/gamedevelopment&artsclub/logo/01JVQTBP5QEDJRFZ8ADKPSJ8MG.png",
@@ -107,7 +107,7 @@ const clubData = [
     },
     {
         name: "Girls Who Code at UC Davis",
-        description: "Empowers women and non-binary students in tech through coding workshops, mentorship, and a supportive community focused on closing the gender gap in CS.",
+        description: " Empowers women and non-binary students in tech through coding workshops, mentorship, and community support.",
         tags: ["diversity", "programming", "mentorship", "workshops", "hackathon", "networking", "professional", "social"],
         category: "Technology",
         logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/girlswhocodeatucdavis/logo/01JVQT3NJD1BQ0NZQPBZ9X3WY2.jpeg",
@@ -130,7 +130,7 @@ const clubData = [
     },
     {
         name: "Google Developer Student Club",
-        description: "A Google-supported club that builds real-world projects, hosts developer workshops, and helps students grow in software development and product thinking.",
+        description: "Builds real-world projects, hosts developer workshops, and fosters growth in software development skills.",
         tags: ["programming", "webdev", "mobile", "cloud", "mentorship", "projects", "workshops", "networking", "professional", "technical"],
         category: "Technology",
         logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/googledeveloperstudentclub/logo/01JVQTC50RE87ZS8QG971KQ1F4.png",
@@ -153,7 +153,7 @@ const clubData = [
     },
     {
         name: "HackDavis",
-        description: "UC Davis's premier collegiate hackathon, where students build software or hardware projects in 24 hours to tackle social and environmental challenges.",
+        description: "Hosts UC Davis’s annual hackathon where students build impactful projects in 24 hours.",
         tags: ["hackathon", "social", "innovation", "competition", "programming", "projects", "sustainability", "networking"],
         category: "Technology",
         logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/hackdavis/logo/01JVQSS38XXHZJYKQR48EHZRJ5.png",
@@ -176,7 +176,7 @@ const clubData = [
     },
     {
         name: "Women in Computer Science",
-        description: "Supports women and gender minorities in computer science through mentorship, career events, coding workshops, and a strong peer community.",
+        description: "Supports women and gender minorities in CS through mentorship, events, and technical workshops.",
         tags: ["diversity", "programming", "mentorship", "professional", "workshops", "networking", "academic", "social"],
         category: "Technology",
         logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/womenincomputerscience/logo/01JVQT439C2QTFM5XZZH3XYHQ5.png",
@@ -199,7 +199,7 @@ const clubData = [
     },
     {
         name: "Design Interactive",
-        description: "A club for students passionate about UX/UI design, human-computer interaction, and product design. Offers hands-on design challenges, Figma workshops, and portfolio help.",
+        description: "Offers hands-on UX/UI design challenges, Figma workshops, and portfolio support for aspiring designers.",
         tags: ["design", "ux", "ui", "research", "prototyping", "creative", "collaboration", "projects", "workshops"],
         category: "Design",
         logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/designinteractive/logo/01JVQSWY96TCDNP38XEJ7TJ8HR.png",
@@ -223,7 +223,7 @@ const clubData = [
 
     {
         name: "Quantum Computing Society at Davis",
-        description: "Explores the cutting-edge field of quantum computing through theoretical study, practical experiments, and research into quantum algorithms and applications.",
+        description: "Explores quantum computing through study, research, and practical applications.",
         tags: ["research", "technical", "innovation", "academic", "programming", "workshops", "collaboration"],
         category: "Technology",
         logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/quantumcomputingatdavis/logo/01JVQV37N2Y49KJG8ED57EABVX.png",
@@ -245,7 +245,7 @@ const clubData = [
     },
     {
         name: "AI Student Collective",
-        description: "A student-led organization focused on promoting diversity and inclusion in computing through mentorship, workshops, and community events.",
+        description: "Provides accessible AI education through workshops, research, and industry networking.",
         tags: ["ai", "ml", "research", "networking", "mentorship", "competition", "diversity", "leadership", "technical", "professional"],
         category: "Data Science",
         logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/aistudentcollective/logo/01JVQTJ8NSSAKD84YNAEMTJVPY.png",
@@ -267,7 +267,7 @@ const clubData = [
     },
     {
         name: "Aggie Sports Analytics",
-        description: "Analyzes sports data using statistics and coding to uncover insights; ideal for students interested in data science, sports, and performance metrics.",
+        description: "Analyzes sports data to uncover insights using statistics, coding, and visualization.",
         tags: ["data", "analytics", "programming", "statistics", "projects", "research", "collaboration", "technical"],
         category: "Data Science",
         logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/aggiesportsanalytics/logo/01JVQVDCBWM2P6KSJCNQFJW5CW.png",
@@ -290,7 +290,7 @@ const clubData = [
     },
     {
         name: "AggieWorks",
-        description: "UC Davis' premier interdisciplinary engineering and software development team that builds real-world products in collaboration with companies and research groups.",
+        description: "Develops interdisciplinary engineering and software projects in collaboration with companies and research groups.",
         tags: ["engineering", "programming", "product", "collaboration", "projects", "professional", "startup", "technical"],
         category: "Technology",
         logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/aggieworks/logo/01JVQTEG716WKSBDF0EJ3N2HKX.png",
@@ -313,7 +313,7 @@ const clubData = [
     },
     {
         name: "BAJA SAE",
-        description: "Designs and builds off-road vehicles from scratch to compete in national engineering competitions; a great hands-on club for mechanical and design engineering.",
+        description: "Designs and builds off-road vehicles to compete in national engineering competitions.",
         tags: ["engineering", "hardware", "design", "competition", "collaboration", "technical", "projects", "manufacturing"],
         category: "Engineering",
         logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/bajasae/logo/01JVQV3PMQKE7HMQW7Q06QCZ0K.png",
@@ -334,7 +334,7 @@ const clubData = [
     },
     {
         name: "Club of Future Female Engineers",
-        description: "Empowers and supports women in engineering through networking, mentoring, and career-building events in a collaborative and welcoming environment.",
+        description: "Supports women in engineering through mentoring, networking, and career development.",
         tags: ["diversity", "engineering", "mentorship", "networking", "professional", "academic", "leadership", "social"],
         category: "Engineering",
         logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/cluboffuturefemengineers/logo/01JVQSTV7XKMKCND24B1CBND1R.jpeg",
@@ -357,7 +357,7 @@ const clubData = [
     },
     {
         name: "CodeLab",
-        description: "A coding-focused club that hosts workshops, coding challenges, and peer-led sessions to help students improve their programming skills and build projects.",
+        description: "Hosts coding workshops, challenges, and projects to help students improve programming skills.s",
         tags: ["programming", "webdev", "mobile", "collaboration", "workshops", "projects", "technical", "academic"],
         category: "Software",
         logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/codelab/logo/01JVQTKM7H8T6X9VRZH4WDKRZY.png",
@@ -379,7 +379,7 @@ const clubData = [
     },
     {
         name: "Cognitive Science Student Association",
-        description: "Brings together students interested in cognitive science, AI, neuroscience, linguistics, and philosophy through discussions, talks, and research opportunities.",
+        description: "Connects students interested in cognitive science and its interdisciplinary fields.",
         tags: ["ai", "research", "academic", "collaboration", "workshops", "networking", "technical", "innovation"],
         category: "Technology",
         logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/cognitivesciencestudentassociation/logo/01JVQTG5FEKCG40GG6CTWPTQGN.jpeg",
@@ -401,7 +401,7 @@ const clubData = [
     },
     {
         name: "ColorStack",
-        description: "A national organization with a UC Davis chapter focused on increasing the number of Black and Latinx students in computing through career prep and community support.",
+        description: "Supports Black and Latinx students in computing through career prep and community building.",
         tags: ["diversity", "programming", "mentorship", "professional", "networking", "academic", "social", "leadership"],
         category: "Technology",
         logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/colorstack/logo/01JVQTJMA0DY89R14DZZVP6CBC.jpeg",
@@ -424,7 +424,7 @@ const clubData = [
     },
     {
         name: "Computer Science Tutoring Club",
-        description: "Provides free peer tutoring for ECS courses and helps students strengthen their understanding of core computer science concepts in a supportive environment.",
+        description: "Provides free peer tutoring and workshops for core computer science courses.",
         tags: ["programming", "tutoring", "academic", "mentorship", "workshops", "interviewing", "professional", "collaboration"],
         category: "Software",
         logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/computersciencetutoringclub/logo/01JVQSV4T9N4VTC3KF4NA13EP4.png",
@@ -447,7 +447,7 @@ const clubData = [
     },
     {
         name: "Cyber Security Club at UC Davis",
-        description: "Dedicated to learning about cybersecurity through workshops, Capture the Flag (CTF) competitions, and ethical hacking events.",
+        description: "Offers hands-on cybersecurity learning through workshops and competitions.",
         tags: ["cybersecurity", "hacking", "security", "ctf", "competition", "networking", "technical", "research"],
         category: "Technology",
         logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/cybersecurityclubatucdavis/logo/01JVQT6PPGW013WGV5JQH595WF.png",
@@ -470,7 +470,7 @@ const clubData = [
     },
     {
         name: "Cyclone RoboSub",
-        description: "A student-run robotics team that designs, builds, and programs autonomous underwater vehicles (AUVs) to compete in the international RoboSub competition.",
+        description: "Designs and programs autonomous underwater vehicles for international competition.",
         tags: ["robotics", "programming", "hardware", "competition", "engineering", "automation", "technical", "collaboration"],
         category: "Hardware",
         logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/cyclonerobosub/logo/01JVQSTHD9QJZD0C2PYJSQ50SY.png",
@@ -493,7 +493,7 @@ const clubData = [
     },
     {
         name: "Davis Data Driven Change",
-        description: "Focuses on using data science and analytics to address social and community challenges through interdisciplinary projects and outreach.",
+        description: "Uses data science to address social and community challenges.",
         tags: ["data", "social", "research", "analytics", "projects", "collaboration", "nonprofit", "technical"],
         category: "Data Science",
         logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/davisdatadrivenchange(d3c)/logo/01JVQT63Z6FZVJ36WRKW33BNTT.png",
@@ -515,7 +515,7 @@ const clubData = [
     },
     {
         name: "Davis Data Science Club",
-        description: "Connects students interested in data science through hands-on projects, workshops, and collaborations with industry professionals and faculty.",
+        description: "Connects data science students through projects, workshops, and industry collaboration.",
         tags: ["data", "analytics", "programming", "ml", "projects", "networking", "workshops", "technical"],
         category: "Data Science",
         logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/davisdatascienceclub/logo/01JVQTWEV1HTQ0DQGY1BJVMW82.png",
@@ -537,7 +537,7 @@ const clubData = [
     },
     {
         name: "Engineering Collaborative Council",
-        description: "A unifying body that connects engineering clubs and departments at UC Davis, promoting collaboration and organizing large-scale engineering events.",
+        description: "Connects engineering clubs to promote collaboration and host joint events.",
         tags: ["engineering", "leadership", "networking", "collaboration", "professional", "academic", "social"],
         category: "Data Science",
         logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/engineeringcollaborativecouncil/logo/01JVQSREBNV1HEC71JE2Y0MMH1.png",
@@ -559,7 +559,7 @@ const clubData = [
     },
     {
         name: "Engineers Without Borders at UC Davis",
-        description: "Partners with international and local communities to design sustainable engineering solutions, while giving students real-world, humanitarian design experience.",
+        description: "Designs sustainable engineering solutions for local and global communities.",
         tags: ["engineering", "social", "sustainability", "collaboration", "projects", "nonprofit", "leadership", "technical"],
         category: "Data Science",
         logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/engineerswithoutbordersatucdavis/logo/01JVQTJTQ58FYRWR41JDSBJY9S.webp",
@@ -582,7 +582,7 @@ const clubData = [
     },
     {
         name: "Food Tech Club",
-        description: "Explores the intersection of food, science, and technology—focusing on innovation in food systems, agriculture, and sustainability.",
+        description: "Explores innovation in food systems, agriculture, and sustainability.",
         tags: ["agtech", "innovation", "sustainability", "research", "networking", "professional", "technical", "collaboration"],
         category: "Data Science",
         logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/engineerswithoutbordersatucdavis/logo/01JVQTJTQ58FYRWR41JDSBJY9S.webp",
@@ -605,7 +605,7 @@ const clubData = [
     },
     {
         name: "Green Innovation Network",
-        description: "A sustainability-focused club that supports student ventures, designs, and research aimed at addressing climate change through innovation.",
+        description: "Supports student-led sustainability projects and climate innovation.",
         tags: ["sustainability", "innovation", "research", "startup", "collaboration", "projects", "networking", "social"],
         category: "Data Science",
         logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/greeninnovationnetwork/logo/01JVQTX9J4WZT0GEW43NP65BGH.png",
@@ -628,7 +628,7 @@ const clubData = [
     },
     {
         name: "Human Resources Managment Association (HRMA)",
-        description: "Connects students interested in HR, leadership, and organizational behavior through workshops, networking, and career-building events.",
+        description: "Connects students interested in HR through workshops and networking.",
         tags: ["leadership", "networking", "professional", "workshops", "enterprise", "social", "communication"],
         category: "Data Science",
         logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/engineerswithoutbordersatucdavis/logo/01JVQTJTQ58FYRWR41JDSBJY9S.webp",
@@ -651,7 +651,7 @@ const clubData = [
     },
     {
         name: "Nuerotech @ UCDavis",
-        description: "A student-run organization exploring brain-computer interfaces and neurotechnology through projects, research, and speaker events.",
+        description: "Explores neurotechnology and brain-computer interfaces through projects and research.",
         tags: ["research", "innovation", "technical", "hardware", "programming", "networking", "academic", "collaboration"],
         category: "Data Science",
         logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/engineerswithoutbordersatucdavis/logo/01JVQTJTQ58FYRWR41JDSBJY9S.webp",
@@ -674,7 +674,7 @@ const clubData = [
     },
     {
         name: "Product Space @ UC Davis",
-        description: "Builds a community for aspiring product managers and designers to learn product thinking through case studies, mentorship, and hands-on projects.",
+        description: "Builds a community for aspiring product managers through mentorship and projects.",
         tags: ["product", "design", "leadership", "mentorship", "networking", "professional", "collaboration", "workshops"],
         category: "Data Science",
         logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/engineerswithoutbordersatucdavis/logo/01JVQTJTQ58FYRWR41JDSBJY9S.webp",
@@ -697,7 +697,7 @@ const clubData = [
     },
     {
         name: "SacHacks",
-        description: "Sacramento’s collegiate hackathon hosted at UC Davis, bringing together students from across California to innovate and build tech projects in 36 hours.",
+        description: " Hosts Sacramento’s collegiate hackathon for building tech projects in 36 hours.",
         tags: ["hackathon", "programming", "innovation", "competition", "networking", "projects", "collaboration", "social"],
         category: "Data Science",
         logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/sachacks/logo/01JVQV9MNH56BVJ05PJSDTWQ63.png",
@@ -720,7 +720,7 @@ const clubData = [
     },
     {
         name: "The Davis Consulting Group ",
-        description: "A student-run organization providing real consulting experience by partnering with startups, nonprofits, and local businesses on strategic projects.",
+        description: "Provides real consulting experience for startups, nonprofits, and local businesses.",
         tags: ["consulting", "leadership", "professional", "startup", "collaboration", "projects", "networking", "enterprise"],
         category: "Data Science",
         logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/thedavisconsultinggroup/logo/01JVQV6P3927RF799RFKZC351H.png",
@@ -743,7 +743,7 @@ const clubData = [
     },
     {
         name: "The Hardware Club @ UC Davis ",
-        description: "Focuses on hands-on electronics, robotics, and hardware design projects, offering a collaborative space for students interested in building physical tech.",
+        description: "Focuses on hands-on electronics, robotics, and hardware projects.",
         tags: ["hardware", "electronics", "robotics", "collaboration", "projects", "technical", "workshops", "innovation"],
         category: "Data Science",
         logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/thedavisconsultinggroup/logo/01JVQV6P3927RF799RFKZC351H.png",
@@ -766,7 +766,7 @@ const clubData = [
     },
     {
         name: "Women in Gaming at UC Davis",
-        description: "Promotes inclusivity in gaming by creating a safe space for women and non-binary students to explore game design, play, and development.",
+        description: "Creates an inclusive space for women and non-binary students in gaming.",
         tags: ["gamedev", "diversity", "design", "creative", "collaboration", "social", "workshops", "community"],
         category: "Data Science",
         logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/womeningamingatucdavis/logo/01JVQVD5W4R4CB318YPWJEZ9VQ.png",
@@ -789,7 +789,7 @@ const clubData = [
     },
     {
         name: "Aggie Space initiative ",
-        description: "A student organization dedicated to space exploration and technology through interdisciplinary projects like satellites, rocketry, and aerospace research.",
+        description: "Engages students in space technology projects like satellites and rocketry.",
         tags: ["research", "engineering", "innovation", "collaboration", "projects", "technical", "hardware", "academic"],
         category: "Data Science",
         logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/womeningamingatucdavis/logo/01JVQVD5W4R4CB318YPWJEZ9VQ.png",
@@ -812,7 +812,7 @@ const clubData = [
     },
     {
         name: "Biomedical Engineering Society (BES)",
-        description: "Connects students interested in biomedical engineering through research opportunities, industry talks, and academic support.",
+        description: "Connects biomedical engineering students through research and industry events.",
         tags: ["engineering", "research", "healthcare", "networking", "academic", "professional", "technical", "collaboration"],
         category: "Data Science",
         logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/womeningamingatucdavis/logo/01JVQVD5W4R4CB318YPWJEZ9VQ.png",
@@ -835,7 +835,7 @@ const clubData = [
     },
     {
         name: "IEEE (Institute of Electrical & Electronics Engineers)",
-        description: "The campus chapter of the global professional association for electrical and computer engineers, offering technical workshops, speaker events, and project teams.",
+        description: "Offers technical workshops, events, and project teams for engineering students.",
         tags: ["engineering", "networking", "professional", "workshops", "technical", "research", "collaboration", "academic"],
         category: "Data Science",
         logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/womeningamingatucdavis/logo/01JVQVD5W4R4CB318YPWJEZ9VQ.png",
@@ -858,7 +858,7 @@ const clubData = [
     },
     {
         name: "Tau Beta Pi",
-        description: "The national engineering honor society recognizing academic excellence and integrity, and promoting leadership and service within the engineering community.",
+        description: "Recognizes engineering excellence and promotes leadership and service.",
         tags: ["engineering", "academic", "leadership", "professional", "networking", "mentorship", "volunteering", "social"],
         category: "Data Science",
         logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/womeningamingatucdavis/logo/01JVQVD5W4R4CB318YPWJEZ9VQ.png",
@@ -881,7 +881,7 @@ const clubData = [
     },
     {
         name: "Swift Coding Club",
-        description: "Focuses on iOS app development using Swift, offering workshops, collaborative projects, and resources for students interested in building mobile apps.",
+        description: "Focuses on iOS development with Swift through workshops and projects.",
         tags: ["mobile", "programming", "workshops", "projects", "collaboration", "technical", "academic", "innovation"],
         category: "Data Science",
         logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/womeningamingatucdavis/logo/01JVQVD5W4R4CB318YPWJEZ9VQ.png",
@@ -904,7 +904,7 @@ const clubData = [
     },
     {
         name: "Finance and Investment Club",
-        description: "Equips students with knowledge in investing, personal finance, and financial markets through workshops, guest speakers, and portfolio simulations.",
+        description: "Teaches investing, personal finance, and markets through events and simulations.",
         tags: ["fintech", "networking", "professional", "workshops", "analytics", "collaboration", "enterprise", "leadership"],
         category: "Data Science",
         logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/financeandinvestmentclub/logo/01JVQTAFPNKYK9NDZBM3T272HC.png",
@@ -927,7 +927,7 @@ const clubData = [
     },
     {
         name: "IDSA at UC Davis",
-        description: "The campus chapter of the Industrial Designers Society of America, fostering creativity and professional growth through product design projects, critiques, and speaker series.",
+        description: "Fosters creativity and growth in industrial design through projects and workshops.",
         tags: ["design", "creative", "projects", "networking", "professional", "collaboration", "workshops", "innovation"],
         category: "Data Science",
         logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/idsaatucdavis/logo/01JVQTP4FZ4C6KPE4T06B5QFS0.png",
@@ -951,7 +951,7 @@ const clubData = [
 
     {
         name: "Project Catalyst",
-        description: "A student-run initiative that connects interdisciplinary teams to tackle real-world problems through research, design, and innovation projects.",
+        description: "Connects students to real-world problem-solving through interdisciplinary projects.",
         tags: ["research", "collaboration", "projects", "innovation", "social", "mentorship", "academic", "volunteering"],
         category: "Data Science",
         logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/projectcatalyst/logo/01JVQT7FFX2XBBSV8B28GBD2BY.png",
@@ -974,7 +974,7 @@ const clubData = [
     },
     {
         name: "SACNAS",
-        description: "Supports underrepresented students in STEM by providing academic resources, mentorship, and opportunities for research and community engagement.",
+        description: "Supports underrepresented students in STEM through resources, mentorship, and engagement.",
         tags: ["diversity", "research", "mentorship", "academic", "networking", "professional", "social", "leadership"],
         category: "Data Science",
         logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/sacnas/logo/01JVQSY7WSRAXVWGTRFGESWCFZ.png",
@@ -997,7 +997,7 @@ const clubData = [
     },
     {
         name: "Science Says",
-        description: "A science communication group that trains students to effectively communicate scientific research to the public through blogs, outreach, and media.",
+        description: "Trains students to communicate scientific research to the public.",
         tags: ["communication", "research", "media", "collaboration", "workshops", "social", "academic", "presentation"],
         category: "Data Science",
         logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/sciencesays/logo/01JVQV3RQ18TV15K87V0Z6JNQV.jpeg",
@@ -1020,7 +1020,7 @@ const clubData = [
     },
     {
         name: "College Bowl",
-        description: "A competitive academic trivia team at UC Davis that competes in quiz bowl tournaments covering a wide range of subjects, from science to pop culture.",
+        description: "Competes in academic trivia tournaments across diverse subjects.",
         tags: ["competition", "academic", "collaboration", "social", "presentation", "research", "networking"],
         category: "Data Science",
         logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/collegebowl/logo/01JVQSPFJMBF3S2XGFGPCQHNGC.jpeg",
@@ -1043,7 +1043,7 @@ const clubData = [
     },
     {
         name: "Construction Management Club",
-        description: "Prepares students interested in construction and civil engineering careers through networking events, site tours, and competitions like ASC Reno.",
+        description: "Prepares students for construction careers through tours and competitions.",
         tags: ["engineering", "professional", "networking", "competition", "collaboration", "technical", "projects", "enterprise"],
         category: "Data Science",
         logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/constructionmanagementclub/logo/01JVQTNEGD0VDMSAVHDV6NRWY7.png",
@@ -1066,7 +1066,7 @@ const clubData = [
     },
     {
         name: "EBSA",
-        description: "Connects students interested in economics and business through guest speaker events, case competitions, and networking opportunities with industry professionals.",
+        description: "Bridges academics and careers through business-related events and networking.",
         tags: ["enterprise", "networking", "professional", "competition", "leadership", "collaboration", "analytics", "consulting"],
         category: "Data Science",
         logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/economicsandbusinessstudentassociation/logo/01JVQT3ZV59JZKEBE01R8ZJTAK.png",
@@ -1089,7 +1089,7 @@ const clubData = [
     },
     {
         name: "Materials Advantage Student Chapter",
-        description: "Supports students in materials science and engineering through professional development, research exposure, and outreach events, often linked with national societies like TMS and ASM.",
+        description: "Supports materials science students with professional and academic opportunities.",
         tags: ["engineering", "research", "professional", "networking", "technical", "academic", "collaboration", "innovation"],
         category: "Data Science",
         logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/materialsadvantagestudentchapter/logo/01JVQST00BNH8BR6THS1WQ5Y2J.png",
@@ -1112,7 +1112,7 @@ const clubData = [
     },
     {
         name: "American Institute of Chemical Engineers",
-        description: "A chapter for chemical engineering students to network, attend conferences, and gain career development support through industry talks, plant tours, and mentorship.",
+        description: "Supports chemical engineering students through networking and professional development.",
         tags: ["engineering", "networking", "professional", "mentorship", "academic", "technical", "collaboration", "enterprise"],
         category: "Data Science",
         logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/americaninstituteofchemicalengineers/logo/01JVQTEKD0HRTAVN2W6W0R6CW5.png",

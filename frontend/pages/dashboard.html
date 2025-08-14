@@ -9,9 +9,6 @@
   <link rel="stylesheet" href="/styles/dashboard.css" />
   
   <!-- Scripts -->
-  <script src="/scripts/bookmark.js" defer></script>
-  <script src="/scripts/events-calendar.js" defer></script>
-  <script src="/scripts/events.js" defer></script>
   <script src="/scripts/dashboard.js" defer></script>
 </head>
 
@@ -20,7 +17,7 @@
   <div class="blur-decoration-left"></div>
   <div class="blur-decoration-right"></div>
 
-  <!-- Navbar - updated with profile circle outside gray background -->
+  <!-- Navbar with enhanced profile circle -->
   <nav class="navbar">
     <div class="navbar-container">
       <div class="logo-title">
@@ -28,19 +25,20 @@
         <span class="logo-text">Cownect</span>
       </div>
       <ul class="nav-links">
-        <li><a href="../pages/tech-clubs.html">Tech Clubs</a></li>
+        <li><a href="/tech-clubs">Tech Clubs</a></li>
         <li><a href="/events" class="nav-link">Events</a></li>
         <li><a href="/niche-landing">Niche Test</a></li>
-        <li><a href="#">Mentor Matching</a></li>
+        <li><a href="#" onclick="showMatchingModal()">Find Matches</a></li>
       </ul>
     </div>
-    <!-- Profile circle outside of the gray background -->
+    <!-- Enhanced profile circle with image support -->
     <div class="navbar-profile-circle" id="navbarProfileCircle" onclick="goToDashboard()" title="Dashboard">
+      <img id="navbarProfileImage" src="" alt="Profile" style="display: none; width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
       <span id="navbarProfileInitials">JD</span>
     </div>
   </nav>
 
-  <!-- Logout Button - positioned in top right -->
+  <!-- Logout Button -->
   <div class="logout-button-container">
     <button class="logout-btn" onclick="logoutUser()" title="Logout">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -52,125 +50,270 @@
     </button>
   </div>
 
-  <!-- Dashboard Container with New Layout -->
+  <!-- Dashboard Container -->
   <main class="dashboard-container">
     
-    <!-- User Profile Card - Left Half, Top -->
+    <!-- Enhanced User Profile Card -->
     <section class="user-profile-card">
-      <div class="profile-image-container">
-        <div class="profile-image" id="profileImage" onclick="document.getElementById('imageUpload').click()">
-          <span id="profileInitials">JD</span>
-          <input type="file" id="imageUpload" accept="image/*" style="display: none;" onchange="handleImageUpload(event)">
+      <!-- Profile Header -->
+      <div class="profile-header">
+        <div class="profile-image-container">
+          <div class="profile-image" id="profileImage" onclick="document.getElementById('imageUpload').click()">
+            <img id="profileImageDisplay" src="" alt="Profile" style="display: none; width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+            <span id="profileInitials">JD</span>
+            <input type="file" id="imageUpload" accept="image/*" style="display: none;" onchange="handleImageUpload(event)">
+            <div class="image-upload-overlay">
+              <svg width="24" height="24" fill="white" viewBox="0 0 24 24">
+                <path d="M12 2C13.1 2 14 2.9 14 4C14 5.1 13.1 6 12 6C10.9 6 10 5.1 10 4C10 2.9 10.9 2 12 2ZM21 9V7L15 1H5C3.89 1 3 1.89 3 3V21C3 22.1 3.89 23 5 23H19C20.1 23 21 22.1 21 21V9M19 9H14V4H19V9Z"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+        <div class="profile-basic-info">
+          <div class="user-display-name" id="userDisplayName">UC Davis Student</div>
+          <div class="user-email" id="userEmail">student@ucdavis.edu</div>
+          <div class="profile-completion">
+            <div class="completion-bar">
+              <div class="completion-fill" id="completionFill" style="width: 0%"></div>
+            </div>
+            <span class="completion-text" id="completionText">0% Complete</span>
+          </div>
         </div>
       </div>
-      <div class="profile-info">
-        <div class="user-major" id="userMajor">Computer Science</div>
-        <div class="user-email" id="userEmail">john.doe@ucdavis.edu</div>
+
+      <!-- Enhanced Profile Form -->
+      <div class="profile-form" id="profileForm">
+        
+        <!-- Basic Information -->
+        <div class="form-section">
+          <h4>Basic Information</h4>
+          
+          <div class="form-row">
+            <label for="profileName">Full Name *</label>
+            <input type="text" id="profileName" placeholder="Your full name" maxlength="100">
+          </div>
+
+          <div class="form-row-group">
+            <div class="form-row">
+              <label for="profileYear">Year *</label>
+              <select id="profileYear">
+                <option value="">Select year</option>
+                <option value="freshman">Freshman</option>
+                <option value="sophomore">Sophomore</option>
+                <option value="junior">Junior</option>
+                <option value="senior">Senior</option>
+                <option value="graduate">Graduate</option>
+                <option value="phd">PhD</option>
+                <option value="postdoc">Postdoc</option>
+              </select>
+            </div>
+
+            <div class="form-row">
+              <label for="profileMajor">Major *</label>
+              <input type="text" id="profileMajor" placeholder="Computer Science" maxlength="100">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <label for="profileBio">Bio *</label>
+            <textarea id="profileBio" placeholder="Tell others about yourself..." maxlength="500" rows="3"></textarea>
+          </div>
+
+          <div class="form-row">
+            <label for="profileHobbies">Interests & Hobbies</label>
+            <input type="text" id="profileHobbies" placeholder="coding, music, hiking, photography" maxlength="300">
+            <small>Separate with commas</small>
+          </div>
+        </div>
+
+        <!-- Networking & Matching -->
+        <div class="form-section">
+          <h4>Networking & Matching</h4>
+          
+          <div class="form-row">
+            <label for="profileLookingFor">Looking For</label>
+            <div class="checkbox-group" id="profileLookingFor">
+              <label class="checkbox-item">
+                <input type="checkbox" value="study-partners"> Study Partners
+              </label>
+              <label class="checkbox-item">
+                <input type="checkbox" value="project-collaborators"> Project Collaborators
+              </label>
+              <label class="checkbox-item">
+                <input type="checkbox" value="research-partners"> Research Partners
+              </label>
+              <label class="checkbox-item">
+                <input type="checkbox" value="internship-referrals"> Internship Referrals
+              </label>
+              <label class="checkbox-item">
+                <input type="checkbox" value="mentorship"> Mentorship
+              </label>
+              <label class="checkbox-item">
+                <input type="checkbox" value="friends"> Friends
+              </label>
+              <label class="checkbox-item">
+                <input type="checkbox" value="networking"> Professional Networking
+              </label>
+              <label class="checkbox-item">
+                <input type="checkbox" value="startup-cofounders"> Startup Co-founders
+              </label>
+              <label class="checkbox-item">
+                <input type="checkbox" value="hackathon-teammates"> Hackathon Teammates
+              </label>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <label for="profileSkills">Skills You Have</label>
+            <input type="text" id="profileSkills" placeholder="JavaScript, Python, React, Design, etc." maxlength="200">
+            <small>Separate with commas</small>
+          </div>
+
+          <div class="form-row">
+            <label for="profileLearningGoals">Want to Learn</label>
+            <input type="text" id="profileLearningGoals" placeholder="Machine Learning, iOS Development, etc." maxlength="200">
+            <small>What skills do you want to develop?</small>
+          </div>
+
+          <div class="form-row">
+            <label for="profileAvailability">Availability</label>
+            <select id="profileAvailability">
+              <option value="">Select availability</option>
+              <option value="very-available">Very Available</option>
+              <option value="moderately-available">Moderately Available</option>
+              <option value="limited-availability">Limited Availability</option>
+              <option value="busy">Currently Busy</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Contact & Social -->
+        <div class="form-section">
+          <h4>Contact & Social</h4>
+          
+          <div class="form-row">
+            <label for="profileLinkedin">LinkedIn Profile</label>
+            <input type="url" id="profileLinkedin" placeholder="https://linkedin.com/in/yourname">
+          </div>
+
+          <div class="form-row">
+            <label>Preferred Contact Methods</label>
+            <div class="checkbox-group" id="profileContactPreferences">
+              <label class="checkbox-item">
+                <input type="checkbox" value="email"> Email
+              </label>
+              <label class="checkbox-item">
+                <input type="checkbox" value="linkedin"> LinkedIn
+              </label>
+              <label class="checkbox-item">
+                <input type="checkbox" value="discord"> Discord
+              </label>
+              <label class="checkbox-item">
+                <input type="checkbox" value="instagram"> Instagram
+              </label>
+              <label class="checkbox-item">
+                <input type="checkbox" value="in-person"> In Person
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Save Button -->
         <div class="profile-actions">
-          <button class="edit-profile-btn" onclick="editProfile()">Edit Profile</button>
+          <button class="save-profile-btn" id="saveProfileBtn" onclick="saveProfile()">Save Profile</button>
         </div>
       </div>
     </section>
 
-    <!-- Saved Clubs Card - Right Half, Top -->
+    <!-- Saved Clubs Card -->
     <section class="saved-clubs-card">
       <h2>Saved Clubs</h2>
       <div class="saved-clubs-grid" id="savedClubsGrid">
-        <!-- Sample saved clubs -->
-        <div class="mini-club-card">
-          <div class="mini-club-logo"></div>
-          <div class="mini-club-name">#include</div>
-          <div class="mini-club-description">Build real-world coding projects</div>
-          <div class="mini-club-tags">#software #webdev</div>
-        </div>
-        <div class="mini-club-card">
-          <div class="mini-club-logo"></div>
-          <div class="mini-club-name">AI Student Collective</div>
-          <div class="mini-club-description">Machine learning and NLP</div>
-          <div class="mini-club-tags">#AI #ML #Python</div>
-        </div>
-        <div class="mini-club-card">
-          <div class="mini-club-logo"></div>
-          <div class="mini-club-name">AggieWorks</div>
-          <div class="mini-club-description">Electronics and microcontrollers</div>
-          <div class="mini-club-tags">#hardware #arduino</div>
+        <div class="empty-state">
+          <div class="empty-state-icon">🔖</div>
+          <div class="empty-state-text">No saved clubs yet</div>
+          <div class="empty-state-subtext">Explore tech clubs and bookmark your favorites!</div>
         </div>
       </div>
     </section>
 
-    <!-- Upcoming Events Card - Right Half, Middle -->
+    <!-- Upcoming Events Card -->
     <section class="upcoming-events-card">
       <h2>My Upcoming Events</h2>
       <div class="events-list" id="eventsList">
-        <!-- Sample events -->
-        <div class="event-item">
-          <div class="event-date">
-            <div class="event-date-day">15</div>
-            <div class="event-date-month">Aug</div>
-          </div>
-          <div class="event-details">
-            <div class="event-name">Weekly Coding Workshop</div>
-            <div class="event-club">#include - 6:00 PM</div>
-          </div>
-        </div>
-        <div class="event-item">
-          <div class="event-date">
-            <div class="event-date-day">18</div>
-            <div class="event-date-month">Aug</div>
-          </div>
-          <div class="event-details">
-            <div class="event-name">AI Research Presentation</div>
-            <div class="event-club">AI Student Collective - 4:30 PM</div>
-          </div>
-        </div>
-        <div class="event-item">
-          <div class="event-date">
-            <div class="event-date-day">22</div>
-            <div class="event-date-month">Aug</div>
-          </div>
-          <div class="event-details">
-            <div class="event-name">Hardware Demo Day</div>
-            <div class="event-club">AggieWorks - 3:00 PM</div>
-          </div>
+        <div class="empty-state">
+          <div class="empty-state-icon">📅</div>
+          <div class="empty-state-text">No upcoming events</div>
+          <div class="empty-state-subtext">Check back later for new tech events!</div>
         </div>
       </div>
     </section>
 
-    <!-- Test Results Card - Left Half, Bottom -->
+    <!-- Test Results Card -->
     <section class="test-results-card">
       <h2>Recent Test Results</h2>
       <div class="test-results-list" id="testResultsList">
-        <!-- Sample test results -->
-        <div class="test-result-item">
-          <div class="test-info">
-            <div class="test-name">Career Interest Assessment</div>
-            <div class="test-date">July 28, 2025</div>
-          </div>
-          <div class="test-score">85%</div>
-        </div>
-        <div class="test-result-item">
-          <div class="test-info">
-            <div class="test-name">Technical Skills Evaluation</div>
-            <div class="test-date">July 20, 2025</div>
-          </div>
-          <div class="test-score">92%</div>
-        </div>
-        <div class="test-result-item">
-          <div class="test-info">
-            <div class="test-name">Leadership Style Quiz</div>
-            <div class="test-date">July 15, 2025</div>
-          </div>
-          <div class="test-score">78%</div>
+        <div class="empty-state">
+          <div class="empty-state-icon">🧪</div>
+          <div class="empty-state-text">No test results yet</div>
+          <div class="empty-state-subtext">Take a niche quiz to discover your ideal career path!</div>
         </div>
       </div>
     </section>
 
-    <!-- Empty Space - Right Half, Bottom (intentionally blank) -->
-    <section class="empty-space-card">
-      <!-- Intentionally left blank as requested -->
+    <!-- Potential Matches Card -->
+    <section class="potential-matches-card">
+      <h2>Potential Matches</h2>
+      <div class="matches-list" id="matchesList">
+        <div class="empty-state">
+          <div class="empty-state-icon">🤝</div>
+          <div class="empty-state-text">Complete your profile to find matches</div>
+          <div class="empty-state-subtext">Add your interests and goals to connect with similar students!</div>
+        </div>
+      </div>
+      <button class="view-all-matches-btn" onclick="showMatchingModal()" style="display: none;">View All Matches</button>
     </section>
 
   </main>
+
+  <!-- Matching Modal -->
+  <div class="modal-overlay" id="matchingModal" style="display: none;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Find Your Perfect Study/Project Partners</h3>
+        <button class="modal-close" onclick="closeMatchingModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="match-filters">
+          <select id="matchFilterLookingFor">
+            <option value="">What are they looking for?</option>
+            <option value="study-partners">Study Partners</option>
+            <option value="project-collaborators">Project Collaborators</option>
+            <option value="research-partners">Research Partners</option>
+            <option value="friends">Friends</option>
+          </select>
+          <select id="matchFilterMajor">
+            <option value="">Any Major</option>
+            <option value="Computer Science">Computer Science</option>
+            <option value="Engineering">Engineering</option>
+            <option value="Data Science">Data Science</option>
+          </select>
+          <select id="matchFilterYear">
+            <option value="">Any Year</option>
+            <option value="freshman">Freshman</option>
+            <option value="sophomore">Sophomore</option>
+            <option value="junior">Junior</option>
+            <option value="senior">Senior</option>
+            <option value="graduate">Graduate</option>
+          </select>
+          <button onclick="findMatches()">Find Matches</button>
+        </div>
+        <div class="matches-results" id="matchesResults">
+          <!-- Matches will be populated here -->
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- Loading State -->
   <div class="loading-overlay" id="loadingOverlay" style="display: none;">
@@ -179,53 +322,80 @@
   </div>
 
   <script>
-    // Function to handle user logout
+    // Global functions for HTML handlers
     function logoutUser() {
       if (confirm('Are you sure you want to logout?')) {
-        console.log('🚪 User logging out...');
-        
-        // Show loading state
-        const loadingOverlay = document.getElementById('loadingOverlay');
-        if (loadingOverlay) {
-          loadingOverlay.style.display = 'flex';
-        }
-        
-        // Redirect to logout endpoint
         window.location.href = '/logout';
       }
     }
 
-    // Function to navigate to dashboard (for navbar profile circle)
     function goToDashboard() {
-      // Already on dashboard, just scroll to top
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    // Initialize navbar profile on dashboard
-    document.addEventListener('DOMContentLoaded', async () => {
-      try {
-        const response = await fetch('/api/user');
-        if (response.ok) {
-          const userData = await response.json();
-          
-          if (userData.isLoggedIn) {
-            // Update navbar profile initials
-            const navbarInitials = document.getElementById('navbarProfileInitials');
-            if (navbarInitials && userData.email) {
-              const emailPrefix = userData.email.split('@')[0];
-              const initials = emailPrefix.substring(0, 2).toUpperCase();
-              navbarInitials.textContent = initials;
-            }
-          }
-        }
-      } catch (error) {
-        console.error('Error loading user data for navbar:', error);
-      }
-    });
+    function showMatchingModal() {
+      document.getElementById('matchingModal').style.display = 'flex';
+    }
 
-    // Global functions for HTML onclick handlers
+    function closeMatchingModal() {
+      document.getElementById('matchingModal').style.display = 'none';
+    }
+
+    async function findMatches() {
+      const lookingFor = document.getElementById('matchFilterLookingFor').value;
+      const major = document.getElementById('matchFilterMajor').value;
+      const year = document.getElementById('matchFilterYear').value;
+
+      try {
+        const params = new URLSearchParams();
+        if (lookingFor) params.append('lookingFor', lookingFor);
+        if (major) params.append('major', major);
+        if (year) params.append('year', year);
+
+        const response = await fetch(`/api/user/matches?${params}`);
+        const data = await response.json();
+
+        displayMatches(data.matches);
+      } catch (error) {
+        console.error('Error finding matches:', error);
+      }
+    }
+
+    function displayMatches(matches) {
+      const resultsContainer = document.getElementById('matchesResults');
+      
+      if (matches.length === 0) {
+        resultsContainer.innerHTML = '<p>No matches found. Try adjusting your filters!</p>';
+        return;
+      }
+
+      resultsContainer.innerHTML = matches.map(match => `
+        <div class="match-card">
+          <div class="match-avatar">
+            ${match.profilePictureUrl ? 
+              `<img src="${match.profilePictureUrl}" alt="${match.displayName}">` :
+              `<span>${match.displayName.split(' ').map(n => n[0]).join('').toUpperCase()}</span>`
+            }
+          </div>
+          <div class="match-info">
+            <h4>${match.displayName}</h4>
+            <p class="match-details">${match.year} • ${match.major}</p>
+            <p class="match-bio">${match.bio}</p>
+            <div class="match-tags">
+              ${(match.skills || []).slice(0, 3).map(skill => `<span class="tag">${skill}</span>`).join('')}
+            </div>
+            <p class="match-score">Match Score: ${match.matchScore}%</p>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Make functions global
     window.logoutUser = logoutUser;
     window.goToDashboard = goToDashboard;
+    window.showMatchingModal = showMatchingModal;
+    window.closeMatchingModal = closeMatchingModal;
+    window.findMatches = findMatches;
   </script>
 
 </body>

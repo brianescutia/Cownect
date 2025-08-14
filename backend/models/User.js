@@ -1,6 +1,6 @@
 // =============================================================================
 // UPDATED USER MODEL - backend/models/User.js
-// Replace your existing User model with this enhanced version
+// Add profile fields for dashboard
 // =============================================================================
 
 const mongoose = require('mongoose');
@@ -17,38 +17,142 @@ const userSchema = new mongoose.Schema({
         trim: true,
         validate: {
             validator: function (email) {
-                // ✅ ENFORCE UC DAVIS EMAIL AT DATABASE LEVEL
                 return email && email.endsWith('@ucdavis.edu');
             },
             message: 'Only UC Davis email addresses (@ucdavis.edu) are allowed'
-        },
-        match: [/^[a-zA-Z0-9._%+-]+@ucdavis\.edu$/, 'Please enter a valid UC Davis email address']
+        }
     },
 
-    // PASSWORD FIELD - Optional for Google users
+    // ✅ BASIC PROFILE FIELDS
+    name: {
+        type: String,
+        trim: true,
+        maxlength: 100,
+        default: ''
+    },
+
+    year: {
+        type: String,
+        enum: ['freshman', 'sophomore', 'junior', 'senior', 'graduate', 'phd', 'postdoc', ''],
+        default: ''
+    },
+
+    major: {
+        type: String,
+        trim: true,
+        maxlength: 100,
+        default: ''
+    },
+
+    bio: {
+        type: String,
+        trim: true,
+        maxlength: 500,
+        default: ''
+    },
+
+    hobbies: {
+        type: String,
+        trim: true,
+        maxlength: 300,
+        default: ''
+    },
+
+    linkedinUrl: {
+        type: String,
+        trim: true,
+        validate: {
+            validator: function (url) {
+                if (!url) return true;
+                return /^https?:\/\/(www\.)?linkedin\.com\/in\/[a-zA-Z0-9\-]+\/?$/.test(url);
+            },
+            message: 'Please enter a valid LinkedIn profile URL'
+        },
+        default: ''
+    },
+
+    // ✅ PROFILE PICTURE
+    profilePictureUrl: {
+        type: String,
+        default: ''
+    },
+
+    // ✅ MATCHING & NETWORKING FIELDS
+    lookingFor: [{
+        type: String,
+        enum: [
+            'study-partners',
+            'project-collaborators',
+            'research-partners',
+            'internship-referrals',
+            'mentorship',
+            'friends',
+            'networking',
+            'startup-cofounders',
+            'hackathon-teammates',
+            'career-guidance'
+        ]
+    }],
+
+    skills: [{
+        type: String,
+        trim: true,
+        maxlength: 50
+    }],
+
+    learningGoals: [{
+        type: String,
+        trim: true,
+        maxlength: 50
+    }],
+
+    availability: {
+        type: String,
+        enum: ['very-available', 'moderately-available', 'limited-availability', 'busy', ''],
+        default: ''
+    },
+
+    contactPreferences: [{
+        type: String,
+        enum: ['email', 'linkedin', 'discord', 'instagram', 'in-person']
+    }],
+
+    // ✅ PRIVACY SETTINGS
+    profileVisibility: {
+        type: String,
+        enum: ['public', 'ucdavis-only', 'connections-only'],
+        default: 'ucdavis-only'
+    },
+
+    showEmail: {
+        type: Boolean,
+        default: false
+    },
+
+    showLinkedIn: {
+        type: Boolean,
+        default: true
+    },
+
+    // AUTHENTICATION FIELDS
     password: {
         type: String,
         required: function () {
-            return !this.googleId;  // Only required if not a Google user
+            return !this.googleId;
         },
         minlength: 6
     },
 
-    // ✅ NEW: Google OAuth fields
     googleId: {
         type: String,
         unique: true,
-        sparse: true  // Allows null values to be non-unique
+        sparse: true
     },
+
     provider: {
         type: String,
         enum: ['local', 'google'],
         default: 'google'
-    },
-
-    lastLoginAt: {
-        type: Date,
-        default: null
     },
 
     authMethod: {
@@ -57,60 +161,170 @@ const userSchema = new mongoose.Schema({
         default: 'email'
     },
 
-    // BOOKMARKED CLUBS - Array of club IDs
+    // BOOKMARKS
     bookmarkedClubs: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Club'
     }],
 
-    // BOOKMARKED EVENTS - Array of event IDs
     bookmarkedEvents: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Event'
     }],
 
-    // TIMESTAMP - Track when user account was created
+    // VERIFICATION & SECURITY
+    isVerified: {
+        type: Boolean,
+        default: false
+    },
+
+    verificationToken: {
+        type: String,
+        default: null
+    },
+
+    verificationTokenExpires: {
+        type: Date,
+        default: null
+    },
+
+    passwordResetToken: {
+        type: String,
+        default: null
+    },
+
+    passwordResetExpires: {
+        type: Date,
+        default: null
+    },
+
+    // TIMESTAMPS
     createdAt: {
         type: Date,
         default: Date.now
     },
 
-    // ✅ EMAIL VERIFICATION FIELDS (apply to ALL users, including Google)
-    isVerified: {
-        type: Boolean,
-        default: false
-    },
-    verificationToken: {
-        type: String,
-        default: null
-    },
-    verificationTokenExpires: {
+    lastLoginAt: {
         type: Date,
         default: null
     },
-    passwordResetToken: {
-        type: String,
-        default: null
-    },
-    passwordResetExpires: {
+
+    updatedAt: {
         type: Date,
-        default: null
-    },
+        default: Date.now
+    }
 });
 
+// ✅ NEW PROFILE METHODS
+userSchema.methods.updateProfile = async function (profileData) {
+    const allowedFields = [
+        'name', 'year', 'major', 'bio', 'hobbies', 'linkedinUrl',
+        'lookingFor', 'skills', 'learningGoals', 'availability',
+        'contactPreferences', 'profileVisibility', 'showEmail', 'showLinkedIn'
+    ];
+
+    allowedFields.forEach(field => {
+        if (profileData[field] !== undefined) {
+            this[field] = profileData[field];
+        }
+    });
+
+    this.updatedAt = new Date();
+
+    return await this.save();
+};
+
+userSchema.methods.getDisplayName = function () {
+    if (this.name && this.name.trim()) {
+        return this.name;
+    }
+    return this.email.split('@')[0].replace(/\./g, ' ');
+};
+
+userSchema.methods.getInitials = function () {
+    if (this.name && this.name.trim()) {
+        return this.name.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
+    }
+    return this.email.substring(0, 2).toUpperCase();
+};
+
+userSchema.methods.getProfileCompleteness = function () {
+    const requiredFields = ['name', 'year', 'major', 'bio'];
+    const optionalFields = ['hobbies', 'linkedinUrl', 'lookingFor', 'skills'];
+
+    let score = 0;
+    let totalPossible = 0;
+
+    // Required fields (worth 20 points each)
+    requiredFields.forEach(field => {
+        totalPossible += 20;
+        if (this[field] && this[field].toString().trim()) {
+            score += 20;
+        }
+    });
+
+    // Optional fields (worth 5 points each)
+    optionalFields.forEach(field => {
+        totalPossible += 5;
+        if (this[field] &&
+            ((Array.isArray(this[field]) && this[field].length > 0) ||
+                this[field].toString().trim())) {
+            score += 5;
+        }
+    });
+
+    // Profile picture (worth 10 points)
+    totalPossible += 10;
+    if (this.profilePictureUrl) {
+        score += 10;
+    }
+
+    return Math.round((score / totalPossible) * 100);
+};
+
+userSchema.methods.getMatchingProfile = function () {
+    return {
+        id: this._id,
+        name: this.getDisplayName(),
+        year: this.year,
+        major: this.major,
+        bio: this.bio,
+        hobbies: this.hobbies,
+        skills: this.skills,
+        lookingFor: this.lookingFor,
+        profilePictureUrl: this.profilePictureUrl,
+        availability: this.availability,
+        contactInfo: this.getContactInfo()
+    };
+};
+
+userSchema.methods.getContactInfo = function () {
+    const contact = {};
+
+    if (this.showEmail && this.contactPreferences.includes('email')) {
+        contact.email = this.email;
+    }
+
+    if (this.showLinkedIn && this.linkedinUrl && this.contactPreferences.includes('linkedin')) {
+        contact.linkedin = this.linkedinUrl;
+    }
+
+    return contact;
+};
+
 // =============================================================================
-// PASSWORD HASHING MIDDLEWARE (only for email users)
+// EXISTING METHODS (unchanged)
 // =============================================================================
+
+// Password hashing middleware
 userSchema.pre('save', async function (next) {
     if (!this.isModified('password')) return next();
 
     try {
-        // Skip hashing for Google OAuth placeholder passwords
         if (this.password.startsWith('google-oauth-')) {
             return next();
         }
 
-        // Hash regular passwords (if you ever add them back)
         const hashedPassword = await bcrypt.hash(this.password, 12);
         this.password = hashedPassword;
         next();
@@ -119,11 +333,7 @@ userSchema.pre('save', async function (next) {
     }
 });
 
-// =============================================================================
-// AUTHENTICATION METHODS
-// =============================================================================
-
-// Password comparison (for email users)
+// Authentication methods
 userSchema.methods.comparePassword = async function (candidatePassword) {
     if (!this.password) {
         throw new Error('This account uses Google authentication');
@@ -131,17 +341,14 @@ userSchema.methods.comparePassword = async function (candidatePassword) {
     return bcrypt.compare(candidatePassword, this.password);
 };
 
-// Check if user can use email/password login
 userSchema.methods.canUsePasswordAuth = function () {
     return this.password && (this.authMethod === 'email' || this.authMethod === 'both');
 };
 
-// Check if user can use Google login
 userSchema.methods.canUseGoogleAuth = function () {
     return this.googleId && (this.authMethod === 'google' || this.authMethod === 'both');
 };
 
-// Update authentication method when linking accounts
 userSchema.methods.linkGoogleAccount = function (googleId) {
     this.googleId = googleId;
     this.authMethod = this.password ? 'both' : 'google';
@@ -153,32 +360,25 @@ userSchema.methods.linkEmailPassword = function (password) {
     this.authMethod = this.googleId ? 'both' : 'email';
 };
 
-// =============================================================================
-// VERIFICATION TOKEN METHODS (apply to all users)
-// =============================================================================
-
+// Verification token methods
 userSchema.methods.generateVerificationToken = function () {
     const token = crypto.randomBytes(32).toString('hex');
     this.verificationToken = token;
-    this.verificationTokenExpires = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours
+    this.verificationTokenExpires = new Date(Date.now() + 24 * 60 * 60 * 1000);
     return token;
 };
 
-// Generate password reset token
 userSchema.methods.generatePasswordResetToken = function () {
     if (!this.canUsePasswordAuth()) {
         throw new Error('This account uses Google authentication');
     }
     const token = crypto.randomBytes(32).toString('hex');
     this.passwordResetToken = token;
-    this.passwordResetExpires = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
+    this.passwordResetExpires = new Date(Date.now() + 60 * 60 * 1000);
     return token;
 };
 
-// =============================================================================
-// CLUB BOOKMARK METHODS (unchanged)
-// =============================================================================
-
+// Bookmark methods
 userSchema.methods.addBookmark = async function (clubId) {
     if (!this.bookmarkedClubs.includes(clubId)) {
         this.bookmarkedClubs.push(clubId);
@@ -211,10 +411,7 @@ userSchema.methods.getBookmarkCount = function () {
     return this.bookmarkedClubs.length;
 };
 
-// =============================================================================
-// EVENT BOOKMARK METHODS (unchanged)
-// =============================================================================
-
+// Event bookmark methods
 userSchema.methods.addEventBookmark = async function (eventId) {
     if (!this.bookmarkedEvents.includes(eventId)) {
         this.bookmarkedEvents.push(eventId);
@@ -247,10 +444,7 @@ userSchema.methods.getEventBookmarkCount = function () {
     return this.bookmarkedEvents.length;
 };
 
-// =============================================================================
-// STATIC METHODS (unchanged)
-// =============================================================================
-
+// Static methods
 userSchema.statics.findWithBookmarks = function (userId) {
     return this.findById(userId)
         .populate('bookmarkedClubs')
@@ -270,11 +464,6 @@ userSchema.statics.findWithEventBookmarks = function (userId) {
         .select('-password');
 };
 
-// =============================================================================
-// NEW STATIC METHODS FOR OAUTH
-// =============================================================================
-
-// Find user by email or Google ID
 userSchema.statics.findByEmailOrGoogleId = function (email, googleId) {
     const query = {
         $or: [
@@ -285,7 +474,6 @@ userSchema.statics.findByEmailOrGoogleId = function (email, googleId) {
     return this.findOne(query);
 };
 
-// Get user's authentication methods
 userSchema.statics.getAuthMethods = function (email) {
     return this.findOne({ email: email.toLowerCase() })
         .select('authMethod googleId password')
@@ -300,24 +488,3 @@ userSchema.statics.getAuthMethods = function (email) {
 };
 
 module.exports = mongoose.model('User', userSchema);
-
-// =============================================================================
-// MIGRATION SCRIPT (run once to update existing users)
-// =============================================================================
-/*
-Run this script once to update existing users:
-
-async function migrateExistingUsers() {
-    const User = require('./models/User');
-    
-    // Update existing users without authMethod
-    await User.updateMany(
-        { authMethod: { $exists: false } },
-        { authMethod: 'email' }
-    );
-    
-    console.log('Migration completed');
-}
-
-// Run: node -e "require('./backend/models/User.js'); migrateExistingUsers();"
-*/
