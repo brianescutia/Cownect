@@ -306,18 +306,24 @@ button {
 }
 
 .bookmark-icon img {
-    height: 35px;
-    width: 35px;
+    height: 3.25rem;
+    width: 3.25rem;
     cursor: pointer;
 }
 
 .bookmark-icon:hover {
-    transform: scale(1.1);
+    transform: scale(1);
 }
 
-.bookmark.bookmarked {
+.bookmark-icon:active {
+    transform: scale(0.25) !important;
+
+    /* Slight shrink on click */
+}
+
+
+.bookmarked {
     filter: hue-rotate(120deg) brightness(1.2);
-    transform: scale(1.1);
 }
 
 /* =============================================================================
