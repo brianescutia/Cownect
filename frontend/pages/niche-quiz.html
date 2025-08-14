@@ -16,28 +16,30 @@
 </head>
 <body>
 
-    <!-- Navbar -->
-    <!-- Navbar -->
-<!-- Navbar -->
-  <nav class="navbar">
-    <div class="navbar-container">
-      <!-- MAKE LOGO CLICKABLE -->
-      <a href="/dashboard" class="logo-title" style="text-decoration: none; color: inherit;">
-        <img src="../assets/cowLogo.png" alt="Cownect Logo" class="logo" />
-        <span class="logo-text">Cownect</span>
-      </a>
-      <ul class="nav-links">
-        <li><a href="/tech-clubs">Tech Clubs</a></li>
-        <li><a href="/events" class="nav-link">Events</a></li>
-        <li><a href="/niche-landing">Niche Test</a></li>
-        <li><a href="#">Mentor Matching</a></li>
-      </ul>
-    </div>
-    <!-- Profile circle outside of the gray background -->
-    <div class="navbar-profile-circle" id="navbarProfileCircle" onclick="goToDashboard()" title="Go to Dashboard">
-      <span id="navbarProfileInitials">--</span> <!-- CHANGED FROM JD -->
-    </div>
-  </nav>
+    <!-- FIXED NAVBAR - Identical to dashboard for consistency -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a href="/dashboard" class="logo-title" style="text-decoration: none; color: inherit;">
+                <img src="../assets/cowLogo.png" alt="Cownect Logo" class="logo" />
+                <span class="logo-text">Cownect</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="/tech-clubs">Tech Clubs</a></li>
+                <li><a href="/events" class="nav-link">Events</a></li>
+                <li><a href="/niche-landing">Niche Test</a></li>
+                <li><a href="#">Mentor Matching</a></li>
+            </ul>
+        </div>
+        <!-- FIXED: Added profile image element for consistency -->
+        <div class="navbar-profile-circle" id="navbarProfileCircle" onclick="goToDashboard()" title="Go to Dashboard">
+            <img id="navbarProfileImage" 
+                 src="" 
+                 alt="Profile" 
+                 style="display: none; width: 100%; height: 100%; object-fit: cover; border-radius: 50%; position: absolute; top: 0; left: 0;">
+            <span id="navbarProfileInitials" 
+                  style="display: block; font-size: 0.9rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">--</span>
+        </div>
+    </nav>
 
     <!-- Main Container -->
     <main class="quiz-container">
@@ -143,164 +145,162 @@
         </section>
 
         <!-- 🎉 QUIZ RESULTS SCREEN -->
-<!-- 🎉 UPDATED QUIZ RESULTS SECTION -->
-<!-- Replace your existing quiz-results section with this updated version -->
-
-<section class="quiz-results" id="quizResults" style="display: none;">
-    
-    <!-- Top Match Card - NOT collapsible -->
-    <div class="top-match-card card">
-        <div class="match-layout">
-            <div class="match-left">
-                <h2>Your closest match is</h2>
-                <h3 id="topCareerName">Web Development</h3>
-                <p id="topCareerDescription">Build websites and web applications...</p>
-            </div>
-            <div class="match-right">
-                <div class="confidence-badge" id="confidenceBadge">High Confidence</div>
-                <div class="match-percentage">
-                    <div class="percentage-circle">
-                        <svg class="progress-ring" width="120" height="120">
-                            <!-- Background circle (unfilled area) -->
-                            <circle 
-                                cx="60" 
-                                cy="60" 
-                                r="52" 
-                                stroke="rgba(255, 255, 255, 0.8)" 
-                                stroke-width="8" 
-                                fill="transparent"
-                            />
-                            <!-- Foreground circle (filled area) -->
-                            <circle 
-                                class="progress-ring__circle" 
-                                cx="60" 
-                                cy="60" 
-                                r="52" 
-                                stroke="#f5a700" 
-                                stroke-width="8" 
-                                fill="transparent"
-                            />
-                        </svg>
-                        <div class="percentage-text" id="matchPercentage">85%</div>
+        <section class="quiz-results" id="quizResults" style="display: none;">
+            
+            <!-- Top Match Card - NOT collapsible -->
+            <div class="top-match-card card">
+                <div class="match-layout">
+                    <div class="match-left">
+                        <h2>Your closest match is</h2>
+                        <h3 id="topCareerName">Web Development</h3>
+                        <p id="topCareerDescription">Build websites and web applications...</p>
                     </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Recommended Clubs - Full Width, 3 Horizontal (NOT collapsible) -->
-    <div class="recommended-clubs card">
-        <div class="section-header">
-            <img src="/assets/clubs.png" alt="Recommended clubs" class="section-icon">
-            <h3 class="section-title">Recommended UC Davis Clubs</h3>
-        </div>
-        <div class="clubs-grid-horizontal" id="recommendedClubsGrid">
-            <!-- 3 Horizontal Club Cards will be populated here -->
-        </div>
-    </div>
-
-    <!-- Two Column Layout with Collapsible Cards -->
-    <div class="results-two-column">
-        <div class="results-left-column">
-            <!-- Career Progression - COLLAPSIBLE -->
-            <div class="career-progression card collapsible-card">
-                <div class="card-header" onclick="toggleQuizCard('career-progression')">
-                    <div class="section-header-collapsible">
-                        <img src="/assets/career-progression.png" alt="Career progression" class="section-icon">
-                        <h3 class="section-title">Career Progression Path</h3>
-                    </div>
-                    <button class="collapse-btn" id="career-progression-btn">−</button>
-                </div>
-                <div class="card-content" id="career-progression-content">
-                    <div class="progression-timeline" id="progressionTimeline">
-                        <!-- Timeline will be populated dynamically -->
-                    </div>
-                </div>
-            </div>
-
-            <!-- Next Steps - COLLAPSIBLE -->
-            <div class="next-steps card collapsible-card">
-                <div class="card-header" onclick="toggleQuizCard('next-steps')">
-                    <div class="section-header-collapsible">
-                        <img src="/assets/next-steps.png" alt="Next steps" class="section-icon">
-                        <h3 class="section-title">Your Next Steps</h3>
-                    </div>
-                    <button class="collapse-btn" id="next-steps-btn">−</button>
-                </div>
-                <div class="card-content" id="next-steps-content">
-                    <div class="steps-list" id="nextStepsList">
-                        <!-- Steps will be populated dynamically -->
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="results-right-column">
-            <!-- All Matches - COLLAPSIBLE -->
-            <div class="all-matches card collapsible-card">
-                <div class="card-header" onclick="toggleQuizCard('all-matches')">
-                    <div class="section-header-collapsible">
-                        <img src="/assets/target.png" alt="All matches" class="section-icon">
-                        <h3 class="section-title">All Career Matches</h3>
-                    </div>
-                    <button class="collapse-btn" id="all-matches-btn">−</button>
-                </div>
-                <div class="card-content" id="all-matches-content">
-                    <div class="matches-chart" id="matchesChart">
-                        <!-- Career match bars will be populated here -->
-                    </div>
-                </div>
-            </div>
-
-            <!-- Market Data - COLLAPSIBLE -->
-            <div class="market-data card collapsible-card">
-                <div class="card-header" onclick="toggleQuizCard('market-data')">
-                    <div class="section-header-collapsible">
-                        <img src="/assets/market-insights.png" alt="Market insights" class="section-icon">
-                        <h3 class="section-title">Market Insights</h3>
-                    </div>
-                    <button class="collapse-btn" id="market-data-btn">−</button>
-                </div>
-                <div class="card-content" id="market-data-content">
-                    <div class="data-grid">
-                        <div class="data-item">
-                            <span class="data-label">Average Salary</span>
-                            <span class="data-value" id="avgSalary">$95k - $140k</span>
-                        </div>
-                        <div class="data-item">
-                            <span class="data-label">Job Growth</span>
-                            <span class="data-value" id="jobGrowth">+13% (2021-2031)</span>
-                        </div>
-                        <div class="data-item">
-                            <span class="data-label">Annual Openings</span>
-                            <span class="data-value" id="annualOpenings">28,900</span>
-                        </div>
-                        <div class="data-item">
-                            <span class="data-label">Work-Life Balance</span>
-                            <span class="data-value" id="workLifeBalance">7.5/10</span>
+                    <div class="match-right">
+                        <div class="confidence-badge" id="confidenceBadge">High Confidence</div>
+                        <div class="match-percentage">
+                            <div class="percentage-circle">
+                                <svg class="progress-ring" width="120" height="120">
+                                    <!-- Background circle (unfilled area) -->
+                                    <circle 
+                                        cx="60" 
+                                        cy="60" 
+                                        r="52" 
+                                        stroke="rgba(255, 255, 255, 0.8)" 
+                                        stroke-width="8" 
+                                        fill="transparent"
+                                    />
+                                    <!-- Foreground circle (filled area) -->
+                                    <circle 
+                                        class="progress-ring__circle" 
+                                        cx="60" 
+                                        cy="60" 
+                                        r="52" 
+                                        stroke="#f5a700" 
+                                        stroke-width="8" 
+                                        fill="transparent"
+                                    />
+                                </svg>
+                                <div class="percentage-text" id="matchPercentage">85%</div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
 
-    <!-- Result Actions -->
-    <div class="result-actions">
-        <button class="action-btn primary" id="shareResultsBtn">
-            🔗 Share Results
-        </button>
-        <button class="action-btn secondary" id="retakeQuizBtn">
-            🔄 Retake Quiz
-        </button>
-        <button class="action-btn secondary" id="exploreClubsBtn">
-            🏛️ Explore Clubs
-        </button>
-        <button class="action-btn secondary" id="saveToDashboardBtn">
-            💾 Save to Dashboard
-        </button>
-    </div>
-</section>
+            <!-- Recommended Clubs - Full Width, 3 Horizontal (NOT collapsible) -->
+            <div class="recommended-clubs card">
+                <div class="section-header">
+                    <img src="/assets/clubs.png" alt="Recommended clubs" class="section-icon">
+                    <h3 class="section-title">Recommended UC Davis Clubs</h3>
+                </div>
+                <div class="clubs-grid-horizontal" id="recommendedClubsGrid">
+                    <!-- 3 Horizontal Club Cards will be populated here -->
+                </div>
+            </div>
+
+            <!-- Two Column Layout with Collapsible Cards -->
+            <div class="results-two-column">
+                <div class="results-left-column">
+                    <!-- Career Progression - COLLAPSIBLE -->
+                    <div class="career-progression card collapsible-card">
+                        <div class="card-header" onclick="toggleQuizCard('career-progression')">
+                            <div class="section-header-collapsible">
+                                <img src="/assets/career-progression.png" alt="Career progression" class="section-icon">
+                                <h3 class="section-title">Career Progression Path</h3>
+                            </div>
+                            <button class="collapse-btn" id="career-progression-btn">−</button>
+                        </div>
+                        <div class="card-content" id="career-progression-content">
+                            <div class="progression-timeline" id="progressionTimeline">
+                                <!-- Timeline will be populated dynamically -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Next Steps - COLLAPSIBLE -->
+                    <div class="next-steps card collapsible-card">
+                        <div class="card-header" onclick="toggleQuizCard('next-steps')">
+                            <div class="section-header-collapsible">
+                                <img src="/assets/next-steps.png" alt="Next steps" class="section-icon">
+                                <h3 class="section-title">Your Next Steps</h3>
+                            </div>
+                            <button class="collapse-btn" id="next-steps-btn">−</button>
+                        </div>
+                        <div class="card-content" id="next-steps-content">
+                            <div class="steps-list" id="nextStepsList">
+                                <!-- Steps will be populated dynamically -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="results-right-column">
+                    <!-- All Matches - COLLAPSIBLE -->
+                    <div class="all-matches card collapsible-card">
+                        <div class="card-header" onclick="toggleQuizCard('all-matches')">
+                            <div class="section-header-collapsible">
+                                <img src="/assets/target.png" alt="All matches" class="section-icon">
+                                <h3 class="section-title">All Career Matches</h3>
+                            </div>
+                            <button class="collapse-btn" id="all-matches-btn">−</button>
+                        </div>
+                        <div class="card-content" id="all-matches-content">
+                            <div class="matches-chart" id="matchesChart">
+                                <!-- Career match bars will be populated here -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Market Data - COLLAPSIBLE -->
+                    <div class="market-data card collapsible-card">
+                        <div class="card-header" onclick="toggleQuizCard('market-data')">
+                            <div class="section-header-collapsible">
+                                <img src="/assets/market-insights.png" alt="Market insights" class="section-icon">
+                                <h3 class="section-title">Market Insights</h3>
+                            </div>
+                            <button class="collapse-btn" id="market-data-btn">−</button>
+                        </div>
+                        <div class="card-content" id="market-data-content">
+                            <div class="data-grid">
+                                <div class="data-item">
+                                    <span class="data-label">Average Salary</span>
+                                    <span class="data-value" id="avgSalary">$95k - $140k</span>
+                                </div>
+                                <div class="data-item">
+                                    <span class="data-label">Job Growth</span>
+                                    <span class="data-value" id="jobGrowth">+13% (2021-2031)</span>
+                                </div>
+                                <div class="data-item">
+                                    <span class="data-label">Annual Openings</span>
+                                    <span class="data-value" id="annualOpenings">28,900</span>
+                                </div>
+                                <div class="data-item">
+                                    <span class="data-label">Work-Life Balance</span>
+                                    <span class="data-value" id="workLifeBalance">7.5/10</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Result Actions -->
+            <div class="result-actions">
+                <button class="action-btn primary" id="shareResultsBtn">
+                    🔗 Share Results
+                </button>
+                <button class="action-btn secondary" id="retakeQuizBtn">
+                    🔄 Retake Quiz
+                </button>
+                <button class="action-btn secondary" id="exploreClubsBtn">
+                    🏛️ Explore Clubs
+                </button>
+                <button class="action-btn secondary" id="saveToDashboardBtn">
+                    💾 Save to Dashboard
+                </button>
+            </div>
+        </section>
+
         <!-- 📊 LOADING SCREEN -->
         <section class="quiz-loading" id="quizLoading" style="display: none;">
             <div class="loading-content">
@@ -365,5 +365,15 @@
             </div>
         </div>
     </template>
+
+    <!-- ADD NAVIGATION FUNCTION -->
+    <script>
+        function goToDashboard() {
+            window.location.href = '/dashboard';
+        }
+        
+        // Make function globally available
+        window.goToDashboard = goToDashboard;
+    </script>
 </body>
 </html>

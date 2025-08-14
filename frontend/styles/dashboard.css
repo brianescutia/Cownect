@@ -1069,3 +1069,274 @@ body {
 .modal-content::-webkit-scrollbar-thumb:hover {
     background: rgba(95, 150, 197, 0.8);
 }
+
+/* =============================================================================
+   SCROLLABLE SAVED CLUBS SECTION - Add to dashboard.css
+   =============================================================================
+*/
+
+/* Enhanced Saved Clubs Card with Scroll */
+.saved-clubs-card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 1.5rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    margin-bottom: 2rem;
+    max-height: 450px;
+    display: flex;
+    flex-direction: column;
+}
+
+.saved-clubs-card h2 {
+    margin: 0 0 1rem 0;
+    color: #2c3e50;
+    font-size: 1.4rem;
+    font-weight: 600;
+    flex-shrink: 0;
+    position: sticky;
+    top: 0;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid rgba(95, 150, 197, 0.1);
+    z-index: 10;
+}
+
+.saved-clubs-scroll-container {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-right: 0.5rem;
+    margin-right: -0.5rem;
+}
+
+.saved-clubs-scroll-container::-webkit-scrollbar {
+    width: 6px;
+}
+
+.saved-clubs-scroll-container::-webkit-scrollbar-track {
+    background: rgba(95, 150, 197, 0.1);
+    border-radius: 3px;
+}
+
+.saved-clubs-scroll-container::-webkit-scrollbar-thumb {
+    background: rgba(95, 150, 197, 0.5);
+    border-radius: 3px;
+    transition: background 0.3s ease;
+}
+
+.saved-clubs-scroll-container::-webkit-scrollbar-thumb:hover {
+    background: rgba(95, 150, 197, 0.7);
+}
+
+.saved-clubs-scroll-container {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(95, 150, 197, 0.5) rgba(95, 150, 197, 0.1);
+}
+
+.saved-clubs-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+    padding: 0.5rem 0;
+    min-height: 200px;
+}
+
+.saved-club-card {
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 15px;
+    padding: 1rem;
+    border: 2px solid rgba(95, 150, 197, 0.2);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+.saved-club-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    border-color: rgba(95, 150, 197, 0.4);
+}
+
+.saved-club-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #5F96C5, #4a8bc2);
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+}
+
+.saved-club-card:hover::before {
+    transform: scaleX(1);
+}
+
+.saved-club-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 0.75rem;
+}
+
+.saved-club-logo {
+    width: 50px;
+    height: 50px;
+    border-radius: 8px;
+    object-fit: contain;
+    background: white;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.saved-club-info h3 {
+    margin: 0;
+    font-size: 1.1rem;
+    color: #2c3e50;
+    font-weight: 600;
+}
+
+.saved-club-info p {
+    margin: 0.25rem 0 0 0;
+    font-size: 0.85rem;
+    color: #64748b;
+    line-height: 1.4;
+}
+
+.saved-club-tags {
+    margin-top: 0.75rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.saved-club-tag {
+    background: rgba(95, 150, 197, 0.1);
+    color: #5F96C5;
+    padding: 0.25rem 0.5rem;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+.remove-saved-club {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    background: rgba(239, 68, 68, 0.1);
+    color: #EF4444;
+    border: none;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 0.75rem;
+    opacity: 0;
+    transition: all 0.3s ease;
+}
+
+.saved-club-card:hover .remove-saved-club {
+    opacity: 1;
+}
+
+.remove-saved-club:hover {
+    background: rgba(239, 68, 68, 0.2);
+    transform: scale(1.1);
+}
+
+.empty-state {
+    text-align: center;
+    padding: 2rem;
+    color: #64748b;
+    grid-column: 1 / -1;
+}
+
+.empty-state-icon {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    display: block;
+}
+
+.empty-state-text {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: #475569;
+}
+
+.empty-state-subtext {
+    font-size: 0.9rem;
+    color: #64748b;
+}
+
+@media (max-width: 768px) {
+    .saved-clubs-card {
+        max-height: 400px;
+        padding: 1rem;
+    }
+
+    .saved-clubs-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .saved-club-card {
+        padding: 0.875rem;
+    }
+
+    .saved-club-header {
+        gap: 0.75rem;
+    }
+
+    .saved-club-logo {
+        width: 40px;
+        height: 40px;
+    }
+}
+
+@media (max-width: 480px) {
+    .saved-clubs-card {
+        max-height: 350px;
+        padding: 0.75rem;
+    }
+
+    .saved-clubs-card h2 {
+        font-size: 1.2rem;
+    }
+}
+
+/* Loading animation for saved clubs */
+.saved-clubs-loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 200px;
+    grid-column: 1 / -1;
+}
+
+.saved-clubs-spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid rgba(95, 150, 197, 0.2);
+    border-top: 3px solid #5F96C5;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}

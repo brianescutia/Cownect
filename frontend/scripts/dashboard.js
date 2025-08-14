@@ -366,76 +366,142 @@ async function handleImageUpload(event) {
     const file = event.target.files[0];
     if (!file) return;
 
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+        alert('Please select an image file');
+        return;
+    }
+
+    // Validate file size (5MB limit)
+    if (file.size > 5 * 1024 * 1024) {
+        alert('Image size must be less than 5MB');
+        return;
+    }
+
     try {
-        // Validate file
-        if (!file.type.startsWith('image/')) {
-            throw new Error('Please select an image file (JPG, PNG, etc.)');
-        }
-
-        if (file.size > 5 * 1024 * 1024) {
-            throw new Error('Please select an image smaller than 5MB');
-        }
-
-        console.log('📷 Processing profile picture upload...');
-
         // Show loading state
         const profileImage = document.getElementById('profileImage');
-        profileImage.style.opacity = '0.6';
+        const originalContent = profileImage.innerHTML;
+        profileImage.innerHTML = '<div style="display: flex; align-items: center; justify-content: center; height: 100%;"><div style="width: 20px; height: 20px; border: 2px solid #5F96C5; border-top: 2px solid transparent; border-radius: 50%; animation: spin 1s linear infinite;"></div></div>';
 
-        // Convert to base64
-        const reader = new FileReader();
-        reader.onload = async function (e) {
-            try {
-                const imageData = e.target.result;
+        // Convert file to base64 (as expected by backend)
+        const base64 = await fileToBase64(file);
 
-                // Update UI immediately for better UX
-                displayProfileImage(imageData);
+        console.log('📷 Uploading profile image...');
 
-                // Upload to server
-                const response = await fetch('/api/user/profile-picture', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ imageData })
-                });
+        // Send to correct backend endpoint with correct data format
+        const response = await fetch('/api/user/profile-picture', {  // ✅ CORRECTED URL
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'  // ✅ JSON instead of FormData
+            },
+            body: JSON.stringify({
+                imageData: base64  // ✅ Send as base64 string as backend expects
+            })
+        });
 
-                const result = await response.json();
+        if (!response.ok) {
+            throw new Error('Upload failed');
+        }
 
-                if (!response.ok) {
-                    throw new Error(result.error || 'Failed to upload profile picture');
-                }
+        const result = await response.json();
 
-                // Update navbar profile
-                updateNavbarProfile({ ...dashboardState.user, profilePictureUrl: imageData });
+        if (result.success && result.profilePictureUrl) {
+            console.log('✅ Profile image uploaded successfully!');
 
-                // Update user state
-                dashboardState.user.profilePictureUrl = imageData;
+            // Update dashboard profile image
+            const profileImageDisplay = document.getElementById('profileImageDisplay');
+            const profileInitials = document.getElementById('profileInitials');
 
-                showDashboardMessage('Profile picture updated! 📷', 'success');
-                console.log('✅ Profile picture uploaded successfully');
-
-            } catch (error) {
-                console.error('❌ Error uploading profile picture:', error);
-                showDashboardMessage(error.message, 'error');
-
-                // Revert UI on error
-                if (dashboardState.user.profilePictureUrl) {
-                    displayProfileImage(dashboardState.user.profilePictureUrl);
-                } else {
-                    displayProfileInitials(dashboardState.user);
-                }
-            } finally {
-                profileImage.style.opacity = '1';
+            if (profileImageDisplay) {
+                profileImageDisplay.src = result.profilePictureUrl;
+                profileImageDisplay.style.display = 'block';
             }
-        };
 
-        reader.readAsDataURL(file);
+            if (profileInitials) {
+                profileInitials.style.display = 'none';
+            }
+
+            // Update navbar profile image
+            const navbarProfileImage = document.getElementById('navbarProfileImage');
+            const navbarProfileInitials = document.getElementById('navbarProfileInitials');
+
+            if (navbarProfileImage) {
+                navbarProfileImage.src = result.profilePictureUrl;
+                navbarProfileImage.style.display = 'block';
+                console.log('✅ Navbar image updated with:', result.profilePictureUrl);
+            }
+
+            if (navbarProfileInitials) {
+                navbarProfileInitials.style.display = 'none';
+                console.log('✅ Navbar initials hidden');
+            }
+
+            // 🔥 IMPORTANT: Refresh the navbar on other pages
+            if (window.refreshNavbarProfile) {
+                await window.refreshNavbarProfile();
+            }
+
+            console.log('✅ Profile image updated across all elements!');
+            showNotification('Profile image updated successfully!', 'success');
+
+        } else {
+            throw new Error(result.error || 'Upload failed');
+        }
 
     } catch (error) {
-        console.error('❌ Error processing image:', error);
-        showDashboardMessage(error.message, 'error');
+        console.error('💥 Error uploading image:', error);
+
+        // Restore original content
+        profileImage.innerHTML = originalContent;
+
+        // Show error message
+        showNotification('Failed to upload image. Please try again.', 'error');
     }
+}
+
+function showNotification(message, type = 'info') {
+    // Create notification element
+    const notification = document.createElement('div');
+    notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        padding: 1rem 1.5rem;
+        border-radius: 8px;
+        color: white;
+        font-weight: 500;
+        z-index: 1000;
+        animation: slideIn 0.3s ease;
+        background: ${type === 'success' ? '#10B981' : type === 'error' ? '#EF4444' : '#6B7280'};
+    `;
+    notification.textContent = message;
+
+    // Add slide-in animation
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+    `;
+    document.head.appendChild(style);
+
+    // Add to page
+    document.body.appendChild(notification);
+
+    // Remove after 3 seconds
+    setTimeout(() => {
+        notification.style.animation = 'slideIn 0.3s ease reverse';
+        setTimeout(() => {
+            if (notification.parentNode) {
+                notification.parentNode.removeChild(notification);
+            }
+            if (style.parentNode) {
+                style.parentNode.removeChild(style);
+            }
+        }, 300);
+    }, 3000);
 }
 
 // =============================================================================

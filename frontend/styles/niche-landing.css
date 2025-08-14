@@ -1,4 +1,4 @@
-/* Niche Landing Page Styles */
+/* Niche Landing Page Styles - FIXED */
 
 body {
     margin: 0;
@@ -6,7 +6,6 @@ body {
     background-color: var(--bg-color);
     min-height: 100vh;
     background-image: none !important;
-
 }
 
 .niche-main {
@@ -16,7 +15,6 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
-    /* Ensure no background images */
     background: none !important;
     background-image: none !important;
 }
@@ -107,11 +105,13 @@ body {
     font-weight: 500;
 }
 
-/* Feature Cards Section at Bottom */
+/* Feature Cards Section at Bottom - FIXED FOR LARGE SCREENS */
 .feature-cards-section {
     width: 70%;
     max-width: 1000px;
     margin-top: auto;
+    padding-bottom: 3rem;
+    /* Add bottom padding to prevent cutoff */
 }
 
 .feature-cards {
@@ -171,6 +171,7 @@ body {
     margin: 0;
 }
 
+/* ENHANCED FLOATING ANIMATION - Higher Amplitude */
 @keyframes float {
 
     0%,
@@ -179,18 +180,25 @@ body {
     }
 
     33% {
-        transform: translateY(-10px) rotate(0.5deg);
+        transform: translateY(-20px) rotate(1deg);
+        /* Increased from -10px to -20px */
     }
 
     66% {
-        transform: translateY(-3px) rotate(-0.3deg);
+        transform: translateY(-8px) rotate(-0.5deg);
+        /* Increased from -3px to -8px */
     }
 }
 
 /* Responsive Design */
 
-/* Large Screens */
+/* Large Screens - FIXED SPACING AND CUTOFF ISSUES */
 @media (min-width: 2560px) {
+    .niche-main {
+        padding: 2rem 4rem 4rem;
+        /* Increased padding for large screens */
+    }
+
     .hero-content h1 {
         font-size: 5rem;
     }
@@ -204,24 +212,48 @@ body {
         font-size: 1.4rem;
     }
 
+    .feature-cards-section {
+        width: 60%;
+        /* Reduced width to prevent stretching */
+        max-width: 1200px;
+        /* Increased max-width */
+        padding-bottom: 5rem;
+        /* More bottom padding */
+    }
+
     .feature-cards {
         gap: 3rem;
     }
 
     .feature-card {
-        padding: 2.5rem 2rem;
+        padding: 3rem 2.5rem;
+        /* Increased padding */
     }
 
     .feature-card .feature-icon {
-        font-size: 3.5rem;
+        font-size: 4rem;
+        /* Larger icons */
     }
 
     .feature-card h4 {
-        font-size: 1.5rem;
+        font-size: 1.6rem;
     }
 
     .feature-card p {
-        font-size: 1.2rem;
+        font-size: 1.3rem;
+    }
+}
+
+/* Extra Large Screens - ADDITIONAL FIXES */
+@media (min-width: 1920px) {
+    .feature-cards-section {
+        width: 65%;
+        padding-bottom: 4rem;
+    }
+
+    .niche-main {
+        min-height: calc(100vh - 140px);
+        /* Ensure proper height */
     }
 }
 
@@ -357,7 +389,7 @@ body {
     }
 }
 
-
+/* NAVBAR STYLES - Keep these from your original file */
 .navbar {
     display: flex;
     justify-content: center;
@@ -373,7 +405,6 @@ body {
     background-color: rgba(183, 183, 183, 0.30);
     border-radius: 25px;
     width: 65.5vw;
-    /* match homepage width */
     height: 4.2vw;
     max-width: 1129px;
     display: flex;
@@ -415,11 +446,6 @@ body {
     border-radius: 20px;
 }
 
-/* =============================================================================
-   NAVBAR PROFILE CIRCLE - New Styles
-   =============================================================================
-*/
-
 .navbar-profile-circle {
     width: 45px;
     height: 45px;
@@ -456,7 +482,6 @@ body {
     letter-spacing: 0.5px;
 }
 
-/* Add a subtle pulse animation on hover */
 .navbar-profile-circle::before {
     content: '';
     position: absolute;

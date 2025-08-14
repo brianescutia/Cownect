@@ -207,16 +207,16 @@ button {
 
 .clubs-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    /* Exactly 3 columns */
+    grid-template-columns: repeat(3, minmax(240px, 280px));
+    /* SKINNIER: Fixed max width instead of 1fr */
     grid-template-rows: repeat(2, auto);
-    /* Exactly 2 rows */
-    gap: 2rem;
-    /* Good spacing between cards */
+    gap: 3rem 4rem;
+    /* Increased horizontal gap for better spacing */
     padding: 2rem;
     justify-content: center;
-    max-width: 1200px;
-    /* Optimized for 3 columns */
+    /* Center the narrower cards */
+    max-width: 1000px;
+    /* Reduced from 1200px to accommodate skinnier cards */
     margin: 0 auto;
 }
 
@@ -232,21 +232,18 @@ button {
 
 .club-card {
     width: 100%;
-    height: 280px;
+    max-width: 280px;
+    height: 300px;
+    /* Increased height slightly to accommodate bigger logo */
     background-color: rgba(255, 255, 255, 0.9);
-    /* More opaque for better contrast */
     backdrop-filter: blur(12px);
 
     /* CLEAR DEFINED BORDERS */
     border: 3px solid rgba(95, 150, 197, 0.3);
-    /* Prominent border */
     box-shadow:
         0 4px 20px rgba(0, 0, 0, 0.1),
-        /* Main shadow */
         0 0 0 1px rgba(255, 255, 255, 0.8),
-        /* Inner light border */
         inset 0 1px 0 rgba(255, 255, 255, 0.9);
-    /* Inner highlight */
 
     border-radius: 15px;
     padding: 1rem;
@@ -256,10 +253,7 @@ button {
     position: relative;
     transition: all 0.3s ease;
     cursor: pointer;
-
-    /* Ensure each card is clearly separated */
-    margin: 0.5rem;
-    /* Extra margin for clear separation */
+    margin: 0 auto;
 }
 
 .club-card:hover {
@@ -281,23 +275,34 @@ button {
 .card-top {
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    margin-bottom: 0.5rem;
+    align-items: flex-start;
+    /* Changed to flex-start for better logo positioning */
+    margin-bottom: 0.75rem;
+    /* Increased margin for bigger logo */
 }
 
 .club-logo {
-    height: 50px;
-    width: 50px;
+    height: 80px;
+    /* Increased from 50px to 80px */
+    width: 80px;
+    /* Increased from 50px to 80px */
     object-fit: contain;
     background-color: #ffffff;
-    border: 1px solid #ccc;
-    border-radius: 8px;
+    border: 2px solid #ddd;
+    /* Slightly thicker border */
+    border-radius: 12px;
+    /* Increased border radius */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    /* Added subtle shadow */
+    transition: transform 0.3s ease;
 }
 
 .bookmark-icon {
     position: relative;
     z-index: 10;
     transition: transform 0.3s ease;
+    margin-top: 0.25rem;
+    /* Small top margin to align with larger logo */
 }
 
 .bookmark-icon img {
@@ -332,25 +337,21 @@ button {
     font-size: 0.9rem;
     color: #444;
     margin: 0 0 0.75rem 0;
-    /* Bottom margin to separate from tags */
     line-height: 1.4;
     flex: 1;
-    /* Takes remaining space, pushing tags to bottom */
     display: -webkit-box;
-    -webkit-line-clamp: 4;
+    -webkit-line-clamp: 3;
+    /* Reduced from 4 to 3 to make room for bigger logo */
     -webkit-box-orient: vertical;
     overflow: hidden;
 }
 
-/* TAGS BACK AT BOTTOM - Removed the order property */
 .club-tags {
     color: #5f96c5;
     font-size: 0.85rem;
     margin: 0;
-    /* No extra margin needed */
     font-weight: 500;
     margin-top: auto;
-    /* Pushes tags to bottom of flex container */
 }
 
 /* =============================================================================
@@ -447,72 +448,59 @@ button {
 */
 
 @media (max-width: 1400px) {
-    .clubs-grid {
-        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-        max-width: 1200px;
-        gap: 1.75rem;
+    .club-card {
+        height: 280px;
+        max-width: 260px;
+    }
+
+    .club-logo {
+        height: 70px;
+        width: 70px;
     }
 }
 
 @media (max-width: 1100px) {
-    .clubs-grid {
-        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-        gap: 1.5rem;
+    .club-card {
+        height: 270px;
+        max-width: 280px;
     }
 
-    .club-card {
-        height: 260px;
-        margin: 0.25rem;
-        /* Slightly smaller margin on smaller screens */
+    .club-logo {
+        height: 65px;
+        width: 65px;
     }
 }
 
 @media (max-width: 768px) {
-    .clubs-grid {
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-        gap: 1.5rem;
-        padding: 1.5rem;
-    }
-
     .club-card {
-        height: 240px;
+        height: 250px;
         padding: 0.875rem;
-        margin: 0.25rem;
         border-width: 2px;
-        /* Slightly thinner border on mobile */
+        max-width: 320px;
     }
 
     .club-logo {
-        height: 40px;
-        width: 40px;
+        height: 60px;
+        /* Still bigger than original 40px */
+        width: 60px;
     }
 
     .bookmark-icon img {
         height: 30px;
         width: 30px;
     }
-
-    .navbar-profile-circle {
-        width: 40px;
-        height: 40px;
-        font-size: 0.9rem;
-    }
-
-    .nav-links {
-        gap: 2rem;
-    }
 }
 
 @media (max-width: 600px) {
-    .clubs-grid {
-        grid-template-columns: 1fr;
-        gap: 1.5rem;
-        padding: 1rem;
+    .club-card {
+        height: 240px;
+        max-width: 100%;
     }
 
-    .club-card {
-        height: 220px;
-        margin: 0;
+    .club-logo {
+        height: 55px;
+        /* Bigger than original even on mobile */
+        width: 55px;
     }
 
     .club-name {
@@ -521,34 +509,12 @@ button {
 
     .club-description {
         font-size: 0.85rem;
-        -webkit-line-clamp: 3;
+        -webkit-line-clamp: 2;
+        /* Further reduced on mobile */
     }
 
     .club-tags {
         font-size: 0.8rem;
-    }
-
-    .navbar {
-        gap: 1rem;
-        padding: 0.5rem 1rem;
-    }
-
-    .navbar-container {
-        padding: 0 2rem;
-    }
-
-    .navbar-profile-circle {
-        width: 35px;
-        height: 35px;
-        font-size: 0.8rem;
-    }
-
-    .nav-links {
-        gap: 1rem;
-    }
-
-    .nav-links a {
-        font-size: 0.9rem;
     }
 }
 

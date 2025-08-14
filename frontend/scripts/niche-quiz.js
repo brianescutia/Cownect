@@ -238,6 +238,33 @@ function updateProgress() {
     document.getElementById('progressFill').style.width = `${progress}%`;
 }
 
+function toggleQuizCard(cardId) {
+    const content = document.getElementById(`${cardId}-content`);
+    const button = document.getElementById(`${cardId}-btn`);
+
+    if (!content || !button) {
+        console.warn(`Card elements not found for: ${cardId}`);
+        return;
+    }
+
+    const isCollapsed = content.classList.contains('collapsed');
+
+    if (isCollapsed) {
+        // Expand the card
+        content.classList.remove('collapsed');
+        button.textContent = '−';
+        button.classList.remove('collapsed');
+        console.log(`Expanded card: ${cardId}`);
+    } else {
+        // Collapse the card
+        content.classList.add('collapsed');
+        button.textContent = '+';
+        button.classList.add('collapsed');
+        console.log(`Collapsed card: ${cardId}`);
+    }
+}
+
+
 // =============================================================================
 // QUESTION TIMER
 // =============================================================================
@@ -749,6 +776,30 @@ function saveToDashboard() {
 // ERROR HANDLING & KEYBOARD SHORTCUTS
 // =============================================================================
 
+
+document.addEventListener('DOMContentLoaded', () => {
+    console.log('🔧 Initializing collapsible cards...');
+
+    // Make sure all cards start expanded by default
+    const cardIds = ['career-progression', 'next-steps', 'all-matches', 'market-data'];
+
+    cardIds.forEach(cardId => {
+        const content = document.getElementById(`${cardId}-content`);
+        const button = document.getElementById(`${cardId}-btn`);
+
+        if (content && button) {
+            // Ensure cards start expanded
+            content.classList.remove('collapsed');
+            button.textContent = '−';
+            button.classList.remove('collapsed');
+        }
+    });
+
+    console.log('✅ Collapsible cards initialized');
+});
+
+window.toggleQuizCard = toggleQuizCard;
+
 window.addEventListener('error', (event) => {
     console.error('🚨 Global error:', event.error);
 
@@ -797,6 +848,61 @@ window.addEventListener('beforeunload', (event) => {
         return event.returnValue;
     }
 });
+
+function goToDashboard() {
+    window.location.href = '/dashboard';
+}
+
+// Add click handlers for result action buttons
+document.addEventListener('DOMContentLoaded', () => {
+    // Share Results
+    const shareBtn = document.getElementById('shareResultsBtn');
+    if (shareBtn) {
+        shareBtn.addEventListener('click', () => {
+            if (navigator.share) {
+                navigator.share({
+                    title: 'My Tech Career Quiz Results',
+                    text: 'I just discovered my ideal tech career path!',
+                    url: window.location.href
+                });
+            } else {
+                // Fallback: copy to clipboard
+                navigator.clipboard.writeText(window.location.href);
+                alert('Results link copied to clipboard!');
+            }
+        });
+    }
+
+    // Retake Quiz
+    const retakeBtn = document.getElementById('retakeQuizBtn');
+    if (retakeBtn) {
+        retakeBtn.addEventListener('click', () => {
+            location.reload();
+        });
+    }
+
+    // Explore Clubs
+    const exploreBtn = document.getElementById('exploreClubsBtn');
+    if (exploreBtn) {
+        exploreBtn.addEventListener('click', () => {
+            window.location.href = '/tech-clubs';
+        });
+    }
+
+    // Save to Dashboard
+    const saveBtn = document.getElementById('saveToDashboardBtn');
+    if (saveBtn) {
+        saveBtn.addEventListener('click', () => {
+            // You can implement this later to save results to user profile
+            alert('Results saved to your dashboard! 💾');
+        });
+    }
+});
+
+// Make functions globally available
+window.goToDashboard = goToDashboard;
+
+console.log('🎯 Quiz collapsible cards script loaded!');
 
 // =============================================================================
 // DEBUG FUNCTIONS

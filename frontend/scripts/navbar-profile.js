@@ -1,112 +1,103 @@
 // =============================================================================
-// NAVBAR PROFILE FUNCTIONALITY
+// SIMPLIFIED NAVBAR PROFILE SCRIPT - For pages that need basic profile sync
 // =============================================================================
-// Save as frontend/scripts/navbar-profile.js
 
-// Function to navigate to dashboard
-function goToDashboard() {
-    window.location.href = '/dashboard';
-}
+console.log('🔧 Simplified Navbar Profile script loaded');
 
-// Load user profile data for navbar
 document.addEventListener('DOMContentLoaded', async () => {
+    console.log('📄 DOM loaded, initializing simple navbar profile...');
+    await initializeSimpleNavbarProfile();
+});
+
+async function initializeSimpleNavbarProfile() {
     try {
-        console.log('🔄 Loading user data for navbar profile...');
-
+        console.log('📡 Fetching user data for simple navbar...');
         const response = await fetch('/api/user');
-        if (response.ok) {
-            const userData = await response.json();
 
-            if (userData.isLoggedIn) {
-                console.log('✅ User is logged in:', userData.email);
-                updateNavbarProfile(userData);
-            } else {
-                console.log('❌ User is not logged in');
-                handleLoggedOutState();
-            }
-        } else {
-            console.warn('⚠️ Failed to fetch user data:', response.status);
-            handleLoggedOutState();
+        if (!response.ok) {
+            console.warn('⚠️ User API response not OK:', response.status);
+            setSimpleDefaultProfile();
+            return;
         }
+
+        const userData = await response.json();
+        console.log('📊 User data received:', userData);
+
+        if (userData.isLoggedIn && userData.email) {
+            updateSimpleProfile(userData);
+        } else {
+            console.log('👤 User not logged in');
+            setSimpleDefaultProfile();
+        }
+
     } catch (error) {
-        console.error('💥 Error loading user data for navbar:', error);
-        handleLoggedOutState();
+        console.error('💥 Error fetching user data:', error);
+        setSimpleDefaultProfile();
     }
-});
+}
 
-// Update navbar profile with user data
-function updateNavbarProfile(userData) {
-    const navbarInitials = document.getElementById('navbarProfileInitials');
-    if (navbarInitials && userData.email) {
-        // Extract initials from email
-        const emailPrefix = userData.email.split('@')[0];
+function updateSimpleProfile(userData) {
+    const emailPrefix = userData.email.split('@')[0];
+    const initials = emailPrefix.substring(0, 2).toUpperCase();
 
-        // Try to create meaningful initials
-        let initials;
-        if (userData.name) {
-            // If we have a full name, use first letters of first and last name
-            const nameParts = userData.name.split(' ');
-            initials = nameParts.map(part => part[0]).join('').substring(0, 2).toUpperCase();
+    // Update navbar profile circle
+    const navbarProfileInitials = document.getElementById('navbarProfileInitials');
+    const navbarProfileImage = document.getElementById('navbarProfileImage');
+
+    if (navbarProfileInitials) {
+        if (userData.profilePictureUrl && navbarProfileImage) {
+            navbarProfileImage.src = userData.profilePictureUrl;
+            navbarProfileImage.style.display = 'block';
+            navbarProfileInitials.style.display = 'none';
+            console.log(`🖼️ Simple navbar image updated: ${userData.profilePictureUrl}`);
         } else {
-            // Otherwise, use first 2 characters of email prefix
-            initials = emailPrefix.substring(0, 2).toUpperCase();
-        }
-
-        navbarInitials.textContent = initials;
-
-        // Update tooltip
-        const profileCircle = document.getElementById('navbarProfileCircle');
-        if (profileCircle) {
-            profileCircle.title = `${userData.email} - Go to Dashboard`;
-        }
-
-        console.log(`🎨 Updated navbar profile: ${initials} for ${userData.email}`);
-    }
-}
-
-// Handle logged out state
-function handleLoggedOutState() {
-    const navbarInitials = document.getElementById('navbarProfileInitials');
-    if (navbarInitials) {
-        navbarInitials.textContent = '?';
-    }
-
-    const profileCircle = document.getElementById('navbarProfileCircle');
-    if (profileCircle) {
-        profileCircle.title = 'Please log in';
-        profileCircle.style.opacity = '0.6';
-        profileCircle.onclick = () => {
-            window.location.href = '/login';
-        };
-    }
-
-    console.log('👤 Set navbar to logged out state');
-}
-
-// Add hover effects and animations
-document.addEventListener('DOMContentLoaded', () => {
-    const profileCircle = document.getElementById('navbarProfileCircle');
-    if (profileCircle) {
-        // Add keyboard accessibility
-        profileCircle.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                goToDashboard();
+            navbarProfileInitials.textContent = initials;
+            navbarProfileInitials.style.display = 'block';
+            if (navbarProfileImage) {
+                navbarProfileImage.style.display = 'none';
             }
-        });
+            console.log(`🎯 Simple navbar initials updated: ${initials}`);
+        }
+    }
 
-        // Add focus styles
-        profileCircle.addEventListener('focus', () => {
-            profileCircle.style.outline = '3px solid rgba(95, 150, 197, 0.5)';
-            profileCircle.style.outlineOffset = '2px';
-        });
-
-        profileCircle.addEventListener('blur', () => {
-            profileCircle.style.outline = 'none';
+    // Add click handler for navigation
+    const profileCircle = document.getElementById('navbarProfileCircle');
+    if (profileCircle) {
+        profileCircle.style.cursor = 'pointer';
+        profileCircle.addEventListener('click', () => {
+            window.location.href = '/dashboard';
         });
     }
-});
 
-// Export functions for global access
-window.goToDashboard = goToDashboard;
-window.updateNavbarProfile = updateNavbarProfile;
+    console.log('✅ Simple profile updated successfully');
+}
+
+function setSimpleDefaultProfile() {
+    const navbarProfileInitials = document.getElementById('navbarProfileInitials');
+    if (navbarProfileInitials) {
+        navbarProfileInitials.textContent = 'UC';
+        navbarProfileInitials.style.display = 'block';
+    }
+
+    const navbarProfileImage = document.getElementById('navbarProfileImage');
+    if (navbarProfileImage) {
+        navbarProfileImage.style.display = 'none';
+    }
+
+    console.log('🎯 Set simple default profile');
+}
+
+// Global function to update profile image on this page
+window.updateSimpleProfileImage = function (imageUrl) {
+    const navbarProfileImage = document.getElementById('navbarProfileImage');
+    const navbarProfileInitials = document.getElementById('navbarProfileInitials');
+
+    if (navbarProfileImage && imageUrl) {
+        navbarProfileImage.src = imageUrl;
+        navbarProfileImage.style.display = 'block';
+        if (navbarProfileInitials) {
+            navbarProfileInitials.style.display = 'none';
+        }
+        console.log('🖼️ Simple profile image updated');
+    }
+};

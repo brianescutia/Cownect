@@ -1980,15 +1980,36 @@ app.get('/api/user/matches', requireAuth, async (req, res) => {
 // =============================================================================
 
 //  USER STATUS API - Let frontend know if someone is logged in
-app.get('/api/user', (req, res) => {
+
+// REPLACE your current /api/user endpoint with this:
+
+app.get('/api/user', async (req, res) => {
   if (req.isAuthenticated()) {
-    res.json({
-      isLoggedIn: true,
-      email: req.user.email,
-      name: req.user.name,
-      userId: req.user._id,
-      isVerified: req.user.isVerified
-    });
+    try {
+      // Fetch the full user data including profilePictureUrl
+      const user = await User.findById(req.user._id);
+
+      res.json({
+        isLoggedIn: true,
+        email: req.user.email,
+        name: req.user.name,
+        userId: req.user._id,
+        isVerified: req.user.isVerified,
+        profilePictureUrl: user?.profilePictureUrl || null, // ✅ ADD THIS LINE
+        displayName: user?.name || req.user.name || req.user.email.split('@')[0]
+      });
+    } catch (error) {
+      console.error('Error fetching user data:', error);
+      // Fallback response if database query fails
+      res.json({
+        isLoggedIn: true,
+        email: req.user.email,
+        name: req.user.name,
+        userId: req.user._id,
+        isVerified: req.user.isVerified,
+        profilePictureUrl: null
+      });
+    }
   } else {
     res.json({ isLoggedIn: false });
   }
