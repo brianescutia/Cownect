@@ -91,13 +91,15 @@ const requireAuth = (req, res, next) => {
   }
 };
 
-function redirectLoggedInUsers(req, res, next) {
+const redirectLoggedInUsers = (req, res, next) => {
   if (req.session && req.session.userId) {
-    console.log(` Redirecting logged-in user ${req.session.userEmail} to tech-clubs`);
-    return res.redirect('/tech-clubs');
+    // If user is logged in, redirect them to dashboard/tech-clubs
+    res.redirect('/tech-clubs');
+  } else {
+    // If user is not logged in, show them the landing page
+    next();
   }
-  next();
-}
+};
 
 app.use('/assets', express.static(path.join(__dirname, '../frontend/assets'), {
   maxAge: '1d', // Cache for 1 day
@@ -213,12 +215,8 @@ app.get('/signup', (req, res) => {
   res.sendFile(path.join(__dirname, '../frontend/pages/signup.html'));
 });
 
-app.get('/', (req, res) => {
-  if (req.session && req.session.userId) {
-    res.redirect('/tech-clubs');
-  } else {
-    res.redirect('/login');
-  }
+app.get('/', redirectLoggedInUsers, (req, res) => {
+  res.sendFile(path.join(__dirname, '../frontend/pages/index.html'));
 });
 
 // Google OAuth login route
@@ -254,9 +252,6 @@ app.get('/auth/google/callback',
 // =============================================================================
 
 // HOME ROUTE
-app.get('/', redirectLoggedInUsers, (req, res) => {
-  res.sendFile(path.join(__dirname, '../frontend/pages/index.html'));
-});
 
 // =============================================================================
 // AUTHENTICATION ROUTES
