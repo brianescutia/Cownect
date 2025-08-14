@@ -307,21 +307,498 @@ body {
     }
 }
 
-/* Theme toggle button (if needed) */
-#themeToggle {
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Rethink Sans', Arial, sans-serif;
+}
+
+body {
+    width: 100vw;
+    height: 100vh;
+    background-color: white;
+    overflow: hidden;
+    position: relative;
+}
+
+/* Header logo (keep existing) */
+.header-logo {
     position: absolute;
     top: 2rem;
-    right: 2rem;
-    padding: 0.5rem 1rem;
-    background-color: #3b82f6;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 0.9rem;
+    left: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
     z-index: 10;
 }
 
-#themeToggle:hover {
-    background-color: #2563eb;
+.header-logo img {
+    width: 3rem;
+    height: 3rem;
+}
+
+.header-logo h1 {
+    font-size: 2rem;
+    font-weight: 600;
+    color: #333;
+}
+
+/* Main container (keep existing) */
+.main-container {
+    display: flex;
+    height: 100vh;
+    width: 100vw;
+}
+
+.left-side {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    background-color: white;
+}
+
+.login-form-container {
+    width: 100%;
+    max-width: 450px;
+    margin-left: 2rem;
+}
+
+/* Welcome text (keep existing) */
+.welcome-text h2 {
+    font-size: 2.5rem;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 0.5rem;
+}
+
+.welcome-text p {
+    font-size: 1.1rem;
+    color: #666;
+    margin-bottom: 2rem;
+    line-height: 1.5;
+}
+
+.separator {
+    width: 100%;
+    height: 1px;
+    background-color: #e5e5e5;
+    margin-bottom: 2rem;
+}
+
+/* =============================================================================
+   GOOGLE AUTH CONTAINER - Main styling for the Google sign-in section
+   ============================================================================= */
+
+.google-auth-container {
+    margin-bottom: 2rem;
+}
+
+.google-signin-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    width: 100%;
+    padding: 1.125rem 1.5rem;
+    background: white;
+    border: 2px solid #e5e5e5;
+    border-radius: 12px;
+    color: #374151;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+    position: relative;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.google-signin-btn:hover {
+    border-color: #4285f4;
+    box-shadow: 0 4px 12px rgba(66, 133, 244, 0.15);
+    transform: translateY(-1px);
+}
+
+.google-signin-btn:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 6px rgba(66, 133, 244, 0.2);
+}
+
+.google-signin-btn:focus {
+    outline: 2px solid #4285f4;
+    outline-offset: 2px;
+}
+
+.google-icon {
+    flex-shrink: 0;
+    transition: transform 0.2s ease;
+}
+
+.google-signin-btn:hover .google-icon {
+    transform: scale(1.05);
+}
+
+/* Security notice */
+.security-notice {
+    background: #f0f9ff;
+    border: 1px solid #bae6fd;
+    color: #0c4a6e;
+    padding: 0.875rem 1rem;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    margin-top: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    line-height: 1.4;
+}
+
+.security-notice svg {
+    flex-shrink: 0;
+}
+
+/* =============================================================================
+   INFO SECTIONS - Benefits and additional information
+   ============================================================================= */
+
+.info-section,
+.benefits-section {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.info-section h3,
+.benefits-section h3 {
+    color: #1e293b;
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+.info-section ul,
+.benefits-section ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.info-section li,
+.benefits-section li {
+    color: #475569;
+    font-size: 0.95rem;
+    margin-bottom: 0.75rem;
+    line-height: 1.4;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+}
+
+.info-section li:last-child,
+.benefits-section li:last-child {
+    margin-bottom: 0;
+}
+
+/* Support link */
+.support-link {
+    text-align: center;
+    font-size: 0.9rem;
+    color: #666;
+    margin-top: 1rem;
+}
+
+.support-link a {
+    color: #3b82f6;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.support-link a:hover {
+    text-decoration: underline;
+}
+
+/* =============================================================================
+   MESSAGES - Error, success, and info messages
+   ============================================================================= */
+
+.error-message {
+    background: #fee2e2;
+    color: #991b1b;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    border: 1px solid #fecaca;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    animation: slideIn 0.3s ease;
+}
+
+.success-message {
+    background: #d1fae5;
+    color: #065f46;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    border: 1px solid #a7f3d0;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    animation: slideIn 0.3s ease;
+}
+
+.info-message {
+    background: #dbeafe;
+    color: #1e40af;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    border: 1px solid #93c5fd;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* =============================================================================
+   LOADING STATES
+   ============================================================================= */
+
+.loading-spinner-inline {
+    width: 20px;
+    height: 20px;
+    border: 2px solid #f3f4f6;
+    border-top: 2px solid #4285f4;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* Loading state for Google button */
+.google-signin-btn.loading {
+    opacity: 0.7;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+/* =============================================================================
+   SIGNUP/LOGIN LINKS
+   ============================================================================= */
+
+.signup-link {
+    text-align: center;
+    font-size: 0.95rem;
+    color: #666;
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #e5e5e5;
+}
+
+.signup-link a {
+    color: #3b82f6;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.signup-link a:hover {
+    text-decoration: underline;
+}
+
+/* =============================================================================
+   RIGHT SIDE - Keep existing styles
+   ============================================================================= */
+
+.right-side {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    background-color: white;
+    flex: 1;
+}
+
+.border-container {
+    position: relative;
+    width: 700px;
+    height: 850px;
+    background: linear-gradient(to bottom, #92BBD8, #738898);
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.clay-image {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    max-width: 90%;
+    max-height: 90%;
+    object-fit: contain;
+    z-index: 2;
+}
+
+/* =============================================================================
+   RESPONSIVE DESIGN
+   ============================================================================= */
+
+@media (max-width: 1400px) {
+    .border-container {
+        width: 550px;
+        height: 650px;
+    }
+}
+
+@media (max-width: 1024px) {
+    .main-container {
+        flex-direction: column;
+    }
+
+    .right-side {
+        display: none;
+    }
+
+    .left-side {
+        width: 100%;
+        padding: 1rem;
+    }
+
+    .login-form-container {
+        margin-left: 0;
+        max-width: 500px;
+    }
+
+    .header-logo {
+        position: relative;
+        top: 0;
+        left: 0;
+        margin-bottom: 2rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .welcome-text h2 {
+        font-size: 2rem;
+    }
+
+    .welcome-text p {
+        font-size: 1rem;
+    }
+
+    .header-logo h1 {
+        font-size: 1.5rem;
+    }
+
+    .header-logo img {
+        width: 2.5rem;
+        height: 2.5rem;
+    }
+
+    .google-signin-btn {
+        padding: 1rem;
+        font-size: 1rem;
+    }
+
+    .info-section,
+    .benefits-section {
+        padding: 1.25rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .left-side {
+        padding: 1rem 0.75rem;
+    }
+
+    .google-signin-btn {
+        padding: 0.875rem;
+        font-size: 0.95rem;
+    }
+
+    .welcome-text h2 {
+        font-size: 1.75rem;
+    }
+}
+
+/* =============================================================================
+   ANIMATIONS AND TRANSITIONS
+   ============================================================================= */
+
+.google-auth-container {
+    animation: fadeInUp 0.4s ease-out;
+}
+
+.info-section,
+.benefits-section {
+    animation: fadeInUp 0.5s ease-out;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Focus management for accessibility */
+.google-signin-btn:focus-visible {
+    outline: 2px solid #4285f4;
+    outline-offset: 2px;
+}
+
+/* Improve contrast for better accessibility */
+.benefits-section li,
+.info-section li {
+    color: #334155;
+}
+
+/* Enhanced hover effects */
+.google-signin-btn {
+    background: linear-gradient(to bottom, #ffffff, #f8fafc);
+}
+
+.google-signin-btn:hover {
+    background: linear-gradient(to bottom, #f8fafc, #f1f5f9);
+}
+
+/* Dark mode support (optional) */
+@media (prefers-color-scheme: dark) {
+    .security-notice {
+        background: #1e3a8a;
+        border-color: #3b82f6;
+        color: #dbeafe;
+    }
 }

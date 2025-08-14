@@ -1,7 +1,10 @@
+require('dotenv').config();
 const express = require('express');
 const path = require('path');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
+dotenv.config();
+
 const session = require('express-session');  // For user session management
 const MongoStore = require('connect-mongo');  // Store sessions in MongoDB
 const User = require('../backend/models/User');        // Import our User model
@@ -9,9 +12,12 @@ const Club = require('./models/Club');
 const { CareerField, QuizQuestion, QuizResult } = require('./models/nicheQuizModels');
 const Event = require('./models/eventModel'); // Import Event model for events API
 // Add this with your other imports (around line 10)
-const { sendVerificationEmail, sendPasswordResetEmail } = require('./emailService');
+const passport = require('passport');
+require('./googleAuth');
+const GoogleStrategy = require('passport-google-oauth20').Strategy;
 
-dotenv.config();
+
+
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -69,27 +75,18 @@ mongoose.connect(process.env.MONGO_URI, {
 // AUTHENTICATION MIDDLEWARE - Our "bouncer" function
 // This checks if someone has a valid wristband before letting them into protected areas
 const requireAuth = (req, res, next) => {
-  console.log('🔒 RequireAuth check for:', req.path);
-  console.log('🔍 Session check:', {
+  console.log('🔒 Auth check for:', req.path);
+  console.log('🔍 Session:', {
     sessionID: req.sessionID,
-    hasSession: !!req.session,
     userId: req.session?.userId,
-    userEmail: req.session?.userEmail,
-    sessionAge: req.session?.cookie?.maxAge
+    userEmail: req.session?.userEmail
   });
 
-  // Check if session exists and has userId
   if (req.session && req.session.userId) {
-    console.log('✅ Authentication successful for:', req.session.userEmail);
+    console.log('✅ User authenticated:', req.session.userEmail);
     return next();
   } else {
-    console.log('❌ Authentication failed - redirecting to login');
-    console.log('🔍 Session state:', {
-      sessionExists: !!req.session,
-      hasUserId: !!req.session?.userId,
-      sessionData: req.session
-    });
-
+    console.log('❌ User not authenticated, redirecting to login');
     return res.redirect('/login');
   }
 };
@@ -177,6 +174,81 @@ app.delete = function (path, ...handlers) {
   }
 };
 
+
+
+// 4. PASSPORT SERIALIZATION
+passport.serializeUser((user, done) => {
+  done(null, user._id);
+});
+
+passport.deserializeUser(async (id, done) => {
+  try {
+    const user = await User.findById(id);
+    done(null, user);
+  } catch (error) {
+    done(error, null);
+  }
+});
+
+// 5. ADD PASSPORT MIDDLEWARE (after your session middleware)
+app.use(passport.initialize());
+app.use(passport.session());
+
+// 6. REPLACE YOUR AUTH ROUTES WITH THESE:
+
+app.get('/login', (req, res) => {
+  // Redirect if already logged in
+  if (req.session && req.session.userId) {
+    return res.redirect('/tech-clubs');
+  }
+  res.sendFile(path.join(__dirname, '../frontend/pages/login.html'));
+});
+
+// Signup page (Google-only)
+app.get('/signup', (req, res) => {
+  // Redirect if already logged in
+  if (req.session && req.session.userId) {
+    return res.redirect('/tech-clubs');
+  }
+  res.sendFile(path.join(__dirname, '../frontend/pages/signup.html'));
+});
+
+app.get('/', (req, res) => {
+  if (req.session && req.session.userId) {
+    res.redirect('/tech-clubs');
+  } else {
+    res.redirect('/login');
+  }
+});
+
+// Google OAuth login route
+app.get('/auth/google',
+  passport.authenticate('google', { scope: ['profile', 'email'] })
+);
+
+app.get('/auth/google/callback',
+  passport.authenticate('google', { failureRedirect: '/login?error=google_auth_failed' }),
+  (req, res) => {
+    console.log('✅ Google OAuth success for:', req.user.email);
+
+    // Check if user is verified (should be true for Google users)
+    if (!req.user.isVerified) {
+      console.log('❌ Google user not verified (unexpected):', req.user.email);
+      return res.redirect('/verify-email-prompt?email=' + encodeURIComponent(req.user.email));
+    }
+
+    // Set session
+    req.session.userId = req.user._id;
+    req.session.userEmail = req.user.email;
+
+    console.log('🎉 Google OAuth login successful, redirecting to tech-clubs');
+    res.redirect('/tech-clubs?google_auth=success');
+  }
+);
+
+
+// In your backend directory
+
 // =============================================================================
 // ROUTES
 // =============================================================================
@@ -190,60 +262,15 @@ app.get('/', redirectLoggedInUsers, (req, res) => {
 // AUTHENTICATION ROUTES
 // =============================================================================
 
+
+
+
 // LOGIN ROUTES
 app.get('/login', redirectLoggedInUsers, (req, res) => {
   res.sendFile(path.join(__dirname, '../frontend/pages/login.html'));
 });
 
-app.post('/login', async (req, res) => {
-  const { email, password } = req.body;
 
-  try {
-    console.log('🔐 Login attempt for:', email);
-
-    // Step 1: Find user by email
-    const user = await User.findOne({ email: email.toLowerCase() });
-
-    if (!user) {
-      console.log('❌ User not found:', email);
-      return res.redirect('/login?error=invalid');
-    }
-
-    // Step 2: Check password
-    const isPasswordValid = await user.comparePassword(password);
-
-    if (!isPasswordValid) {
-      console.log('❌ Invalid password for:', email);
-      return res.redirect('/login?error=invalid');
-    }
-
-    // Step 3: Check email verification - IMPROVED
-    if (!user.isVerified) {
-      console.log('❌ User not verified:', email);
-      // Redirect to verification prompt with user's email
-      return res.redirect(`/verify-email-prompt?email=${encodeURIComponent(user.email)}&error=not_verified`);
-    }
-
-    // Step 4: Create session
-    req.session.userId = user._id;
-    req.session.userEmail = user.email;
-
-    // Step 5: Save session and redirect
-    req.session.save((err) => {
-      if (err) {
-        console.error('💥 Session save error:', err);
-        return res.redirect('/login?error=server');
-      }
-
-      console.log('✅ Login successful, redirecting to tech-clubs');
-      res.redirect('/tech-clubs');
-    });
-
-  } catch (err) {
-    console.error('💥 Login error:', err);
-    res.redirect('/login?error=server');
-  }
-});
 
 // SIGNUP ROUTES
 app.use((err, req, res, next) => {
@@ -273,150 +300,21 @@ app.get('/signup', redirectLoggedInUsers, (req, res) => {
   res.sendFile(path.join(__dirname, '../frontend/pages/signup.html'));
 });
 
-app.get('/verify-email-prompt', (req, res) => {
-  console.log(' Verify email prompt accessed');
-  res.sendFile(path.join(__dirname, '../frontend/pages/verify-email-prompt.html'));
-});
+
 
 // Replace your existing /signup POST route in backend/app.js with this:
 
-app.post('/signup', async (req, res) => {
-  const { email, password } = req.body;
 
-  console.log('📝 Signup attempt for:', email);
-
-  try {
-    // Step 1: Basic validation
-    if (!email || !password) {
-      return res.redirect('/signup?error=missing_fields');
-    }
-
-    // Step 2: Validate UC Davis email domain
-    if (!email.toLowerCase().endsWith('@ucdavis.edu')) {
-      console.log('❌ Invalid email domain:', email);
-      return res.redirect('/signup?error=invalid_domain');
-    }
-
-    // Step 3: Validate password
-    if (password.length < 6) {
-      return res.redirect('/signup?error=weak_password');
-    }
-
-    // Step 4: Check if user already exists
-    const existingUser = await User.findOne({ email: email.toLowerCase() });
-
-    if (existingUser) {
-      // ✅ IMPROVED: Handle unverified existing accounts better
-      if (!existingUser.isVerified) {
-        console.log('🔄 Found unverified account, updating and resending verification...');
-
-        // Update the password (in case they want to change it)
-        existingUser.password = password;
-
-        // Generate NEW verification token (old one might be expired)
-        const verificationToken = existingUser.generateVerificationToken();
-
-        // Save the updated user
-        await existingUser.save();
-        console.log('💾 Updated existing unverified user');
-
-        // Try to send verification email
-        let emailSent = false;
-        try {
-          const { sendVerificationEmail } = require('./emailService');
-          const emailResult = await sendVerificationEmail(existingUser.email, verificationToken);
-          emailSent = emailResult.success;
-
-          if (emailSent) {
-            console.log('✅ New verification email sent successfully');
-          } else {
-            console.error('❌ Failed to send verification email:', emailResult.error);
-          }
-        } catch (emailError) {
-          console.error('💥 Email service error:', emailError);
-          emailSent = false;
-        }
-
-        // Redirect to verification prompt with success message
-        const emailParam = encodeURIComponent(existingUser.email);
-        const statusParam = emailSent ? 'resent' : 'email_error';
-        return res.redirect(`/verify-email-prompt?email=${emailParam}&status=${statusParam}`);
-      } else {
-        // Account exists and is verified
-        console.log('❌ Verified account already exists:', email);
-        return res.redirect('/signup?error=account_exists');
-      }
-    }
-
-    // Step 5: Create new user (if no existing user found)
-    console.log('✅ Creating new user...');
-    const newUser = new User({
-      email: email.toLowerCase(),
-      password: password,
-      isVerified: false
-    });
-
-    // Step 6: Generate verification token
-    console.log('🔑 Generating verification token...');
-    const verificationToken = newUser.generateVerificationToken();
-
-    // Step 7: Save user to database  
-    await newUser.save();
-    console.log('💾 New user saved to database');
-
-    // Step 8: Send verification email
-    console.log('📧 Attempting to send verification email...');
-    let emailSent = false;
-
-    try {
-      const { sendVerificationEmail } = require('./emailService');
-      const emailResult = await sendVerificationEmail(newUser.email, verificationToken);
-      emailSent = emailResult.success;
-
-      if (emailSent) {
-        console.log('✅ Verification email sent successfully');
-      } else {
-        console.error('❌ Failed to send verification email:', emailResult.error);
-      }
-    } catch (emailError) {
-      console.error('💥 Email service error:', emailError);
-      emailSent = false;
-    }
-
-    // Step 9: Redirect to verification page (instead of JSON response)
-    console.log('🎉 Signup successful, redirecting to verification page');
-    const emailParam = encodeURIComponent(newUser.email);
-    const statusParam = emailSent ? 'sent' : 'email_error';
-    return res.redirect(`/verify-email-prompt?email=${emailParam}&status=${statusParam}`);
-
-  } catch (err) {
-    console.error('💥 Signup error:', err);
-
-    // Handle MongoDB duplicate key error
-    if (err.code === 11000) {
-      return res.redirect('/signup?error=account_exists');
-    }
-
-    // Handle validation errors
-    if (err.name === 'ValidationError') {
-      return res.redirect('/signup?error=validation_error');
-    }
-
-    // Handle other errors
-    return res.redirect('/signup?error=server_error');
-  }
-});
 
 
 //  LOGOUT ROUTE
 app.get('/logout', (req, res) => {
-  // 🗑️ REMOVE THE WRISTBAND - Destroy the session completely
   req.session.destroy((err) => {
     if (err) {
       console.error('Logout error:', err);
     }
     console.log('User logged out');
-    res.redirect('/login');
+    res.redirect('/login?logged_out=true');
   });
 });
 
@@ -1843,15 +1741,15 @@ app.get('/api/user/profile', requireAuth, async (req, res) => {
 
 //  USER STATUS API - Let frontend know if someone is logged in
 app.get('/api/user', (req, res) => {
-  if (req.session.userId) {
-    // User has a valid wristband - send their info
+  if (req.isAuthenticated()) {
     res.json({
       isLoggedIn: true,
-      email: req.session.userEmail,
-      userId: req.session.userId
+      email: req.user.email,
+      name: req.user.name,
+      userId: req.user._id,
+      isVerified: req.user.isVerified
     });
   } else {
-    // No wristband - they're not logged in
     res.json({ isLoggedIn: false });
   }
 });
@@ -2643,183 +2541,9 @@ app.get('/api/quiz/results', requireAuth, async (req, res) => {
 // =============================================================================
 const { requireAuth: requireAuthentication, requireVerification } = require('../backend/authMiddleware');
 
-// Replace your existing signup route
-app.post('/signup', async (req, res) => {
-  const { email, password } = req.body;
-
-  try {
-    // Step 1: Check if user already exists
-    const existingUser = await User.findOne({ email: email.toLowerCase() });
-
-    if (existingUser) {
-      return res.redirect('/signup?error=exists');
-    }
-
-    // Step 2: Validate UC Davis email domain
-    if (!email.toLowerCase().endsWith('@ucdavis.edu')) {
-      return res.redirect('/signup?error=email');
-    }
-
-    // Step 3: Create new user (NOT VERIFIED initially)
-    const newUser = new User({
-      email: email.toLowerCase(),
-      password: password,
-      isVerified: false  //  Start unverified
-    });
-
-    // Step 4: Generate verification token
-    const verificationToken = newUser.generateVerificationToken();
-    await newUser.save();
-
-    // Step 5: Send verification email
-    const emailResult = await sendVerificationEmail(newUser.email, verificationToken);
-
-    if (!emailResult.success) {
-      console.error('Failed to send verification email:', emailResult.error);
-      // Continue anyway - user can request resend later
-    }
-
-    // Step 6: DON'T auto-login - redirect to verification prompt
-    console.log('New user created, verification email sent:', newUser.email);
-    res.redirect('/verify-email-prompt?email=' + encodeURIComponent(newUser.email));
-
-  } catch (err) {
-    console.error('Signup error:', err);
-    if (err.code === 11000) {
-      return res.redirect('/signup?error=exists');
-    }
-    res.redirect('/signup?error=server');
-  }
-});
-
-//  EMAIL VERIFICATION ROUTES
-
-// Show verification prompt page
-app.get('/verify-email-prompt', (req, res) => {
-  // Allow both logged-in and non-logged-in users
-  res.sendFile(path.join(__dirname, '../frontend/pages/verify-email-prompt.html'));
-});
-
-// Verify email token
-app.get('/verify-email', async (req, res) => {
-  try {
-    const { token } = req.query;
-
-    if (!token) {
-      console.log('❌ Missing verification token');
-      return res.redirect('/verify-email-prompt?error=missing_token');
-    }
-
-    console.log('🔍 Verifying token...');
-
-    // Find user with this verification token that hasn't expired
-    const user = await User.findOne({
-      verificationToken: token,
-      verificationTokenExpires: { $gt: Date.now() }
-    });
-
-    if (!user) {
-      console.log('❌ Invalid or expired token');
-      return res.redirect('/verify-email-prompt?error=invalid_token');
-    }
-
-    // ✅ Mark user as verified
-    user.isVerified = true;
-    user.verificationToken = null;
-    user.verificationTokenExpires = null;
-    await user.save();
-
-    console.log('✅ Email verified successfully for:', user.email);
-
-    // Auto-login the verified user
-    req.session.userId = user._id;
-    req.session.userEmail = user.email;
-
-    // Save session explicitly
-    req.session.save((err) => {
-      if (err) {
-        console.error('❌ Session save error after verification:', err);
-        return res.redirect('/login?verified=true');
-      }
-
-      console.log('✅ User auto-logged in after verification');
-      res.redirect('/tech-clubs?verified=true');
-    });
-
-  } catch (error) {
-    console.error('💥 Email verification error:', error);
-    res.redirect('/verify-email-prompt?error=server');
-  }
-});
 
 
-// Resend verification email
-app.post('/api/resend-verification', async (req, res) => {
-  try {
-    const { email } = req.body;
 
-    if (!email) {
-      return res.status(400).json({
-        success: false,
-        error: 'Email is required'
-      });
-    }
-
-    console.log('📤 Resending verification for:', email);
-
-    // Find unverified user
-    const user = await User.findOne({
-      email: email.toLowerCase(),
-      isVerified: false
-    });
-
-    if (!user) {
-      return res.status(404).json({
-        success: false,
-        error: 'User not found or already verified'
-      });
-    }
-
-    // Generate NEW verification token
-    const verificationToken = user.generateVerificationToken();
-    await user.save();
-
-    console.log('🔑 Generated new verification token');
-
-    // Send new verification email
-    try {
-      const { sendVerificationEmail } = require('./emailService');
-      const emailResult = await sendVerificationEmail(user.email, verificationToken);
-
-      if (emailResult.success) {
-        console.log('✅ Verification email resent successfully');
-        res.json({
-          success: true,
-          message: 'Verification email sent successfully!'
-        });
-      } else {
-        console.error('❌ Failed to resend verification email:', emailResult.error);
-        res.status(500).json({
-          success: false,
-          error: 'Failed to send verification email. Please try again.'
-        });
-      }
-    } catch (emailError) {
-      console.error('💥 Email service error:', emailError);
-      res.status(500).json({
-        success: false,
-        error: 'Email service error. Please try again later.'
-      });
-    }
-
-  } catch (error) {
-    console.error('💥 Resend verification error:', error);
-    res.status(500).json({
-      success: false,
-      error: 'Server error occurred. Please try again.'
-    });
-  }
-});
 
 // Add this route for testing
 app.get('/api/test/db', async (req, res) => {
