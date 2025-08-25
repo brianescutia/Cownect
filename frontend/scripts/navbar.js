@@ -1,5 +1,5 @@
 // =============================================================================
-// ENHANCED NAVBAR FUNCTIONALITY - RESTORED NAVIGATION, NO AUTO-SCROLL
+// ENHANCED NAVBAR FUNCTIONALITY - WORKS WITH DYNAMIC NAVBAR
 // =============================================================================
 
 console.log('🔧 Enhanced Navbar script loaded successfully!');
@@ -9,6 +9,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     console.log('📄 DOM loaded, initializing navbar...');
 
     try {
+        // Wait a bit for dynamic navbar to be injected
+        await waitForNavbarInjection();
+
         // Initialize navbar profile
         await initializeNavbarProfile();
 
@@ -21,6 +24,35 @@ document.addEventListener('DOMContentLoaded', async () => {
         console.error('💥 Navbar initialization error:', error);
     }
 });
+
+// =============================================================================
+// WAIT FOR DYNAMIC NAVBAR INJECTION
+// =============================================================================
+
+function waitForNavbarInjection(maxAttempts = 10) {
+    return new Promise((resolve) => {
+        let attempts = 0;
+
+        const checkNavbar = () => {
+            const navbar = document.querySelector('.navbar');
+            const profileCircle = document.getElementById('navbarProfileCircle');
+
+            if (navbar && profileCircle) {
+                console.log('✅ Dynamic navbar detected');
+                resolve();
+            } else if (attempts < maxAttempts) {
+                attempts++;
+                console.log(`🔄 Waiting for navbar injection... (${attempts}/${maxAttempts})`);
+                setTimeout(checkNavbar, 50);
+            } else {
+                console.warn('⚠️ Navbar injection timeout, proceeding anyway');
+                resolve();
+            }
+        };
+
+        checkNavbar();
+    });
+}
 
 // =============================================================================
 // INITIALIZE NAVBAR PROFILE
@@ -260,35 +292,76 @@ function setDefaultProfile() {
 }
 
 // =============================================================================
-// SETUP NAVBAR INTERACTIONS - RESTORED NAVIGATION WITHOUT AUTO-SCROLL
+// SETUP NAVBAR INTERACTIONS - ENHANCED FOR DYNAMIC NAVBAR
 // =============================================================================
 
 function setupNavbarInteractions() {
     console.log('🔧 Setting up navbar interactions...');
 
-    // LOGO CLICK NAVIGATION
+    // LOGO CLICK NAVIGATION - Works with dynamic navbar
+    setupLogoClickHandler();
+
+    // PROFILE CIRCLE NAVIGATION - Works with dynamic navbar
+    setupProfileClickHandler();
+
+    // NAV LINKS CLICK HANDLERS - Optional enhancement
+    setupNavLinksHandlers();
+
+    console.log('✅ Navbar interactions set up');
+}
+
+function setupLogoClickHandler() {
     const logoTitle = document.querySelector('.logo-title');
-    if (logoTitle && !logoTitle.href && !logoTitle.closest('a')) {
-        logoTitle.style.cursor = 'pointer';
-        logoTitle.addEventListener('click', () => {
-            window.location.href = '/dashboard';
+    if (logoTitle) {
+        // Remove any existing handlers and onclick attributes
+        logoTitle.removeAttribute('onclick');
+
+        // Add event listener (this won't duplicate if called multiple times)
+        logoTitle.addEventListener('click', (e) => {
+            // Allow normal link behavior, but log it
+            console.log('🎯 Logo clicked - navigating to dashboard');
         });
+
         console.log('🎯 Logo click handler added');
     }
+}
 
-    // PROFILE CIRCLE NAVIGATION
+function setupProfileClickHandler() {
     const profileCircle = document.getElementById('navbarProfileCircle');
     if (profileCircle) {
+        // Remove any existing onclick attributes
         profileCircle.removeAttribute('onclick');
-        profileCircle.style.cursor = 'pointer';
+
+        // Add event listener
         profileCircle.addEventListener('click', () => {
             console.log('🎯 Profile circle clicked - navigating to dashboard');
             window.location.href = '/dashboard';
         });
-        console.log('🎯 Profile circle navigation restored');
-    }
 
-    console.log('✅ Navbar interactions set up');
+        // Ensure it looks clickable
+        profileCircle.style.cursor = 'pointer';
+
+        console.log('🎯 Profile circle navigation set up');
+    }
+}
+
+function setupNavLinksHandlers() {
+    const navLinks = document.querySelectorAll('.nav-link');
+
+    navLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+            // Log navigation for debugging
+            console.log(`🔗 Navigating to: ${link.href}`);
+
+            // Update active state immediately (before page loads)
+            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+            link.classList.add('active');
+        });
+    });
+
+    if (navLinks.length > 0) {
+        console.log(`🎯 Set up handlers for ${navLinks.length} nav links`);
+    }
 }
 
 // =============================================================================
@@ -353,30 +426,9 @@ window.updateProfileImage = function (imageUrl) {
     console.log('✅ Profile image updated across all pages');
 };
 
-// Manual test function for debugging
-window.testNavbar = function () {
-    const btn = document.querySelector('.account-btn');
-    const initials = document.getElementById('navbarProfileInitials');
-
-    if (btn) {
-        btn.innerHTML = 'TEST WORKED!';
-        btn.style.backgroundColor = 'red';
-        console.log('🧪 Account button test successful!');
-    }
-
-    if (initials) {
-        initials.textContent = 'TEST';
-        initials.style.backgroundColor = 'red';
-        console.log('🧪 Profile initials test successful!');
-    } else {
-        console.log('❌ Button or initials not found');
-    }
-};
-
-window.testProfileImage = function (imageUrl) {
-    console.log('🧪 Testing profile image with URL:', imageUrl);
-    updateNavbarProfileCircle('TE', imageUrl);
-};
+// =============================================================================
+// DEBUG FUNCTIONS
+// =============================================================================
 
 window.debugProfile = function () {
     const navbarProfileInitials = document.getElementById('navbarProfileInitials');
@@ -397,23 +449,15 @@ window.debugProfile = function () {
     });
 };
 
-// Export for other modules if needed
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = {
-        initializeNavbarProfile,
-        updateProfileWithUserData,
-        setDefaultProfile
-    };
-}
-// Debug function
 window.debugNavbar = function () {
     console.log('🔍 Navbar Debug Information:');
     console.log('  Current URL:', window.location.href);
-    console.log('  Navbar profile circle:', document.getElementById('navbarProfileCircle'));
+    console.log('  Navbar element:', document.querySelector('.navbar'));
+    console.log('  Profile circle:', document.getElementById('navbarProfileCircle'));
     console.log('  Profile initials:', document.getElementById('navbarProfileInitials'));
     console.log('  Profile image:', document.getElementById('navbarProfileImage'));
-    console.log('  Account button:', document.querySelector('.account-btn'));
-    console.log('  Logo title:', document.querySelector('.logo-title'));
+    console.log('  Nav links:', document.querySelectorAll('.nav-link'));
+    console.log('  Active links:', document.querySelectorAll('.nav-link.active'));
 };
 
 // Export for other modules if needed
@@ -425,3 +469,5 @@ if (typeof module !== 'undefined' && module.exports) {
         updateProfileImage
     };
 }
+
+console.log('✅ Enhanced Navbar with Dynamic Support ready');

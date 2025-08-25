@@ -366,68 +366,136 @@ function renderFeaturedEvents() {
     const template = document.getElementById('eventCardTemplate');
 
     if (!grid) {
-        console.error(' Featured events grid not found');
+        console.error('❌ Featured events grid not found');
         return;
     }
 
     if (!template) {
-        console.error(' Event card template not found');
+        console.error('❌ Event card template not found');
         return;
     }
 
+    // Clear all existing content including loading cards
     grid.innerHTML = '';
 
     if (CalendarState.featuredEvents.length === 0) {
-        grid.innerHTML = '<div class="no-events">No featured events available</div>';
+        grid.innerHTML = '<div class="no-events" style="grid-column: 1 / -1; text-align: center; padding: 2rem; color: #666;">No featured events available</div>';
         return;
     }
 
-    CalendarState.featuredEvents.forEach(event => {
+    CalendarState.featuredEvents.forEach((event, index) => {
         const eventCard = template.content.cloneNode(true);
-        eventCard.querySelector('.event-card').setAttribute('data-event-id', event._id || event.id);
+        const cardElement = eventCard.querySelector('.event-card');
 
+        // Set data attributes for event tracking
+        cardElement.setAttribute('data-event-id', event._id || event.id);
+        cardElement.setAttribute('data-event-date', event.date);
+        cardElement.setAttribute('data-event-time', event.time || event.formattedTime);
 
-        // Update card content
+        // Update event image
         const img = eventCard.querySelector('.event-image');
-        img.src = event.imageUrl || '/assets/default-event-image.jpg';
+        updateImageInEventCard(eventCard, event);
         img.alt = event.title;
 
+        // Handle image loading errors
+        img.addEventListener('error', () => {
+            img.style.background = getEventCategoryGradient(event.category);
+            img.style.display = 'flex';
+            img.style.alignItems = 'center';
+            img.style.justifyContent = 'center';
+            img.style.color = 'white';
+            img.style.fontWeight = '600';
+            img.style.fontSize = '2rem';
+            img.textContent = getEventIcon(event.category);
+        });
+
+        // Update date badge
+        const eventDate = new Date(event.date);
+        const dateDay = eventCard.querySelector('.date-day');
+        const dateMonth = eventCard.querySelector('.date-month');
+
+        dateDay.textContent = eventDate.getDate();
+        dateMonth.textContent = eventDate.toLocaleDateString('en-US', { month: 'short' }).toUpperCase();
+
+        // Update bookmark button
         const bookmark = eventCard.querySelector('.event-bookmark');
         bookmark.addEventListener('click', (e) => {
             e.stopPropagation();
-            handleEventBookmark(event._id || event.id);
+            handleEventBookmark(event._id || event.id, bookmark);
         });
 
-        const dateMonth = eventCard.querySelector('.date-month');
-        const dateDay = eventCard.querySelector('.date-day');
-        const eventDate = new Date(event.date);
-        dateMonth.textContent = eventDate.toLocaleDateString('en-US', { month: 'short' }).toUpperCase();
-        dateDay.textContent = eventDate.getDate();
-
+        // Update event content
         eventCard.querySelector('.event-title').textContent = event.title;
         eventCard.querySelector('.event-description').textContent = event.description;
         eventCard.querySelector('.time-text').textContent = event.formattedTime || event.time;
         eventCard.querySelector('.location-text').textContent = event.location;
 
-        // Event actions
-        const joinBtn = eventCard.querySelector('.join-event-btn');
-        joinBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            handleEventJoin(event._id || event.id);
-        });
-
+        // UPDATED: Only handle calendar button (join button is removed)
+        const calendarDropdown = eventCard.querySelector('.calendar-dropdown');
         const calendarBtn = eventCard.querySelector('.add-calendar-btn');
+        const calendarOptions = eventCard.querySelector('.calendar-options');
+
+        // Main calendar button click - default to Google Calendar
         calendarBtn.addEventListener('click', (e) => {
             e.stopPropagation();
             addToGoogleCalendar(event);
         });
 
+        // Show dropdown on hover
+        calendarDropdown.addEventListener('mouseenter', () => {
+            calendarOptions.style.display = 'block';
+        });
+
+        calendarDropdown.addEventListener('mouseleave', () => {
+            calendarOptions.style.display = 'none';
+        });
+
+        // Handle calendar option selections
+        eventCard.querySelectorAll('.calendar-option').forEach(option => {
+            option.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const type = option.getAttribute('data-type');
+                handleCalendarExport(event, type);
+                calendarOptions.style.display = 'none';
+            });
+        });
+
+        // Add click handler for entire card to show event details
+        cardElement.addEventListener('click', () => {
+            selectEventDate(event);
+        });
+
         grid.appendChild(eventCard);
     });
 
-    console.log(` Rendered ${CalendarState.featuredEvents.length} featured event cards`);
+    console.log(`✅ Rendered ${CalendarState.featuredEvents.length} featured event cards with single calendar button`);
 }
 
+function handleCalendarExport(event, type) {
+    try {
+        console.log(`📅 Exporting to ${type} calendar:`, event.title);
+
+        switch (type) {
+            case 'google':
+                addToGoogleCalendar(event);
+                break;
+            case 'outlook':
+                addToOutlookCalendar(event);
+                break;
+            case 'apple':
+                addToAppleCalendar(event);
+                break;
+            case 'ics':
+                downloadICSFile(event);
+                break;
+            default:
+                addToGoogleCalendar(event);
+        }
+    } catch (error) {
+        console.error('❌ Calendar export error:', error);
+        showNotification(`Failed to export to ${type} calendar`, 'error');
+    }
+}
 // =============================================================================
 // DATE SELECTION AND SIDEBAR FUNCTIONS
 // =============================================================================
@@ -609,105 +677,155 @@ async function handleEventJoin(eventId) {
     }
 }
 
-async function handleEventBookmark(eventId) {
+async function handleEventBookmark(eventId, bookmarkElement) {
     try {
-        console.log(` Bookmarking event: ${eventId}`);
-        alert('Event bookmarked! (Feature coming soon)');
+        console.log(`🔖 Toggling bookmark for event: ${eventId}`);
+
+        const isBookmarked = bookmarkElement.classList.contains('bookmarked');
+
+        // Optimistic update
+        if (isBookmarked) {
+            bookmarkElement.classList.remove('bookmarked');
+        } else {
+            bookmarkElement.classList.add('bookmarked');
+        }
+
+        // In the future, make actual API call here:
+        // const response = await fetch(`/api/events/${eventId}/bookmark`, { method: 'POST' });
+
+        const message = isBookmarked ? 'Event removed from bookmarks' : 'Event bookmarked! 🔖';
+        showNotification(message, 'info');
+
     } catch (error) {
-        console.error(' Error bookmarking event:', error);
-        alert('Failed to bookmark event');
+        console.error('❌ Error bookmarking event:', error);
+
+        // Revert optimistic update
+        if (bookmarkElement.classList.contains('bookmarked')) {
+            bookmarkElement.classList.remove('bookmarked');
+        } else {
+            bookmarkElement.classList.add('bookmarked');
+        }
+
+        showNotification('Failed to bookmark event', 'error');
     }
 }
 
 function addToGoogleCalendar(event) {
     try {
-        console.log(` Adding to Google Calendar: ${event.title}`);
+        console.log('📅 Adding to Google Calendar:', event.title);
 
-        // Validate event object
-        if (!event || !event.title) {
-            console.error(' Invalid event object:', event);
-            showNotification('Invalid event data', 'error');
-            return;
-        }
+        // Parse event date and time
+        const eventDate = new Date(event.date);
+        const timeResult = parseEventTime(event.time || event.formattedTime, eventDate);
 
-        // Parse event date with better error handling
-        let eventDate;
-        try {
-            if (event.date) {
-                eventDate = new Date(event.date);
-                // Check if date is valid
-                if (isNaN(eventDate.getTime())) {
-                    throw new Error('Invalid date');
-                }
-            } else {
-                // Default to today if no date
-                eventDate = new Date();
-            }
-        } catch (dateError) {
-            console.error(' Date parsing error:', dateError);
-            eventDate = new Date(); // Fallback to today
-        }
+        const calendarUrl = new URL('https://calendar.google.com/calendar/render');
+        calendarUrl.searchParams.set('action', 'TEMPLATE');
+        calendarUrl.searchParams.set('text', event.title);
+        calendarUrl.searchParams.set('dates',
+            `${formatDateForCalendar(timeResult.start)}/${formatDateForCalendar(timeResult.end)}`
+        );
+        calendarUrl.searchParams.set('details',
+            `${event.description}\n\n📍 ${event.location}\n🎓 UC Davis Cownect`
+        );
+        calendarUrl.searchParams.set('location', event.location);
+        calendarUrl.searchParams.set('ctz', 'America/Los_Angeles');
 
-        console.log(' Parsed event date:', eventDate);
-
-        // Parse time with fallback
-        let startTime, endTime;
-        try {
-            if (event.time && event.time !== 'Time TBD') {
-                const timeResult = parseEventTimeCalendar(event.time, eventDate);
-                startTime = timeResult.start;
-                endTime = timeResult.end;
-            } else {
-                // Default times
-                startTime = new Date(eventDate);
-                startTime.setHours(18, 0, 0, 0); // 6 PM
-                endTime = new Date(startTime);
-                endTime.setHours(20, 0, 0, 0); // 8 PM
-            }
-        } catch (timeError) {
-            console.error(' Time parsing error:', timeError);
-            // Fallback times
-            startTime = new Date(eventDate);
-            startTime.setHours(18, 0, 0, 0);
-            endTime = new Date(startTime);
-            endTime.setHours(20, 0, 0, 0);
-        }
-
-        console.log(' Start time:', startTime, 'End time:', endTime);
-
-        // Validate times before proceeding
-        if (isNaN(startTime.getTime()) || isNaN(endTime.getTime())) {
-            console.error(' Invalid times generated');
-            showNotification('Failed to parse event time', 'error');
-            return;
-        }
-
-        // Build Google Calendar URL
-        const calendarUrl = buildCalendarUrl({
-            title: event.title,
-            description: event.description || 'UC Davis Tech Event',
-            location: event.location || 'UC Davis Campus',
-            startTime: startTime,
-            endTime: endTime
-        });
-
-        console.log('🔗 Calendar URL:', calendarUrl);
-
-        // Open Google Calendar
-        const newWindow = window.open(calendarUrl, '_blank', 'noopener,noreferrer');
+        const newWindow = window.open(calendarUrl.toString(), '_blank', 'noopener,noreferrer');
 
         if (newWindow) {
-            console.log(' Opened Google Calendar');
             showNotification('Event added to Google Calendar! 📅', 'success');
         } else {
-            console.error(' Failed to open new window');
             showNotification('Please allow popups to add events', 'error');
         }
 
     } catch (error) {
-        console.error(' Error adding to Google Calendar:', error);
-        showNotification(`Calendar error: ${error.message}`, 'error');
+        console.error('❌ Google Calendar error:', error);
+        showNotification('Failed to add to Google Calendar', 'error');
     }
+}
+
+function addToOutlookCalendar(event) {
+    try {
+        const eventDate = new Date(event.date);
+        const timeResult = parseEventTime(event.time || event.formattedTime, eventDate);
+
+        const outlookUrl = new URL('https://outlook.live.com/calendar/0/deeplink/compose');
+        outlookUrl.searchParams.set('subject', event.title);
+        outlookUrl.searchParams.set('body',
+            `${event.description}\n\n📍 Location: ${event.location}\n🎓 UC Davis Cownect`
+        );
+        outlookUrl.searchParams.set('startdt', timeResult.start.toISOString());
+        outlookUrl.searchParams.set('enddt', timeResult.end.toISOString());
+        outlookUrl.searchParams.set('location', event.location);
+
+        window.open(outlookUrl.toString(), '_blank', 'noopener,noreferrer');
+        showNotification('Event added to Outlook Calendar! 📅', 'success');
+
+    } catch (error) {
+        console.error('❌ Outlook Calendar error:', error);
+        showNotification('Failed to add to Outlook Calendar', 'error');
+    }
+}
+
+function addToAppleCalendar(event) {
+    // For Apple Calendar, we'll generate an ICS file
+    downloadICSFile(event);
+    showNotification('ICS file downloaded for Apple Calendar! 📅', 'success');
+}
+
+function downloadICSFile(event) {
+    try {
+        const eventDate = new Date(event.date);
+        const timeResult = parseEventTime(event.time || event.formattedTime, eventDate);
+
+        const icsContent = generateICSContent({
+            title: event.title,
+            description: event.description,
+            location: event.location,
+            startTime: timeResult.start,
+            endTime: timeResult.end
+        });
+
+        const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
+        const url = window.URL.createObjectURL(blob);
+
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `${event.title.replace(/[^a-z0-9]/gi, '_').toLowerCase()}.ics`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+        window.URL.revokeObjectURL(url);
+
+        showNotification('Calendar file downloaded! 💾', 'success');
+
+    } catch (error) {
+        console.error('❌ ICS download error:', error);
+        showNotification('Failed to download calendar file', 'error');
+    }
+}
+
+function generateICSContent({ title, description, location, startTime, endTime }) {
+    const formatICSDate = (date) => {
+        return date.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
+    };
+
+    return [
+        'BEGIN:VCALENDAR',
+        'VERSION:2.0',
+        'PRODID:-//UC Davis Cownect//Event Calendar//EN',
+        'BEGIN:VEVENT',
+        `DTSTART:${formatICSDate(startTime)}`,
+        `DTEND:${formatICSDate(endTime)}`,
+        `SUMMARY:${title}`,
+        `DESCRIPTION:${description}\\n\\n📍 ${location}\\n🎓 UC Davis Cownect`,
+        `LOCATION:${location}`,
+        `UID:${Date.now()}@cownect.ucdavis.edu`,
+        'STATUS:CONFIRMED',
+        'END:VEVENT',
+        'END:VCALENDAR'
+    ].join('\r\n');
 }
 
 function parseEventTimeCalendar(timeString, eventDate) {
@@ -727,21 +845,49 @@ function parseEventTimeCalendar(timeString, eventDate) {
     }
 }
 
+function parseEventTime(timeString, eventDate) {
+    const baseDate = new Date(eventDate);
+
+    if (!timeString || timeString === 'Time TBD') {
+        // Default to 6 PM - 8 PM
+        const startTime = new Date(baseDate);
+        startTime.setHours(18, 0, 0, 0);
+        const endTime = new Date(startTime);
+        endTime.setHours(20, 0, 0, 0);
+        return { start: startTime, end: endTime };
+    }
+
+    // Handle time ranges like "6:00 PM - 8:00 PM"
+    if (timeString.includes('-')) {
+        const parts = timeString.split('-').map(t => t.trim());
+        const startTime = parseTimeString(parts[0], baseDate);
+        const endTime = parts[1] ? parseTimeString(parts[1], baseDate) :
+            new Date(startTime.getTime() + 2 * 60 * 60 * 1000);
+        return { start: startTime, end: endTime };
+    } else {
+        // Single time
+        const startTime = parseTimeString(timeString, baseDate);
+        const endTime = new Date(startTime.getTime() + 2 * 60 * 60 * 1000);
+        return { start: startTime, end: endTime };
+    }
+}
+
+
 function parseTimeString(timeStr, baseDate) {
     const date = new Date(baseDate);
     const cleanTime = timeStr.trim().toLowerCase();
 
-    // Match "6:00 pm" or "6 pm" or "18:00"
     const match = cleanTime.match(/(\d{1,2})(?::(\d{2}))?\s*(am|pm)?/);
     if (!match) {
-        throw new Error(`Cannot parse time: ${timeStr}`);
+        // Fallback to 6 PM if can't parse
+        date.setHours(18, 0, 0, 0);
+        return date;
     }
 
     let hours = parseInt(match[1]);
     const minutes = parseInt(match[2] || '0');
     const period = match[3];
 
-    // Convert to 24-hour format
     if (period === 'pm' && hours !== 12) {
         hours += 12;
     } else if (period === 'am' && hours === 12) {
@@ -1027,6 +1173,28 @@ function renderFeaturedEvents() {
         img.src = event.imageUrl || generatePlaceholderImage(event.title);
         img.alt = event.title;
 
+        // Add smart positioning
+        img.addEventListener('load', function () {
+            const title = event.title.toLowerCase();
+
+            // Simple positioning logic based on event type
+            if (title.includes('fair') || title.includes('expo') || title.includes('conference')) {
+                this.style.objectPosition = 'left top';
+            } else if (title.includes('hackathon') || title.includes('workshop')) {
+                this.style.objectPosition = 'center center';
+            } else if (title.includes('research')) {
+                this.style.objectPosition = 'left top';
+            } else {
+                // Check image aspect ratio
+                const ratio = this.naturalWidth / this.naturalHeight;
+                if (ratio > 2.5) {
+                    this.style.objectPosition = 'center top'; // Wide banners
+                } else {
+                    this.style.objectPosition = 'center center';
+                }
+            }
+        });
+
         // Handle image loading errors
         img.addEventListener('error', () => {
             img.style.background = getEventCategoryGradient(event.category);
@@ -1092,6 +1260,189 @@ function renderFeaturedEvents() {
 
     console.log(` Rendered ${CalendarState.featuredEvents.length} featured event cards with responsive design`);
 }
+
+// =============================================================================
+// SMART IMAGE POSITIONING SYSTEM
+// Add this to your events-calendar.js file
+// =============================================================================
+
+// Function to analyze and position images based on their content and type
+function smartImagePositioning(img, event) {
+    // Wait for image to load to analyze its dimensions
+    img.addEventListener('load', function () {
+        const naturalWidth = this.naturalWidth;
+        const naturalHeight = this.naturalHeight;
+        const aspectRatio = naturalWidth / naturalHeight;
+        const containerRatio = 450 / 180; // Your container aspect ratio (2.5)
+
+        console.log(`Image: ${event.title} - Dimensions: ${naturalWidth}x${naturalHeight}, Ratio: ${aspectRatio.toFixed(2)}`);
+
+        // Determine best positioning based on image characteristics
+        let positioning = determineImagePositioning(event, aspectRatio, containerRatio);
+
+        // Apply the positioning
+        this.style.objectPosition = positioning;
+
+        // Log for debugging
+        console.log(`Applied positioning: ${positioning} for "${event.title}"`);
+    });
+
+    // Handle loading errors
+    img.addEventListener('error', function () {
+        console.log(`Image failed to load for: ${event.title}`);
+        this.style.background = 'linear-gradient(135deg, #5F96C5, #4a8bc2)';
+        this.style.display = 'flex';
+        this.style.alignItems = 'center';
+        this.style.justifyContent = 'center';
+        this.style.color = 'white';
+        this.style.fontSize = '2rem';
+        this.textContent = getEventIcon(event.category || 'default');
+    });
+}
+
+function determineImagePositioning(event, imageRatio, containerRatio) {
+    const title = event.title.toLowerCase();
+    const description = (event.description || '').toLowerCase();
+
+    // 1. Check for specific event types that typically have text at top
+    if (title.includes('fair') || title.includes('expo') || title.includes('conference')) {
+        return 'center top';
+    }
+
+    // 2. Check for banner-style images (very wide)
+    if (imageRatio > containerRatio * 1.5) {
+        // Very wide image - likely a banner with text at top
+        return 'center top';
+    }
+
+    // 3. Check for poster-style images (tall)
+    if (imageRatio < containerRatio * 0.6) {
+        // Tall image - show top portion where titles usually are
+        return 'center top';
+    }
+
+    // 4. Check for specific keywords that suggest text placement
+    if (title.includes('hackathon') || title.includes('workshop')) {
+        // These often have centered logos/text
+        return 'center center';
+    }
+
+    if (title.includes('research') || title.includes('presentation')) {
+        // Academic events often have important info at top
+        return 'center top';
+    }
+
+    if (title.includes('social') || title.includes('networking')) {
+        // Social events often have people/activities in center
+        return 'center center';
+    }
+
+    // 5. Default positioning based on aspect ratio
+    if (imageRatio > containerRatio * 1.2) {
+        // Wide image - show top portion
+        return 'center top';
+    } else if (imageRatio < containerRatio * 0.8) {
+        // Tall image - show top portion
+        return 'center top';
+    } else {
+        // Roughly matching ratio - center is fine
+        return 'center center';
+    }
+}
+
+// Enhanced version with manual override capability
+function setupSmartImageSystem() {
+    // Create a positioning override map for specific problematic images
+    const manualOverrides = {
+        // Add specific overrides as you encounter problem images
+        'career fair': 'center top',
+        'fall virtual career fair': 'center top',
+        'hackdavis': 'center center',
+        'research expo': 'left top',
+        // Add more as needed
+    };
+
+    return {
+        manualOverrides,
+        getPositioning: function (event, imageRatio, containerRatio) {
+            const title = event.title.toLowerCase();
+
+            // Check for manual overrides first
+            for (const [key, position] of Object.entries(manualOverrides)) {
+                if (title.includes(key)) {
+                    return position;
+                }
+            }
+
+            // Fall back to smart detection
+            return determineImagePositioning(event, imageRatio, containerRatio);
+        }
+    };
+}
+
+// Update your renderFeaturedEvents function to use this system
+function updateImageInEventCard(eventCard, event) {
+    const img = eventCard.querySelector('.event-image');
+    const imageSystem = setupSmartImageSystem();
+
+    img.src = event.imageUrl || generatePlaceholderImage(event.title);
+    img.alt = event.title;
+
+    // Apply smart positioning
+    img.addEventListener('load', function () {
+        const aspectRatio = this.naturalWidth / this.naturalHeight;
+        const containerRatio = 450 / 180;
+
+        const positioning = imageSystem.getPositioning(event, aspectRatio, containerRatio);
+        this.style.objectPosition = positioning;
+
+        // Optional: Add a data attribute to track what positioning was used
+        this.setAttribute('data-positioning', positioning);
+        this.setAttribute('data-ratio', aspectRatio.toFixed(2));
+
+        console.log(`${event.title}: ${this.naturalWidth}x${this.naturalHeight} (${aspectRatio.toFixed(2)}) → ${positioning}`);
+    });
+
+    // Handle errors
+    img.addEventListener('error', function () {
+        this.style.background = getEventCategoryGradient(event.category);
+        this.style.display = 'flex';
+        this.style.alignItems = 'center';
+        this.style.justifyContent = 'center';
+        this.style.color = 'white';
+        this.style.fontSize = '2rem';
+        this.textContent = getEventIcon(event.category || 'default');
+    });
+}
+
+// Utility function to get event icon (add this if you don't have it)
+function getEventIcon(category) {
+    const icons = {
+        'hackathon': '💻',
+        'workshop': '🛠️',
+        'career': '💼',
+        'fair': '🏢',
+        'research': '🔬',
+        'social': '🎉',
+        'default': '📅'
+    };
+    return icons[category] || icons.default;
+}
+
+// CSS classes you can add to your stylesheet for different positioning options
+const imagePositioningCSS = `
+.event-image.top-left { object-position: left top !important; }
+.event-image.top-center { object-position: center top !important; }
+.event-image.top-right { object-position: right top !important; }
+.event-image.center-left { object-position: left center !important; }
+.event-image.center-center { object-position: center center !important; }
+.event-image.center-right { object-position: right center !important; }
+.event-image.bottom-left { object-position: left bottom !important; }
+.event-image.bottom-center { object-position: center bottom !important; }
+.event-image.bottom-right { object-position: right bottom !important; }
+`;
+
+console.log('Smart Image Positioning System loaded');
 
 // =============================================================================
 // ENHANCED EVENT ACTIONS FOR NEW DESIGN
@@ -1175,7 +1526,7 @@ async function handleEventBookmark(eventId, bookmarkElement) {
 
 function selectEventDate(event) {
     const eventDate = new Date(event.date);
-    console.log(` Selecting date from featured event: ${eventDate.toDateString()}`);
+    console.log(`📅 Selecting date from featured event: ${eventDate.toDateString()}`);
 
     // Update the calendar to show this date
     CalendarState.currentDate = new Date(eventDate.getFullYear(), eventDate.getMonth(), 1);
@@ -1185,14 +1536,18 @@ function selectEventDate(event) {
         renderCalendar();
         selectDate(eventDate);
 
-        // Scroll to calendar section
-        document.querySelector('.calendar-section').scrollIntoView({
-            behavior: 'smooth',
-            block: 'start'
-        });
+        // Scroll to calendar section smoothly
+        const calendarSection = document.querySelector('.calendar-section');
+        if (calendarSection) {
+            calendarSection.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
+        }
     });
 }
 
+console.log('✅ Updated Events Calendar script with single calendar button loaded successfully');
 // =============================================================================
 // UTILITY FUNCTIONS FOR NEW DESIGN
 // =============================================================================
@@ -1205,11 +1560,10 @@ function truncateText(text, maxLength) {
 
 function generatePlaceholderImage(title) {
     const width = 450;
-    const height = 180; // 60% of 300px card height
+    const height = 180;
     const bgColor = '5F96C5';
     const textColor = 'FFFFFF';
     const encodedTitle = encodeURIComponent(title || 'Tech Event');
-
     return `https://via.placeholder.com/${width}x${height}/${bgColor}/${textColor}?text=${encodedTitle}`;
 }
 
@@ -1221,10 +1575,8 @@ function getEventCategoryGradient(category) {
         'tech-talk': 'linear-gradient(135deg, #34495e, #2c3e50)',
         'networking': 'linear-gradient(135deg, #f39c12, #f1c40f)',
         'research': 'linear-gradient(135deg, #3498db, #2980b9)',
-        'social': 'linear-gradient(135deg, #e67e22, #d35400)',
         'default': 'linear-gradient(135deg, #5F96C5, #4a8bc2)'
     };
-
     return gradients[category] || gradients.default;
 }
 
@@ -1236,10 +1588,8 @@ function getEventIcon(category) {
         'tech-talk': '🎤',
         'networking': '🤝',
         'research': '🔬',
-        'social': '🎉',
         'default': '🎉'
     };
-
     return icons[category] || icons.default;
 }
 
@@ -1281,13 +1631,11 @@ function showNotification(message, type = 'info') {
 
     document.body.appendChild(notification);
 
-    // Animate in
     setTimeout(() => {
         notification.style.opacity = '1';
         notification.style.transform = 'translateX(0)';
     }, 100);
 
-    // Auto remove after 4 seconds
     setTimeout(() => {
         if (notification.parentElement) {
             notification.style.opacity = '0';

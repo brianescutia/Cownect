@@ -6,12 +6,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Dashboard | Cownect</title>
   <link href="https://fonts.googleapis.com/css2?family=Rethink+Sans&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/styles/navbar.css" />
   <link rel="stylesheet" href="/styles/dashboard.css" />
   
   <!-- Scripts -->
   <script src="/scripts/dashboard.js" defer></script>
-    <script src="/scripts/navbar.js" defer></script>
-
+ <script src="/scripts/navbar-component.js?v=3" defer></script>
+<script src="/scripts/navbar.js?v=3" defer></script>
 </head>
 
 <body>
@@ -20,26 +21,7 @@
   <div class="blur-decoration-right"></div>
 
   <!-- Navbar with enhanced profile circle -->
-  <nav class="navbar">
-  <div class="navbar-container">
-    <!-- MAKE LOGO CLICKABLE -->
-    <a href="/dashboard" class="logo-title" style="text-decoration: none; color: inherit;">
-      <img src="../assets/cowLogo.png" alt="Cownect Logo" class="logo" />
-      <span class="logo-text">Cownect</span>
-    </a>
-    <ul class="nav-links">
-      <li><a href="/tech-clubs">Tech Clubs</a></li>
-      <li><a href="/events" class="nav-link">Events</a></li>
-      <li><a href="/niche-landing">Niche Test</a></li>
-      <li><a href="#" onclick="showMatchingModal()">Mentor Matching</a></li>
-    </ul>
-  </div>
-  <!-- Profile circle outside of the gray background -->
-  <div class="navbar-profile-circle" id="navbarProfileCircle" onclick="goToDashboard()" title="Go to Dashboard">
-    <img id="navbarProfileImage" src="" alt="Profile" style="display: none; width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
-    <span id="navbarProfileInitials">--</span> <!-- CHANGED FROM JD -->
-  </div>
-</nav>
+
 
   <!-- Logout Button -->
   <div class="logout-button-container">

@@ -1,5 +1,5 @@
 /* =============================================================================
-   IMPROVED EVENTS PAGE STYLES - REDUCED BLUE, BETTER COLOR BALANCE
+   IMPROVED EVENTS PAGE STYLES - NAVBAR CSS COMPLETELY REMOVED
    ============================================================================= */
 
 /* Reset and Base Styles */
@@ -12,14 +12,13 @@
 body {
     font-family: 'Rethink Sans', sans-serif;
     background: #f8fafb;
-    /* CHANGED: More neutral, less blue */
     min-height: 100vh;
     color: #2c3e50;
     position: relative;
     overflow-x: hidden;
 }
 
-/* Background blur decorations - REDUCED OPACITY */
+/* Background blur decorations */
 .blur-decoration-left {
     position: fixed;
     top: -1em;
@@ -31,7 +30,6 @@ body {
     background-size: cover;
     background-repeat: no-repeat;
     opacity: 0.3;
-    /* REDUCED: From 0.6 to 0.3 */
     z-index: -1;
 }
 
@@ -46,7 +44,6 @@ body {
     background-size: cover;
     background-repeat: no-repeat;
     opacity: 0.2;
-    /* REDUCED: From 0.4 to 0.2 */
     z-index: -1;
 }
 
@@ -61,7 +58,6 @@ body {
     background-size: cover;
     background-repeat: no-repeat;
     opacity: 0.3;
-    /* REDUCED: From 0.6 to 0.3 */
     z-index: -1;
 }
 
@@ -72,123 +68,6 @@ a {
 
 button {
     cursor: pointer;
-}
-
-/* =============================================================================
-   NAVBAR STYLES - CONSISTENT WITH OTHER PAGES
-   ============================================================================= */
-
-.navbar {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 25px;
-    margin: 1rem auto;
-    padding: 0.75rem 2rem;
-    max-width: 1130px;
-    width: 90%;
-    height: clamp(50px, 8vw, 68px);
-    gap: 2rem;
-}
-
-.navbar-container {
-    background-color: rgba(183, 183, 183, 0.30);
-    border-radius: 25px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 3rem;
-    flex: 1;
-    max-width: 750px;
-}
-
-.logo-title {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    font-weight: bold;
-    font-size: 1.2rem;
-    margin-left: -1rem;
-    cursor: pointer;
-    transition: transform 0.2s ease;
-}
-
-.logo-title:hover {
-    transform: scale(1.05);
-}
-
-.logo {
-    height: 40px;
-}
-
-.nav-links {
-    list-style: none;
-    display: flex;
-    gap: 4.5rem;
-    align-items: center;
-    margin: 0;
-}
-
-.nav-links a {
-    font-weight: 500;
-    font-size: 1rem;
-    text-decoration: none;
-    color: inherit;
-    transition: color 0.2s ease;
-}
-
-.nav-links a:hover,
-.nav-links a.active {
-    color: #27ae60;
-    /* CHANGED: From blue to green for variety */
-    transform: translateY(-1px);
-}
-
-.account-btn {
-    background-color: #5F96C5;
-    color: white !important;
-    padding: 0.4rem 0.9rem;
-    border-radius: 20px;
-    transition: all 0.3s ease;
-}
-
-.account-btn:hover {
-    background-color: #4a8bc2;
-    transform: translateY(-1px);
-}
-
-/* NAVBAR PROFILE CIRCLE */
-.navbar-profile-circle {
-    width: 45px;
-    height: 45px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, #5F96C5, #4a8bc2);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-size: 1rem;
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    border: 2px solid rgba(255, 255, 255, 0.3);
-    box-shadow: 0 2px 8px rgba(95, 150, 197, 0.3);
-    position: relative;
-    overflow: hidden;
-    flex-shrink: 0;
-}
-
-.navbar-profile-circle:hover {
-    transform: scale(1.1);
-    box-shadow: 0 4px 15px rgba(95, 150, 197, 0.5);
-    border-color: rgba(255, 255, 255, 0.6);
-}
-
-#navbarProfileInitials {
-    font-size: 0.9rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
 }
 
 /* =============================================================================
@@ -207,7 +86,7 @@ button {
 }
 
 /* =============================================================================
-   FEATURED EVENTS SECTION - IMPROVED COLORS
+   FEATURED EVENTS SECTION
    ============================================================================= */
 
 .featured-events-section {
@@ -218,7 +97,6 @@ button {
 .featured-events-section h2 {
     font-size: 2rem;
     color: #2c3e50;
-    /* NEUTRAL: Dark gray instead of blue */
     margin-bottom: 2rem;
     text-align: left;
     font-weight: 600;
@@ -258,17 +136,16 @@ button {
 }
 
 /* =============================================================================
-   EVENT CARDS - IMPROVED COLOR VARIETY
+   EVENT CARDS
    ============================================================================= */
 
 .event-card {
     width: 100%;
     max-width: 450px;
     min-width: 320px;
-    height: 380px;
-    /* INCREASED for better content fit */
-    background-color: rgba(255, 255, 255, 0.85);
-    /* IMPROVED: More opaque */
+    height: 420px;
+    /* Increased height to accommodate layout */
+    background-color: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     border: 1px solid rgba(255, 255, 255, 0.9);
@@ -280,23 +157,21 @@ button {
     display: flex;
     flex-direction: column;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-    /* SOFTER shadow */
 }
 
 .event-card:hover {
     transform: translateY(-8px);
     box-shadow: 0 12px 35px rgba(0, 0, 0, 0.12);
-    /* SOFTER hover shadow */
 }
 
-/* Date Badge - VARIED COLORS */
+/* Date Badge */
 .event-date-badge {
     position: absolute;
     top: 12px;
     left: 12px;
-    background: linear-gradient(135deg, #27ae60, #2ecc71);
-    /* GREEN instead of blue */
-    color: white;
+    background: white !important;
+    color: #2c3e50 !important;
+    border: 1px solid #e0e0e0 !important;
     padding: 8px 10px;
     border-radius: 8px;
     text-align: center;
@@ -323,14 +198,12 @@ button {
     opacity: 0.9;
 }
 
-/* Category Badge - NEW FEATURE */
+/* Category Badge */
 .event-category-badge {
     position: absolute;
     top: 12px;
     right: 60px;
-    /* Space for bookmark */
     background: linear-gradient(135deg, #8e44ad, #9b59b6);
-    /* PURPLE */
     color: white;
     padding: 4px 8px;
     border-radius: 12px;
@@ -341,7 +214,7 @@ button {
     z-index: 10;
 }
 
-/* Bookmark Button - IMPROVED DESIGN */
+/* Bookmark Button */
 .event-bookmark {
     position: absolute;
     top: 12px;
@@ -375,12 +248,10 @@ button {
 
 .event-bookmark:hover svg {
     stroke: #f39c12;
-    /* ORANGE instead of blue */
 }
 
 .event-bookmark.bookmarked {
     background: rgba(243, 156, 18, 0.1);
-    /* ORANGE theme */
     transform: scale(1.1);
 }
 
@@ -391,7 +262,8 @@ button {
 
 /* Event Image */
 .event-image-container {
-    height: 50%;
+    height: 35%;
+    /* Reduced from 50% to 35% */
     overflow: hidden;
     position: relative;
 }
@@ -409,18 +281,21 @@ button {
 
 /* Event Content */
 .event-content {
-    height: 45%;
-    padding: 1rem;
+    height: 60%;
+    /* Increased from 45% to 60% */
+    padding: 1.2rem;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
 }
 
 .event-title {
-    font-size: 1.1rem;
-    font-weight: 600;
+    font-size: 1.2rem;
+    /* Slightly larger */
+    font-weight: 700;
+    /* Bolder */
     color: #2c3e50;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.75rem;
     line-height: 1.3;
     overflow: hidden;
     display: -webkit-box;
@@ -429,13 +304,15 @@ button {
 }
 
 .event-description {
-    font-size: 0.85rem;
+    font-size: 0.9rem;
+    /* Slightly larger */
     color: #666;
-    line-height: 1.4;
-    margin-bottom: 0.75rem;
+    line-height: 1.5;
+    margin-bottom: 1rem;
     overflow: hidden;
     display: -webkit-box;
-    -webkit-line-clamp: 2;
+    -webkit-line-clamp: 3;
+    /* Allow 3 lines instead of 2 */
     -webkit-box-orient: vertical;
     flex-grow: 1;
 }
@@ -443,9 +320,9 @@ button {
 /* Event Details */
 .event-details {
     display: flex;
-    gap: 1rem;
-    margin-bottom: 0.75rem;
-    font-size: 0.8rem;
+    gap: 1.5rem;
+    margin-bottom: 1rem;
+    font-size: 0.85rem;
     color: #666;
 }
 
@@ -453,33 +330,45 @@ button {
 .event-time {
     display: flex;
     align-items: center;
-    gap: 0.25rem;
+    gap: 0.4rem;
 }
 
 .event-location svg {
-    color: #e74c3c;
-    /* RED for location */
+    color: black;
     flex-shrink: 0;
+    width: 16px;
+    height: 16px;
 }
 
 .event-time svg {
-    color: #f39c12;
-    /* ORANGE for time */
+    color: black;
     flex-shrink: 0;
+    width: 16px;
+    height: 16px;
 }
 
-/* Event Actions - IMPROVED */
+/* Event Actions - SINGLE BUTTON LAYOUT */
 .event-actions {
     display: flex;
-    gap: 0.5rem;
+    gap: 0;
+    /* No gap since we only have one button */
     align-items: center;
+    justify-content: center;
+    /* Center the single button */
+}
+
+.event-actions .join-event-btn {
+    display: none !important;
+    /* Completely hide the join button */
+}
+
+.event-actions .add-calendar-btn,
+.event-actions .calendar-dropdown {
+    width: 100%;
 }
 
 .join-event-btn {
-    display: none !important;
-
     background: linear-gradient(135deg, #27ae60, #2ecc71);
-    /* GREEN theme */
     color: white;
     border: none;
     padding: 0.6rem 1.2rem;
@@ -501,73 +390,71 @@ button {
 
 .join-event-btn.joined {
     background: linear-gradient(135deg, #3498db, #2980b9);
-    /* BLUE when joined */
 }
 
 .join-event-btn.joined:hover {
     background: linear-gradient(135deg, #e74c3c, #c0392b);
-    /* RED on hover to suggest "unjoin" */
 }
 
 .join-event-btn.joined:hover .joined-text::after {
     content: ' → Leave';
 }
 
-/* Calendar Dropdown - NEW IMPROVED DESIGN */
+/* Calendar Dropdown */
 .calendar-dropdown {
     position: relative;
 }
 
 .add-calendar-btn {
-    background: linear-gradient(135deg, #27ae60, #2ecc71);
-    /* GREEN */
-    color: white;
-    border: none;
-    padding: 0.6rem 1.2rem;
-    border-radius: 8px;
-    font-size: 0.85rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    /* space between icon and text */
+    background: linear-gradient(135deg, #34495e, #2c3e50) !important;
+    color: white !important;
+    border: none !important;
+    padding: 0.5rem 0.75rem !important;
+    border-radius: 6px !important;
+    font-size: 0.75rem !important;
+    font-weight: 600 !important;
+    box-shadow: 0 2px 8px rgba(52, 73, 94, 0.3) !important;
+    width: auto !important;
+    white-space: nowrap !important;
 }
 
 .add-calendar-btn:hover {
-    background: linear-gradient(135deg, #229954, #27ae60);
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(39, 174, 96, 0.3);
+    background: linear-gradient(135deg, #2c3e50, #1a252f) !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 4px 12px rgba(52, 73, 94, 0.4) !important;
 }
 
-/* Joined state */
+.add-calendar-btn:active {
+    transform: translateY(0);
+}
+
 .add-calendar-btn.joined {
     background: linear-gradient(135deg, #3498db, #2980b9);
-    /* BLUE */
 }
 
 .add-calendar-btn.joined:hover {
     background: linear-gradient(135deg, #2980b9, #2471a3);
 }
 
-.add-calendar-btn::before {
-    content: "Join Event";
-}
+
 
 .calendar-options {
     display: none;
     position: absolute;
     bottom: 100%;
+    left: 0;
     right: 0;
     background: white;
     border-radius: 8px;
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
     z-index: 100;
-    min-width: 150px;
     overflow: hidden;
     margin-bottom: 5px;
+}
+
+.calendar-dropdown:hover .calendar-options,
+.calendar-dropdown.active .calendar-options {
+    display: block;
 }
 
 .calendar-option {
@@ -585,6 +472,7 @@ button {
 .calendar-option:hover {
     background: #f8f9fa;
 }
+
 
 .calendar-option:first-child {
     border-top-left-radius: 8px;
@@ -633,12 +521,11 @@ button {
 }
 
 /* =============================================================================
-   CALENDAR SECTION - LESS BLUE
+   CALENDAR SECTION
    ============================================================================= */
 
 .calendar-section {
     background-color: rgba(255, 255, 255, 0.85);
-    /* MORE OPAQUE */
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     border: 1px solid rgba(255, 255, 255, 0.9);
@@ -654,7 +541,6 @@ button {
 
 .calendar-header h2 {
     color: #2c3e50;
-    /* NEUTRAL instead of blue */
 }
 
 .calendar-header p {
@@ -663,7 +549,6 @@ button {
 
 .view-toggle .view-btn {
     background: #ecf0f1;
-    /* NEUTRAL */
     color: #2c3e50;
     border: 1px solid #bdc3c7;
     padding: 0.5rem 1rem;
@@ -673,8 +558,7 @@ button {
 }
 
 .view-toggle .view-btn.active {
-    background: linear-gradient(135deg, #27ae60, #2ecc71);
-    /* GREEN instead of blue */
+    background: linear-gradient(135deg, #007bff, #0056b3);
     color: white;
     border-color: #27ae60;
 }
@@ -694,7 +578,7 @@ button {
 }
 
 /* =============================================================================
-   TOAST NOTIFICATIONS - NEW FEATURE
+   TOAST NOTIFICATIONS
    ============================================================================= */
 
 .toast-container {
@@ -757,7 +641,7 @@ button {
 }
 
 /* =============================================================================
-   LOADING AND ERROR STATES - LESS BLUE
+   LOADING AND ERROR STATES
    ============================================================================= */
 
 .loading-overlay {
@@ -767,7 +651,6 @@ button {
     width: 100%;
     height: 100%;
     background: rgba(248, 250, 251, 0.95);
-    /* NEUTRAL background */
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -780,9 +663,7 @@ button {
     width: 50px;
     height: 50px;
     border: 4px solid rgba(149, 165, 166, 0.3);
-    /* NEUTRAL colors */
     border-top: 4px solid #27ae60;
-    /* GREEN accent */
     border-radius: 50%;
     animation: spin 1s linear infinite;
     margin-bottom: 1rem;
@@ -800,7 +681,6 @@ button {
 
 .loading-overlay p {
     color: #2c3e50;
-    /* NEUTRAL text */
     font-weight: 500;
     font-size: 1.1rem;
 }
@@ -821,7 +701,6 @@ button {
 
 .retry-btn {
     background: #27ae60;
-    /* GREEN instead of blue */
     color: white;
     border: none;
     padding: 0.75rem 1.5rem;
@@ -856,65 +735,47 @@ button {
     }
 
     .event-card {
-        height: 350px;
+        height: 380px;
         min-width: 280px;
     }
 
-    .navbar-container {
-        padding: 0 2rem;
+    .event-content {
+        padding: 1rem;
     }
 
-    .nav-links {
-        gap: 2rem;
+    .event-title {
+        font-size: 1.1rem;
     }
 
-    .navbar-profile-circle {
-        width: 40px;
-        height: 40px;
-        font-size: 0.9rem;
+    .event-description {
+        font-size: 0.85rem;
+    }
+
+    .add-calendar-btn {
+        padding: 0.6rem 1.25rem;
+        font-size: 0.85rem;
     }
 }
 
 @media (max-width: 480px) {
-    .navbar {
-        gap: 0.5rem;
-        padding: 0.5rem 1rem;
-    }
-
-    .navbar-container {
-        padding: 0 1.5rem;
-    }
-
-    .nav-links {
-        gap: 1rem;
-    }
-
-    .navbar-profile-circle {
-        width: 35px;
-        height: 35px;
-        font-size: 0.8rem;
-    }
-
     .event-card {
         min-width: 250px;
-        height: 320px;
+        height: 350px;
     }
 
     .event-content {
         padding: 0.75rem;
     }
 
-    .calendar-section {
-        padding: 1rem;
+    .event-details {
+        gap: 1rem;
     }
 }
 
 /* =============================================================================
-   ENHANCED JOIN EVENT BUTTON - Add this to your events.css or events-redesigned.css
-   =============================================================================
-*/
+   JOIN EVENT BUTTON STYLES
+   ============================================================================= */
 
-/* Green Join Event Button */
 .join-event-btn {
     background: linear-gradient(135deg, #28a745, #20c997);
     color: white;
@@ -945,7 +806,6 @@ button {
     transform: translateY(0);
 }
 
-/* Success state when joined */
 .join-event-btn.joined {
     background: linear-gradient(135deg, #6c757d, #5a6268);
     cursor: default;
@@ -957,14 +817,12 @@ button {
     box-shadow: 0 4px 12px rgba(108, 117, 125, 0.3);
 }
 
-/* Mini version for carousel cards */
 .join-event-btn.mini {
     padding: 0.5rem 1rem;
     font-size: 0.8rem;
     border-radius: 8px;
 }
 
-/* Text switching animation */
 .join-text,
 .joined-text {
     transition: all 0.3s ease;
@@ -984,7 +842,6 @@ button {
     gap: 0.5rem;
 }
 
-/* Loading state (optional) */
 .join-event-btn.loading {
     background: linear-gradient(135deg, #6c757d, #5a6268);
     cursor: wait;
@@ -1002,225 +859,10 @@ button {
     margin-left: 0.5rem;
 }
 
-@keyframes spin {
-    0% {
-        transform: rotate(0deg);
-    }
-
-    100% {
-        transform: rotate(360deg);
-    }
-}
-
-/* Toast Notifications */
-.toast-container {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    z-index: 10000;
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-}
-
-.toast {
-    background: white;
-    border-radius: 12px;
-    padding: 1rem 1.5rem;
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-    border-left: 4px solid #28a745;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-    min-width: 300px;
-    animation: slideInToast 0.3s ease;
-}
-
-.toast-success {
-    border-left-color: #28a745;
-}
-
-.toast-info {
-    border-left-color: #17a2b8;
-}
-
-.toast-error {
-    border-left-color: #dc3545;
-}
-
-.toast button {
-    background: none;
-    border: none;
-    font-size: 1.2rem;
-    color: #6c757d;
-    cursor: pointer;
-    padding: 0;
-    width: 24px;
-    height: 24px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-    transition: all 0.2s ease;
-}
-
-.toast button:hover {
-    background: rgba(108, 117, 125, 0.1);
-}
-
-@keyframes slideInToast {
-    from {
-        transform: translateX(100%);
-        opacity: 0;
-    }
-
-    to {
-        transform: translateX(0);
-        opacity: 1;
-    }
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-    .join-event-btn {
-        padding: 0.6rem 1.25rem;
-        font-size: 0.85rem;
-    }
-
-    .toast-container {
-        top: 10px;
-        right: 10px;
-        left: 10px;
-    }
-
-    .toast {
-        min-width: unset;
-    }
-}
-
 /* =============================================================================
-   NAVBAR SPACING FIX - Make sure all navbars look identical
-   =============================================================================
-*/
+   CALENDAR BUTTON STYLES
+   ============================================================================= */
 
-/* Ensure consistent navbar styling across all pages */
-.navbar {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 25px;
-    margin: 1rem auto;
-    padding: 0.75rem 2rem;
-    max-width: 1130px;
-    width: 90%;
-    height: clamp(50px, 8vw, 68px);
-    gap: 2rem;
-}
-
-.navbar-container {
-    background-color: rgba(183, 183, 183, 0.30);
-    border-radius: 25px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 3rem;
-    flex: 1;
-    max-width: 750px;
-}
-
-.logo-title {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    font-weight: bold;
-    font-size: 1.2rem;
-    margin-left: -1rem;
-}
-
-.logo {
-    height: 40px;
-}
-
-.nav-links {
-    list-style: none;
-    display: flex;
-    gap: 4.5rem;
-    align-items: center;
-    margin: 0;
-    padding: 0;
-}
-
-.nav-links a {
-    font-weight: 500;
-    font-size: 1rem;
-    color: inherit;
-    text-decoration: none;
-}
-
-.navbar-profile-circle {
-    width: 45px;
-    height: 45px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, #5F96C5, #4a8bc2);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-size: 1rem;
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    border: 2px solid rgba(255, 255, 255, 0.3);
-    box-shadow: 0 2px 8px rgba(95, 150, 197, 0.3);
-    position: relative;
-    overflow: hidden;
-    flex-shrink: 0;
-}
-
-.navbar-profile-circle:hover {
-    transform: scale(1.1);
-    box-shadow: 0 4px 15px rgba(95, 150, 197, 0.5);
-}
-
-#navbarProfileInitials {
-    font-size: 0.9rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-/* Responsive navbar */
-@media (max-width: 768px) {
-    .navbar-profile-circle {
-        width: 40px;
-        height: 40px;
-        font-size: 0.9rem;
-    }
-
-    .nav-links {
-        gap: 2rem;
-    }
-}
-
-@media (max-width: 480px) {
-    .navbar-profile-circle {
-        width: 35px;
-        height: 35px;
-        font-size: 0.8rem;
-    }
-
-    .nav-links {
-        gap: 1rem;
-    }
-}
-
-/* =============================================================================
-   ENHANCED CALENDAR BUTTON - Full Width Calendar Button (replaces join button)
-   =============================================================================
-*/
-
-/* Full-Width Calendar Button */
 .add-calendar-btn-full {
     background: linear-gradient(135deg, #007bff, #0056b3);
     color: white;
@@ -1251,7 +893,6 @@ button {
     transform: translateY(0);
 }
 
-/* Success state when added */
 .add-calendar-btn-full.added {
     background: linear-gradient(135deg, #28a745, #20c997);
     cursor: default;
@@ -1263,14 +904,12 @@ button {
     box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
 }
 
-/* Mini version for carousel cards */
 .add-calendar-btn-full.mini {
     padding: 0.5rem 1rem;
     font-size: 0.8rem;
     border-radius: 8px;
 }
 
-/* Text switching animation */
 .calendar-text,
 .calendar-added-text {
     transition: all 0.3s ease;
@@ -1290,7 +929,6 @@ button {
     gap: 0.5rem;
 }
 
-/* Loading state (optional) */
 .add-calendar-btn-full.loading {
     background: linear-gradient(135deg, #6c757d, #5a6268);
     cursor: wait;
@@ -1308,17 +946,7 @@ button {
     margin-left: 0.5rem;
 }
 
-@keyframes spin {
-    0% {
-        transform: rotate(0deg);
-    }
-
-    100% {
-        transform: rotate(360deg);
-    }
-}
-
-/* Toast Notifications */
+/* Enhanced Toast Notifications */
 .toast-container {
     position: fixed;
     top: 20px;
@@ -1387,8 +1015,13 @@ button {
     }
 }
 
-/* Responsive Design */
+/* Final responsive adjustments */
 @media (max-width: 768px) {
+    .join-event-btn {
+        padding: 0.6rem 1.25rem;
+        font-size: 0.85rem;
+    }
+
     .add-calendar-btn-full {
         padding: 0.6rem 1.25rem;
         font-size: 0.85rem;
@@ -1406,117 +1039,120 @@ button {
 }
 
 /* =============================================================================
-   NAVBAR SPACING FIX - Make sure all navbars look identical
-   =============================================================================
-*/
+   MINIMAL CSS FIXES - ONLY VISUAL CHANGES, NO JAVASCRIPT CHANGES NEEDED
+   Add this to the END of your events-redesigned.css file
+   ============================================================================= */
 
-/* Ensure consistent navbar styling across all pages */
-.navbar {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 25px;
-    margin: 1rem auto;
-    padding: 0.75rem 2rem;
-    max-width: 1130px;
-    width: 90%;
-    height: clamp(50px, 8vw, 68px);
-    gap: 2rem;
+/* Fix event card image size and content visibility */
+.event-card {
+    height: 420px !important;
+    /* Slightly taller cards */
 }
 
-.navbar-container {
-    background-color: rgba(183, 183, 183, 0.30);
-    border-radius: 25px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 3rem;
-    flex: 1;
-    max-width: 750px;
+/* Make image smaller - 35% instead of 50% */
+.event-image-container {
+    height: 35% !important;
 }
 
-.logo-title {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    font-weight: bold;
-    font-size: 1.2rem;
-    margin-left: -1rem;
+/* Make content area larger - 60% instead of 45% */
+.event-content {
+    height: 60% !important;
+    padding: 1.2rem !important;
 }
 
-.logo {
-    height: 40px;
+/* Make event title slightly larger and bolder */
+.event-title {
+    font-size: 1.2rem !important;
+    font-weight: 700 !important;
+    margin-bottom: 0.75rem !important;
+    line-height: 1.3 !important;
 }
 
-.nav-links {
-    list-style: none;
-    display: flex;
-    gap: 4.5rem;
-    align-items: center;
-    margin: 0;
-    padding: 0;
+/* Make description larger and allow 3 lines */
+.event-description {
+    font-size: 0.9rem !important;
+    line-height: 1.5 !important;
+    margin-bottom: 1rem !important;
+    -webkit-line-clamp: 3 !important;
+    /* Show 3 lines instead of 2 */
 }
 
-.nav-links a {
-    font-weight: 500;
-    font-size: 1rem;
-    color: inherit;
-    text-decoration: none;
+/* Hide the first join button (left button) */
+.event-actions .join-event-btn {
+    display: none !important;
 }
 
-.navbar-profile-circle {
-    width: 45px;
-    height: 45px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, #5F96C5, #4a8bc2);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-size: 1rem;
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    border: 2px solid rgba(255, 255, 255, 0.3);
-    box-shadow: 0 2px 8px rgba(95, 150, 197, 0.3);
-    position: relative;
-    overflow: hidden;
-    flex-shrink: 0;
+/* Make the calendar button (right button) full width */
+.event-actions .add-calendar-btn,
+.event-actions .calendar-dropdown {
+    width: 100% !important;
 }
 
-.navbar-profile-circle:hover {
-    transform: scale(1.1);
-    box-shadow: 0 4px 15px rgba(95, 150, 197, 0.5);
+.event-actions {
+    justify-content: center !important;
 }
 
-#navbarProfileInitials {
-    font-size: 0.9rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
+/* Style the calendar button to look like the green button in your screenshot */
+.add-calendar-btn {
+    background: linear-gradient(135deg, #34495e, #2c3e50) !important;
+    color: white !important;
+    border: none !important;
+    padding: 0.5rem 0.75rem !important;
+    border-radius: 6px !important;
+    font-size: 0.75rem !important;
+    font-weight: 600 !important;
+    box-shadow: 0 2px 8px rgba(52, 73, 94, 0.3) !important;
+    width: auto !important;
+    white-space: nowrap !important;
 }
 
-/* Responsive navbar */
+.add-calendar-btn:hover {
+    background: linear-gradient(135deg, #2c3e50, #1a252f) !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 4px 12px rgba(52, 73, 94, 0.4) !important;
+}
+
+/* Fix the button text */
+
+/* Hide any existing text in the button */
+.add-calendar-btn .btn-text,
+.add-calendar-btn .btn-icon {
+    display: none !important;
+}
+
+/* Make event details more prominent */
+.event-details {
+    margin-bottom: 1rem !important;
+    font-size: 0.85rem !important;
+}
+
+.event-details svg {
+    width: 16px !important;
+    height: 16px !important;
+}
+
+/* Responsive adjustments */
 @media (max-width: 768px) {
-    .navbar-profile-circle {
-        width: 40px;
-        height: 40px;
-        font-size: 0.9rem;
+    .event-card {
+        height: 380px !important;
     }
 
-    .nav-links {
-        gap: 2rem;
+    .event-content {
+        padding: 1rem !important;
+    }
+
+    .add-calendar-btn {
+        padding: 0.6rem 1.25rem !important;
+        font-size: 0.85rem !important;
     }
 }
 
 @media (max-width: 480px) {
-    .navbar-profile-circle {
-        width: 35px;
-        height: 35px;
-        font-size: 0.8rem;
+    .event-card {
+        height: 350px !important;
     }
 
-    .nav-links {
-        gap: 1rem;
+    .event-content {
+        padding: 0.75rem !important;
     }
 }

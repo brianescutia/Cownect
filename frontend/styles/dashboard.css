@@ -1,5 +1,6 @@
 /* =============================================================================
    ENHANCED DASHBOARD CSS - Complete Profile Management & Matching
+   ALL NAVBAR CSS COMPLETELY REMOVED
    =============================================================================
 */
 
@@ -16,7 +17,7 @@ body {
     background: #f5fcff;
     position: relative;
     overflow-x: hidden;
-    min-height: 100vh;
+    min-width: 100vw;
 }
 
 /* Background blur decorations */
@@ -45,85 +46,9 @@ body {
 }
 
 /* =============================================================================
-   NAVBAR WITH ENHANCED PROFILE CIRCLE
+   LOGOUT BUTTON
    =============================================================================
 */
-
-.navbar {
-    display: flex;
-    justify-content: center;
-    border-radius: 25px;
-    margin: 1rem auto;
-    padding: 0.75rem 2rem;
-    max-width: 1130px;
-    width: 90%;
-    height: clamp(50px, 8vw, 68px);
-}
-
-.navbar-container {
-    background-color: rgba(183, 183, 183, 0.30);
-    border-radius: 25px;
-    width: 65.5vw;
-    height: 4.2vw;
-    max-width: 1129px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 3rem;
-}
-
-.logo-title {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    font-weight: bold;
-    font-size: 1.2rem;
-    margin-left: -1rem;
-}
-
-.logo {
-    height: 40px;
-}
-
-.nav-links {
-    list-style: none;
-    display: flex;
-    gap: 4.5rem;
-    align-items: center;
-    margin: 0;
-}
-
-.nav-links a {
-    font-weight: 500;
-    font-size: 1rem;
-    text-decoration: none;
-    color: inherit;
-    cursor: pointer;
-}
-
-.navbar-profile-circle {
-    width: 45px;
-    height: 45px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, #5F96C5, #4a8bc2);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-    font-size: 1rem;
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    border: 2px solid rgba(255, 255, 255, 0.3);
-    box-shadow: 0 2px 8px rgba(95, 150, 197, 0.3);
-    position: relative;
-    overflow: hidden;
-}
-
-.navbar-profile-circle:hover {
-    transform: scale(1.1);
-    box-shadow: 0 4px 15px rgba(95, 150, 197, 0.5);
-}
 
 .logout-btn {
     display: flex;
@@ -159,14 +84,12 @@ body {
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-template-rows: auto auto auto auto;
-    /* Add extra row */
     gap: 2rem;
     grid-template-areas:
         "user-profile saved-clubs"
         "user-profile upcoming-events"
         "test-results potential-matches"
         "saved-clubs-expanded saved-clubs-expanded";
-    /* Full width row for saved clubs when needed */
     justify-content: center;
 }
 
@@ -179,7 +102,6 @@ body {
     grid-area: user-profile;
     width: 100%;
     min-height: 900px;
-    /* Increased for full form */
     background: rgba(255, 255, 255, 0.7);
     backdrop-filter: blur(12px);
     border: 1px solid rgba(255, 255, 255, 0.8);
@@ -494,7 +416,7 @@ body {
 }
 
 /* =============================================================================
-   POTENTIAL MATCHES CARD - NEW
+   POTENTIAL MATCHES CARD
    =============================================================================
 */
 
@@ -782,49 +704,69 @@ body {
 */
 
 .mini-club-card {
-    flex: 0 0 180px;
-    height: 200px;
-    background: rgba(255, 255, 255, 0.9);
+    background: white;
     border-radius: 12px;
-    padding: 1rem;
+    padding: 1.5rem;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(95, 150, 197, 0.1);
+    transition: all 0.3s ease;
+    cursor: pointer;
+    position: relative;
+    width: 280px;
+    min-width: 280px;
+    height: 200px;
+    flex-shrink: 0;
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
-    cursor: pointer;
-    transition: all 0.3s ease;
+    box-sizing: border-box;
+    margin: 0;
 }
 
 .mini-club-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+    border-color: rgba(95, 150, 197, 0.3);
 }
 
 .mini-club-logo {
-    width: 40px;
-    height: 40px;
+    width: 50px;
+    height: 50px;
     border-radius: 8px;
-    background: #5F96C5;
+    margin-bottom: 1rem;
+    background-color: #f8f9fa;
     background-size: cover;
     background-position: center;
+    border: 1px solid rgba(95, 150, 197, 0.1);
+    flex-shrink: 0;
 }
 
 .mini-club-name {
-    font-size: 0.9rem;
     font-weight: 600;
+    font-size: 1rem;
     color: #2c3e50;
+    margin-bottom: 0.5rem;
+    line-height: 1.3;
+    flex-shrink: 0;
 }
 
 .mini-club-description {
-    font-size: 0.8rem;
-    color: #7f8c8d;
-    line-height: 1.3;
-    flex: 1;
+    color: #666;
+    font-size: 0.85rem;
+    line-height: 1.4;
+    margin-bottom: 0.75rem;
+    flex-grow: 1;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }
 
 .mini-club-tags {
-    font-size: 0.7rem;
+    font-size: 0.8rem;
     color: #5F96C5;
     font-weight: 500;
+    flex-shrink: 0;
+    margin-top: auto;
 }
 
 /* Event and Test Result Items */
@@ -947,6 +889,81 @@ body {
 }
 
 /* =============================================================================
+   SAVED CLUBS SECTION
+   =============================================================================
+*/
+
+.saved-clubs-card {
+    width: 100%;
+    max-width: none;
+    box-sizing: border-box;
+}
+
+#savedClubsGrid {
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.saved-clubs-container {
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    box-sizing: border-box;
+    display: flex;
+    gap: 1rem;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 0.5rem 0;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+}
+
+.saved-clubs-container::-webkit-scrollbar {
+    height: 6px;
+}
+
+.saved-clubs-container::-webkit-scrollbar-track {
+    background: rgba(95, 150, 197, 0.1);
+    border-radius: 3px;
+}
+
+.saved-clubs-container::-webkit-scrollbar-thumb {
+    background: rgba(95, 150, 197, 0.4);
+    border-radius: 3px;
+}
+
+.saved-clubs-container::-webkit-scrollbar-thumb:hover {
+    background: rgba(95, 150, 197, 0.6);
+}
+
+/* =============================================================================
+   SCROLLBAR STYLING
+   =============================================================================
+*/
+
+.user-profile-card::-webkit-scrollbar,
+.matches-list::-webkit-scrollbar,
+.modal-content::-webkit-scrollbar {
+    width: 6px;
+}
+
+.user-profile-card::-webkit-scrollbar-thumb,
+.matches-list::-webkit-scrollbar-thumb,
+.modal-content::-webkit-scrollbar-thumb {
+    background: rgba(95, 150, 197, 0.5);
+    border-radius: 3px;
+}
+
+.user-profile-card::-webkit-scrollbar-thumb:hover,
+.matches-list::-webkit-scrollbar-thumb:hover,
+.modal-content::-webkit-scrollbar-thumb:hover {
+    background: rgba(95, 150, 197, 0.8);
+}
+
+/* =============================================================================
    RESPONSIVE DESIGN
    =============================================================================
 */
@@ -1004,11 +1021,6 @@ body {
         font-size: 0.85rem;
     }
 
-    .navbar-profile-circle {
-        width: 40px;
-        height: 40px;
-    }
-
     .modal-content {
         width: 95%;
     }
@@ -1016,6 +1028,22 @@ body {
     .modal-header,
     .modal-body {
         padding: 1.5rem;
+    }
+
+    .mini-club-card {
+        width: 250px;
+        min-width: 250px;
+        height: 180px;
+        padding: 1.25rem;
+    }
+
+    .mini-club-logo {
+        width: 45px;
+        height: 45px;
+    }
+
+    .mini-club-name {
+        font-size: 0.95rem;
     }
 }
 
@@ -1038,180 +1066,8 @@ body {
         font-size: 1rem;
     }
 
-    .navbar-profile-circle {
-        width: 35px;
-        height: 35px;
-    }
-
     .logout-btn {
         padding: 0.5rem 0.8rem;
         font-size: 0.8rem;
-    }
-}
-
-/* =============================================================================
-   SCROLLBAR STYLING
-   =============================================================================
-*/
-
-.user-profile-card::-webkit-scrollbar,
-.matches-list::-webkit-scrollbar,
-.modal-content::-webkit-scrollbar {
-    width: 6px;
-}
-
-.user-profile-card::-webkit-scrollbar-thumb,
-.matches-list::-webkit-scrollbar-thumb,
-.modal-content::-webkit-scrollbar-thumb {
-    background: rgba(95, 150, 197, 0.5);
-    border-radius: 3px;
-}
-
-.user-profile-card::-webkit-scrollbar-thumb:hover,
-.matches-list::-webkit-scrollbar-thumb:hover,
-.modal-content::-webkit-scrollbar-thumb:hover {
-    background: rgba(95, 150, 197, 0.8);
-}
-
-/* =============================================================================
-   SCROLLABLE SAVED CLUBS SECTION - Add to dashboard.css
-   =============================================================================
-*/
-
-/* ===== FORCE SAVED CLUBS TO USE FULL CONTAINER WIDTH ===== */
-
-.saved-clubs-card {
-    width: 100% !important;
-    max-width: none !important;
-    box-sizing: border-box;
-}
-
-#savedClubsGrid {
-    width: 100% !important;
-    max-width: none !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    box-sizing: border-box;
-}
-
-.saved-clubs-container {
-    width: 100% !important;
-    max-width: none !important;
-    margin: 0 !important;
-    box-sizing: border-box;
-    display: flex !important;
-    gap: 1rem !important;
-    overflow-x: auto !important;
-    overflow-y: hidden !important;
-    padding: 0.5rem 0 !important;
-    scroll-behavior: smooth !important;
-    -webkit-overflow-scrolling: touch !important;
-}
-
-/* Custom horizontal scrollbar styling */
-.saved-clubs-container::-webkit-scrollbar {
-    height: 6px;
-}
-
-.saved-clubs-container::-webkit-scrollbar-track {
-    background: rgba(95, 150, 197, 0.1);
-    border-radius: 3px;
-}
-
-.saved-clubs-container::-webkit-scrollbar-thumb {
-    background: rgba(95, 150, 197, 0.4);
-    border-radius: 3px;
-}
-
-.saved-clubs-container::-webkit-scrollbar-thumb:hover {
-    background: rgba(95, 150, 197, 0.6);
-}
-
-/* ✅ FIXED WIDTH CARDS for horizontal scrolling */
-.mini-club-card {
-    background: white;
-    border-radius: 12px;
-    padding: 1.5rem;
-    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
-    border: 1px solid rgba(95, 150, 197, 0.1);
-    transition: all 0.3s ease;
-    cursor: pointer;
-    position: relative;
-
-    /* ✅ FIXED DIMENSIONS for horizontal scrolling */
-    width: 280px !important;
-    min-width: 280px !important;
-    height: 200px !important;
-    flex-shrink: 0 !important;
-
-    display: flex;
-    flex-direction: column;
-    box-sizing: border-box;
-    margin: 0 !important;
-}
-
-.mini-club-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
-    border-color: rgba(95, 150, 197, 0.3);
-}
-
-.mini-club-logo {
-    width: 50px;
-    height: 50px;
-    border-radius: 8px;
-    margin-bottom: 1rem;
-    background-color: #f8f9fa;
-    background-size: cover;
-    background-position: center;
-    border: 1px solid rgba(95, 150, 197, 0.1);
-    flex-shrink: 0;
-}
-
-.mini-club-name {
-    font-weight: 600;
-    font-size: 1rem;
-    color: #2c3e50;
-    margin-bottom: 0.5rem;
-    line-height: 1.3;
-    flex-shrink: 0;
-}
-
-.mini-club-description {
-    color: #666;
-    font-size: 0.85rem;
-    line-height: 1.4;
-    margin-bottom: 0.75rem;
-    flex-grow: 1;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-}
-
-.mini-club-tags {
-    font-size: 0.8rem;
-    color: #5F96C5;
-    font-weight: 500;
-    flex-shrink: 0;
-    margin-top: auto;
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-    .mini-club-card {
-        width: 250px !important;
-        min-width: 250px !important;
-        height: 180px !important;
-        padding: 1.25rem !important;
-    }
-
-    .mini-club-logo {
-        width: 45px;
-        height: 45px;
-    }
-
-    .mini-club-name {
-        font-size: 0.95rem;
     }
 }

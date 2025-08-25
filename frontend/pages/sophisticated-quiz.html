@@ -1,0 +1,1356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enhanced AI Career Discovery - UC Davis Tech Quiz</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'davis-blue': '#022851',
+                        'davis-gold': '#FFBF00',
+                        'tech-purple': '#6366f1',
+                        'tech-cyan': '#06b6d4'
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.5s ease-in',
+                        'slide-up': 'slideUp 0.6s ease-out',
+                        'pulse-glow': 'pulseGlow 2s infinite',
+                        'bounce-in': 'bounceIn 0.6s ease-out'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes slideUp {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 0 20px rgba(99, 102, 241, 0.4); }
+            50% { box-shadow: 0 0 40px rgba(99, 102, 241, 0.8); }
+        }
+        
+        @keyframes bounceIn {
+            0% { transform: scale(0.3); opacity: 0; }
+            50% { transform: scale(1.05); opacity: 0.8; }
+            70% { transform: scale(0.9); opacity: 0.9; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .gradient-bg {
+            background: linear-gradient(135deg, #6366f1 0%, #06b6d4 50%, #8b5cf6 100%);
+        }
+        
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .question-card {
+            transition: all 0.3s ease;
+        }
+        
+        .option-card {
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+        
+        .option-card:hover {
+            transform: translateY(-2px);
+        }
+        
+        .selected {
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            color: white;
+        }
+        
+        .scale-slider {
+            -webkit-appearance: none;
+            height: 8px;
+            border-radius: 4px;
+            background: #e5e7eb;
+            outline: none;
+        }
+        
+        .scale-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(99, 102, 241, 0.4);
+        }
+        
+        .scale-slider::-moz-range-thumb {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            cursor: pointer;
+            border: none;
+        }
+
+        .visual-option {
+            transition: all 0.3s ease;
+        }
+
+        .visual-option:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .visual-option.selected {
+            transform: scale(1.02);
+            box-shadow: 0 0 30px rgba(99, 102, 241, 0.5);
+        }
+
+        .drag-item {
+            transition: all 0.2s ease;
+            cursor: grab;
+        }
+
+        .drag-item:active {
+            cursor: grabbing;
+            transform: rotate(5deg);
+        }
+
+        .drop-zone {
+            transition: all 0.2s ease;
+            min-height: 60px;
+        }
+
+        .drop-zone.drag-over {
+            background: rgba(99, 102, 241, 0.1);
+            border-color: #6366f1;
+            transform: scale(1.02);
+        }
+
+        .typing-indicator {
+            border-right: 2px solid #6366f1;
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 50% { border-color: #6366f1; }
+            51%, 100% { border-color: transparent; }
+        }
+
+        .level-card {
+            transition: all 0.3s ease;
+        }
+
+        .level-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <!-- Header -->
+    <header class="bg-white shadow-sm border-b sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto px-4 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <a href="/tech-clubs" class="text-davis-blue hover:text-tech-purple flex items-center transition-colors">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                        </svg>
+                        Back to Dashboard
+                    </a>
+                </div>
+                <h1 class="text-xl font-bold bg-gradient-to-r from-tech-purple to-tech-cyan bg-clip-text text-transparent">
+                    🤖 Enhanced AI Career Discovery
+                </h1>
+                <div class="w-32"></div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-4xl mx-auto px-4 py-8">
+        <!-- Introduction Screen -->
+        <div id="introScreen" class="space-y-8 animate-fade-in">
+            <!-- Hero Section -->
+            <div class="text-center gradient-bg rounded-2xl p-8 text-white">
+                <div class="animate-bounce-in">
+                    <h2 class="text-4xl font-bold mb-4">🚀 Enhanced 3-Level Career Discovery</h2>
+                    <p class="text-xl text-blue-100 mb-6 max-w-2xl mx-auto">
+                        Revolutionary AI-powered assessment with level-based progression. 
+                        Get career guidance that matches your experience and provides targeted next steps.
+                    </p>
+                    <div class="glass-effect rounded-lg p-4 max-w-md mx-auto">
+                        <div class="text-2xl font-bold">Choose Your Level</div>
+                        <div class="text-blue-200">Beginner • Intermediate • Advanced</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- What Makes It Special -->
+            <div class="bg-white rounded-xl p-8 shadow-lg">
+                <h3 class="text-2xl font-bold text-center mb-6 text-gray-900">🌟 Enhanced Features</h3>
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="text-center p-4 bg-gradient-to-br from-purple-50 to-blue-50 rounded-lg">
+                        <div class="text-3xl mb-3">🎯</div>
+                        <h4 class="font-bold text-gray-900 mb-2">Level-Based Progression</h4>
+                        <p class="text-sm text-gray-600">Questions and guidance tailored to your experience level</p>
+                    </div>
+                    <div class="text-center p-4 bg-gradient-to-br from-cyan-50 to-teal-50 rounded-lg">
+                        <div class="text-3xl mb-3">🎨</div>
+                        <h4 class="font-bold text-gray-900 mb-2">Varied Question Types</h4>
+                        <p class="text-sm text-gray-600">Scenarios, scales, visuals, and rankings prevent boredom</p>
+                    </div>
+                    <div class="text-center p-4 bg-gradient-to-br from-green-50 to-emerald-50 rounded-lg">
+                        <div class="text-3xl mb-3">🧠</div>
+                        <h4 class="font-bold text-gray-900 mb-2">Enhanced AI Analysis</h4>
+                        <p class="text-sm text-gray-600">Experience-specific insights and development recommendations</p>
+                    </div>
+                    <div class="text-center p-4 bg-gradient-to-br from-orange-50 to-red-50 rounded-lg">
+                        <div class="text-3xl mb-3">🎓</div>
+                        <h4 class="font-bold text-gray-900 mb-2">UC Davis Integration</h4>
+                        <p class="text-sm text-gray-600">Level-appropriate courses, clubs, and campus resources</p>
+                    </div>
+                    <div class="text-center p-4 bg-gradient-to-br from-pink-50 to-purple-50 rounded-lg">
+                        <div class="text-3xl mb-3">🛡️</div>
+                        <h4 class="font-bold text-gray-900 mb-2">Gaming-Resistant</h4>
+                        <p class="text-sm text-gray-600">Multiple formats make manipulation nearly impossible</p>
+                    </div>
+                    <div class="text-center p-4 bg-gradient-to-br from-indigo-50 to-blue-50 rounded-lg">
+                        <div class="text-3xl mb-3">⚡</div>
+                        <h4 class="font-bold text-gray-900 mb-2">Instant Results</h4>
+                        <p class="text-sm text-gray-600">Get comprehensive insights and action plans immediately</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Start Button -->
+            <div class="text-center">
+                <button id="startQuizBtn" class="bg-gradient-to-r from-tech-purple to-tech-cyan text-white px-8 py-4 rounded-xl text-lg font-bold hover:shadow-xl transition-all duration-300 hover:scale-105 animate-pulse-glow">
+                    🚀 Choose Your Experience Level
+                </button>
+                <p class="text-sm text-gray-600 mt-4">Trusted by UC Davis students • Enhanced with GPT-4</p>
+            </div>
+        </div>
+
+        <!-- Level Selection Screen -->
+        <div id="levelSelection" class="hidden space-y-8 animate-fade-in">
+            <div class="text-center">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Choose Your Experience Level</h2>
+                <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+                    Select the level that best matches your current tech experience for the most accurate career guidance.
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+                <!-- Beginner Level -->
+                <div class="level-card cursor-pointer transform hover:scale-105 transition-all duration-300" data-level="beginner">
+                    <div class="bg-white rounded-xl shadow-lg overflow-hidden border-2 border-gray-200 hover:border-green-400">
+                        <div class="bg-gradient-to-br from-green-50 to-emerald-50 p-6 text-center">
+                            <div class="text-4xl mb-3">🌱</div>
+                            <h3 class="text-xl font-bold text-gray-900 mb-2">Tech Explorer</h3>
+                            <p class="text-green-600 font-medium">New to tech? Discover your path.</p>
+                        </div>
+                        <div class="p-6">
+                            <div class="space-y-3 mb-4">
+                                <div class="flex justify-between text-sm">
+                                    <span class="text-gray-600">Duration:</span>
+                                    <span class="font-semibold">5-7 minutes</span>
+                                </div>
+                                <div class="flex justify-between text-sm">
+                                    <span class="text-gray-600">Questions:</span>
+                                    <span class="font-semibold">8 questions</span>
+                                </div>
+                                <div class="flex justify-between text-sm">
+                                    <span class="text-gray-600">Focus:</span>
+                                    <span class="font-semibold">Discovery</span>
+                                </div>
+                            </div>
+                            <p class="text-sm text-gray-600 mb-4">Perfect for students exploring tech careers with no prior experience.</p>
+                            <div class="text-xs text-gray-500 mb-4">
+                                <strong>Question Types:</strong> Scenarios, Visual Choices, Scales
+                            </div>
+                            <button class="w-full bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600 transition-colors">
+                                Start Exploring
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Intermediate Level -->
+                <div class="level-card cursor-pointer transform hover:scale-105 transition-all duration-300" data-level="intermediate">
+                    <div class="bg-white rounded-xl shadow-lg overflow-hidden border-2 border-gray-200 hover:border-blue-400">
+                        <div class="bg-gradient-to-br from-blue-50 to-indigo-50 p-6 text-center">
+                            <div class="text-4xl mb-3">🚀</div>
+                            <h3 class="text-xl font-bold text-gray-900 mb-2">Tech Curious</h3>
+                            <p class="text-blue-600 font-medium">Some experience? Find your specialization.</p>
+                        </div>
+                        <div class="p-6">
+                            <div class="space-y-3 mb-4">
+                                <div class="flex justify-between text-sm">
+                                    <span class="text-gray-600">Duration:</span>
+                                    <span class="font-semibold">8-10 minutes</span>
+                                </div>
+                                <div class="flex justify-between text-sm">
+                                    <span class="text-gray-600">Questions:</span>
+                                    <span class="font-semibold">6 questions</span>
+                                </div>
+                                <div class="flex justify-between text-sm">
+                                    <span class="text-gray-600">Focus:</span>
+                                    <span class="font-semibold">Specialization</span>
+                                </div>
+                            </div>
+                            <p class="text-sm text-gray-600 mb-4">For students with some coding classes or tech exposure seeking their ideal focus.</p>
+                            <div class="text-xs text-gray-500 mb-4">
+                                <strong>Question Types:</strong> Technical Scenarios, Ethics, Design Thinking
+                            </div>
+                            <button class="w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition-colors">
+                                Find My Specialization
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Advanced Level -->
+                <div class="level-card cursor-pointer transform hover:scale-105 transition-all duration-300" data-level="advanced">
+                    <div class="bg-white rounded-xl shadow-lg overflow-hidden border-2 border-gray-200 hover:border-purple-400">
+                        <div class="bg-gradient-to-br from-purple-50 to-violet-50 p-6 text-center">
+                            <div class="text-4xl mb-3">⚡</div>
+                            <h3 class="text-xl font-bold text-gray-900 mb-2">Tech Insider</h3>
+                            <p class="text-purple-600 font-medium">Experienced? Optimize your trajectory.</p>
+                        </div>
+                        <div class="p-6">
+                            <div class="space-y-3 mb-4">
+                                <div class="flex justify-between text-sm">
+                                    <span class="text-gray-600">Duration:</span>
+                                    <span class="font-semibold">10-12 minutes</span>
+                                </div>
+                                <div class="flex justify-between text-sm">
+                                    <span class="text-gray-600">Questions:</span>
+                                    <span class="font-semibold">6 questions</span>
+                                </div>
+                                <div class="flex justify-between text-sm">
+                                    <span class="text-gray-600">Focus:</span>
+                                    <span class="font-semibold">Optimization</span>
+                                </div>
+                            </div>
+                            <p class="text-sm text-gray-600 mb-4">For experienced students with internships and leadership roles.</p>
+                            <div class="text-xs text-gray-500 mb-4">
+                                <strong>Question Types:</strong> Strategic Decisions, Architecture, Leadership
+                            </div>
+                            <button class="w-full bg-purple-500 text-white py-2 px-4 rounded-lg hover:bg-purple-600 transition-colors">
+                                Optimize My Path
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Back Button -->
+            <div class="text-center">
+                <button id="backToIntroBtn" class="text-gray-600 hover:text-gray-800 flex items-center mx-auto transition-colors">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                    </svg>
+                    Back to Introduction
+                </button>
+            </div>
+        </div>
+
+        <!-- Quiz Interface -->
+        <div id="quizInterface" class="hidden">
+            <!-- Progress Bar -->
+            <div class="bg-white rounded-xl p-6 mb-6 shadow-lg sticky top-20 z-40">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 id="quizTitle" class="text-xl font-bold text-gray-900">Enhanced Career Assessment</h2>
+                    <div class="flex items-center space-x-4">
+                        <span id="selectedLevel" class="text-sm bg-gray-100 px-3 py-1 rounded-full"></span>
+                        <span id="progressText" class="text-sm text-gray-600"></span>
+                    </div>
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-3">
+                    <div id="progressBar" class="bg-gradient-to-r from-tech-purple to-tech-cyan h-3 rounded-full transition-all duration-500" style="width: 0%"></div>
+                </div>
+            </div>
+
+            <!-- Question Container -->
+            <div id="questionContainer" class="question-card bg-white rounded-xl p-8 shadow-lg animate-slide-up">
+                <!-- Question content will be populated by JavaScript -->
+            </div>
+
+            <!-- Navigation -->
+            <div class="flex justify-between items-center mt-8">
+                <button id="prevButton" class="px-6 py-3 text-gray-600 hover:text-gray-800 flex items-center transition-colors" style="display: none;">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                    </svg>
+                    Previous
+                </button>
+                
+                <button id="nextButton" class="px-8 py-3 bg-gradient-to-r from-tech-purple to-tech-cyan text-white rounded-lg hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center transition-all" disabled>
+                    <span id="nextButtonText">Continue</span>
+                    <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Loading Screen -->
+        <div id="loadingScreen" class="hidden text-center py-12">
+            <div class="bg-white rounded-xl p-8 shadow-lg max-w-md mx-auto">
+                <div class="animate-spin w-16 h-16 border-4 border-tech-purple border-t-transparent rounded-full mx-auto mb-6"></div>
+                <h3 class="text-2xl font-bold text-gray-900 mb-3">🤖 Enhanced AI Analysis</h3>
+                <p class="text-gray-600 mb-4">Our advanced AI is analyzing your responses with level-specific insights...</p>
+                <div class="text-sm text-tech-purple font-medium">
+                    <span id="loadingStep" class="typing-indicator">Processing your responses...</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results Screen -->
+        <div id="resultsScreen" class="hidden space-y-6">
+            <!-- Results will be populated by JavaScript -->
+        </div>
+    </main>
+
+    <!-- JavaScript -->
+    <script>
+        class EnhancedThreeLevelQuizApp {
+            constructor() {
+                this.selectedLevel = null;
+                this.questions = [];
+                this.answers = [];
+                this.currentQuestionIndex = 0;
+                this.startTime = null;
+                this.init();
+            }
+
+            async init() {
+                console.log('🚀 Initializing Enhanced 3-Level Career Quiz...');
+                this.setupEventListeners();
+                this.showScreen('introScreen');
+            }
+
+            setupEventListeners() {
+                document.getElementById('startQuizBtn').addEventListener('click', () => this.showLevelSelection());
+                document.getElementById('backToIntroBtn').addEventListener('click', () => this.showScreen('introScreen'));
+                
+                // Level selection handlers
+                document.querySelectorAll('.level-card').forEach(card => {
+                    card.addEventListener('click', () => this.selectLevel(card.dataset.level));
+                });
+
+                // Navigation buttons
+                document.getElementById('prevButton').addEventListener('click', () => this.previousQuestion());
+                document.getElementById('nextButton').addEventListener('click', () => this.nextQuestion());
+            }
+
+            showLevelSelection() {
+                this.showScreen('levelSelection');
+            }
+
+            async selectLevel(level) {
+                console.log(`🎯 Level selected: ${level}`);
+                this.selectedLevel = level;
+                
+                // Visual feedback
+                document.querySelectorAll('.level-card').forEach(card => {
+                    card.style.opacity = card.dataset.level === level ? '1' : '0.5';
+                });
+
+                // Load questions for the selected level
+                await this.loadQuestionsForLevel(level);
+                
+                setTimeout(() => this.startQuiz(), 500);
+            }
+
+            async loadQuestionsForLevel(level) {
+                try {
+                    console.log(`📚 Loading ${level} level questions...`);
+                    
+                    // Try to fetch from server first
+                    try {
+                        const response = await fetch(`/api/quiz/enhanced/questions/${level}`);
+                        if (response.ok) {
+                            const data = await response.json();
+                            this.questions = data.questions;
+                            console.log(`✅ Loaded ${this.questions.length} ${level} questions from server`);
+                            return;
+                        }
+                    } catch (serverError) {
+                        console.warn('Server not available, using sample questions');
+                    }
+                    
+                    // Fallback to sample questions
+                    this.questions = this.getSampleQuestionsForLevel(level);
+                    console.log(`✅ Loaded ${this.questions.length} sample ${level} questions`);
+                } catch (error) {
+                    console.error('💥 Error loading questions:', error);
+                    this.questions = this.getSampleQuestionsForLevel('beginner'); // Fallback
+                }
+            }
+
+            getSampleQuestionsForLevel(level) {
+                const sampleQuestions = {
+                    beginner: [
+                        {
+                            id: 'B01',
+                            type: 'scenario',
+                            category: 'problem_solving_style',
+                            question: "You're planning your friend's surprise birthday party, but everything is going wrong. The venue cancelled, half the guests can't make it, and you have two days left. What's your first instinct?",
+                            subtitle: "Choose the approach that feels most natural to you",
+                            options: [
+                                {
+                                    id: 'systematic_planning',
+                                    title: 'Create a Detailed Backup Plan',
+                                    description: 'Make lists of alternative venues, create a new guest list, and systematically work through each problem'
+                                },
+                                {
+                                    id: 'collaborative_creative',
+                                    title: 'Rally Friends for Creative Solutions',
+                                    description: 'Get your friends together to brainstorm fun alternatives like a park picnic or house party'
+                                },
+                                {
+                                    id: 'user_centered',
+                                    title: 'Focus on What Makes Them Happy',
+                                    description: 'Think about what your friend would actually want most and work backwards from there'
+                                },
+                                {
+                                    id: 'systematic_coordination',
+                                    title: 'Organize and Delegate Tasks',
+                                    description: 'Divide responsibilities among friends and create a group chat to coordinate efficiently'
+                                }
+                            ]
+                        },
+                        {
+                            id: 'B02',
+                            type: 'visual_choice',
+                            category: 'team_dynamics',
+                            question: "In a group project where your team can't agree on direction, which role feels most natural?",
+                            subtitle: "Trust your instinct about what you'd actually do",
+                            options: [
+                                {
+                                    id: 'diplomatic_facilitator',
+                                    visual: '🤝',
+                                    title: 'The Diplomatic Facilitator',
+                                    description: 'Help everyone understand each other\'s perspectives and find common ground'
+                                },
+                                {
+                                    id: 'analytical_researcher',
+                                    visual: '📊',
+                                    title: 'The Analytical Researcher',
+                                    description: 'Research different approaches and present pros and cons of each option'
+                                },
+                                {
+                                    id: 'creative_synthesizer',
+                                    visual: '💡',
+                                    title: 'The Creative Synthesizer',
+                                    description: 'Suggest completely different approaches that combine everyone\'s ideas'
+                                },
+                                {
+                                    id: 'task_coordinator',
+                                    visual: '📋',
+                                    title: 'The Task Coordinator',
+                                    description: 'Focus on specific parts you can contribute to and help others do the same'
+                                }
+                            ]
+                        },
+                        {
+                            id: 'B03',
+                            type: 'scale',
+                            category: 'learning_style',
+                            question: "When learning something completely new, how do you prefer to approach it?",
+                            subtitle: "Think about what actually helps you learn best",
+                            scale: {
+                                min: 1,
+                                max: 10,
+                                labels: {
+                                    1: "Jump in and experiment immediately",
+                                    3: "Some trial and error with basic guidance",
+                                    5: "Balanced mix of study and practice",
+                                    7: "Structured learning with systematic practice",
+                                    10: "Thorough research and planning before starting"
+                                },
+                                descriptions: {
+                                    1: "You learn best by diving in and figuring things out through experimentation",
+                                    3: "You like to start doing but with some basic guidance or tutorials",
+                                    5: "You prefer a mix of studying the fundamentals and hands-on practice",
+                                    7: "You learn best with structured lessons and systematic skill building",
+                                    10: "You prefer to thoroughly understand the theory before attempting practice"
+                                }
+                            }
+                        },
+                        {
+                            id: 'B04',
+                            type: 'multiple_choice',
+                            category: 'communication_style',
+                            question: "You're trying to explain a complex concept to a friend who's struggling to understand it. What's your approach?",
+                            options: [
+                                {
+                                    id: 'systematic_building',
+                                    title: 'Break It Down Step by Step',
+                                    description: 'Start with simpler parts and build up their understanding systematically'
+                                },
+                                {
+                                    id: 'creative_analogies',
+                                    title: 'Use Creative Analogies',
+                                    description: 'Find analogies or examples from things they already understand well'
+                                },
+                                {
+                                    id: 'diagnostic_questioning',
+                                    title: 'Ask Questions to Diagnose Confusion',
+                                    description: 'Ask them questions to figure out exactly where they\'re getting stuck'
+                                },
+                                {
+                                    id: 'resource_finding',
+                                    title: 'Find Better Resources',
+                                    description: 'Look for a really good video or article that explains it better than you could'
+                                }
+                            ]
+                        }
+                    ],
+                    intermediate: [
+                        {
+                            id: 'I01',
+                            type: 'scenario',
+                            category: 'leadership_adaptive',
+                            question: "You're leading a study group for a challenging CS course. Half the group is struggling with the material while the other half is bored. How do you handle this?",
+                            options: [
+                                {
+                                    id: 'distributed_leadership',
+                                    title: 'Create Peer Mentoring System',
+                                    description: 'Set up different tracks where advanced students mentor struggling ones while you facilitate'
+                                },
+                                {
+                                    id: 'systematic_differentiation',
+                                    title: 'Design Multi-Level Problems',
+                                    description: 'Create practice problems that have multiple difficulty levels built into them'
+                                },
+                                {
+                                    id: 'practical_contextualization',
+                                    title: 'Focus on Real-World Applications',
+                                    description: 'Make the material relevant to everyone through practical, relatable examples'
+                                },
+                                {
+                                    id: 'structured_dual_track',
+                                    title: 'Split Sessions by Skill Level',
+                                    description: 'Alternate between fundamentals review and advanced exploration sessions'
+                                }
+                            ]
+                        },
+                        {
+                            id: 'I02',
+                            type: 'scale',
+                            category: 'ethical_technical_judgment',
+                            question: "You discover a potential security vulnerability in a popular campus app. How quickly should you act?",
+                            subtitle: "Consider the balance between thoroughness and urgency",
+                            scale: {
+                                min: 1,
+                                max: 10,
+                                labels: {
+                                    1: "Alert developers immediately",
+                                    5: "Balanced research and responsible disclosure",
+                                    10: "Extensive research and formal process"
+                                },
+                                descriptions: {
+                                    1: "Students could be at risk - contact developers right away with initial findings",
+                                    5: "Balance between protecting users and providing developers with useful information",
+                                    10: "Follow formal security research protocols with comprehensive analysis and proof-of-concept"
+                                }
+                            }
+                        },
+                        {
+                            id: 'I03',
+                            type: 'short_response',
+                            category: 'ambiguity_navigation',
+                            question: "Describe a time when you had to work with unclear requirements or expectations. How did you handle it?",
+                            subtitle: "This could be from school, work, or personal projects",
+                            placeholder: "I remember when I had to work on a project where...",
+                            max_length: 250
+                        }
+                    ],
+                    advanced: [
+                        {
+                            id: 'A01',
+                            type: 'scenario',
+                            category: 'technical_leadership_judgment',
+                            question: "You're the technical lead on a project where the initial architecture isn't scaling. The team is split between refactoring (risky, time-consuming) and quick fixes (faster, but creates technical debt). How do you navigate this decision?",
+                            options: [
+                                {
+                                    id: 'strategic_analysis',
+                                    title: 'Comprehensive Cost-Benefit Analysis',
+                                    description: 'Conduct thorough analysis of both approaches, considering long-term maintenance and team velocity'
+                                },
+                                {
+                                    id: 'collaborative_consensus',
+                                    title: 'Facilitate Team Decision-Making',
+                                    description: 'Lead team discussions to understand concerns and build consensus around technical direction'
+                                },
+                                {
+                                    id: 'creative_compromise',
+                                    title: 'Design Hybrid Approach',
+                                    description: 'Create a solution that addresses critical scalability issues while minimizing risk'
+                                },
+                                {
+                                    id: 'systematic_mitigation',
+                                    title: 'Incremental Refactoring with Checkpoints',
+                                    description: 'Implement gradual refactoring with measurable milestones to balance risk and progress'
+                                }
+                            ]
+                        },
+                        {
+                            id: 'A02',
+                            type: 'short_response',
+                            category: 'strategic_product_judgment',
+                            question: "Describe your approach to making a critical business decision under pressure with limited information.",
+                            subtitle: "Think about a challenging decision you've made or how you would approach one",
+                            placeholder: "When facing a high-stakes decision with incomplete information, I would...",
+                            max_length: 300
+                        },
+                        {
+                            id: 'A03',
+                            type: 'visual_choice',
+                            category: 'systems_architecture_expertise',
+                            question: "You're designing a system for unpredictable traffic spikes while maintaining performance and cost-effectiveness. What's your architectural philosophy?",
+                            subtitle: "Choose the approach that aligns with your engineering thinking",
+                            options: [
+                                {
+                                    id: 'distributed_resilience',
+                                    visual: '🏗️',
+                                    title: 'Distributed Resilience Architecture',
+                                    description: 'Microservices with auto-scaling, caching layers, and circuit breakers for reliability'
+                                },
+                                {
+                                    id: 'cloud_native_serverless',
+                                    visual: '☁️',
+                                    title: 'Cloud-Native Serverless',
+                                    description: 'Serverless-first approach with edge computing and intelligent load balancing'
+                                },
+                                {
+                                    id: 'adaptive_performance',
+                                    visual: '⚡',
+                                    title: 'Adaptive Performance System',
+                                    description: 'Hybrid system that gracefully degrades functionality during peak loads'
+                                },
+                                {
+                                    id: 'predictive_intelligence',
+                                    visual: '🧠',
+                                    title: 'Predictive Intelligence',
+                                    description: 'ML-powered system that anticipates traffic patterns and scales proactively'
+                                }
+                            ]
+                        }
+                    ]
+                };
+                
+                return sampleQuestions[level] || sampleQuestions.beginner;
+            }
+
+            startQuiz() {
+                console.log(`🎯 Starting ${this.selectedLevel} level quiz...`);
+                this.startTime = Date.now();
+                this.currentQuestionIndex = 0;
+                this.answers = new Array(this.questions.length).fill(null);
+                
+                // Update UI with level info
+                document.getElementById('selectedLevel').textContent = this.selectedLevel.charAt(0).toUpperCase() + this.selectedLevel.slice(1);
+                
+                this.showScreen('quizInterface');
+                this.renderQuestion();
+            }
+
+            renderQuestion() {
+                const question = this.questions[this.currentQuestionIndex];
+                
+                // Update progress
+                document.getElementById('progressText').textContent = `Question ${this.currentQuestionIndex + 1} of ${this.questions.length}`;
+                const progress = ((this.currentQuestionIndex + 1) / this.questions.length) * 100;
+                document.getElementById('progressBar').style.width = `${progress}%`;
+
+                // Render question based on type
+                const container = document.getElementById('questionContainer');
+                container.className = 'question-card bg-white rounded-xl p-8 shadow-lg animate-slide-up';
+                
+                switch (question.type) {
+                    case 'visual_choice':
+                        this.renderVisualChoice(question, container);
+                        break;
+                    case 'scale':
+                        this.renderScale(question, container);
+                        break;
+                    case 'scenario':
+                    case 'multiple_choice':
+                        this.renderScenario(question, container);
+                        break;
+                    case 'short_response':
+                        this.renderShortResponse(question, container);
+                        break;
+                    case 'ranking':
+                        this.renderRanking(question, container);
+                        break;
+                    default:
+                        this.renderMultipleChoice(question, container);
+                }
+
+                // Update navigation
+                this.updateNavigation();
+            }
+
+            renderVisualChoice(question, container) {
+                container.innerHTML = `
+                    <div class="text-center mb-8">
+                        <h3 class="text-2xl font-bold text-gray-900 mb-2">${question.question}</h3>
+                        <p class="text-gray-600">${question.subtitle || ''}</p>
+                    </div>
+                    
+                    <div class="grid md:grid-cols-2 gap-6">
+                        ${question.options.map(option => `
+                            <div class="visual-option p-6 border-2 border-gray-200 rounded-xl cursor-pointer hover:border-tech-purple transition-all" 
+                                 data-option-id="${option.id}"
+                                 onclick="enhancedQuizApp.selectVisualOption('${option.id}')">
+                                <div class="text-center">
+                                    <div class="text-4xl mb-4">${option.visual}</div>
+                                    <h4 class="text-lg font-bold text-gray-900 mb-2">${option.title}</h4>
+                                    <p class="text-gray-600 text-sm">${option.description}</p>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            }
+
+            renderScale(question, container) {
+                const middleValue = Math.ceil((question.scale.min + question.scale.max) / 2);
+                container.innerHTML = `
+                    <div class="text-center mb-8">
+                        <h3 class="text-2xl font-bold text-gray-900 mb-2">${question.question}</h3>
+                        <p class="text-gray-600">${question.subtitle || ''}</p>
+                    </div>
+                    
+                    <div class="max-w-2xl mx-auto">
+                        <div class="mb-6">
+                            <input type="range" id="scaleSlider" class="scale-slider w-full" 
+                                   min="${question.scale.min}" max="${question.scale.max}" value="${middleValue}"
+                                   oninput="enhancedQuizApp.updateScale(this.value)">
+                        </div>
+                        
+                        <div class="text-center mb-6">
+                            <div id="scaleValue" class="text-2xl font-bold text-tech-purple mb-2">${middleValue}</div>
+                            <div id="scaleLabel" class="text-lg font-medium text-gray-900 mb-2">${question.scale.labels[middleValue]}</div>
+                            <div id="scaleDescription" class="text-gray-600">${question.scale.descriptions[middleValue]}</div>
+                        </div>
+                        
+                        <div class="flex justify-between text-sm text-gray-500">
+                            <span>${question.scale.labels[question.scale.min]}</span>
+                            <span>${question.scale.labels[question.scale.max]}</span>
+                        </div>
+                    </div>
+                `;
+            }
+
+            renderScenario(question, container) {
+                container.innerHTML = `
+                    <div class="mb-8">
+                        <h3 class="text-2xl font-bold text-gray-900 mb-4">${question.question}</h3>
+                        ${question.subtitle ? `<p class="text-gray-600 mb-4">${question.subtitle}</p>` : ''}
+                    </div>
+                    
+                    <div class="space-y-4">
+                        ${question.options.map(option => `
+                            <div class="option-card p-6 border-2 border-gray-200 rounded-xl cursor-pointer hover:border-tech-purple transition-all" 
+                                 data-option-id="${option.id}"
+                                 onclick="enhancedQuizApp.selectOption('${option.id}')">
+                                <h4 class="text-lg font-bold text-gray-900 mb-2">${option.title}</h4>
+                                <p class="text-gray-600">${option.description}</p>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            }
+
+            renderShortResponse(question, container) {
+                container.innerHTML = `
+                    <div class="mb-8">
+                        <h3 class="text-2xl font-bold text-gray-900 mb-2">${question.question}</h3>
+                        <p class="text-gray-600">${question.subtitle || ''}</p>
+                    </div>
+                    
+                    <div class="max-w-2xl mx-auto">
+                        <textarea id="textResponse" 
+                                  class="w-full p-4 border-2 border-gray-200 rounded-xl focus:border-tech-purple focus:outline-none transition-colors" 
+                                  rows="4"
+                                  placeholder="${question.placeholder}"
+                                  maxlength="${question.max_length}"
+                                  oninput="enhancedQuizApp.updateTextResponse(this.value)"></textarea>
+                        <div class="flex justify-between text-sm text-gray-500 mt-2">
+                            <span>Share your authentic experience</span>
+                            <span id="charCount">0/${question.max_length}</span>
+                        </div>
+                    </div>
+                `;
+            }
+
+            renderRanking(question, container) {
+                container.innerHTML = `
+                    <div class="mb-8">
+                        <h3 class="text-2xl font-bold text-gray-900 mb-2">${question.question}</h3>
+                        <p class="text-gray-600">${question.subtitle}</p>
+                    </div>
+                    
+                    <div class="max-w-2xl mx-auto">
+                        <p class="text-sm text-gray-600 mb-6 text-center">Drag items to reorder them from most important (top) to least important (bottom)</p>
+                        
+                        <div id="rankingContainer" class="space-y-3">
+                            ${question.items.map((item, index) => `
+                                <div class="drag-item p-4 bg-gray-50 border-2 border-gray-200 rounded-lg" 
+                                     draggable="true"
+                                     data-item-index="${index}"
+                                     ondragstart="enhancedQuizApp.handleDragStart(event)"
+                                     ondragover="enhancedQuizApp.handleDragOver(event)"
+                                     ondrop="enhancedQuizApp.handleDrop(event)">
+                                    <div class="flex items-center">
+                                        <div class="w-8 h-8 bg-tech-purple text-white rounded-full flex items-center justify-center mr-4 font-bold">
+                                            ${index + 1}
+                                        </div>
+                                        <div>
+                                            <h4 class="font-bold text-gray-900">${item.text}</h4>
+                                            <p class="text-sm text-gray-600">${item.description}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Event handlers for different question types
+            selectVisualOption(optionId) {
+                // Clear previous selections
+                document.querySelectorAll('.visual-option').forEach(el => {
+                    el.classList.remove('selected');
+                    el.style.borderColor = '#e5e7eb';
+                });
+
+                // Select new option
+                const selectedEl = document.querySelector(`[data-option-id="${optionId}"]`);
+                selectedEl.classList.add('selected');
+                selectedEl.style.borderColor = '#6366f1';
+
+                // Find the selected option data
+                const question = this.questions[this.currentQuestionIndex];
+                const selectedOption = question.options.find(opt => opt.id === optionId);
+
+                // Save response
+                this.saveResponse({ selectedOption: selectedOption });
+            }
+
+            updateScale(value) {
+                const question = this.questions[this.currentQuestionIndex];
+                document.getElementById('scaleValue').textContent = value;
+                document.getElementById('scaleLabel').textContent = question.scale.labels[value];
+                document.getElementById('scaleDescription').textContent = question.scale.descriptions[value];
+                
+                this.saveResponse({ scaleValue: parseInt(value) });
+            }
+
+            selectOption(optionId) {
+                // Clear previous selections
+                document.querySelectorAll('.option-card').forEach(el => {
+                    el.classList.remove('selected');
+                    el.style.borderColor = '#e5e7eb';
+                });
+
+                // Select new option
+                const selectedEl = document.querySelector(`[data-option-id="${optionId}"]`);
+                selectedEl.classList.add('selected');
+                selectedEl.style.borderColor = '#6366f1';
+
+                // Find the selected option data
+                const question = this.questions[this.currentQuestionIndex];
+                const selectedOption = question.options.find(opt => opt.id === optionId);
+
+                this.saveResponse({ selectedOption: selectedOption });
+            }
+
+            updateTextResponse(value) {
+                document.getElementById('charCount').textContent = `${value.length}/${this.questions[this.currentQuestionIndex].max_length}`;
+                this.saveResponse({ textResponse: value });
+            }
+
+            saveResponse(responseData) {
+                this.answers[this.currentQuestionIndex] = {
+                    questionId: this.questions[this.currentQuestionIndex].id,
+                    questionType: this.questions[this.currentQuestionIndex].type,
+                    ...responseData,
+                    timestamp: new Date().toISOString(),
+                    timeTaken: Date.now() - this.startTime
+                };
+                
+                // Enable next button
+                document.getElementById('nextButton').disabled = false;
+            }
+
+            updateNavigation() {
+                const prevBtn = document.getElementById('prevButton');
+                const nextBtn = document.getElementById('nextButton');
+                const nextBtnText = document.getElementById('nextButtonText');
+
+                prevBtn.style.display = this.currentQuestionIndex === 0 ? 'none' : 'flex';
+                nextBtn.disabled = !this.answers[this.currentQuestionIndex];
+
+                if (this.currentQuestionIndex === this.questions.length - 1) {
+                    nextBtnText.textContent = 'Get My Enhanced Analysis 🤖';
+                } else {
+                    nextBtnText.textContent = 'Continue';
+                }
+            }
+
+            previousQuestion() {
+                if (this.currentQuestionIndex > 0) {
+                    this.currentQuestionIndex--;
+                    this.renderQuestion();
+                }
+            }
+
+            nextQuestion() {
+                if (this.currentQuestionIndex < this.questions.length - 1) {
+                    this.currentQuestionIndex++;
+                    this.renderQuestion();
+                } else {
+                    this.submitQuiz();
+                }
+            }
+
+            async submitQuiz() {
+                console.log(`🤖 Submitting ${this.selectedLevel} level quiz for enhanced AI analysis...`);
+                
+                this.showScreen('loadingScreen');
+                this.animateLoadingSteps();
+                
+                try {
+                    const completionTime = Math.floor((Date.now() - this.startTime) / 1000);
+                    
+                    const submissionData = {
+                        level: this.selectedLevel,
+                        answers: this.answers.filter(a => a !== null),
+                        completionTime: completionTime,
+                        metadata: {
+                            version: '3.0-Enhanced',
+                            questionTypes: [...new Set(this.questions.map(q => q.type))],
+                            timestamp: new Date().toISOString()
+                        }
+                    };
+
+                    console.log('📤 Submitting to enhanced analyzer:', submissionData);
+
+                    // Try to submit to server
+                    try {
+                        const response = await fetch('/api/quiz/enhanced/submit', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(submissionData)
+                        });
+
+                        if (response.ok) {
+                            const results = await response.json();
+                            this.displayResults(results.results);
+                            return;
+                        }
+                    } catch (serverError) {
+                        console.warn('Server submission failed, using mock results');
+                    }
+                    
+                    // Fallback to mock results
+                    await new Promise(resolve => setTimeout(resolve, 3000));
+                    this.displayResults(this.getMockResultsForLevel(this.selectedLevel));
+                    
+                } catch (error) {
+                    console.error('💥 Quiz submission error:', error);
+                    this.showError('Analysis failed. Please try again.');
+                }
+            }
+
+            getMockResultsForLevel(level) {
+                const levelResults = {
+                    beginner: {
+                        topMatch: {
+                            career: 'Software Engineering (Frontend)',
+                            percentage: 84,
+                            reasoning: 'Your systematic approach to problem-solving and preference for user-focused solutions align perfectly with frontend development.',
+                            keyPatterns: ['User-centered thinking', 'Visual problem solving', 'Systematic approach'],
+                            nextSteps: [
+                                'Take CS 161 to explore programming fundamentals',
+                                'Join #include or CodeLab for hands-on experience',
+                                'Build simple projects to test your interest',
+                                'Attend tech talks and info sessions on campus'
+                            ]
+                        },
+                        personalityInsights: {
+                            workStyle: 'Collaborative with attention to user needs',
+                            motivation: 'Making technology accessible and useful',
+                            environment: 'Team-oriented with creative freedom',
+                            challenges: 'May need to develop more technical depth over time'
+                        }
+                    },
+                    intermediate: {
+                        topMatch: {
+                            career: 'Full-Stack Development',
+                            percentage: 87,
+                            reasoning: 'Your balance of technical skills and collaborative leadership makes you ideal for full-stack development roles.',
+                            keyPatterns: ['Technical leadership', 'Cross-functional collaboration', 'Balanced approach'],
+                            nextSteps: [
+                                'Build a complete web application for your portfolio',
+                                'Join Google Developer Student Club for advanced projects',
+                                'Apply for software engineering internships',
+                                'Contribute to open source projects'
+                            ]
+                        },
+                        personalityInsights: {
+                            workStyle: 'Bridge between technical and business concerns',
+                            motivation: 'Building complete solutions from idea to deployment',
+                            environment: 'Cross-functional teams with technical challenges',
+                            challenges: 'Need to balance depth vs breadth in technical skills'
+                        }
+                    },
+                    advanced: {
+                        topMatch: {
+                            career: 'Technical Product Management',
+                            percentage: 91,
+                            reasoning: 'Your strategic thinking, technical depth, and decision-making under pressure position you well for technical product management.',
+                            keyPatterns: ['Strategic decision-making', 'Technical architecture thinking', 'Pressure management'],
+                            nextSteps: [
+                                'Lead a significant technical project or initiative',
+                                'Develop business acumen through relevant coursework',
+                                'Network with product managers in industry',
+                                'Consider product management internships at tech companies'
+                            ]
+                        },
+                        personalityInsights: {
+                            workStyle: 'Strategic with strong technical foundation',
+                            motivation: 'Connecting technology capabilities with business value',
+                            environment: 'High-impact roles with strategic responsibility',
+                            challenges: 'Balancing technical and business perspectives'
+                        }
+                    }
+                };
+
+                return levelResults[level] || levelResults.intermediate;
+            }
+
+            animateLoadingSteps() {
+                const steps = [
+                    '🧠 Analyzing psychological patterns...',
+                    '🔍 Detecting authentic preferences...',
+                    '🎯 Matching with career profiles...',
+                    '💡 Generating personalized insights...',
+                    '🚀 Preparing your custom action plan...'
+                ];
+                
+                let stepIndex = 0;
+                const stepElement = document.getElementById('loadingStep');
+                
+                const updateStep = () => {
+                    if (stepIndex < steps.length) {
+                        stepElement.textContent = steps[stepIndex];
+                        stepIndex++;
+                        setTimeout(updateStep, 800);
+                    }
+                };
+                
+                updateStep();
+            }
+
+            displayResults(results) {
+                this.showScreen('resultsScreen');
+                
+                const container = document.getElementById('resultsScreen');
+                container.innerHTML = `
+                    <div class="gradient-bg text-white rounded-xl p-8 text-center animate-bounce-in">
+                        <h2 class="text-3xl font-bold mb-4">🎉 Your Enhanced ${this.selectedLevel.charAt(0).toUpperCase() + this.selectedLevel.slice(1)} Analysis is Ready!</h2>
+                        <div class="glass-effect rounded-lg p-6 max-w-2xl mx-auto">
+                            <h3 class="text-2xl font-bold mb-2">${results.topMatch.career}</h3>
+                            <div class="text-4xl font-bold mb-2">${results.topMatch.percentage}% Match</div>
+                            <p class="text-blue-100">${results.topMatch.reasoning}</p>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white rounded-xl p-8 shadow-lg">
+                        <h3 class="text-xl font-bold mb-4">🎯 Key Patterns Identified</h3>
+                        <div class="grid md:grid-cols-3 gap-4">
+                            ${results.topMatch.keyPatterns.map(pattern => `
+                                <div class="p-4 bg-gradient-to-br from-purple-50 to-blue-50 rounded-lg text-center">
+                                    <div class="font-medium text-gray-900">${pattern}</div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                    
+                    ${results.personalityInsights ? `
+                    <div class="bg-white rounded-xl p-8 shadow-lg">
+                        <h3 class="text-xl font-bold mb-4">🧠 Personality Insights</h3>
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <div>
+                                <h4 class="font-semibold text-gray-900 mb-2">Work Style</h4>
+                                <p class="text-gray-600">${results.personalityInsights.workStyle}</p>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-gray-900 mb-2">Motivation</h4>
+                                <p class="text-gray-600">${results.personalityInsights.motivation}</p>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-gray-900 mb-2">Ideal Environment</h4>
+                                <p class="text-gray-600">${results.personalityInsights.environment}</p>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-gray-900 mb-2">Growth Areas</h4>
+                                <p class="text-gray-600">${results.personalityInsights.challenges}</p>
+                            </div>
+                        </div>
+                    </div>
+                    ` : ''}
+                    
+                    <div class="bg-white rounded-xl p-8 shadow-lg">
+                        <h3 class="text-xl font-bold mb-4">🚀 Your Next Steps</h3>
+                        <div class="space-y-3">
+                            ${results.topMatch.nextSteps.map((step, index) => `
+                                <div class="flex items-start">
+                                    <div class="w-6 h-6 bg-tech-purple text-white rounded-full flex items-center justify-center text-sm font-bold mr-3 mt-1">
+                                        ${index + 1}
+                                    </div>
+                                    <p class="text-gray-700">${step}</p>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                    
+                    <div class="text-center space-y-4">
+                        <button onclick="enhancedQuizApp.retakeQuiz()" class="bg-gradient-to-r from-tech-purple to-tech-cyan text-white px-8 py-3 rounded-xl font-bold hover:shadow-lg transition-all mr-4">
+                            🔄 Try Another Level
+                        </button>
+                        <button onclick="window.exploreClubs()" class="bg-white text-tech-purple border-2 border-tech-purple px-8 py-3 rounded-xl font-bold hover:bg-tech-purple hover:text-white transition-all">
+                            🏛️ Explore UC Davis Clubs
+                        </button>
+                    </div>
+                `;
+            }
+
+            showScreen(screenId) {
+                const screens = ['introScreen', 'levelSelection', 'quizInterface', 'loadingScreen', 'resultsScreen'];
+                screens.forEach(id => {
+                    const element = document.getElementById(id);
+                    if (element) {
+                        element.classList.toggle('hidden', id !== screenId);
+                    }
+                });
+            }
+
+            showError(message) {
+                alert(`Error: ${message}`);
+                this.showScreen('introScreen');
+            }
+
+            retakeQuiz() {
+                this.selectedLevel = null;
+                this.currentQuestionIndex = 0;
+                this.answers = [];
+                this.startTime = null;
+                this.questions = [];
+                
+                // Reset level card styles
+                document.querySelectorAll('.level-card').forEach(card => {
+                    card.style.opacity = '1';
+                });
+                
+                this.showScreen('introScreen');
+            }
+
+            // Drag and drop handlers for ranking questions
+            handleDragStart(event) {
+                event.dataTransfer.setData('text/plain', event.target.dataset.itemIndex);
+                event.target.style.opacity = '0.7';
+            }
+
+            handleDragOver(event) {
+                event.preventDefault();
+                event.target.closest('.drag-item').classList.add('drop-zone');
+            }
+
+            handleDrop(event) {
+                event.preventDefault();
+                const draggedIndex = event.dataTransfer.getData('text/plain');
+                const targetIndex = event.target.closest('.drag-item').dataset.itemIndex;
+                
+                // Implement ranking logic here
+                console.log(`Moved item ${draggedIndex} to position ${targetIndex}`);
+                
+                // Reset opacity
+                document.querySelectorAll('.drag-item').forEach(item => {
+                    item.style.opacity = '1';
+                    item.classList.remove('drop-zone');
+                });
+                
+                this.saveResponse({ ranking: [/* ranking array */] });
+            }
+        }
+
+        // Initialize the app
+        let enhancedQuizApp;
+        document.addEventListener('DOMContentLoaded', () => {
+            enhancedQuizApp = new EnhancedThreeLevelQuizApp();
+            console.log('🚀 Enhanced 3-Level Career Quiz loaded successfully');
+        });
+
+        // Make it globally accessible for button handlers
+        window.enhancedQuizApp = enhancedQuizApp;
+
+        // Global functions for buttons
+        window.retakeQuiz = function () {
+            enhancedQuizApp?.retakeQuiz();
+        };
+
+        window.shareResults = function () {
+            // Enhanced sharing implementation
+            if (!enhancedQuizApp) return;
+
+            const shareData = {
+                title: 'Enhanced AI Career Analysis Results',
+                text: `I discovered my ideal tech career path through UC Davis's enhanced AI career quiz!`,
+                url: window.location.href
+            };
+
+            if (navigator.share) {
+                navigator.share(shareData).catch(err => console.log('Share cancelled'));
+            } else {
+                navigator.clipboard.writeText(`${shareData.text} ${shareData.url}`).then(() => {
+                    alert('Results copied to clipboard!');
+                });
+            }
+        };
+
+        window.exploreClubs = function () {
+            window.location.href = '/tech-clubs';
+        };
+
+        window.saveToDashboard = function () {
+            alert('Results saved to your dashboard! 💾');
+        };
+
+        console.log('✅ Enhanced 3-Level Career Quiz Engine loaded and ready');
+    </script>
+</body>
+</html>

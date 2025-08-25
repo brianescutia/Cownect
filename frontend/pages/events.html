@@ -5,47 +5,33 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Tech Events | Cownect</title>
+    
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="/styles/navbar.css" />
     <link rel="stylesheet" href="../styles/events-redesigned.css" />
     <link rel="stylesheet" href="../styles/events-calendar.css" />
-    <script src="/scripts/calendar-utils.js" defer></script>
-    <link href="https://fonts.googleapis.com/css2?family=Rethink+Sans:wght@400;500;600;700&display=swap"
-        rel="stylesheet">
+    <link rel="stylesheet" href="../styles/events-image-fixes.css" />
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Rethink+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 
 <body>
-    <!-- Background blur decorations - Same as tech-clubs -->
+    <!-- Background blur decorations -->
     <div class="blur-decoration-left"></div>
     <div class="blur-decoration-left2"></div>
     <div class="blur-decoration-right"></div>
 
-    <!-- Navbar - FIXED TO MATCH OTHER PAGES -->
-    <nav class="navbar">
-        <div class="navbar-container">
-            <!-- MAKE LOGO CLICKABLE -->
-            <a href="/dashboard" class="logo-title" style="text-decoration: none; color: inherit;">
-                <img src="../assets/cowLogo.png" alt="Cownect Logo" class="logo" />
-                <span class="logo-text">Cownect</span>
-            </a>
-            <ul class="nav-links">
-                <li><a href="/tech-clubs">Tech Clubs</a></li>
-                <li><a href="/events" class="nav-link active">Events</a></li>
-                <li><a href="/niche-landing">Niche Test</a></li>
-                <li><a href="#">Mentor Matching</a></li>
-            </ul>
-        </div>
-        <!-- Profile circle outside of the gray background -->
-        <div class="navbar-profile-circle" id="navbarProfileCircle" onclick="goToDashboard()" title="Go to Dashboard">
-            <span id="navbarProfileInitials">--</span> <!-- FIXED FROM JD -->
-        </div>
-    </nav>
+    <!-- Navbar will be injected dynamically here -->
 
+    <!-- Main Content -->
     <main class="events-main">
         <!-- Events Container -->
         <div id="eventsContainer" class="events-container">
 
             <!-- Featured Events Section - Upper Half -->
             <section class="featured-events-section">
-                <h2>🎯 Tech Events You Can't Miss</h2>
+                <h2>Tech Events You Can't Miss</h2>
                 <div class="featured-events-grid" id="featuredEventsGrid">
                     <!-- Loading state with 3 cards -->
                     <div class="loading-cards">
@@ -62,7 +48,7 @@
                     <!-- Calendar Header -->
                     <div class="calendar-header">
                         <div class="calendar-title">
-                            <h2>📅 Events Calendar</h2>
+                            <h2>Events Calendar</h2>
                             <p>Click on any date to see events for that day</p>
                         </div>
 
@@ -139,50 +125,52 @@
                     </svg>
                 </button>
 
-                <!-- Event Image - Upper Half -->
+                <!-- Event Image - Upper Section (35% height via CSS) -->
                 <div class="event-image-container">
                     <img class="event-image" src="" alt="Event Image" />
-                    <!-- Event Category Badge -->
                 </div>
 
-                <!-- Event Content - Lower Half -->
+                <!-- Event Content - Lower Section (60% height via CSS) -->
                 <div class="event-content">
                     <h3 class="event-title">Event Title</h3>
-                    <p class="event-description">Short event description goes here...</p>
+                    <p class="event-description">Event description that will now be fully visible with proper spacing and multiple lines of text to describe the event properly.</p>
 
-                    <div class="event-details">
-                        <div class="event-location">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                stroke-width="2">
-                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
-                                <circle cx="12" cy="10" r="3" />
-                            </svg>
-                            <span class="location-text">Location</span>
+                    <!-- Bottom section with location/time on left, button on right -->
+                    <div class="event-bottom-section">
+                        <div class="event-details">
+                            <div class="event-location">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                                    <circle cx="12" cy="10" r="3" />
+                                </svg>
+                                <span class="location-text">Location</span>
+                            </div>
+                            <div class="event-time">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10" />
+                                    <polyline points="12,6 12,12 16,14" />
+                                </svg>
+                                <span class="time-text">6:00 PM</span>
+                            </div>
                         </div>
-                        <div class="event-time">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                stroke-width="2">
-                                <circle cx="12" cy="12" r="10" />
-                                <polyline points="12,6 12,12 16,14" />
-                            </svg>
-                            <span class="time-text">6:00 PM</span>
-                        </div>
+                        
+                        <button class="event-calendar-btn-small add-calendar-btn">
+                            
+                        </button>
                     </div>
 
-                    <div class="event-actions">
-                        <!-- IMPROVED JOIN/UNJOIN BUTTON -->
+                    <!-- Hidden original actions for compatibility -->
+                    <div class="event-actions" style="display: none;">
                         <button class="join-event-btn" data-joined="false">
                             <span class="join-text">Join Event</span>
                             <span class="joined-text" style="display: none;">Joined ✓</span>
                         </button>
                         
-                        <!-- IMPROVED ADD TO CALENDAR BUTTON -->
                         <div class="calendar-dropdown">
                             <button class="add-calendar-btn">
-    <span class="btn-icon"></span>
-    <span class="btn-text"></span>
-</button>
-                            <!-- CALENDAR OPTIONS DROPDOWN -->
+                                <span class="btn-icon"></span>
+                                <span class="btn-text"></span>
+                            </button>
                             <div class="calendar-options">
                                 <button class="calendar-option" data-type="google">Google Calendar</button>
                                 <button class="calendar-option" data-type="outlook">Outlook</button>
@@ -229,11 +217,12 @@
 
     </main>
 
-    <!-- Scripts -->
-    <script src="../scripts/navbar.js" defer></script>
+    <!-- Scripts - Keep your original JavaScript files -->
+    <script src="/scripts/calendar-utils.js" defer></script>
+    <script src="/scripts/navbar-component.js" defer></script>
+    <script src="/scripts/navbar.js" defer></script>
     <script src="../scripts/event-bookmark.js" defer></script>
     <script src="../scripts/events-calendar.js" defer></script>
-
 
 </body>
 

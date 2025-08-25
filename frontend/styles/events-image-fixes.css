@@ -1,0 +1,131 @@
+/* =============================================================================
+   EVENT IMAGE FIXES - events-image-fixes.css
+   Save this as a separate CSS file and link it in your HTML
+   ============================================================================= */
+
+/* Fix event card image size and content visibility */
+.event-card {
+    height: 420px !important;
+}
+
+/* Make image smaller - 35% instead of 50% */
+.event-image-container {
+    height: 35% !important;
+    overflow: hidden !important;
+    position: relative !important;
+}
+
+/* Make content area larger - 60% instead of 45% */
+.event-content {
+    height: 60% !important;
+    padding: 1.2rem !important;
+}
+
+/* Make event title slightly larger and bolder */
+.event-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+    line-height: 1.3;
+}
+
+/* Make description larger and allow 3 lines */
+.event-description {
+    font-size: 0.9rem;
+    line-height: 1.5;
+    margin-bottom: 1rem;
+    -webkit-line-clamp: 3;
+}
+
+/* Image positioning - left top for career fair type images */
+.event-image {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    object-position: left top !important;
+    transition: transform 0.3s ease !important;
+}
+
+/* Hide the first join button (left button) */
+.event-actions .join-event-btn {
+    display: none;
+}
+
+/* Make the calendar button (right button) full width */
+.event-actions .add-calendar-btn,
+.event-actions .calendar-dropdown {
+    width: 100%;
+}
+
+.event-actions {
+    justify-content: center;
+}
+
+/* Style the calendar button */
+.add-calendar-btn {
+    background: linear-gradient(135deg, #3498db, #2980b9);
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 10px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(39, 174, 96, 0.3);
+    width: 100%;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.add-calendar-btn:hover {
+    background: linear-gradient(135deg, #3498db, #2980b9);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(39, 174, 96, 0.4);
+}
+
+/* Fix the button text */
+.add-calendar-btn::before {
+    content: "Add to Calendar";
+}
+
+/* Hide any existing text in the button */
+.add-calendar-btn .btn-text,
+.add-calendar-btn .btn-icon {
+    display: none;
+}
+
+/* Make event details more prominent */
+.event-details {
+    margin-bottom: 1rem;
+    font-size: 0.85rem;
+}
+
+.event-details svg {
+    width: 16px;
+    height: 16px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .event-card {
+        height: 380px;
+    }
+
+    .event-content {
+        padding: 1rem;
+    }
+
+    .add-calendar-btn {
+        padding: 0.6rem 1.25rem;
+        font-size: 0.85rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .event-card {
+        height: 350px;
+    }
+
+    .event-content {
+        padding: 0.75rem;
+    }
+}
