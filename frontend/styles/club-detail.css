@@ -27,16 +27,15 @@ body {
 */
 
 .club-hero-image {
-    width: 100%;
-    max-width: 1200px;
-    height: 250px;
-    position: relative;
-    overflow: hidden;
-    border-radius: 15px;
+    width: 90rem;
+    height: 25rem;
     margin: 2rem auto;
+    position: relative;
+    border-radius: 15px;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
     background: linear-gradient(135deg, #5F96C5, #4a8bc2);
 }
+
 
 .club-hero-image img {
     width: 100%;
