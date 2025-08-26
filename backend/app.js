@@ -743,22 +743,9 @@ app.put('/api/clubs/:id/images', requireAuth, async (req, res) => {
     const clubId = req.params.id;
     const { logoUrl, heroImageUrl } = req.body;
 
-    // Validate input
-    if (!logoUrl && !heroImageUrl) {
-      return res.status(400).json({
-        error: 'At least one image URL (logoUrl or heroImageUrl) is required'
-      });
-    }
-
-    console.log(`Updating images for club ID: ${clubId}`);
-
     const updateData = {};
     if (logoUrl) updateData.logoUrl = logoUrl;
-    if (heroImageUrl) {
-      updateData.heroImageUrl = heroImageUrl;
-      updateData.hasCustomHeroImage = true; // 🔑 Mark as manually set
-    }
-    updateData.updatedAt = new Date();
+    if (heroImageUrl) updateData.heroImageUrl = heroImageUrl;
 
     const club = await Club.findByIdAndUpdate(
       clubId,
@@ -770,31 +757,19 @@ app.put('/api/clubs/:id/images', requireAuth, async (req, res) => {
       return res.status(404).json({ error: 'Club not found' });
     }
 
-    console.log(`Updated images for: ${club.name}`);
-    if (heroImageUrl) console.log(`   New hero image: ${heroImageUrl}`);
-
-    res.json({
-      success: true,
-      message: 'Club images updated successfully',
-      club: {
-        id: club._id,
-        name: club.name,
-        logoUrl: club.logoUrl,
-        heroImageUrl: club.heroImageUrl,
-        hasCustomHeroImage: club.hasCustomHeroImage
-      }
-    });
+    console.log(`✅ Updated images for club: ${club.name}`);
+    res.json({ message: 'Club images updated successfully', club });
 
   } catch (error) {
-    console.error(' Error updating club images:', error);
+    console.error('💥 Error updating club images:', error);
     res.status(500).json({ error: 'Failed to update club images' });
   }
 });
-
-// Unique hero images for each club
-// Replace the problematic global code with this route handler:
-app.post('/api/clubs/set-hero-images', requireAuth, async (req, res) => {
+// 🖼️ GIVE EACH CLUB A UNIQUE HERO IMAGE
+app.get('/api/set-hero-images', requireAuth, async (req, res) => {
   try {
+    console.log('🎨 Setting unique hero images for all clubs...');
+
     // Unique hero images for each club
     const heroImages = {
       "#include": "https://includedavis.com/_next/image?url=%2Fabout%2Fimages%2FdescPic.jpg&w=3840&q=75",
@@ -843,277 +818,36 @@ app.post('/api/clubs/set-hero-images', requireAuth, async (req, res) => {
       "Construction Management Club": "https://engineering.ucdavis.edu/sites/g/files/dgvnsk2151/files/styles/sf_landscape_4x3/public/media/images/IMG_9715.jpeg?h=640cca5b&itok=sKGtVvIx",
       "EBSA": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSFZcm6GJ8aKQJleiqz0gUSauYSYoYb9f1EUQ&s",
       "Materials Advantage Student Chapter": "https://mse.engineering.ucdavis.edu/sites/g/files/dgvnsk4451/files/media/images/MaterialsMagicShow2023.jpg",
-      "American Institute of Chemical Engineers": "https://aiche.ucdavis.edu/sites/g/files/dgvnsk5996/files/styles/sf_image_banner/public/media/images/IMG_2282_1_80.jpeg?itok=9hOLB5ns"
+      "American Institute of Chemical Engineers": "https://aiche.ucdavis.edu/sites/g/files/dgvnsk5996/files/styles/sf_image_banner/public/media/images/IMG_2282_1_80.jpeg?itok=9hOLB5ns",
     };
 
     let updated = 0;
-    let skipped = 0;
 
-    for (const [clubName, defaultHeroUrl] of Object.entries(heroImages)) {
-      const club = await Club.findOne({ name: clubName });
+    for (const [clubName, heroUrl] of Object.entries(heroImages)) {
+      const club = await Club.findOneAndUpdate(
+        { name: clubName },
+        { heroImageUrl: heroUrl },
+        { new: true }
+      );
 
-      if (!club) {
-        console.log(`❌ Club not found: ${clubName}`);
-        continue;
-      }
-
-      // ONLY update if club doesn't have a custom hero image
-      if (!club.hasCustomHeroImage && (!club.heroImageUrl || club.heroImageUrl.includes('default-club-hero'))) {
-        await Club.findOneAndUpdate(
-          { name: clubName },
-          {
-            heroImageUrl: defaultHeroUrl,
-            hasCustomHeroImage: false // Mark as default, not custom
-          }
-        );
+      if (club) {
         updated++;
-        console.log(`✅ Set default image for: ${clubName}`);
-      } else {
-        skipped++;
-        console.log(`⏭️ Skipped (has custom image): ${clubName}`);
+        console.log(`✅ Updated hero image for: ${clubName}`);
       }
     }
 
     res.json({
-      success: true,
-      message: `Set defaults for ${updated} clubs, protected ${skipped} custom images`,
-      updated,
-      skipped,
+      message: `Updated ${updated} club hero images`,
+      updated: updated,
       total: Object.keys(heroImages).length
     });
 
   } catch (error) {
-    console.error('❌ Error setting default images:', error);
-    res.status(500).json({ error: 'Failed to set default images' });
-  }
-});
-app.get('/api/clubs/image-management', requireAuth, async (req, res) => {
-  try {
-    const clubs = await Club.find({ isActive: true })
-      .select('name logoUrl heroImageUrl hasCustomHeroImage')
-      .sort({ name: 1 });
-
-    const imageData = clubs.map(club => ({
-      id: club._id,
-      name: club.name,
-      logoUrl: club.logoUrl,
-      heroImageUrl: club.heroImageUrl,
-      hasCustomHeroImage: club.hasCustomHeroImage || false,
-      imageStatus: getImageStatus(club)
-    }));
-
-    res.json({
-      clubs: imageData,
-      summary: {
-        total: clubs.length,
-        withCustomHero: clubs.filter(c => c.hasCustomHeroImage).length,
-        withDefaultHero: clubs.filter(c => c.heroImageUrl && !c.hasCustomHeroImage).length,
-        withoutHero: clubs.filter(c => !c.heroImageUrl).length
-      }
-    });
-
-  } catch (error) {
-    console.error(' Error fetching image management data:', error);
-    res.status(500).json({ error: 'Failed to fetch image management data' });
+    console.error('💥 Error updating hero images:', error);
+    res.status(500).json({ error: 'Failed to update hero images' });
   }
 });
 
-function getImageStatus(club) {
-  if (club.hasCustomHeroImage) return 'custom';
-  if (club.heroImageUrl) return 'default';
-  return 'none';
-}
-app.post('/api/clubs/migrate', requireAuth, async (req, res) => {
-  try {
-    const result = await Club.updateMany(
-      { hasCustomHeroImage: { $exists: false } },
-      { hasCustomHeroImage: false }
-    );
-
-    res.json({
-      success: true,
-      message: `Updated ${result.modifiedCount} clubs`,
-      modifiedCount: result.modifiedCount
-    });
-
-  } catch (error) {
-    console.error(' Migration error:', error);
-    res.status(500).json({ error: 'Migration failed' });
-  }
-});
-
-app.put('/api/clubs/bulk-update', requireAuth, async (req, res) => {
-  try {
-    const { updates } = req.body;
-
-    if (!updates || !Array.isArray(updates)) {
-      return res.status(400).json({
-        error: 'updates array is required',
-        example: {
-          updates: [
-            { clubName: "Club Name 1", heroImageUrl: "https://..." },
-            { clubName: "Club Name 2", heroImageUrl: "https://..." }
-          ]
-        }
-      });
-    }
-
-    console.log(` Bulk updating ${updates.length} clubs...`);
-
-    const results = [];
-
-    for (const update of updates) {
-      try {
-        const { clubName, heroImageUrl } = update;
-
-        if (!clubName || !heroImageUrl) {
-          results.push({
-            clubName: clubName || 'Unknown',
-            success: false,
-            error: 'Missing clubName or heroImageUrl'
-          });
-          continue;
-        }
-
-        const club = await Club.findOneAndUpdate(
-          { name: { $regex: new RegExp(`^${clubName}$`, 'i') } },
-          {
-            heroImageUrl: heroImageUrl,
-            hasCustomHeroImage: true,
-            updatedAt: new Date()
-          },
-          { new: true }
-        );
-
-        if (club) {
-          results.push({
-            clubName: club.name,
-            success: true,
-            heroImageUrl: club.heroImageUrl
-          });
-          console.log(` Updated: ${club.name}`);
-        } else {
-          results.push({
-            clubName,
-            success: false,
-            error: 'Club not found'
-          });
-        }
-
-      } catch (error) {
-        results.push({
-          clubName: update.clubName || 'Unknown',
-          success: false,
-          error: error.message
-        });
-      }
-    }
-
-    const successCount = results.filter(r => r.success).length;
-    const failCount = results.filter(r => !r.success).length;
-
-    console.log(` Bulk update complete: ${successCount} success, ${failCount} failed`);
-
-    res.json({
-      success: true,
-      message: `Updated ${successCount}/${updates.length} clubs`,
-      successCount,
-      failCount,
-      results
-    });
-
-  } catch (error) {
-    console.error(' Bulk update error:', error);
-    res.status(500).json({ error: 'Bulk update failed: ' + error.message });
-  }
-});
-app.put('/api/test/bulk-update', async (req, res) => {
-  try {
-    const { updates } = req.body;
-
-    if (!updates || !Array.isArray(updates)) {
-      return res.status(400).json({
-        error: 'updates array is required',
-        example: {
-          updates: [
-            { clubName: "Club Name 1", heroImageUrl: "https://..." },
-            { clubName: "Club Name 2", heroImageUrl: "https://..." }
-          ]
-        }
-      });
-    }
-
-    console.log(` TEST: Bulk updating ${updates.length} clubs...`);
-
-    const results = [];
-
-    for (const update of updates) {
-      try {
-        const { clubName, heroImageUrl } = update;
-
-        if (!clubName || !heroImageUrl) {
-          results.push({
-            clubName: clubName || 'Unknown',
-            success: false,
-            error: 'Missing clubName or heroImageUrl'
-          });
-          continue;
-        }
-
-        const club = await Club.findOneAndUpdate(
-          { name: { $regex: new RegExp(`^${clubName}$`, 'i') } },
-          {
-            heroImageUrl: heroImageUrl,
-            hasCustomHeroImage: true,
-            updatedAt: new Date()
-          },
-          { new: true }
-        );
-
-        if (club) {
-          results.push({
-            clubName: club.name,
-            success: true,
-            heroImageUrl: club.heroImageUrl
-          });
-          console.log(` TEST: Updated ${club.name}`);
-        } else {
-          results.push({
-            clubName,
-            success: false,
-            error: 'Club not found'
-          });
-          console.log(` TEST: Club not found: ${clubName}`);
-        }
-
-      } catch (error) {
-        results.push({
-          clubName: update.clubName || 'Unknown',
-          success: false,
-          error: error.message
-        });
-        console.error(` TEST: Error updating ${update.clubName}:`, error);
-      }
-    }
-
-    const successCount = results.filter(r => r.success).length;
-    const failCount = results.filter(r => !r.success).length;
-
-    console.log(` TEST: Bulk update complete - ${successCount} success, ${failCount} failed`);
-
-    res.json({
-      success: true,
-      message: `TEST: Updated ${successCount}/${updates.length} clubs`,
-      successCount,
-      failCount,
-      results
-    });
-
-  } catch (error) {
-    console.error(' TEST: Bulk update error:', error);
-    res.status(500).json({ error: 'Test bulk update failed: ' + error.message });
-  }
-});
 //  JOIN EVENT - Enhanced version
 app.post('/api/events/:id/join', requireAuth, async (req, res) => {
   try {
