@@ -27,10 +27,10 @@ body {
 */
 
 .club-hero-image {
-    width: 90rem;
-    height: 25rem;
+    width: 75rem;
+    height: 30rem;
     margin: 2rem auto;
-    position: relative;
+    position: center;
     border-radius: 15px;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
     background: linear-gradient(135deg, #5F96C5, #4a8bc2);
