@@ -1,440 +1,621 @@
-// Enhanced 3-Level Quiz Data with Complete Question Sets
-// Save as: backend/data/enhancedThreeLevelQuizData.js
+// Revised Tech Path Discovery Quiz Questions
+// Enhanced with authentic experience-based questions
 
 const enhancedThreeLevelQuizQuestions = {
     // =============================================================================
-    // BEGINNER LEVEL - Tech Explorer (8 Questions)
+    // BEGINNER LEVEL - Tech Explorer (12 Questions)
     // =============================================================================
     beginner: [
         {
             id: 'B01',
-            type: 'scenario',
-            category: 'problem_solving_style',
-            question: "You're planning your friend's surprise birthday party, but everything is going wrong. The venue cancelled, half the guests can't make it, and you have two days left. What's your first instinct?",
-            subtitle: "Choose the approach that feels most natural to you",
-            options: [
-                {
-                    id: 'systematic_planning',
-                    title: 'Create a Detailed Backup Plan',
-                    description: 'Make lists of alternative venues, create a new guest list, and systematically work through each problem'
-                },
-                {
-                    id: 'collaborative_creative',
-                    title: 'Rally Friends for Creative Solutions',
-                    description: 'Get your friends together to brainstorm fun alternatives like a park picnic or house party'
-                },
-                {
-                    id: 'user_centered',
-                    title: 'Focus on What Makes Them Happy',
-                    description: 'Think about what your friend would actually want most and work backwards from there'
-                },
-                {
-                    id: 'systematic_coordination',
-                    title: 'Organize and Delegate Tasks',
-                    description: 'Divide responsibilities among friends and create a group chat to coordinate efficiently'
-                }
-            ]
+            type: 'short_response',
+            category: 'natural_curiosity',
+            question: "Think of the last time you got completely absorbed in figuring something out (could be anything - a puzzle, fixing something, learning a skill). What was it and what kept you hooked?",
+            subtitle: "This helps us understand what naturally captures your attention",
+            placeholder: "I remember getting completely absorbed when I was...",
+            max_length: 200
         },
 
         {
             id: 'B02',
-            type: 'visual_choice',
-            category: 'team_dynamics',
-            question: "In a group project where your team can't agree on direction, which role feels most natural?",
-            subtitle: "Trust your instinct about what you'd actually do",
+            type: 'multiple_choice',
+            category: 'problem_identification',
+            question: "What's a piece of technology you use daily that genuinely annoys you?",
+            subtitle: "Choose the one that bothers you most",
             options: [
                 {
-                    id: 'diplomatic_facilitator',
-                    visual: '🤝',
-                    title: 'The Diplomatic Facilitator',
-                    description: 'Help everyone understand each other\'s perspectives and find common ground'
+                    id: 'interface_frustration',
+                    title: 'Apps with confusing or cluttered interfaces',
+                    description: 'When things are hard to find or the design doesn\'t make sense'
                 },
                 {
-                    id: 'analytical_researcher',
-                    visual: '📊',
-                    title: 'The Analytical Researcher',
-                    description: 'Research different approaches and present pros and cons of each option'
+                    id: 'speed_reliability',
+                    title: 'Things that are slow or unreliable',
+                    description: 'When apps crash, websites load slowly, or systems don\'t work consistently'
                 },
                 {
-                    id: 'creative_synthesizer',
-                    visual: '💡',
-                    title: 'The Creative Synthesizer',
-                    description: 'Suggest completely different approaches that combine everyone\'s ideas'
+                    id: 'personalization_limits',
+                    title: 'One-size-fits-all solutions',
+                    description: 'When technology doesn\'t adapt to your specific needs or preferences'
                 },
                 {
-                    id: 'task_coordinator',
-                    visual: '📋',
-                    title: 'The Task Coordinator',
-                    description: 'Focus on specific parts you can contribute to and help others do the same'
+                    id: 'complexity_barriers',
+                    title: 'Unnecessarily complicated processes',
+                    description: 'When simple tasks require too many steps or technical knowledge'
                 }
             ]
         },
 
         {
             id: 'B03',
-            type: 'scale',
-            category: 'learning_style',
-            question: "When learning something completely new, how do you prefer to approach it?",
-            subtitle: "Think about what actually helps you learn best",
-            scale: {
-                min: 1,
-                max: 10,
-                labels: {
-                    1: "Jump in and experiment immediately",
-                    3: "Some trial and error with basic guidance",
-                    5: "Balanced mix of study and practice",
-                    7: "Structured learning with systematic practice",
-                    10: "Thorough research and planning before starting"
-                },
-                descriptions: {
-                    1: "You learn best by diving in and figuring things out through experimentation",
-                    3: "You like to start doing but with some basic guidance or tutorials",
-                    5: "You prefer a mix of studying the fundamentals and hands-on practice",
-                    7: "You learn best with structured lessons and systematic skill building",
-                    10: "You prefer to thoroughly understand the theory before attempting practice"
-                }
-            }
-        },
-
-        {
-            id: 'B04',
-            type: 'multiple_choice',
-            category: 'communication_style',
-            question: "You're trying to explain a complex concept to a friend who's struggling to understand it. What's your approach?",
+            type: 'visual_choice',
+            category: 'natural_focus',
+            question: "When you discover a really cool new app or website, what's the FIRST thing you notice?",
+            subtitle: "Go with your gut reaction",
             options: [
                 {
-                    id: 'systematic_building',
-                    title: 'Break It Down Step by Step',
-                    description: 'Start with simpler parts and build up their understanding systematically'
+                    id: 'visual_design',
+                    visual: '🎨',
+                    title: 'How it looks and feels',
+                    description: 'Colors, layout, animations, overall visual appeal'
                 },
                 {
-                    id: 'creative_analogies',
-                    title: 'Use Creative Analogies',
-                    description: 'Find analogies or examples from things they already understand well'
+                    id: 'functionality_features',
+                    visual: '⚙️',
+                    title: 'What it can do',
+                    description: 'Features, capabilities, and how well it works'
                 },
                 {
-                    id: 'diagnostic_questioning',
-                    title: 'Ask Questions to Diagnose Confusion',
-                    description: 'Ask them questions to figure out exactly where they\'re getting stuck'
+                    id: 'user_experience',
+                    visual: '👆',
+                    title: 'How easy it is to use',
+                    description: 'Navigation, intuitive flow, user-friendliness'
                 },
                 {
-                    id: 'resource_finding',
-                    title: 'Find Better Resources',
-                    description: 'Look for a really good video or article that explains it better than you could'
+                    id: 'performance_speed',
+                    visual: '⚡',
+                    title: 'How fast and smooth it is',
+                    description: 'Loading speed, responsiveness, performance'
                 }
             ]
         },
 
         {
+            id: 'B04',
+            type: 'short_response',
+            category: 'impact_motivation',
+            question: "You have unlimited time and resources to build one thing that would genuinely help UC Davis students. What would you create?",
+            subtitle: "Think about problems you've actually experienced or witnessed",
+            placeholder: "I would build something that helps students with...",
+            max_length: 200
+        },
+
+        {
             id: 'B05',
             type: 'multiple_choice',
-            category: 'debugging_approach',
-            question: "Your phone battery has been dying really quickly lately. How do you figure out what's wrong?",
+            category: 'natural_aptitudes',
+            question: "What's something you're naturally good at that friends or family often ask you to help with?",
             options: [
                 {
-                    id: 'systematic_testing',
-                    title: 'Systematic App Analysis',
-                    description: 'Check which apps use the most battery and test them one by one to isolate the problem'
+                    id: 'troubleshooting_fixing',
+                    title: 'Troubleshooting and fixing things',
+                    description: 'When something isn\'t working, people come to you to figure out why'
                 },
                 {
-                    id: 'social_problem_solving',
-                    title: 'Ask Tech-Savvy Friends',
-                    description: 'Reach out to people you know who are good with phones for their opinions'
+                    id: 'explaining_teaching',
+                    title: 'Explaining complicated things clearly',
+                    description: 'Breaking down complex topics so others can understand them'
                 },
                 {
-                    id: 'research_driven',
-                    title: 'Research Common Solutions',
-                    description: 'Google common battery problems and try the most likely fixes first'
+                    id: 'organizing_planning',
+                    title: 'Organizing and planning projects',
+                    description: 'Coordinating people, timelines, and resources effectively'
                 },
                 {
-                    id: 'experimental_approach',
-                    title: 'Try Different Charging Methods',
-                    description: 'Experiment with different chargers and charging habits to see what changes'
+                    id: 'creative_solutions',
+                    title: 'Coming up with creative alternatives',
+                    description: 'Finding unconventional solutions when the obvious approach doesn\'t work'
                 }
             ]
         },
 
         {
             id: 'B06',
-            type: 'multiple_choice',
-            category: 'pattern_recognition',
-            question: "You notice your favorite coffee shop is packed on certain days but empty on others. This makes you...",
-            options: [
-                {
-                    id: 'data_driven_curiosity',
-                    title: 'Want to Track and Analyze Variables',
-                    description: 'Curious about the pattern - maybe start tracking weather, events, or days of the week'
+            type: 'scale',
+            category: 'work_preference',
+            question: "What type of work environment makes you most productive and energized?",
+            subtitle: "Think about when you do your best work",
+            scale: {
+                min: 1,
+                max: 10,
+                labels: {
+                    1: "Solo focus time with minimal interruption",
+                    3: "Mostly independent with occasional collaboration",
+                    5: "Balanced mix of solo work and teamwork",
+                    7: "Collaborative environment with regular interaction",
+                    10: "High-energy team environment with constant communication"
                 },
-                {
-                    id: 'optimization_thinking',
-                    title: 'Think About Practical Optimization',
-                    description: 'Wonder if there\'s a way to predict busy times and plan visits accordingly'
-                },
-                {
-                    id: 'social_investigation',
-                    title: 'Ask People About It',
-                    description: 'Interested in asking the barista or other customers what they think is happening'
-                },
-                {
-                    id: 'adaptive_acceptance',
-                    title: 'Accept It and Adapt',
-                    description: 'Just adjust your routine to avoid crowds - some things just are what they are'
+                descriptions: {
+                    1: "You're most productive when you can dive deep without distractions",
+                    3: "You like working independently but value periodic check-ins",
+                    5: "You work well both alone and with others, depending on the task",
+                    7: "You thrive on collaboration and regular feedback from teammates",
+                    10: "You're energized by constant interaction and team problem-solving"
                 }
-            ]
+            }
         },
 
         {
             id: 'B07',
-            type: 'ranking',
-            category: 'decision_criteria',
-            question: "When choosing classes at UC Davis, what factors matter most to you?",
-            subtitle: "Rank these from most important to least important",
-            items: [
+            type: 'multiple_choice',
+            category: 'learning_approach',
+            question: "You need to learn a new skill quickly for a project. What's your go-to approach?",
+            options: [
                 {
-                    id: 'intellectual_curiosity',
-                    text: 'Intellectual Interest',
-                    description: 'How interesting the subject matter is and whether it sparks your curiosity'
+                    id: 'structured_learning',
+                    title: 'Find a good course or tutorial series',
+                    description: 'Work through structured lessons from beginner to advanced'
                 },
                 {
-                    id: 'career_relevance',
-                    text: 'Career Relevance',
-                    description: 'How the skills will be useful for your future career goals'
+                    id: 'project_based',
+                    title: 'Start building something and learn as you go',
+                    description: 'Jump into a project and figure out what you need along the way'
                 },
                 {
-                    id: 'social_connections',
-                    text: 'Social Connections',
-                    description: 'Whether your friends are taking it or if you\'ll meet like-minded people'
+                    id: 'social_learning',
+                    title: 'Find someone who knows it and learn from them',
+                    description: 'Get mentorship or join a study group with more experienced people'
                 },
                 {
-                    id: 'learning_quality',
-                    text: 'Learning Quality',
-                    description: 'How well the professor teaches and the quality of the learning experience'
+                    id: 'documentation_research',
+                    title: 'Read documentation and experiment',
+                    description: 'Study the official docs and try different approaches systematically'
                 }
             ]
         },
 
         {
             id: 'B08',
-            type: 'multiple_choice',
-            category: 'quality_assurance',
-            question: "You're about to submit an important assignment. What's your final step?",
-            options: [
+            type: 'ranking',
+            category: 'decision_values',
+            question: "When making important decisions about your future, what matters most to you?",
+            subtitle: "Rank these from most important to least important",
+            items: [
                 {
-                    id: 'comprehensive_verification',
-                    title: 'Comprehensive Double-Check',
-                    description: 'Verify requirements, run spell-check, check sources, ensure proper formatting'
+                    id: 'intellectual_challenge',
+                    text: 'Intellectual Challenge',
+                    description: 'Work that pushes you to learn and grow continuously'
                 },
                 {
-                    id: 'reader_focused_review',
-                    title: 'Read-Through for Flow',
-                    description: 'Read through once more to ensure it flows well and makes sense to others'
+                    id: 'positive_impact',
+                    text: 'Making a Positive Impact',
+                    description: 'Creating something that genuinely helps people or society'
                 },
                 {
-                    id: 'confidence_submission',
-                    title: 'Trust Your Work and Submit',
-                    description: 'Check basic requirements and submit - you\'ve done your best work'
+                    id: 'financial_stability',
+                    text: 'Financial Security',
+                    description: 'Good compensation and long-term career stability'
                 },
                 {
-                    id: 'collaborative_validation',
-                    title: 'Get Someone Else\'s Eyes on It',
-                    description: 'Have someone review it for feedback or bounce ideas off them'
-                }
-            ]
-        }
-    ],
-
-    // =============================================================================
-    // INTERMEDIATE LEVEL - Tech Curious (6 Questions)
-    // =============================================================================
-    intermediate: [
-        {
-            id: 'I01',
-            type: 'scenario',
-            category: 'leadership_adaptive',
-            question: "You're leading a study group for a challenging CS course. Half the group is struggling with the material while the other half is bored. How do you handle this?",
-            options: [
-                {
-                    id: 'distributed_leadership',
-                    title: 'Create Peer Mentoring System',
-                    description: 'Set up different tracks where advanced students mentor struggling ones while you facilitate'
+                    id: 'work_life_balance',
+                    text: 'Work-Life Balance',
+                    description: 'Having time for personal interests and relationships'
                 },
                 {
-                    id: 'systematic_differentiation',
-                    title: 'Design Multi-Level Problems',
-                    description: 'Create practice problems that have multiple difficulty levels built into them'
-                },
-                {
-                    id: 'practical_contextualization',
-                    title: 'Focus on Real-World Applications',
-                    description: 'Make the material relevant to everyone through practical, relatable examples'
-                },
-                {
-                    id: 'structured_dual_track',
-                    title: 'Split Sessions by Skill Level',
-                    description: 'Alternate between fundamentals review and advanced exploration sessions'
+                    id: 'creative_expression',
+                    text: 'Creative Expression',
+                    description: 'Ability to be creative and put your personal touch on your work'
                 }
             ]
         },
 
         {
-            id: 'I02',
+            id: 'B09',
+            type: 'multiple_choice',
+            category: 'attention_to_detail',
+            question: "What do you notice about technology that your friends don't seem to care about?",
+            options: [
+                {
+                    id: 'design_inconsistencies',
+                    title: 'Design inconsistencies and visual details',
+                    description: 'Things like misaligned buttons, inconsistent fonts, or poor color choices'
+                },
+                {
+                    id: 'efficiency_optimization',
+                    title: 'Ways things could be more efficient',
+                    description: 'Unnecessary steps, slow processes, or features that could be streamlined'
+                },
+                {
+                    id: 'accessibility_issues',
+                    title: 'How hard things are for some people to use',
+                    description: 'Barriers that might affect people with different abilities or technical skills'
+                },
+                {
+                    id: 'security_privacy',
+                    title: 'Security and privacy concerns',
+                    description: 'Data collection, security vulnerabilities, or privacy implications'
+                }
+            ]
+        },
+
+        {
+            id: 'B10',
+            type: 'scenario',
+            category: 'collaboration_style',
+            question: "You're working on a group project where everyone has different ideas about the direction. What role do you naturally fall into?",
+            options: [
+                {
+                    id: 'mediator_synthesizer',
+                    title: 'The Bridge Builder',
+                    description: 'Help everyone understand each other and find ways to combine different ideas'
+                },
+                {
+                    id: 'researcher_analyst',
+                    title: 'The Researcher',
+                    description: 'Gather information to help the group make informed decisions'
+                },
+                {
+                    id: 'implementer_doer',
+                    title: 'The Implementer',
+                    description: 'Focus on what you can contribute while others debate the big picture'
+                },
+                {
+                    id: 'facilitator_organizer',
+                    title: 'The Organizer',
+                    description: 'Keep the group on track and make sure everyone\'s voice is heard'
+                }
+            ]
+        },
+
+        {
+            id: 'B11',
+            type: 'multiple_choice',
+            category: 'motivation_source',
+            question: "What type of work makes you lose track of time?",
+            options: [
+                {
+                    id: 'creative_building',
+                    title: 'Creating or building something new',
+                    description: 'When you\'re bringing an idea to life or making something from scratch'
+                },
+                {
+                    id: 'problem_solving',
+                    title: 'Solving puzzles or debugging problems',
+                    description: 'Working through complex problems until you find the solution'
+                },
+                {
+                    id: 'learning_mastery',
+                    title: 'Learning and mastering new skills',
+                    description: 'Diving deep into understanding how something works'
+                },
+                {
+                    id: 'helping_others',
+                    title: 'Helping others achieve their goals',
+                    description: 'Teaching, mentoring, or enabling others to succeed'
+                }
+            ]
+        },
+
+        {
+            id: 'B12',
             type: 'scale',
-            category: 'ethical_technical_judgment',
-            question: "You discover a potential security vulnerability in a popular campus app. How quickly should you act?",
-            subtitle: "Consider the balance between thoroughness and urgency",
+            category: 'risk_comfort',
+            question: "How do you feel about trying new approaches when the familiar way works fine?",
+            subtitle: "Consider both personal projects and academic work",
             scale: {
                 min: 1,
                 max: 10,
                 labels: {
-                    1: "Alert developers immediately",
-                    3: "Quick verification, then immediate contact",
-                    5: "Balanced research and responsible disclosure",
-                    7: "Thorough documentation before disclosure",
-                    10: "Extensive research and formal process"
+                    1: "Stick with what works reliably",
+                    3: "Try new things occasionally",
+                    5: "Balance between proven and experimental",
+                    7: "Often experiment with new approaches",
+                    10: "Always looking for better ways to do things"
                 },
                 descriptions: {
-                    1: "Students could be at risk - contact developers right away with initial findings",
-                    3: "Do basic verification to confirm the issue, then reach out quickly to developers",
-                    5: "Balance between protecting users and providing developers with useful information",
-                    7: "Document the vulnerability thoroughly to help developers understand and fix it properly",
-                    10: "Follow formal security research protocols with comprehensive analysis and proof-of-concept"
+                    1: "You prefer reliable, proven methods that you know will work",
+                    3: "You'll try new approaches sometimes, but default to what's familiar",
+                    5: "You balance trying new things with using reliable approaches",
+                    7: "You actively seek out new methods and tools to improve your work",
+                    10: "You're always experimenting and pushing boundaries, even if it's riskier"
                 }
             }
-        },
+        }
+    ],
 
+    // =============================================================================
+    // INTERMEDIATE LEVEL - Tech Curious (10 Questions)
+    // =============================================================================
+    intermediate: [
         {
-            id: 'I03',
+            id: 'I01',
             type: 'short_response',
-            category: 'ambiguity_navigation',
-            question: "Describe a time when you had to work with unclear requirements or expectations. How did you handle it?",
-            subtitle: "This could be from school, work, or personal projects",
-            placeholder: "I remember when I had to work on a project where...",
-            max_length: 250
+            category: 'authentic_problem_solving',
+            question: "Describe a real project or problem you worked on where you had to figure things out as you went along. What was your approach when you hit roadblocks?",
+            subtitle: "This could be from school, work, personal projects, or even non-tech situations",
+            placeholder: "I was working on... and when I got stuck, I...",
+            max_length: 300
         },
 
         {
-            id: 'I04',
-            type: 'scenario',
-            category: 'crisis_prioritization',
-            question: "Your team's app prototype isn't working as expected before a major demo. You have 3 hours. What's your strategy?",
+            id: 'I02',
+            type: 'multiple_choice',
+            category: 'critical_thinking',
+            question: "What's a technology trend or tool that everyone seems excited about, but you're skeptical of?",
+            subtitle: "What makes you cautious when others are enthusiastic?",
             options: [
                 {
-                    id: 'critical_path_focus',
-                    title: 'Focus on Core Features Only',
-                    description: 'Quickly identify the essential features that must work and focus entirely on those'
+                    id: 'ai_automation_concerns',
+                    title: 'AI replacing human jobs too quickly',
+                    description: 'Worried about the pace of AI adoption without considering social impact'
                 },
                 {
-                    id: 'parallel_coordination',
-                    title: 'Coordinate Parallel Problem-Solving',
-                    description: 'Divide the team to work on different issues simultaneously while maintaining communication'
+                    id: 'privacy_surveillance',
+                    title: 'Smart devices and data collection',
+                    description: 'Concerned about privacy implications of connected devices and data harvesting'
                 },
                 {
-                    id: 'backup_demo_strategy',
-                    title: 'Create Backup Demo Plan',
-                    description: 'Develop an alternative demo strategy that showcases what does work effectively'
+                    id: 'complexity_over_utility',
+                    title: 'Complex solutions to simple problems',
+                    description: 'When new tech makes things more complicated instead of actually better'
                 },
                 {
-                    id: 'systematic_debugging',
-                    title: 'Debug from Most Likely Issues',
-                    description: 'Work systematically from the most probable failure points to least likely ones'
+                    id: 'sustainability_concerns',
+                    title: 'Environmental impact of new tech',
+                    description: 'Questioning the environmental cost of crypto, AI training, or constant device upgrades'
+                },
+                {
+                    id: 'hype_over_substance',
+                    title: 'Technologies that seem overhyped',
+                    description: 'When the marketing promises don\'t match the actual current capabilities'
                 }
             ]
         },
 
         {
-            id: 'I05',
-            type: 'visual_choice',
-            category: 'user_centered_design',
-            question: "You're designing a campus navigation app for students with very different needs. What's your design philosophy?",
-            subtitle: "Choose the approach that resonates most with you",
+            id: 'I03',
+            type: 'scenario',
+            category: 'leadership_under_pressure',
+            question: "You're leading a team project with a tight deadline. Two days before it's due, you realize a core assumption was wrong and your current approach won't work. How do you handle this?",
             options: [
                 {
-                    id: 'user_research_driven',
-                    visual: '🎯',
-                    title: 'Deep User Research',
-                    description: 'Interview diverse students to understand their specific needs and usage patterns'
+                    id: 'transparent_pivot',
+                    title: 'Immediate team meeting to pivot strategy',
+                    description: 'Be transparent about the issue and rally the team around a new approach'
                 },
                 {
-                    id: 'adaptive_algorithmic',
-                    visual: '🤖',
-                    title: 'Smart Adaptive System',
-                    description: 'Design a system that learns from user choices and adapts recommendations over time'
+                    id: 'damage_control_focus',
+                    title: 'Focus on what can still be salvaged',
+                    description: 'Quickly identify parts that still work and build a minimal viable solution'
                 },
                 {
-                    id: 'user_control_personalization',
-                    visual: '⚙️',
-                    title: 'Customizable Preferences',
-                    description: 'Create detailed preferences that let users prioritize what matters most to them'
+                    id: 'stakeholder_communication',
+                    title: 'Communicate with stakeholders about timeline',
+                    description: 'Manage expectations while the team works on the best possible solution'
                 },
                 {
-                    id: 'multi_modal_design',
-                    visual: '🔄',
-                    title: 'Multiple Interface Modes',
-                    description: 'Build different interface modes optimized for different types of users and use cases'
+                    id: 'parallel_solution_development',
+                    title: 'Split team to work on multiple approaches',
+                    description: 'Divide efforts between fixing current approach and developing alternatives'
+                }
+            ]
+        },
+
+        {
+            id: 'I04',
+            type: 'short_response',
+            category: 'learning_under_pressure',
+            question: "Tell me about a time when you had to learn something completely new under pressure. What strategies worked for you?",
+            subtitle: "Focus on what actually helped you succeed in that situation",
+            placeholder: "I had to quickly learn... and what worked was...",
+            max_length: 250
+        },
+
+        {
+            id: 'I05',
+            type: 'multiple_choice',
+            category: 'systems_thinking',
+            question: "You notice a pattern or inefficiency that others seem to miss. Give me a real example from your life at UC Davis or elsewhere.",
+            subtitle: "This reveals how you naturally observe and think about systems",
+            options: [
+                {
+                    id: 'workflow_inefficiency',
+                    title: 'Inefficient processes or workflows',
+                    description: 'Like registration systems, food service lines, or administrative processes that could be streamlined'
+                },
+                {
+                    id: 'resource_allocation',
+                    title: 'Poor resource allocation or utilization',
+                    description: 'Like study spaces being empty while others are overcrowded, or equipment not being used optimally'
+                },
+                {
+                    id: 'communication_gaps',
+                    title: 'Communication breakdowns or information gaps',
+                    description: 'When information doesn\'t reach the people who need it, or gets lost between departments'
+                },
+                {
+                    id: 'user_experience_friction',
+                    title: 'User experience friction in daily systems',
+                    description: 'When campus apps, websites, or services make simple tasks unnecessarily difficult'
+                },
+                {
+                    id: 'timing_scheduling_issues',
+                    title: 'Timing or scheduling inefficiencies',
+                    description: 'Like bus schedules that don\'t match class times, or services closing when students need them most'
                 }
             ]
         },
 
         {
             id: 'I06',
-            type: 'ranking',
-            category: 'diverse_team_coordination',
-            question: "You're on a hackathon team with people of different skill levels. What's most important for success?",
-            subtitle: "Rank these strategies from most important to least important",
-            items: [
+            type: 'visual_choice',
+            category: 'technical_curiosity',
+            question: "What's the most interesting technical challenge you've encountered, even if you couldn't fully solve it?",
+            subtitle: "What made it fascinating to you?",
+            options: [
                 {
-                    id: 'strengths_based_allocation',
-                    text: 'Play to Individual Strengths',
-                    description: 'Map everyone\'s strengths and design tasks that utilize them effectively'
+                    id: 'algorithmic_optimization',
+                    visual: '🧮',
+                    title: 'Algorithm or Performance Challenge',
+                    description: 'Making something faster, more efficient, or handling scale better'
                 },
                 {
-                    id: 'mentorship_pairing',
-                    text: 'Peer Learning System',
-                    description: 'Create pairs where stronger and newer members can learn from each other'
+                    id: 'integration_complexity',
+                    visual: '🔗',
+                    title: 'Integration or Compatibility Problem',
+                    description: 'Getting different systems, APIs, or technologies to work together'
                 },
                 {
-                    id: 'realistic_scope',
-                    text: 'Achievable but Impressive Scope',
-                    description: 'Focus on a concept that\'s technically realistic but impressive in execution'
+                    id: 'user_behavior_mystery',
+                    visual: '🤔',
+                    title: 'Understanding User Behavior',
+                    description: 'Figuring out why people use something differently than expected'
                 },
                 {
-                    id: 'continuous_coordination',
-                    text: 'Regular Check-ins and Knowledge Sharing',
-                    description: 'Set up structured communication and knowledge-sharing throughout the event'
+                    id: 'data_pattern_analysis',
+                    visual: '📊',
+                    title: 'Data Pattern or Analysis Challenge',
+                    description: 'Finding meaningful patterns in complex or messy data'
+                },
+                {
+                    id: 'creative_constraint_solving',
+                    visual: '🎯',
+                    title: 'Creative Solution within Constraints',
+                    description: 'Building something useful with limited resources or strict requirements'
                 }
             ]
+        },
+
+        {
+            id: 'I07',
+            type: 'scenario',
+            category: 'conflict_resolution',
+            question: "You're on a project team where two members have completely different visions and are getting frustrated with each other. How do you help move things forward?",
+            options: [
+                {
+                    id: 'structured_decision_process',
+                    title: 'Create structured decision-making process',
+                    description: 'Establish criteria for evaluating both approaches objectively'
+                },
+                {
+                    id: 'stakeholder_perspective',
+                    title: 'Refocus on end-user needs',
+                    description: 'Bring the conversation back to what would actually serve users best'
+                },
+                {
+                    id: 'hybrid_solution_development',
+                    title: 'Explore hybrid approaches',
+                    description: 'Look for ways to combine the best elements of both visions'
+                },
+                {
+                    id: 'prototype_validation',
+                    title: 'Build quick prototypes to test assumptions',
+                    description: 'Create simple versions of both approaches to see what actually works'
+                }
+            ]
+        },
+
+        {
+            id: 'I08',
+            type: 'ranking',
+            category: 'team_effectiveness',
+            question: "You're building a diverse project team. What's most important for the team's success?",
+            subtitle: "Rank these from most critical to least critical",
+            items: [
+                {
+                    id: 'psychological_safety',
+                    text: 'Psychological Safety',
+                    description: 'Team members feel safe to take risks, make mistakes, and share ideas freely'
+                },
+                {
+                    id: 'complementary_skills',
+                    text: 'Complementary Skills',
+                    description: 'Team has diverse technical and non-technical skills that cover all project needs'
+                },
+                {
+                    id: 'clear_communication',
+                    text: 'Clear Communication Protocols',
+                    description: 'Established ways for sharing information, making decisions, and resolving conflicts'
+                },
+                {
+                    id: 'shared_vision',
+                    text: 'Shared Vision and Goals',
+                    description: 'Everyone understands and is committed to the same objectives and success metrics'
+                },
+                {
+                    id: 'adaptive_processes',
+                    text: 'Adaptive Processes',
+                    description: 'Ability to change approach when things aren\'t working or requirements shift'
+                }
+            ]
+        },
+
+        {
+            id: 'I09',
+            type: 'scale',
+            category: 'autonomy_preference',
+            question: "When working on challenging problems, how much guidance do you prefer?",
+            subtitle: "Consider both technical and non-technical challenges",
+            scale: {
+                min: 1,
+                max: 10,
+                labels: {
+                    1: "Clear direction and regular check-ins",
+                    3: "General guidance with structured milestones",
+                    5: "Balanced independence with available support",
+                    7: "Minimal guidance, mostly independent work",
+                    10: "Complete autonomy to define and solve problems"
+                },
+                descriptions: {
+                    1: "You work best with clear expectations and regular feedback",
+                    3: "You like having a roadmap but prefer some flexibility in execution",
+                    5: "You want the option to get help when needed, but can work independently",
+                    7: "You prefer figuring things out yourself with occasional guidance",
+                    10: "You thrive when given complete freedom to approach problems your way"
+                }
+            }
+        },
+
+        {
+            id: 'I10',
+            type: 'short_response',
+            category: 'failure_resilience',
+            question: "Describe a time when your approach to a problem completely failed. What did you do next, and what did you learn?",
+            subtitle: "We're interested in how you handle setbacks and learn from them",
+            placeholder: "I was trying to... and when it completely failed, I...",
+            max_length: 250
         }
     ],
 
     // =============================================================================
-    // ADVANCED LEVEL - Tech Insider (6 Questions)
+    // ADVANCED LEVEL - Tech Insider (10 Questions)  
     // =============================================================================
     advanced: [
         {
             id: 'A01',
             type: 'scenario',
             category: 'technical_leadership_judgment',
-            question: "You're the technical lead on a project where the initial architecture isn't scaling. The team is split between refactoring (risky, time-consuming) and quick fixes (faster, but creates technical debt). How do you navigate this decision?",
+            question: "You're the technical lead on a project where the initial architecture isn't scaling. Your team is split between refactoring (risky, time-consuming) and quick fixes (faster, but creates technical debt). The business is pressuring for delivery. How do you navigate this decision?",
             options: [
                 {
-                    id: 'strategic_analysis',
-                    title: 'Comprehensive Cost-Benefit Analysis',
-                    description: 'Conduct thorough analysis of both approaches, considering long-term maintenance and team velocity'
+                    id: 'quantified_risk_analysis',
+                    title: 'Quantify long-term costs vs short-term gains',
+                    description: 'Present detailed analysis showing the true cost of technical debt vs refactoring investment'
                 },
                 {
-                    id: 'collaborative_consensus',
-                    title: 'Facilitate Team Decision-Making',
-                    description: 'Lead team discussions to understand concerns and build consensus around technical direction'
+                    id: 'stakeholder_education',
+                    title: 'Educate stakeholders on technical implications',
+                    description: 'Help business stakeholders understand the long-term impact of technical decisions'
                 },
                 {
-                    id: 'creative_compromise',
-                    title: 'Design Hybrid Approach',
-                    description: 'Create a solution that addresses critical scalability issues while minimizing risk'
+                    id: 'phased_hybrid_approach',
+                    title: 'Design phased approach with clear milestones',
+                    description: 'Create strategy that delivers business value while systematically addressing technical debt'
                 },
                 {
-                    id: 'systematic_mitigation',
-                    title: 'Incremental Refactoring with Checkpoints',
-                    description: 'Implement gradual refactoring with measurable milestones to balance risk and progress'
+                    id: 'team_consensus_building',
+                    title: 'Facilitate team decision with clear ownership',
+                    description: 'Build team consensus around approach and ensure everyone owns the consequences'
                 }
             ]
         },
@@ -442,43 +623,39 @@ const enhancedThreeLevelQuizQuestions = {
         {
             id: 'A02',
             type: 'short_response',
-            category: 'strategic_product_judgment',
-            question: "Describe your approach to making a critical business decision under pressure with limited information.",
-            subtitle: "Think about a challenging decision you've made or how you would approach one",
-            placeholder: "When facing a high-stakes decision with incomplete information, I would...",
-            max_length: 300
+            category: 'strategic_judgment',
+            question: "Describe your approach to making a critical business or technical decision when you have limited information and significant time pressure.",
+            subtitle: "Think about a challenging decision you've actually made or how you would systematically approach one",
+            placeholder: "When facing a high-stakes decision with incomplete information, my approach is to...",
+            max_length: 350
         },
 
         {
             id: 'A03',
-            type: 'visual_choice',
-            category: 'systems_architecture_expertise',
-            question: "You're designing a system for unpredictable traffic spikes while maintaining performance and cost-effectiveness. What's your architectural philosophy?",
-            subtitle: "Choose the approach that aligns with your engineering thinking",
+            type: 'multiple_choice',
+            category: 'systems_architecture_philosophy',
+            question: "You're designing a system that needs to handle unpredictable traffic spikes while maintaining performance and cost-effectiveness. What's your architectural philosophy?",
+            subtitle: "Choose the approach that best aligns with your engineering thinking",
             options: [
                 {
-                    id: 'distributed_resilience',
-                    visual: '🗗️',
-                    title: 'Distributed Resilience Architecture',
-                    description: 'Microservices with auto-scaling, caching layers, and circuit breakers for reliability'
+                    id: 'resilience_first',
+                    title: 'Resilience-First Architecture',
+                    description: 'Build for failure with circuit breakers, graceful degradation, and self-healing capabilities'
                 },
                 {
-                    id: 'cloud_native_serverless',
-                    visual: '☁️',
-                    title: 'Cloud-Native Serverless',
-                    description: 'Serverless-first approach with edge computing and intelligent load balancing'
+                    id: 'adaptive_intelligence',
+                    title: 'Adaptive Intelligence Systems',
+                    description: 'Use machine learning and predictive analytics to anticipate and auto-scale resources'
                 },
                 {
-                    id: 'adaptive_performance',
-                    visual: '⚡',
-                    title: 'Adaptive Performance System',
-                    description: 'Hybrid system that gracefully degrades functionality during peak loads'
+                    id: 'modular_composability',
+                    title: 'Modular Composable Architecture',
+                    description: 'Design loosely coupled services that can be independently scaled and modified'
                 },
                 {
-                    id: 'predictive_intelligence',
-                    visual: '🧠',
-                    title: 'Predictive Intelligence',
-                    description: 'ML-powered system that anticipates traffic patterns and scales proactively'
+                    id: 'edge_distributed',
+                    title: 'Edge-Distributed Processing',
+                    description: 'Push processing closer to users with CDNs, edge computing, and regional distribution'
                 }
             ]
         },
@@ -486,25 +663,25 @@ const enhancedThreeLevelQuizQuestions = {
         {
             id: 'A04',
             type: 'scale',
-            category: 'innovation_risk_management',
-            question: "Your company could benefit from a new ML technology, but your team doesn't know it yet. How much risk are you willing to take on the unknown?",
-            subtitle: "Consider business pressure, team capability, and potential impact",
+            category: 'innovation_risk_appetite',
+            question: "Your team could significantly benefit from adopting a cutting-edge technology, but it's relatively untested in production environments and your team doesn't have experience with it. How do you approach this decision?",
+            subtitle: "Consider business pressure, team capability, timeline constraints, and potential impact",
             scale: {
                 min: 1,
                 max: 10,
                 labels: {
-                    1: "Stick with proven technologies",
-                    3: "Small pilot with familiar backup",
-                    5: "Balanced innovation with risk mitigation",
-                    7: "Aggressive learning with external help",
-                    10: "Full commitment to cutting-edge approach"
+                    1: "Use proven technologies only",
+                    3: "Limited pilot with comprehensive fallback plan",
+                    5: "Balanced innovation with risk mitigation strategies",
+                    7: "Aggressive adoption with external expertise",
+                    10: "Full commitment with intensive research phase"
                 },
                 descriptions: {
-                    1: "Use current stack to deliver safely, innovate later when timeline allows",
-                    3: "Small prototype with new tech while building backup using familiar tools",
-                    5: "Invest in team learning while developing minimum viable version in parallel",
-                    7: "Partner with external experts and consultants to accelerate adoption",
-                    10: "Commit fully to the new technology with intensive research and validation phase"
+                    1: "Stick with battle-tested stack to ensure delivery, innovate when timeline allows",
+                    3: "Small proof-of-concept while developing robust backup using familiar tools",
+                    5: "Invest in team training while building minimal viable version in parallel",
+                    7: "Partner with consultants/experts while team rapidly upskills on new technology",
+                    10: "Commit fully to new tech with intensive research, prototyping, and validation phase"
                 }
             }
         },
@@ -513,124 +690,353 @@ const enhancedThreeLevelQuizQuestions = {
             id: 'A05',
             type: 'scenario',
             category: 'mentorship_communication',
-            question: "You're reviewing code from a junior developer that works but has significant issues with maintainability, performance, and follows outdated patterns. How do you provide feedback?",
+            question: "You're reviewing code from a talented junior developer that works functionally but has significant issues with maintainability, performance, and follows outdated patterns. How do you provide feedback that helps them grow?",
             options: [
                 {
-                    id: 'educational_mentorship',
-                    title: 'Interactive Code Review Session',
-                    description: 'Schedule time to walk through issues together and explain reasoning behind best practices'
+                    id: 'collaborative_code_review',
+                    title: 'Interactive pairing and code walkthrough',
+                    description: 'Schedule time to explore the code together and discuss improvements in real-time'
                 },
                 {
-                    id: 'comprehensive_documentation',
-                    title: 'Detailed Written Feedback',
-                    description: 'Provide thorough written feedback with examples of better approaches and learning resources'
+                    id: 'educational_resource_provision',
+                    title: 'Comprehensive feedback with learning resources',
+                    description: 'Provide detailed written feedback with links to best practices and learning materials'
                 },
                 {
-                    id: 'practical_demonstration',
-                    title: 'Refactor as Example',
-                    description: 'Refactor a portion of the code as an example and explain the improvements in context'
+                    id: 'gradual_improvement_plan',
+                    title: 'Staged improvement with clear priorities',
+                    description: 'Focus on most critical issues first and create structured plan for gradual enhancement'
                 },
                 {
-                    id: 'prioritized_development',
-                    title: 'Staged Learning Plan',
-                    description: 'Focus on most critical issues first and create a structured plan for gradual improvement'
+                    id: 'contextual_refactoring',
+                    title: 'Demonstrate improvements through refactoring',
+                    description: 'Show better approaches by refactoring parts of their code as teaching examples'
                 }
             ]
         },
 
         {
             id: 'A06',
+            type: 'short_response',
+            category: 'technical_judgment_experience',
+            question: "Describe a technical decision you made that you later realized was suboptimal or wrong. What would you do differently now, and how has this influenced your decision-making process?",
+            subtitle: "Focus on what you learned and how it changed your approach",
+            placeholder: "I made a decision to... and later realized it was wrong because... Now I approach similar decisions by...",
+            max_length: 300
+        },
+
+        {
+            id: 'A07',
             type: 'scenario',
-            category: 'technical_change_management',
-            question: "You're leading the evaluation of a new framework that promises significant benefits but requires migrating legacy code. The engineering team is divided. How do you drive the decision?",
+            category: 'change_management_leadership',
+            question: "You're leading the evaluation of a new framework that promises significant benefits but requires migrating substantial legacy code. The engineering team is divided - some are excited, others are concerned about risk. How do you drive this decision?",
             options: [
                 {
-                    id: 'comprehensive_planning',
-                    title: 'Detailed Migration Plan with Risk Assessment',
-                    description: 'Create thorough migration strategy with risk analysis and rollback procedures'
+                    id: 'evidence_based_consensus',
+                    title: 'Build consensus through evidence and inclusion',
+                    description: 'Involve skeptics in evaluation process and address concerns with concrete data'
                 },
                 {
-                    id: 'inclusive_decision_process',
-                    title: 'Build Consensus Through Inclusion',
-                    description: 'Address team concerns and involve skeptics in the evaluation process'
+                    id: 'pilot_validation_approach',
+                    title: 'Proof-of-concept with real migration challenges',
+                    description: 'Implement realistic pilot that demonstrates both benefits and migration complexity'
                 },
                 {
-                    id: 'empirical_validation',
-                    title: 'Proof-of-Concept Pilot',
-                    description: 'Implement pilot project to demonstrate benefits and identify real-world challenges'
+                    id: 'risk_mitigation_planning',
+                    title: 'Comprehensive risk assessment and mitigation',
+                    description: 'Create detailed migration plan with rollback procedures and risk mitigation strategies'
                 },
                 {
-                    id: 'objective_measurement',
-                    title: 'Establish Clear Success Criteria',
-                    description: 'Define objective success metrics and decision criteria before beginning evaluation'
+                    id: 'objective_criteria_framework',
+                    title: 'Establish clear success metrics and decision criteria',
+                    description: 'Define objective measurements for evaluation before beginning assessment process'
+                }
+            ]
+        },
+
+        {
+            id: 'A08',
+            type: 'multiple_choice',
+            category: 'hiring_leadership_philosophy',
+            question: "You're hiring for a senior technical role and have two equally qualified candidates. One consistently takes creative risks and pushes boundaries, while the other delivers reliable, high-quality results with proven approaches. Your team currently has tight deadlines and stability needs, but also long-term innovation goals. Who do you choose and why?",
+            options: [
+                {
+                    id: 'stability_prioritization',
+                    title: 'The Reliable Deliverer',
+                    description: 'Current stability needs outweigh innovation - can foster creativity later when timeline allows'
+                },
+                {
+                    id: 'innovation_investment',
+                    title: 'The Creative Risk-Taker',
+                    description: 'Long-term innovation is critical - willing to invest in managing short-term stability challenges'
+                },
+                {
+                    id: 'contextual_role_design',
+                    title: 'Depends on specific role and team composition',
+                    description: 'Decision should be based on what the team specifically lacks and the role\'s primary focus'
+                },
+                {
+                    id: 'hybrid_team_strategy',
+                    title: 'Try to hire both and create complementary roles',
+                    description: 'Structure team to leverage both stability and innovation strengths if resources allow'
+                }
+            ]
+        },
+
+        {
+            id: 'A09',
+            type: 'short_response',
+            category: 'emerging_technology_analysis',
+            question: "What's an emerging technology that you believe will fundamentally change how people work or live in the next 5-10 years? What's your evidence for this prediction, and what are the potential downsides?",
+            subtitle: "Focus on your reasoning and analysis rather than just the technology itself",
+            placeholder: "I believe [technology] will fundamentally change [area] because [evidence/reasoning]. However, the potential downsides include...",
+            max_length: 400
+        },
+
+        {
+            id: 'A10',
+            type: 'scenario',
+            category: 'adaptive_leadership_uncertainty',
+            question: "You're leading a project where the requirements keep changing due to shifting market conditions and stakeholder feedback. Your team is getting frustrated with the constant pivots. How do you maintain momentum and team morale while adapting to uncertainty?",
+            options: [
+                {
+                    id: 'transparent_context_sharing',
+                    title: 'Increase transparency about business context',
+                    description: 'Help team understand why changes are happening and their role in company success'
+                },
+                {
+                    id: 'agile_process_optimization',
+                    title: 'Optimize processes for change management',
+                    description: 'Implement systems and workflows that make pivoting less disruptive to team productivity'
+                },
+                {
+                    id: 'core_stability_creation',
+                    title: 'Identify stable core elements to build upon',
+                    description: 'Find aspects of the project that won\'t change and create solid foundation there'
+                },
+                {
+                    id: 'team_skill_development',
+                    title: 'Invest in team adaptability and resilience skills',
+                    description: 'Focus on developing team capabilities that remain valuable regardless of direction changes'
                 }
             ]
         }
     ]
 };
 
-// Enhanced career options
-const enhancedCareerOptions = [
-    // Core Engineering
-    'Software Engineering (Frontend)',
-    'Software Engineering (Backend)',
-    'Software Engineering (Full-Stack)',
-    'DevOps Engineering',
-    'Site Reliability Engineering',
-    'Mobile Development',
-    'Game Development',
-    'Embedded Systems Engineering',
+// Enhanced career options organized by pathway clusters
+const enhancedCareerPathways = {
+    // Technical Implementation & Engineering
+    engineering: [
+        'Frontend Software Engineering',
+        'Backend Software Engineering',
+        'Full-Stack Software Engineering',
+        'Mobile Development (iOS/Android)',
+        'DevOps & Site Reliability Engineering',
+        'Cloud Infrastructure Engineering',
+        'Embedded Systems Engineering',
+        'Game Development',
+        'AR/VR Development',
+        'Blockchain Development'
+    ],
 
-    // Data & AI
-    'Data Science',
-    'Machine Learning Engineering',
-    'AI Research',
-    'Data Engineering',
-    'Business Intelligence',
-    'Quantitative Analysis',
+    // Data, AI & Analytics
+    dataAI: [
+        'Data Science',
+        'Machine Learning Engineering',
+        'AI Research Scientist',
+        'Data Engineering',
+        'Business Intelligence Analyst',
+        'Quantitative Analysis',
+        'Computer Vision Engineer',
+        'Natural Language Processing Engineer',
+        'Robotics Engineering'
+    ],
 
-    // Design & User Experience
-    'UX Design',
-    'UI Design',
-    'Product Design',
-    'User Research',
-    'Design Systems',
+    // User Experience & Design
+    design: [
+        'UX Design',
+        'UI Design',
+        'Product Design',
+        'User Research',
+        'Design Systems Engineering',
+        'Service Design',
+        'Design Operations',
+        'Creative Technology'
+    ],
 
     // Product & Strategy
-    'Product Management',
-    'Technical Product Management',
-    'Product Marketing',
-    'Growth Product Management',
-    'Strategy & Operations',
+    product: [
+        'Product Management',
+        'Technical Product Management',
+        'Product Marketing',
+        'Growth Product Management',
+        'Strategy & Operations',
+        'Business Analysis',
+        'Technical Program Management',
+        'Venture Capital (Technical)'
+    ],
 
     // Security & Infrastructure
-    'Cybersecurity',
-    'Security Engineering',
-    'Cloud Architecture',
-    'Network Engineering',
+    security: [
+        'Cybersecurity Engineering',
+        'Security Research',
+        'Privacy Engineering',
+        'Network Security',
+        'Application Security',
+        'Risk Assessment',
+        'Compliance & Governance'
+    ],
 
-    // Business & Communication
-    'Technical Writing',
-    'Developer Relations',
-    'Sales Engineering',
-    'Technical Consulting',
-    'Engineering Management',
-    'Startup Founder',
+    // Communication & Enablement  
+    communication: [
+        'Technical Writing',
+        'Developer Relations',
+        'Sales Engineering',
+        'Technical Consulting',
+        'Customer Success (Technical)',
+        'Technical Training & Education',
+        'Community Management'
+    ],
 
-    // Emerging & Specialized
-    'Robotics Engineering',
-    'AR/VR Development',
-    'Blockchain Development',
-    'Quantum Computing',
-    'Green Tech Engineering',
+    // Leadership & Management
+    leadership: [
+        'Engineering Management',
+        'Technical Leadership',
+        'Chief Technology Officer',
+        'Startup Founder',
+        'Technical Advisor/Board Member',
+        'Innovation Management'
+    ],
 
     // Research & Academia
-    'Computer Science Research',
-    'Industry Research',
-    'Technical Education'
-];
+    research: [
+        'Computer Science Research',
+        'Industry Research Lab',
+        'Technical Education/Professor',
+        'Research & Development',
+        'Patent Analysis',
+        'Technology Assessment'
+    ],
+
+    // Emerging & Specialized
+    emerging: [
+        'Quantum Computing Research',
+        'Biotech Software Engineering',
+        'Climate Tech Engineering',
+        'Space Technology',
+        'Autonomous Systems',
+        'Extended Reality (XR)',
+        'Digital Health Technology',
+        'EdTech Innovation'
+    ]
+};
+
+// Scoring rubric for AI analysis
+const scoringDimensions = {
+    // Core technical aptitudes
+    systematicThinking: {
+        description: "Preference for structured, methodical approaches to problem-solving",
+        indicators: ["systematic_planning", "comprehensive_verification", "structured_dual_track", "quantified_risk_analysis"]
+    },
+
+    creativeInnovation: {
+        description: "Tendency toward novel solutions and experimental approaches",
+        indicators: ["creative_solutions", "innovation_investment", "experimental_approach", "creative_constraint_solving"]
+    },
+
+    userCenteredFocus: {
+        description: "Natural attention to user needs and human-centered design",
+        indicators: ["user_centered", "stakeholder_perspective", "reader_focused_review", "user_research_driven"]
+    },
+
+    // Collaboration and leadership styles
+    collaborativeLeadership: {
+        description: "Preference for team-based solutions and inclusive decision making",
+        indicators: ["collaborative_creative", "diplomatic_facilitator", "evidence_based_consensus", "team_consensus_building"]
+    },
+
+    autonomousExecution: {
+        description: "Comfort with independent work and self-directed problem solving",
+        indicators: ["confidence_submission", "systematic_testing", "complete_autonomy", "adaptive_acceptance"]
+    },
+
+    // Learning and growth patterns
+    experimentalLearning: {
+        description: "Learning through hands-on experimentation and iteration",
+        indicators: ["project_based", "jump_in_experiment", "prototype_validation", "trial_and_error"]
+    },
+
+    structuredLearning: {
+        description: "Preference for systematic, curriculum-based learning approaches",
+        indicators: ["structured_learning", "comprehensive_documentation", "systematic_building", "thorough_research"]
+    },
+
+    // Technical focus areas
+    systemsArchitecture: {
+        description: "Interest in large-scale system design and infrastructure",
+        indicators: ["distributed_resilience", "modular_composability", "systematic_coordination", "integration_complexity"]
+    },
+
+    dataAnalytical: {
+        description: "Attraction to data analysis, patterns, and quantitative reasoning",
+        indicators: ["data_driven_curiosity", "algorithmic_optimization", "data_pattern_analysis", "quantified_risk_analysis"]
+    },
+
+    humanCenteredTech: {
+        description: "Focus on technology's impact on people and society",
+        indicators: ["positive_impact", "accessibility_issues", "helping_others", "user_behavior_mystery"]
+    }
+};
+
+// Question category mapping for analysis
+const categoryMapping = {
+    // Beginner categories
+    'natural_curiosity': 'intrinsic_motivation',
+    'problem_identification': 'problem_solving_approach',
+    'natural_focus': 'attention_patterns',
+    'impact_motivation': 'value_alignment',
+    'natural_aptitudes': 'skill_indicators',
+    'work_preference': 'collaboration_style',
+    'learning_approach': 'learning_style',
+    'decision_values': 'motivational_drivers',
+    'attention_to_detail': 'quality_orientation',
+    'collaboration_style': 'team_dynamics',
+    'motivation_source': 'flow_activities',
+    'risk_comfort': 'innovation_appetite',
+
+    // Intermediate categories  
+    'authentic_problem_solving': 'real_experience_validation',
+    'critical_thinking': 'independent_judgment',
+    'leadership_under_pressure': 'crisis_management',
+    'learning_under_pressure': 'adaptability',
+    'systems_thinking': 'pattern_recognition',
+    'technical_curiosity': 'complexity_preference',
+    'conflict_resolution': 'interpersonal_skills',
+    'team_effectiveness': 'leadership_philosophy',
+    'autonomy_preference': 'work_structure_needs',
+    'failure_resilience': 'growth_mindset',
+
+    // Advanced categories
+    'technical_leadership_judgment': 'senior_decision_making',
+    'strategic_judgment': 'executive_thinking',
+    'systems_architecture_philosophy': 'technical_vision',
+    'innovation_risk_appetite': 'technology_adoption',
+    'mentorship_communication': 'people_development',
+    'technical_judgment_experience': 'experiential_learning',
+    'change_management_leadership': 'organizational_influence',
+    'hiring_leadership_philosophy': 'team_building',
+    'emerging_technology_analysis': 'strategic_forecasting',
+    'adaptive_leadership_uncertainty': 'uncertainty_navigation'
+};
 
 module.exports = {
     enhancedThreeLevelQuizQuestions,
-    enhancedCareerOptions
+    enhancedCareerPathways,
+    scoringDimensions,
+    categoryMapping
 };
+// Make data available to browser
+if (typeof window !== 'undefined') {
+    window.enhancedThreeLevelQuizQuestions = enhancedThreeLevelQuizQuestions;
+}
