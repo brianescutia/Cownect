@@ -109,6 +109,11 @@ const clubSchema = new mongoose.Schema({
         default: false
     },
 
+    heroImagePosition: {
+        type: String,
+        default: 'center center'
+    },
+
     // WEB PRESENCE
     websiteUrl: {
         type: String,
