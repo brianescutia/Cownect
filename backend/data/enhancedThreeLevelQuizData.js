@@ -825,7 +825,7 @@ const enhancedThreeLevelQuizQuestions = {
 };
 
 // Enhanced career options organized by pathway clusters
-const enhancedCareerPathways = {
+const enhancedCareerOptions = {
     // Technical Implementation & Engineering
     engineering: [
         'Frontend Software Engineering',
@@ -1032,7 +1032,7 @@ const categoryMapping = {
 
 module.exports = {
     enhancedThreeLevelQuizQuestions,
-    enhancedCareerPathways,
+    enhancedCareerOptions,
     scoringDimensions,
     categoryMapping
 };

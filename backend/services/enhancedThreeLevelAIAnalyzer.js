@@ -97,9 +97,26 @@ ASSESSMENT TYPES YOU'LL SEE:
 - Rankings (values, priorities, team coordination strategies)
 - Multiple choice (approaches, preferences, methods)
 
-CAREER OPTIONS TO CONSIDER:
-${enhancedCareerOptions.join(', ')}
 
+${[
+                'Software Engineering',
+                'Data Science',
+                'Product Management',
+                'UX/UI Design',
+                'DevOps Engineering',
+                'Cybersecurity',
+                'Mobile Development',
+                'Machine Learning Engineering',
+                'Game Development',
+                'Technical Writing',
+                'Product Design',
+                'Data Engineering',
+                'AI/ML Engineering',
+                'Cloud Architecture',
+                'Technical Product Management'
+            ].join(', ')}
+
+            
 ANALYSIS APPROACH:
 1. Look for patterns across ALL response types (not just individual answers)
 2. Pay special attention to emotional language and authenticity in text responses
@@ -220,9 +237,12 @@ USER RESPONSE:
                 case 'ranking':
                     if (response.ranking) {
                         prompt += `Ranking (1st to last preference):\n`;
-                        response.ranking.forEach((itemIndex, rank) => {
-                            const item = question.items[itemIndex];
-                            prompt += `${rank + 1}. ${item.text}: ${item.description}\n`;
+                        response.ranking.forEach((itemId, rank) => {
+                            // Find item by ID instead of using array index
+                            const item = question.items.find(i => i.id === itemId);
+                            if (item) {
+                                prompt += `${rank + 1}. ${item.text || item.title || item.id}: ${item.description}\n`;
+                            }
                         });
                     }
                     break;

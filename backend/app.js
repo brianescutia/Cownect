@@ -2434,11 +2434,12 @@ app.post('/api/quiz/submit', requireAuth, async (req, res) => {
     }
 
     // Get user profile for personalized analysis
-    const User = require('../models/User');
+    const User = require('./models/User');
     const userProfile = await User.findById(userId).select('major year name email');
 
     // Get questions for context
-    const questions = aiOnlyQuizQuestions[level] || [];
+    const { enhancedThreeLevelQuizQuestions } = require('./data/enhancedThreeLevelQuizData');
+    const questions = enhancedThreeLevelQuizQuestions[level] || [];
 
     if (questions.length === 0) {
       return res.status(500).json({ error: 'Quiz questions not found' });
@@ -2454,11 +2455,13 @@ app.post('/api/quiz/submit', requireAuth, async (req, res) => {
     console.log('🧠 Running AI-powered career analysis...');
 
     // Run AI analysis (no weights involved)
-    const aiResults = await aiAnalyzer.analyzeUserResponses(
+    const EnhancedAIAnalyzer = require('./services/enhancedThreeLevelAIAnalyzer');
+    const enhancedAnalyzer = new EnhancedAIAnalyzer();
+    const aiResults = await enhancedAnalyzer.analyzeCareerFit(
       answers,
       questions,
+      level,
       {
-        level: level,
         major: userProfile?.major,
         year: userProfile?.year,
         university: 'UC Davis',
@@ -2473,7 +2476,7 @@ app.post('/api/quiz/submit', requireAuth, async (req, res) => {
 
     // Save results to database
     try {
-      const QuizResult = require('../models/nicheQuizModels').QuizResult;
+      const QuizResult = require('./models/nicheQuizModels').QuizResult;
 
       const quizResult = new QuizResult({
         user: userId,
@@ -3224,7 +3227,7 @@ app.get('/api/quiz/results', requireAuth, async (req, res) => {
 
     console.log(`📊 Fetching AI quiz results for user: ${req.session.userEmail}`);
 
-    const QuizResult = require('../models/nicheQuizModels').QuizResult;
+    const QuizResult = require('./models/nicheQuizModels').QuizResult;
 
     const results = await QuizResult.find({ user: userId })
       .sort({ createdAt: -1 })

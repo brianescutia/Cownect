@@ -1038,7 +1038,16 @@ function formatDateKey(date) {
 }
 
 function formatDateForCalendar(date) {
-    return date.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
+    try {
+        if (!date || !(date instanceof Date) || isNaN(date.getTime())) {
+            console.error('Invalid date passed to formatDateForCalendar:', date);
+            return new Date().toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
+        }
+        return date.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
+    } catch (error) {
+        console.error('Error formatting date:', error);
+        return new Date().toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
+    }
 }
 
 // =============================================================================
@@ -1665,10 +1674,33 @@ window.joinEvent = function (eventId) {
 };
 
 window.addToCalendar = function (eventId) {
-    const event = findEventById(eventId);
-    if (event) {
-        addToGoogleCalendar(event);
+    console.log('Adding event to calendar:', eventId);
+
+    // Find the event from the sidebar events
+    const event = CalendarState.selectedDateEvents.find(e => e.id === eventId);
+
+    if (!event) {
+        console.error('Event not found:', eventId);
+        showNotification('Event not found', 'error');
+        return;
     }
+
+    console.log('Found event:', event);
+
+    // Create a properly formatted event object for the calendar function
+    const calendarEvent = {
+        title: event.title || 'Event',
+        description: event.description || 'UC Davis Event',
+        location: event.location || 'UC Davis',
+        date: CalendarState.selectedDate, // Use the selected date from calendar
+        time: event.time || '6:00 PM - 8:00 PM',
+        formattedTime: event.time || '6:00 PM - 8:00 PM'
+    };
+
+    console.log('Formatted event for calendar:', calendarEvent);
+
+    // Call the Google Calendar function
+    addToGoogleCalendar(calendarEvent);
 };
 
 function findEventById(eventId) {

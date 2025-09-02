@@ -225,9 +225,7 @@
             <div class="text-center">
                 <button id="backToIntroBtn" class="text-gray-600 hover:text-gray-800 flex items-center mx-auto transition-colors">
                     <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
                     </svg>
-                    Back to Introduction
                 </button>
             </div>
         </div>
@@ -433,6 +431,47 @@
     }
 
     this.updateNavigation();
+    setTimeout(() => this.restorePreviousAnswer(), 100);
+
+}
+
+restorePreviousAnswer() {
+    const savedAnswer = this.answers[this.currentQuestionIndex];
+    if (!savedAnswer) return;
+    
+    const question = this.questions[this.currentQuestionIndex];
+    
+    switch (question.type) {
+        case 'short_response':
+            const textArea = document.getElementById('textResponse');
+            if (textArea && savedAnswer.textResponse) {
+                textArea.value = savedAnswer.textResponse;
+                this.updateTextResponse(savedAnswer.textResponse);
+            }
+            break;
+            
+        case 'visual_choice':
+        case 'multiple_choice':
+        case 'scenario':
+            if (savedAnswer.selectedOption) {
+                const optionEl = document.querySelector(`[data-option-id="${savedAnswer.selectedOption.id}"]`);
+                if (optionEl) {
+                    optionEl.classList.add('selected');
+                    optionEl.style.borderColor = '#6366f1';
+                }
+            }
+            break;
+            
+        case 'scale':
+            if (savedAnswer.scaleValue) {
+                const slider = document.getElementById('scaleSlider');
+                if (slider) {
+                    slider.value = savedAnswer.scaleValue;
+                    this.updateScale(savedAnswer.scaleValue);
+                }
+            }
+            break;
+    }
 }
 
 renderShortResponse(question, container) {
@@ -487,8 +526,7 @@ renderVisualChoice(question, container) {
         <div class="grid md:grid-cols-2 gap-6">
             ${question.options.map(option => `
                 <div class="visual-option p-6 border-2 border-gray-200 rounded-xl cursor-pointer hover:border-tech-purple transition-all" 
-                     data-option-id="${option.id}"
-                     onclick="enhancedQuizApp.selectOption('${option.id}')">
+                     data-option-id="${option.id}">
                     <div class="text-center">
                         <div class="text-4xl mb-4">${option.visual || '🎯'}</div>
                         <h4 class="text-lg font-bold text-gray-900 mb-2">${option.title}</h4>
@@ -498,10 +536,32 @@ renderVisualChoice(question, container) {
             `).join('')}
         </div>
     `;
+    
+    // Add click handlers after rendering
+    container.querySelectorAll('.visual-option').forEach(optionEl => {
+        optionEl.addEventListener('click', () => {
+            // Clear all selections first
+            container.querySelectorAll('.visual-option').forEach(el => {
+                el.classList.remove('selected');
+                el.style.borderColor = '#e5e7eb';
+            });
+            
+            // Select this option
+            optionEl.classList.add('selected');
+            optionEl.style.borderColor = '#6366f1';
+            
+            const optionId = optionEl.dataset.optionId;
+            const selectedOption = question.options.find(opt => opt.id === optionId);
+            this.saveResponse({ selectedOption });
+        });
+    });
 }
 
 renderScale(question, container) {
-    const middleValue = Math.ceil((question.scale.min + question.scale.max) / 2);
+    // Find a valid starting value that exists in the labels
+    const validValues = Object.keys(question.scale.labels).map(Number);
+    const middleValue = validValues[Math.floor(validValues.length / 2)];
+    
     container.innerHTML = `
         <div class="text-center mb-8">
             <h3 class="text-2xl font-bold text-gray-900 mb-2">${question.question}</h3>
@@ -544,7 +604,7 @@ renderRanking(question, container) {
             
             <div id="rankingContainer" class="space-y-3">
                 ${question.items.map((item, index) => `
-                    <div class="drag-item p-4 bg-gray-50 border-2 border-gray-200 rounded-lg" 
+                    <div class="drag-item p-4 bg-gray-50 border-2 border-gray-200 rounded-lg cursor-grab" 
                          draggable="true"
                          data-item-id="${item.id}"
                          data-item-index="${index}">
@@ -552,10 +612,11 @@ renderRanking(question, container) {
                             <div class="w-8 h-8 bg-tech-purple text-white rounded-full flex items-center justify-center mr-4 font-bold rank-number">
                                 ${index + 1}
                             </div>
-                            <div>
+                            <div class="flex-1">
                                 <h4 class="font-bold text-gray-900">${item.text}</h4>
                                 <p class="text-sm text-gray-600">${item.description}</p>
                             </div>
+                            <div class="text-gray-400 ml-2">⋮⋮</div>
                         </div>
                     </div>
                 `).join('')}
@@ -563,18 +624,85 @@ renderRanking(question, container) {
         </div>
     `;
     
-    // Simple ranking - just save the initial order for now
+    // Initialize drag and drop functionality
+    this.initializeDragAndDrop();
+    
+    // Save initial ranking
     const ranking = question.items.map(item => item.id);
+    this.saveResponse({ ranking });
+}
+
+initializeDragAndDrop() {
+    const container = document.getElementById('rankingContainer');
+    let draggedElement = null;
+    
+    // Add event listeners to all drag items
+    const dragItems = container.querySelectorAll('.drag-item');
+    
+    dragItems.forEach(item => {
+        item.addEventListener('dragstart', (e) => {
+            draggedElement = item;
+            item.style.opacity = '0.5';
+            e.dataTransfer.effectAllowed = 'move';
+        });
+        
+        item.addEventListener('dragend', (e) => {
+            item.style.opacity = '1';
+            draggedElement = null;
+            this.updateRankNumbers();
+            this.saveRankingOrder();
+        });
+        
+        item.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+        });
+        
+        item.addEventListener('drop', (e) => {
+            e.preventDefault();
+            if (draggedElement && draggedElement !== item) {
+                const container = item.parentNode;
+                const draggedRect = draggedElement.getBoundingClientRect();
+                const targetRect = item.getBoundingClientRect();
+                
+                if (draggedRect.top < targetRect.top) {
+                    container.insertBefore(draggedElement, item.nextSibling);
+                } else {
+                    container.insertBefore(draggedElement, item);
+                }
+            }
+        });
+    });
+}
+
+updateRankNumbers() {
+    const items = document.querySelectorAll('#rankingContainer .drag-item');
+    items.forEach((item, index) => {
+        const rankNumber = item.querySelector('.rank-number');
+        rankNumber.textContent = index + 1;
+    });
+}
+
+saveRankingOrder() {
+    const items = document.querySelectorAll('#rankingContainer .drag-item');
+    const ranking = Array.from(items).map(item => item.dataset.itemId);
     this.saveResponse({ ranking });
 }
 
 updateScale(value) {
     const question = this.questions[this.currentQuestionIndex];
-    document.getElementById('scaleValue').textContent = value;
-    document.getElementById('scaleLabel').textContent = question.scale.labels[value];
-    document.getElementById('scaleDescription').textContent = question.scale.descriptions[value];
+    const intValue = parseInt(value);
     
-    this.saveResponse({ scaleValue: parseInt(value) });
+    document.getElementById('scaleValue').textContent = intValue;
+    
+    // Use fallback text if label/description doesn't exist for this value
+    const label = question.scale.labels[intValue] || `Level ${intValue}`;
+    const description = question.scale.descriptions[intValue] || `Selected value: ${intValue}`;
+    
+    document.getElementById('scaleLabel').textContent = label;
+    document.getElementById('scaleDescription').textContent = description;
+    
+    this.saveResponse({ scaleValue: intValue });
 }
 updateTextResponse(value) {
     const question = this.questions[this.currentQuestionIndex];
@@ -642,63 +770,73 @@ updateTextResponse(value) {
             }
 
             nextQuestion() {
+    if (this.isSubmitting) return; // Prevent multiple submissions
+    
     console.log('Next question called. Current index:', this.currentQuestionIndex, 'Total questions:', this.questions.length);
     
     if (this.currentQuestionIndex < this.questions.length - 1) {
         this.currentQuestionIndex++;
-        console.log('Moving to question index:', this.currentQuestionIndex);
         this.renderQuestion();
     } else {
         console.log('Reached end of quiz. Submitting...');
-        // Only submit once when reaching the end
         if (!this.isSubmitting) {
             this.isSubmitting = true;
+            document.getElementById('nextButton').disabled = true; // Disable button
             this.submitQuiz();
         }
     }
 }
 
             async submitQuiz() {
-                console.log(`Submitting ${this.selectedLevel} level quiz for enhanced AI analysis...`);
-                
-                this.showScreen('loadingScreen');
-                this.animateLoadingSteps();
-                
-                // Simulate analysis
-                await new Promise(resolve => setTimeout(resolve, 3000));
-                this.displayResults(this.getMockResultsForLevel(this.selectedLevel));
+    console.log(`Submitting ${this.selectedLevel} level quiz for enhanced AI analysis...`);
+    
+    this.showScreen('loadingScreen');
+    this.animateLoadingSteps();
+    
+    try {
+        const submissionData = {
+            level: this.selectedLevel,
+            answers: this.answers.filter(a => a !== null),
+            completionTime: Math.floor((Date.now() - this.startTime) / 1000),
+            metadata: {
+                version: '3.0-Enhanced',
+                timestamp: new Date().toISOString()
             }
+        };
 
-            getMockResultsForLevel(level) {
-                const levelResults = {
-                    beginner: {
-                        topMatch: {
-                            career: 'Software Engineering (Frontend)',
-                            percentage: 84,
-                            reasoning: 'Your systematic approach to problem-solving and preference for user-focused solutions align perfectly with frontend development.',
-                            keyPatterns: ['User-centered thinking', 'Visual problem solving', 'Systematic approach']
-                        }
-                    },
-                    intermediate: {
-                        topMatch: {
-                            career: 'Full-Stack Development',
-                            percentage: 87,
-                            reasoning: 'Your balance of technical skills and collaborative leadership makes you ideal for full-stack development roles.',
-                            keyPatterns: ['Technical leadership', 'Cross-functional collaboration', 'Balanced approach']
-                        }
-                    },
-                    advanced: {
-                        topMatch: {
-                            career: 'Technical Product Management',
-                            percentage: 91,
-                            reasoning: 'Your strategic thinking, technical depth, and decision-making under pressure position you well for technical product management.',
-                            keyPatterns: ['Strategic decision-making', 'Technical architecture thinking', 'Pressure management']
-                        }
-                    }
-                };
+        console.log('Submitting to server:', submissionData);
+        console.log('Number of answers:', submissionData.answers.length);
 
-                return levelResults[level] || levelResults.intermediate;
-            }
+        const response = await fetch('/api/quiz/submit', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(submissionData)
+        });
+
+        console.log('Response status:', response.status);
+        console.log('Response ok:', response.ok);
+
+        if (!response.ok) {
+            const errorText = await response.text();
+            console.log('Error response:', errorText);
+            throw new Error(`Server error: ${response.status} - ${errorText}`);
+        }
+
+        const data = await response.json();
+        console.log('Received results from server:', data);
+        
+        this.displayResults(data.results || data);
+        
+    } catch (error) {
+        console.error('Quiz submission error details:', error);
+        console.error('Error message:', error.message);
+        this.showScreen('levelSelection');
+        alert('Failed to analyze your responses. Please try again.');
+    }
+}
+
 
             animateLoadingSteps() {
                 const steps = [
@@ -724,40 +862,48 @@ updateTextResponse(value) {
             }
 
             displayResults(results) {
-                this.showScreen('resultsScreen');
-                
-                const container = document.getElementById('resultsScreen');
-                container.innerHTML = `
-                    <div class="gradient-bg text-white rounded-xl p-8 text-center animate-bounce-in">
-                        <h2 class="text-3xl font-bold mb-4">Your Enhanced ${this.selectedLevel.charAt(0).toUpperCase() + this.selectedLevel.slice(1)} Analysis is Ready!</h2>
-                        <div class="glass-effect rounded-lg p-6 max-w-2xl mx-auto">
-                            <h3 class="text-2xl font-bold mb-2">${results.topMatch.career}</h3>
-                            <div class="text-4xl font-bold mb-2">${results.topMatch.percentage}% Match</div>
-                            <p class="text-blue-100">${results.topMatch.reasoning}</p>
-                        </div>
-                    </div>
-                    
-                    <div class="bg-white rounded-xl p-8 shadow-lg">
-                        <h3 class="text-xl font-bold mb-4">Key Patterns Identified</h3>
-                        <div class="grid md:grid-cols-3 gap-4">
-                            ${results.topMatch.keyPatterns.map(pattern => `
-                                <div class="p-4 bg-gradient-to-br from-purple-50 to-blue-50 rounded-lg text-center">
-                                    <div class="font-medium text-gray-900">${pattern}</div>
-                                </div>
-                            `).join('')}
-                        </div>
-                    </div>
-                    
-                    <div class="text-center space-y-4">
-                        <button onclick="enhancedQuizApp.retakeQuiz()" class="bg-gradient-to-r from-tech-purple to-tech-cyan text-white px-8 py-3 rounded-xl font-bold hover:shadow-lg transition-all mr-4">
-                            Try Another Level
-                        </button>
-                        <button onclick="window.location.href='/tech-clubs'" class="bg-white text-tech-purple border-2 border-tech-purple px-8 py-3 rounded-xl font-bold hover:bg-tech-purple hover:text-white transition-all">
-                            Explore UC Davis Clubs
-                        </button>
-                    </div>
-                `;
-            }
+    this.showScreen('resultsScreen');
+    
+    const container = document.getElementById('resultsScreen');
+    
+    // Handle the results structure from your backend
+    const topMatch = results.topMatch || results.results?.topMatch;
+    const allMatches = results.allMatches || results.results?.allMatches || [];
+    
+    if (!topMatch) {
+        console.error('No top match found in results:', results);
+        return;
+    }
+    
+    container.innerHTML = `
+        <div class="gradient-bg text-white rounded-xl p-8 text-center animate-bounce-in">
+            <h2 class="text-3xl font-bold mb-4">Your Enhanced ${this.selectedLevel.charAt(0).toUpperCase() + this.selectedLevel.slice(1)} Analysis is Ready!</h2>
+            <div class="glass-effect rounded-lg p-6 max-w-2xl mx-auto">
+                <h3 class="text-2xl font-bold mb-2">${topMatch.career}</h3>
+                <div class="text-4xl font-bold mb-2">${topMatch.percentage}% Match</div>
+                <p class="text-blue-100">${topMatch.reasoning || 'AI-powered career analysis based on your responses.'}</p>
+            </div>
+        </div>
+        
+        <div class="bg-white rounded-xl p-8 shadow-lg">
+            <h3 class="text-xl font-bold mb-4">AI Career Analysis Results</h3>
+            <div class="space-y-4">
+                <p><strong>Career:</strong> ${topMatch.career}</p>
+                <p><strong>Match Percentage:</strong> ${topMatch.percentage}%</p>
+                <p><strong>Reasoning:</strong> ${topMatch.reasoning || 'Based on your responses and preferences.'}</p>
+            </div>
+        </div>
+        
+        <div class="text-center space-y-4">
+            <button onclick="enhancedQuizApp.retakeQuiz()" class="bg-gradient-to-r from-tech-purple to-tech-cyan text-white px-8 py-3 rounded-xl font-bold hover:shadow-lg transition-all mr-4">
+                Try Another Level
+            </button>
+            <button onclick="window.location.href='/tech-clubs'" class="bg-white text-tech-purple border-2 border-tech-purple px-8 py-3 rounded-xl font-bold hover:bg-tech-purple hover:text-white transition-all">
+                Explore UC Davis Clubs
+            </button>
+        </div>
+    `;
+}
 
             showScreen(screenId) {
                 const screens = ['introScreen', 'levelSelection', 'quizInterface', 'loadingScreen', 'resultsScreen'];
