@@ -13,29 +13,39 @@ body {
 }
 
 /* Background blur decorations */
-.blur-decoration-left {
+.tech-clubs-blur-left {
     position: fixed;
-    top: -1em;
-    left: -20em;
-    transform: translateY(-50%) rotate(91deg);
-    width: 75%;
-    height: 75%;
-    background: radial-gradient(circle, rgba(95, 150, 197, 0.3) 0%, transparent 70%);
+    top: 50%;
+    left: -25%;
+    transform: translateY(-50%) rotate(-45deg);
+    width: 50%;
+    height: 90%;
+    background-image: url('../assets/blueBlur.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
     opacity: 0.6;
     z-index: -1;
+    pointer-events: none;
 }
 
-.blur-decoration-right {
+/* Tech Clubs - Right blur */
+.tech-clubs-blur-right {
     position: fixed;
-    top: 10em;
-    right: -26em;
-    transform: translateY(-50%) rotate(270deg);
-    width: 75%;
-    height: 75%;
-    background: radial-gradient(circle, rgba(95, 150, 197, 0.3) 0%, transparent 70%);
+    top: 50%;
+    right: -24%;
+    transform: translateY(-50%) rotate(-45deg);
+    width: 50%;
+    height: 90%;
+    background-image: url('../assets/blueBlur.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
     opacity: 0.6;
     z-index: -1;
+    pointer-events: none;
 }
+
 
 a {
     text-decoration: none;
@@ -549,4 +559,89 @@ button {
     text-align: center;
     padding: 3rem;
     color: #666;
+}
+
+.club-tags-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    align-items: center;
+    margin-top: auto;
+    min-height: 26px;
+}
+
+.tag-pill {
+    background-color: #f1f5f9;
+    color: #64748b;
+    padding: 0.25rem 0.625rem;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    border: 1px solid #e2e8f0;
+}
+
+.tag-pill:hover {
+    background-color: #e2e8f0;
+    color: #475569;
+}
+
+.tag-pill.hidden {
+    display: none;
+}
+
+.club-tags-container.expanded .tag-pill.hidden {
+    display: inline-flex;
+    animation: fadeInTag 0.3s ease;
+}
+
+.more-tags-btn {
+    background-color: #94a3b8;
+    color: white;
+    border: none;
+    padding: 0.25rem 0.625rem;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.15rem;
+}
+
+.more-tags-btn:hover {
+    background-color: #64748b;
+    transform: scale(1.05);
+}
+
+.more-tags-btn.showing-less {
+    background-color: #64748b;
+}
+
+@keyframes fadeInTag {
+    from {
+        opacity: 0;
+        transform: scale(0.85);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .tag-pill {
+        font-size: 0.7rem;
+        padding: 0.2rem 0.5rem;
+    }
+
+    .more-tags-btn {
+        font-size: 0.7rem;
+        padding: 0.2rem 0.5rem;
+    }
 }

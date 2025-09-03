@@ -19,46 +19,35 @@ body {
 }
 
 /* Background blur decorations */
-.blur-decoration-left {
+.events-blur-top-left {
     position: fixed;
-    top: -1em;
-    left: -20em;
-    transform: translateY(-50%) rotate(91deg);
-    width: 75%;
-    height: 75%;
+    top: -20%;
+    left: -34%;
+    width: 80%;
+    height: 70%;
     background-image: url('../assets/blueBlur.png');
-    background-size: cover;
+    background-size: contain;
     background-repeat: no-repeat;
-    opacity: 0.3;
+    background-position: center;
+    opacity: 0.5;
     z-index: -1;
+    pointer-events: none;
 }
 
-.blur-decoration-left2 {
+/* Events - Bottom right blur */
+.events-blur-bottom-right {
     position: fixed;
-    top: 20em;
-    left: -30em;
-    transform: translateY(-50%) rotate(45deg);
-    width: 50%;
-    height: 50%;
+    bottom: -20%;
+    right: -34%;
+    width: 80%;
+    height: 70%;
     background-image: url('../assets/blueBlur.png');
-    background-size: cover;
+    background-size: contain;
     background-repeat: no-repeat;
-    opacity: 0.2;
+    background-position: center;
+    opacity: 0.5;
     z-index: -1;
-}
-
-.blur-decoration-right {
-    position: fixed;
-    top: 10em;
-    right: -26em;
-    transform: translateY(-50%) rotate(270deg);
-    width: 75%;
-    height: 75%;
-    background-image: url('../assets/blueBlur.png');
-    background-size: cover;
-    background-repeat: no-repeat;
-    opacity: 0.3;
-    z-index: -1;
+    pointer-events: none;
 }
 
 a {

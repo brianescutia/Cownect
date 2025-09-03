@@ -388,3 +388,68 @@ body {
         padding: 1rem;
     }
 }
+
+.niche-blur-top-left {
+    position: fixed;
+    top: -15%;
+    left: -21%;
+    width: 55%;
+    height: 55%;
+    background-image: url('../assets/blueBlur.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    opacity: 0.4;
+    z-index: -1;
+    pointer-events: none;
+}
+
+/* Niche - Top right blur */
+.niche-blur-top-right {
+    position: fixed;
+    top: -15%;
+    right: -21%;
+    transform: rotate(-70deg);
+    width: 55%;
+    height: 55%;
+    background-image: url('../assets/blueBlur.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    opacity: 0.4;
+    z-index: -1;
+    pointer-events: none;
+}
+
+/* Niche - Bottom left blur */
+.niche-blur-bottom-left {
+    position: fixed;
+    bottom: -15%;
+    left: -21%;
+    transform: rotate(-70deg);
+    width: 55%;
+    height: 55%;
+    background-image: url('../assets/blueBlur.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    opacity: 0.4;
+    z-index: -1;
+    pointer-events: none;
+}
+
+/* Niche - Bottom right blur */
+.niche-blur-bottom-right {
+    position: fixed;
+    bottom: -15%;
+    right: -21%;
+    width: 55%;
+    height: 55%;
+    background-image: url('../assets/blueBlur.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    opacity: 0.4;
+    z-index: -1;
+    pointer-events: none;
+}

@@ -130,27 +130,35 @@ function renderClubsWithPagination(clubs) {
     const endIndex = startIndex + CLUBS_PER_PAGE;
     const clubsToShow = clubs.slice(startIndex, endIndex);
 
-    console.log(` Showing clubs ${startIndex + 1}-${Math.min(endIndex, clubs.length)} of ${clubs.length}`);
+    console.log(`📄 Showing clubs ${startIndex + 1}-${Math.min(endIndex, clubs.length)} of ${clubs.length}`);
 
-    const clubsHTML = clubsToShow.map(club => `
-        <div class="club-card clickable-card" data-club-id="${club._id}">
-            <div class="card-top">
-                <img src="${club.logoUrl}" alt="${club.name} Logo" class="club-logo" />
-                <div class="bookmark-icon">
-                    <img src="../assets/bookmark.png" alt="Bookmark" 
-                         class="bookmark" data-club-id="${club._id}" />
+    const clubsHTML = clubsToShow.map(club => {
+        // Create the expandable tags HTML
+        const tagsHTML = createExpandableTagsHTML(club.tags);
+
+        return `
+            <div class="club-card clickable-card" data-club-id="${club._id}">
+                <div class="card-top">
+                    <img src="${club.logoUrl}" alt="${club.name} Logo" class="club-logo" />
+                    <div class="bookmark-icon">
+                        <img src="../assets/bookmark.png" alt="Bookmark" 
+                             class="bookmark" data-club-id="${club._id}" />
+                    </div>
                 </div>
+                <h3 class="club-name">${club.name}</h3>
+                <p class="club-description">${club.description}</p>
+                ${tagsHTML}
             </div>
-            <h3 class="club-name">${club.name}</h3>
-            <p class="club-description">${club.description}</p>
-            <p class="club-tags">${club.tags.map(tag => `#${tag}`).join(' ')}</p>
-        </div>
-    `).join('');
+        `;
+    }).join('');
 
     clubsGrid.innerHTML = clubsHTML;
 
-    // Add click listeners after rendering - FIXED VERSION
+    // Add click listeners after rendering
     addClubCardListeners();
+
+    // Add tag expand/collapse listeners
+    addTagToggleListeners();
 }
 
 // =============================================================================
@@ -266,28 +274,29 @@ function addClubCardListeners() {
 
     clubCards.forEach(card => {
         card.addEventListener('click', (e) => {
-            // Check if the click is on the bookmark icon or its children
+            // Check if the click is on the bookmark icon, tag button, or their children
             const isBookmarkClick = e.target.closest('.bookmark-icon');
+            const isTagButtonClick = e.target.closest('.more-tags-btn');
+            const isTagPillClick = e.target.classList.contains('tag-pill');
 
-            if (isBookmarkClick) {
-                console.log(' Bookmark clicked, not navigating to club');
-                // Let the bookmark handler deal with this
+            if (isBookmarkClick || isTagButtonClick || isTagPillClick) {
+                console.log('🔖 Special element clicked, not navigating');
                 return;
             }
 
             // This is a card click, navigate to the club
             const clubId = card.dataset.clubId;
-            console.log(` Club card clicked! Club ID: ${clubId}`);
+            console.log(`🎯 Club card clicked! Club ID: ${clubId}`);
 
             if (clubId) {
                 navigateToClub(clubId);
             } else {
-                console.error(' No club ID found on card');
+                console.error('❌ No club ID found on card');
             }
         });
     });
 
-    console.log(` Added click listeners to ${clubCards.length} club cards`);
+    console.log(`✅ Added click listeners to ${clubCards.length} club cards`);
 }
 
 // =============================================================================
@@ -440,6 +449,127 @@ function navigateToClub(clubId) {
     console.log(`🔗 Navigating to club: ${clubId}`);
     window.location.href = `/club/${clubId}`;
 }
+
+function initializeExpandableTags() {
+    // For each club card, convert the hashtags to the new system
+    document.querySelectorAll('.club-card').forEach(card => {
+        const tagsElement = card.querySelector('.club-tags');
+        if (!tagsElement) return;
+
+        // Get the current hashtag text
+        const tagText = tagsElement.textContent;
+        const tags = tagText.split(' ').filter(tag => tag.startsWith('#')).map(tag => tag.substring(1));
+
+        if (tags.length === 0) return;
+
+        // Create new container
+        const container = document.createElement('div');
+        container.className = 'club-tags-container';
+
+        // Determine how many tags to show initially (show 2, hide the rest)
+        const maxVisible = 2;
+
+        tags.forEach((tag, index) => {
+            const tagPill = document.createElement('span');
+            tagPill.className = 'tag-pill';
+            if (index >= maxVisible) {
+                tagPill.classList.add('hidden');
+            }
+            tagPill.textContent = tag;
+            container.appendChild(tagPill);
+        });
+
+        // Add the +X more button if there are hidden tags
+        const hiddenCount = tags.length - maxVisible;
+        if (hiddenCount > 0) {
+            const moreBtn = document.createElement('button');
+            moreBtn.className = 'more-tags-btn';
+            moreBtn.innerHTML = `<span class="more-text">+${hiddenCount}</span>`;
+            moreBtn.onclick = function () {
+                toggleTags(container, moreBtn, hiddenCount);
+            };
+            container.appendChild(moreBtn);
+        }
+
+        // Replace the old tags element with the new container
+        tagsElement.replaceWith(container);
+    });
+}
+
+// Toggle function for expanding/collapsing tags
+function toggleTags(container, button, hiddenCount) {
+    const isExpanded = container.classList.contains('expanded');
+
+    if (isExpanded) {
+        // Collapse
+        container.classList.remove('expanded');
+        button.classList.remove('showing-less');
+        button.innerHTML = `<span class="more-text">+${hiddenCount}</span>`;
+    } else {
+        // Expand
+        container.classList.add('expanded');
+        button.classList.add('showing-less');
+        button.innerHTML = `<span class="more-text">show less</span>`;
+    }
+}
+
+function createExpandableTagsHTML(tags, maxVisible = 2) {
+    if (!tags || tags.length === 0) {
+        return '<div class="club-tags-container"></div>';
+    }
+
+    let html = '<div class="club-tags-container">';
+
+    // Add tag pills
+    tags.forEach((tag, index) => {
+        const isHidden = index >= maxVisible;
+        const cleanTag = tag.replace('#', ''); // Remove # if present
+        html += `<span class="tag-pill ${isHidden ? 'hidden' : ''}">${cleanTag}</span>`;
+    });
+
+    // Add the more button if there are hidden tags
+    const hiddenCount = tags.length - maxVisible;
+    if (hiddenCount > 0) {
+        html += `
+            <button class="more-tags-btn" type="button">
+                <span class="more-text">+${hiddenCount}</span>
+            </button>
+        `;
+    }
+
+    html += '</div>';
+    return html;
+}
+
+function addTagToggleListeners() {
+    const moreButtons = document.querySelectorAll('.more-tags-btn');
+
+    moreButtons.forEach(button => {
+        button.addEventListener('click', function (e) {
+            e.stopPropagation(); // Prevent card click
+
+            const container = this.closest('.club-tags-container');
+            const isExpanded = container.classList.contains('expanded');
+            const hiddenTags = container.querySelectorAll('.tag-pill.hidden');
+            const hiddenCount = hiddenTags.length;
+
+            if (isExpanded) {
+                // Collapse
+                container.classList.remove('expanded');
+                this.classList.remove('showing-less');
+                this.innerHTML = `<span class="more-text">+${hiddenCount}</span>`;
+            } else {
+                // Expand
+                container.classList.add('expanded');
+                this.classList.add('showing-less');
+                this.innerHTML = `<span class="more-text">show less</span>`;
+            }
+        });
+    });
+
+    console.log(`✅ Added toggle listeners to ${moreButtons.length} tag buttons`);
+}
+
 
 // =============================================================================
 // GLOBAL FUNCTIONS
