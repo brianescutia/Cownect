@@ -2,31 +2,31 @@ require('dotenv').config();
 const express = require('express');
 const path = require('path');
 const mongoose = require('mongoose');
-const dotenv = require('dotenv');
-dotenv.config();
-
-const session = require('express-session');  // For user session management
-const MongoStore = require('connect-mongo');  // Store sessions in MongoDB
-const User = require('../backend/models/User');        // Import our User model
-const Club = require('./models/Club');
-const { CareerField, QuizQuestion, QuizResult } = require('./models/nicheQuizModels');
-const Event = require('./models/eventModel'); // Import Event model for events API
-// Add this with your other imports (around line 10)
+const session = require('express-session');
+const MongoStore = require('connect-mongo');
 const passport = require('passport');
-require('./googleAuth');
-const GoogleStrategy = require('passport-google-oauth20').Strategy;
-const EnhancedAICareerAnalyzer = require('./services/enhancedThreeLevelAIAnalyzer');
 
-
-
-
-
+// Create Express app
 const app = express();
 const port = process.env.PORT || 3000;
 const isProduction = process.env.NODE_ENV === 'production';
+
+// CRITICAL: Set trust proxy IMMEDIATELY after creating app
+app.set('trust proxy', 1);
+app.enable('trust proxy');
+
+// Load your models
+const User = require('../backend/models/User');
+const Club = require('./models/Club');
+const { CareerField, QuizQuestion, QuizResult } = require('./models/nicheQuizModels');
+const Event = require('./models/eventModel');
+
+// NOW load Google Auth AFTER trust proxy is set
+require('./googleAuth');
+
+// Load services
+const EnhancedAICareerAnalyzer = require('./services/enhancedThreeLevelAIAnalyzer');
 const enhancedAnalyzer = new EnhancedAICareerAnalyzer();
-
-
 
 
 // =============================================================================
