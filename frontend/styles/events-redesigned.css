@@ -39,6 +39,7 @@ body {
     position: fixed;
     bottom: -20%;
     right: -34%;
+
     width: 80%;
     height: 70%;
     background-image: url('../assets/blueBlur.png');

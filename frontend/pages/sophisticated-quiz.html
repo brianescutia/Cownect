@@ -7,8 +7,8 @@
     
     <!-- External CSS -->
     <link rel="stylesheet" href="/styles/navbar.css" />
-    <link rel="stylesheet" href="../styles/enhanced-quiz.css" />
-    <link rel="stylesheet" href="../styles/dark.css">
+    <link rel="stylesheet" href="/styles/niche-quiz.css" />
+    <link rel="stylesheet" href="/styles/enhanced-results.css" />
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -127,7 +127,7 @@
                 <div class="level-card cursor-pointer transform hover:scale-105 transition-all duration-300" data-level="beginner">
                     <div class="bg-white rounded-xl shadow-lg overflow-hidden border-2 border-gray-200 hover:border-green-400">
                         <div class="bg-gradient-to-br from-green-50 to-emerald-50 p-6 text-center">
-                            <div class="text-4xl mb-3"></div>
+                            <div class="text-4xl mb-3">🌱</div>
                             <h3 class="text-xl font-bold text-gray-900 mb-2">Tech Explorer</h3>
                             <p class="text-green-600 font-medium">New to tech? Discover your path.</p>
                         </div>
@@ -141,13 +141,8 @@
                                     <span class="text-gray-600">Questions:</span>
                                     <span class="font-semibold">12 questions</span>
                                 </div>
-                                <div class="flex justify-between text-sm">
-                                    
-                                </div>
                             </div>
                             <p class="text-sm text-gray-600 mb-4">Perfect for students exploring tech careers with no prior experience.</p>
-                            <div class="text-xs text-gray-500 mb-4">
-                            </div>
                             <button class="w-full bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600 transition-colors">
                                 Start Exploring
                             </button>
@@ -159,7 +154,7 @@
                 <div class="level-card cursor-pointer transform hover:scale-105 transition-all duration-300" data-level="intermediate">
                     <div class="bg-white rounded-xl shadow-lg overflow-hidden border-2 border-gray-200 hover:border-blue-400">
                         <div class="bg-gradient-to-br from-blue-50 to-indigo-50 p-6 text-center">
-                            <div class="text-4xl mb-3"></div>
+                            <div class="text-4xl mb-3">🚀</div>
                             <h3 class="text-xl font-bold text-gray-900 mb-2">Tech Curious</h3>
                             <p class="text-blue-600 font-medium">Some experience? Find your specialization.</p>
                         </div>
@@ -173,13 +168,8 @@
                                     <span class="text-gray-600">Questions:</span>
                                     <span class="font-semibold">10 questions</span>
                                 </div>
-                                <div class="flex justify-between text-sm">
-                                   
-                                </div>
                             </div>
                             <p class="text-sm text-gray-600 mb-4">For students with some coding classes or tech exposure seeking their ideal focus.</p>
-                            <div class="text-xs text-gray-500 mb-4">
-                            </div>
                             <button class="w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition-colors">
                                 Find My Specialization
                             </button>
@@ -191,7 +181,7 @@
                 <div class="level-card cursor-pointer transform hover:scale-105 transition-all duration-300" data-level="advanced">
                     <div class="bg-white rounded-xl shadow-lg overflow-hidden border-2 border-gray-200 hover:border-purple-400">
                         <div class="bg-gradient-to-br from-purple-50 to-violet-50 p-6 text-center">
-                            <div class="text-4xl mb-3"></div>
+                            <div class="text-4xl mb-3">⚡</div>
                             <h3 class="text-xl font-bold text-gray-900 mb-2">Tech Insider</h3>
                             <p class="text-purple-600 font-medium">Experienced? Optimize your trajectory.</p>
                         </div>
@@ -205,14 +195,8 @@
                                     <span class="text-gray-600">Questions:</span>
                                     <span class="font-semibold">10 questions</span>
                                 </div>
-                                <div class="flex justify-between text-sm">
-                                
-                                </div>
                             </div>
                             <p class="text-sm text-gray-600 mb-4">For experienced students with internships and leadership roles seeking their ideal path.</p>
-                            <div class="text-xs text-gray-500 mb-4">
-                                
-                            </div>
                             <button class="w-full bg-purple-500 text-white py-2 px-4 rounded-lg hover:bg-purple-600 transition-colors">
                                 Optimize My Path
                             </button>
@@ -225,7 +209,9 @@
             <div class="text-center">
                 <button id="backToIntroBtn" class="text-gray-600 hover:text-gray-800 flex items-center mx-auto transition-colors">
                     <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
                     </svg>
+                    Back to Introduction
                 </button>
             </div>
         </div>
@@ -299,14 +285,14 @@
                 this.answers = [];
                 this.currentQuestionIndex = 0;
                 this.startTime = null;
-                this.isSubmitting = false; // Add this line
+                this.isSubmitting = false;
                 this.init();
             }
 
             async init() {
                 console.log('🚀 Initializing Enhanced 3-Level Career Quiz...');
                 this.setupEventListeners();
-                this.showLevelSelection(); // Skip intro and go directly to level selection
+                this.showLevelSelection();
             }
 
             setupEventListeners() {
@@ -346,369 +332,369 @@
     try {
         console.log(`Loading ${level} level questions...`);
         
-        // Try to fetch from server first
-        try {
-            const response = await fetch(`/api/quiz/enhanced/questions/${level}`);
-            if (response.ok) {
-                const data = await response.json();
-                this.questions = data.questions;
-                console.log(`Loaded ${this.questions.length} ${level} questions from server`);
-                return;
-            }
-        } catch (serverError) {
-            console.warn('Server not available, using local question data');
-        }
+        // Fix: Use correct endpoint path
+        const response = await fetch(`/api/quiz/enhanced/questions/${level}`, {
+            credentials: 'same-origin' // Include cookies for auth
+        });
         
-        // Fallback to local question data from enhancedthreelevelquizdata.js
-        if (typeof window.enhancedQuizQuestions !== 'undefined') {
-            this.questions = window.enhancedQuizQuestions[level] || window.enhancedThreeLevelQuizQuestions.beginner;
-            console.log(`Loaded ${this.questions.length} ${level} questions from local data`);
+        if (response.ok) {
+            const data = await response.json();
+            this.questions = data.questions;
+            console.log(`Loaded ${this.questions.length} ${level} questions from server`);
+            return;
         } else {
-            throw new Error('Question data not available');
+            throw new Error(`Server returned ${response.status}`);
         }
-        
     } catch (error) {
         console.error('Error loading questions:', error);
-        alert('Failed to load quiz questions. Please refresh the page.');
+        
+        // Better fallback handling
+        if (typeof window.enhancedThreeLevelQuizQuestions !== 'undefined' && 
+            window.enhancedThreeLevelQuizQuestions[level]) {
+            this.questions = window.enhancedThreeLevelQuizQuestions[level];
+            console.log(`Loaded ${this.questions.length} ${level} questions from local data`);
+        } else {
+            throw new Error('No questions available');
+        }
     }
 }
-                    
+                        
             startQuiz() {
-    console.log(`Starting ${this.selectedLevel} level quiz...`);
-    this.startTime = Date.now();
-    this.currentQuestionIndex = 0;
-    this.answers = new Array(this.questions.length).fill(null);
-    
-    // Debug logging
-    console.log('Total questions loaded:', this.questions.length);
-    console.log('Question IDs:', this.questions.map(q => q.id));
-    console.log('Answers array initialized:', this.answers.length);
-    
-    // Update UI with level info
-    document.getElementById('selectedLevel').textContent = this.selectedLevel.charAt(0).toUpperCase() + this.selectedLevel.slice(1);
-    
-    this.showScreen('quizInterface');
-    this.renderQuestion();
-}
+                console.log(`Starting ${this.selectedLevel} level quiz...`);
+                this.startTime = Date.now();
+                this.currentQuestionIndex = 0;
+                this.answers = new Array(this.questions.length).fill(null);
+                
+                // Debug logging
+                console.log('Total questions loaded:', this.questions.length);
+                console.log('Question IDs:', this.questions.map(q => q.id));
+                console.log('Answers array initialized:', this.answers.length);
+                
+                // Update UI with level info
+                document.getElementById('selectedLevel').textContent = this.selectedLevel.charAt(0).toUpperCase() + this.selectedLevel.slice(1);
+                
+                this.showScreen('quizInterface');
+                this.renderQuestion();
+            }
 
             renderQuestion() {
-    const question = this.questions[this.currentQuestionIndex];
-    
-    if (!question) {
-        console.error('No question found at index:', this.currentQuestionIndex);
-        return;
-    }
-    
-    console.log('Rendering question type:', question.type, question);
-    
-    // Update progress
-    document.getElementById('progressText').textContent = `Question ${this.currentQuestionIndex + 1} of ${this.questions.length}`;
-    const progress = ((this.currentQuestionIndex + 1) / this.questions.length) * 100;
-    document.getElementById('progressBar').style.width = `${progress}%`;
+                const question = this.questions[this.currentQuestionIndex];
+                
+                if (!question) {
+                    console.error('No question found at index:', this.currentQuestionIndex);
+                    return;
+                }
+                
+                console.log('Rendering question type:', question.type, question);
+                
+                // Update progress
+                document.getElementById('progressText').textContent = `Question ${this.currentQuestionIndex + 1} of ${this.questions.length}`;
+                const progress = ((this.currentQuestionIndex + 1) / this.questions.length) * 100;
+                document.getElementById('progressBar').style.width = `${progress}%`;
 
-    const container = document.getElementById('questionContainer');
-    
-    // Handle different question types based on your data structure
-    switch (question.type) {
-        case 'short_response':
-            this.renderShortResponse(question, container);
-            break;
-        case 'multiple_choice':
-        case 'scenario':
-            this.renderMultipleChoice(question, container);
-            break;
-        case 'visual_choice':
-            this.renderVisualChoice(question, container);
-            break;
-        case 'scale':
-            this.renderScale(question, container);
-            break;
-        case 'ranking':
-            this.renderRanking(question, container);
-            break;
-        default:
-            console.error('Unknown question type:', question.type);
-    }
+                const container = document.getElementById('questionContainer');
+                
+                // Handle different question types based on your data structure
+                switch (question.type) {
+                    case 'short_response':
+                        this.renderShortResponse(question, container);
+                        break;
+                    case 'multiple_choice':
+                    case 'scenario':
+                        this.renderMultipleChoice(question, container);
+                        break;
+                    case 'visual_choice':
+                        this.renderVisualChoice(question, container);
+                        break;
+                    case 'scale':
+                        this.renderScale(question, container);
+                        break;
+                    case 'ranking':
+                        this.renderRanking(question, container);
+                        break;
+                    default:
+                        console.error('Unknown question type:', question.type);
+                }
 
-    this.updateNavigation();
-    setTimeout(() => this.restorePreviousAnswer(), 100);
-
-}
-
-restorePreviousAnswer() {
-    const savedAnswer = this.answers[this.currentQuestionIndex];
-    if (!savedAnswer) return;
-    
-    const question = this.questions[this.currentQuestionIndex];
-    
-    switch (question.type) {
-        case 'short_response':
-            const textArea = document.getElementById('textResponse');
-            if (textArea && savedAnswer.textResponse) {
-                textArea.value = savedAnswer.textResponse;
-                this.updateTextResponse(savedAnswer.textResponse);
+                this.updateNavigation();
+                setTimeout(() => this.restorePreviousAnswer(), 100);
             }
-            break;
-            
-        case 'visual_choice':
-        case 'multiple_choice':
-        case 'scenario':
-            if (savedAnswer.selectedOption) {
-                const optionEl = document.querySelector(`[data-option-id="${savedAnswer.selectedOption.id}"]`);
-                if (optionEl) {
-                    optionEl.classList.add('selected');
-                    optionEl.style.borderColor = '#6366f1';
+
+            restorePreviousAnswer() {
+                const savedAnswer = this.answers[this.currentQuestionIndex];
+                if (!savedAnswer) return;
+                
+                const question = this.questions[this.currentQuestionIndex];
+                
+                switch (question.type) {
+                    case 'short_response':
+                        const textArea = document.getElementById('textResponse');
+                        if (textArea && savedAnswer.textResponse) {
+                            textArea.value = savedAnswer.textResponse;
+                            this.updateTextResponse(savedAnswer.textResponse);
+                        }
+                        break;
+                        
+                    case 'visual_choice':
+                    case 'multiple_choice':
+                    case 'scenario':
+                        if (savedAnswer.selectedOption) {
+                            const optionEl = document.querySelector(`[data-option-id="${savedAnswer.selectedOption.id}"]`);
+                            if (optionEl) {
+                                optionEl.classList.add('selected');
+                                optionEl.style.borderColor = '#6366f1';
+                            }
+                        }
+                        break;
+                        
+                    case 'scale':
+                        if (savedAnswer.scaleValue) {
+                            const slider = document.getElementById('scaleSlider');
+                            if (slider) {
+                                slider.value = savedAnswer.scaleValue;
+                                this.updateScale(savedAnswer.scaleValue);
+                            }
+                        }
+                        break;
                 }
             }
-            break;
-            
-        case 'scale':
-            if (savedAnswer.scaleValue) {
-                const slider = document.getElementById('scaleSlider');
-                if (slider) {
-                    slider.value = savedAnswer.scaleValue;
-                    this.updateScale(savedAnswer.scaleValue);
-                }
-            }
-            break;
-    }
-}
 
-renderShortResponse(question, container) {
-    container.innerHTML = `
-        <div class="mb-8">
-            <h3 class="text-2xl font-bold text-gray-900 mb-4">${question.question}</h3>
-            ${question.subtitle ? `<p class="text-gray-600 mb-4">${question.subtitle}</p>` : ''}
-        </div>
-        
-        <div class="max-w-2xl mx-auto">
-            <textarea id="textResponse" 
-                      class="w-full p-4 border-2 border-gray-200 rounded-xl focus:border-tech-purple focus:outline-none transition-colors" 
-                      rows="4"
-                      placeholder="${question.placeholder || 'Share your thoughts...'}"
-                      maxlength="${question.max_length || 500}"
-                      oninput="enhancedQuizApp.updateTextResponse(this.value)"></textarea>
-            <div class="flex justify-between text-sm text-gray-500 mt-2">
-                <span>Share your authentic experience</span>
-                <span id="charCount">0/${question.max_length || 500}</span>
-            </div>
-        </div>
-    `;
-}
-
-renderMultipleChoice(question, container) {
-    container.innerHTML = `
-        <div class="mb-8">
-            <h3 class="text-2xl font-bold text-gray-900 mb-4">${question.question}</h3>
-            ${question.subtitle ? `<p class="text-gray-600 mb-4">${question.subtitle}</p>` : ''}
-        </div>
-        
-        <div class="space-y-4">
-            ${question.options.map(option => `
-                <div class="option-card p-6 border-2 border-gray-200 rounded-xl cursor-pointer hover:border-tech-purple transition-all" 
-                     data-option-id="${option.id}"
-                     onclick="enhancedQuizApp.selectOption('${option.id}')">
-                    <h4 class="text-lg font-bold text-gray-900 mb-2">${option.title}</h4>
-                    <p class="text-gray-600">${option.description}</p>
-                </div>
-            `).join('')}
-        </div>
-    `;
-}
-
-renderVisualChoice(question, container) {
-    container.innerHTML = `
-        <div class="text-center mb-8">
-            <h3 class="text-2xl font-bold text-gray-900 mb-2">${question.question}</h3>
-            <p class="text-gray-600">${question.subtitle || ''}</p>
-        </div>
-        
-        <div class="grid md:grid-cols-2 gap-6">
-            ${question.options.map(option => `
-                <div class="visual-option p-6 border-2 border-gray-200 rounded-xl cursor-pointer hover:border-tech-purple transition-all" 
-                     data-option-id="${option.id}">
-                    <div class="text-center">
-                        <div class="text-4xl mb-4">${option.visual || '🎯'}</div>
-                        <h4 class="text-lg font-bold text-gray-900 mb-2">${option.title}</h4>
-                        <p class="text-gray-600 text-sm">${option.description}</p>
+            renderShortResponse(question, container) {
+                container.innerHTML = `
+                    <div class="mb-8">
+                        <h3 class="text-2xl font-bold text-gray-900 mb-4">${question.question}</h3>
+                        ${question.subtitle ? `<p class="text-gray-600 mb-4">${question.subtitle}</p>` : ''}
                     </div>
-                </div>
-            `).join('')}
-        </div>
-    `;
-    
-    // Add click handlers after rendering
-    container.querySelectorAll('.visual-option').forEach(optionEl => {
-        optionEl.addEventListener('click', () => {
-            // Clear all selections first
-            container.querySelectorAll('.visual-option').forEach(el => {
-                el.classList.remove('selected');
-                el.style.borderColor = '#e5e7eb';
-            });
-            
-            // Select this option
-            optionEl.classList.add('selected');
-            optionEl.style.borderColor = '#6366f1';
-            
-            const optionId = optionEl.dataset.optionId;
-            const selectedOption = question.options.find(opt => opt.id === optionId);
-            this.saveResponse({ selectedOption });
-        });
-    });
-}
-
-renderScale(question, container) {
-    // Find a valid starting value that exists in the labels
-    const validValues = Object.keys(question.scale.labels).map(Number);
-    const middleValue = validValues[Math.floor(validValues.length / 2)];
-    
-    container.innerHTML = `
-        <div class="text-center mb-8">
-            <h3 class="text-2xl font-bold text-gray-900 mb-2">${question.question}</h3>
-            <p class="text-gray-600">${question.subtitle || ''}</p>
-        </div>
-        
-        <div class="max-w-2xl mx-auto">
-            <div class="mb-6">
-                <input type="range" id="scaleSlider" class="scale-slider w-full" 
-                       min="${question.scale.min}" max="${question.scale.max}" value="${middleValue}"
-                       oninput="enhancedQuizApp.updateScale(this.value)">
-            </div>
-            
-            <div class="text-center mb-6">
-                <div id="scaleValue" class="text-2xl font-bold text-tech-purple mb-2">${middleValue}</div>
-                <div id="scaleLabel" class="text-lg font-medium text-gray-900 mb-2">${question.scale.labels[middleValue]}</div>
-                <div id="scaleDescription" class="text-gray-600">${question.scale.descriptions[middleValue]}</div>
-            </div>
-            
-            <div class="flex justify-between text-sm text-gray-500">
-                <span>${question.scale.labels[question.scale.min]}</span>
-                <span>${question.scale.labels[question.scale.max]}</span>
-            </div>
-        </div>
-    `;
-    
-    // Auto-save the default value
-    this.saveResponse({ scaleValue: middleValue });
-}
-
-renderRanking(question, container) {
-    container.innerHTML = `
-        <div class="mb-8">
-            <h3 class="text-2xl font-bold text-gray-900 mb-2">${question.question}</h3>
-            <p class="text-gray-600">${question.subtitle}</p>
-        </div>
-        
-        <div class="max-w-2xl mx-auto">
-            <p class="text-sm text-gray-600 mb-6 text-center">Drag items to reorder them from most important (top) to least important (bottom)</p>
-            
-            <div id="rankingContainer" class="space-y-3">
-                ${question.items.map((item, index) => `
-                    <div class="drag-item p-4 bg-gray-50 border-2 border-gray-200 rounded-lg cursor-grab" 
-                         draggable="true"
-                         data-item-id="${item.id}"
-                         data-item-index="${index}">
-                        <div class="flex items-center">
-                            <div class="w-8 h-8 bg-tech-purple text-white rounded-full flex items-center justify-center mr-4 font-bold rank-number">
-                                ${index + 1}
-                            </div>
-                            <div class="flex-1">
-                                <h4 class="font-bold text-gray-900">${item.text}</h4>
-                                <p class="text-sm text-gray-600">${item.description}</p>
-                            </div>
-                            <div class="text-gray-400 ml-2">⋮⋮</div>
+                    
+                    <div class="max-w-2xl mx-auto">
+                        <textarea id="textResponse" 
+                                  class="w-full p-4 border-2 border-gray-200 rounded-xl focus:border-tech-purple focus:outline-none transition-colors" 
+                                  rows="4"
+                                  placeholder="${question.placeholder || 'Share your thoughts...'}"
+                                  maxlength="${question.max_length || 500}"
+                                  oninput="enhancedQuizApp.updateTextResponse(this.value)"></textarea>
+                        <div class="flex justify-between text-sm text-gray-500 mt-2">
+                            <span>Share your authentic experience</span>
+                            <span id="charCount">0/${question.max_length || 500}</span>
                         </div>
                     </div>
-                `).join('')}
-            </div>
-        </div>
-    `;
-    
-    // Initialize drag and drop functionality
-    this.initializeDragAndDrop();
-    
-    // Save initial ranking
-    const ranking = question.items.map(item => item.id);
-    this.saveResponse({ ranking });
-}
-
-initializeDragAndDrop() {
-    const container = document.getElementById('rankingContainer');
-    let draggedElement = null;
-    
-    // Add event listeners to all drag items
-    const dragItems = container.querySelectorAll('.drag-item');
-    
-    dragItems.forEach(item => {
-        item.addEventListener('dragstart', (e) => {
-            draggedElement = item;
-            item.style.opacity = '0.5';
-            e.dataTransfer.effectAllowed = 'move';
-        });
-        
-        item.addEventListener('dragend', (e) => {
-            item.style.opacity = '1';
-            draggedElement = null;
-            this.updateRankNumbers();
-            this.saveRankingOrder();
-        });
-        
-        item.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            e.dataTransfer.dropEffect = 'move';
-        });
-        
-        item.addEventListener('drop', (e) => {
-            e.preventDefault();
-            if (draggedElement && draggedElement !== item) {
-                const container = item.parentNode;
-                const draggedRect = draggedElement.getBoundingClientRect();
-                const targetRect = item.getBoundingClientRect();
-                
-                if (draggedRect.top < targetRect.top) {
-                    container.insertBefore(draggedElement, item.nextSibling);
-                } else {
-                    container.insertBefore(draggedElement, item);
-                }
+                `;
             }
-        });
-    });
-}
 
-updateRankNumbers() {
-    const items = document.querySelectorAll('#rankingContainer .drag-item');
-    items.forEach((item, index) => {
-        const rankNumber = item.querySelector('.rank-number');
-        rankNumber.textContent = index + 1;
-    });
-}
+            renderMultipleChoice(question, container) {
+                container.innerHTML = `
+                    <div class="mb-8">
+                        <h3 class="text-2xl font-bold text-gray-900 mb-4">${question.question}</h3>
+                        ${question.subtitle ? `<p class="text-gray-600 mb-4">${question.subtitle}</p>` : ''}
+                    </div>
+                    
+                    <div class="space-y-4">
+                        ${question.options.map(option => `
+                            <div class="option-card p-6 border-2 border-gray-200 rounded-xl cursor-pointer hover:border-tech-purple transition-all" 
+                                 data-option-id="${option.id}"
+                                 onclick="enhancedQuizApp.selectOption('${option.id}')">
+                                <h4 class="text-lg font-bold text-gray-900 mb-2">${option.title}</h4>
+                                <p class="text-gray-600">${option.description}</p>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            }
 
-saveRankingOrder() {
-    const items = document.querySelectorAll('#rankingContainer .drag-item');
-    const ranking = Array.from(items).map(item => item.dataset.itemId);
-    this.saveResponse({ ranking });
-}
+            renderVisualChoice(question, container) {
+                container.innerHTML = `
+                    <div class="text-center mb-8">
+                        <h3 class="text-2xl font-bold text-gray-900 mb-2">${question.question}</h3>
+                        <p class="text-gray-600">${question.subtitle || ''}</p>
+                    </div>
+                    
+                    <div class="grid md:grid-cols-2 gap-6">
+                        ${question.options.map(option => `
+                            <div class="visual-option p-6 border-2 border-gray-200 rounded-xl cursor-pointer hover:border-tech-purple transition-all" 
+                                 data-option-id="${option.id}">
+                                <div class="text-center">
+                                    <div class="text-4xl mb-4">${option.visual || '🎯'}</div>
+                                    <h4 class="text-lg font-bold text-gray-900 mb-2">${option.title}</h4>
+                                    <p class="text-gray-600 text-sm">${option.description}</p>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+                
+                // Add click handlers after rendering
+                container.querySelectorAll('.visual-option').forEach(optionEl => {
+                    optionEl.addEventListener('click', () => {
+                        // Clear all selections first
+                        container.querySelectorAll('.visual-option').forEach(el => {
+                            el.classList.remove('selected');
+                            el.style.borderColor = '#e5e7eb';
+                        });
+                        
+                        // Select this option
+                        optionEl.classList.add('selected');
+                        optionEl.style.borderColor = '#6366f1';
+                        
+                        const optionId = optionEl.dataset.optionId;
+                        const selectedOption = question.options.find(opt => opt.id === optionId);
+                        this.saveResponse({ selectedOption });
+                    });
+                });
+            }
 
-updateScale(value) {
-    const question = this.questions[this.currentQuestionIndex];
-    const intValue = parseInt(value);
-    
-    document.getElementById('scaleValue').textContent = intValue;
-    
-    // Use fallback text if label/description doesn't exist for this value
-    const label = question.scale.labels[intValue] || `Level ${intValue}`;
-    const description = question.scale.descriptions[intValue] || `Selected value: ${intValue}`;
-    
-    document.getElementById('scaleLabel').textContent = label;
-    document.getElementById('scaleDescription').textContent = description;
-    
-    this.saveResponse({ scaleValue: intValue });
-}
-updateTextResponse(value) {
-    const question = this.questions[this.currentQuestionIndex];
-    document.getElementById('charCount').textContent = `${value.length}/${question.max_length || 500}`;
-    this.saveResponse({ textResponse: value });
-}
+            renderScale(question, container) {
+                // Find a valid starting value that exists in the labels
+                const validValues = Object.keys(question.scale.labels).map(Number);
+                const middleValue = validValues[Math.floor(validValues.length / 2)];
+                
+                container.innerHTML = `
+                    <div class="text-center mb-8">
+                        <h3 class="text-2xl font-bold text-gray-900 mb-2">${question.question}</h3>
+                        <p class="text-gray-600">${question.subtitle || ''}</p>
+                    </div>
+                    
+                    <div class="max-w-2xl mx-auto">
+                        <div class="mb-6">
+                            <input type="range" id="scaleSlider" class="scale-slider w-full" 
+                                   min="${question.scale.min}" max="${question.scale.max}" value="${middleValue}"
+                                   oninput="enhancedQuizApp.updateScale(this.value)">
+                        </div>
+                        
+                        <div class="text-center mb-6">
+                            <div id="scaleValue" class="text-2xl font-bold text-tech-purple mb-2">${middleValue}</div>
+                            <div id="scaleLabel" class="text-lg font-medium text-gray-900 mb-2">${question.scale.labels[middleValue]}</div>
+                            <div id="scaleDescription" class="text-gray-600">${question.scale.descriptions[middleValue]}</div>
+                        </div>
+                        
+                        <div class="flex justify-between text-sm text-gray-500">
+                            <span>${question.scale.labels[question.scale.min]}</span>
+                            <span>${question.scale.labels[question.scale.max]}</span>
+                        </div>
+                    </div>
+                `;
+                
+                // Auto-save the default value
+                this.saveResponse({ scaleValue: middleValue });
+            }
+
+            renderRanking(question, container) {
+                container.innerHTML = `
+                    <div class="mb-8">
+                        <h3 class="text-2xl font-bold text-gray-900 mb-2">${question.question}</h3>
+                        <p class="text-gray-600">${question.subtitle}</p>
+                    </div>
+                    
+                    <div class="max-w-2xl mx-auto">
+                        <p class="text-sm text-gray-600 mb-6 text-center">Drag items to reorder them from most important (top) to least important (bottom)</p>
+                        
+                        <div id="rankingContainer" class="space-y-3">
+                            ${question.items.map((item, index) => `
+                                <div class="drag-item p-4 bg-gray-50 border-2 border-gray-200 rounded-lg cursor-grab" 
+                                     draggable="true"
+                                     data-item-id="${item.id}"
+                                     data-item-index="${index}">
+                                    <div class="flex items-center">
+                                        <div class="w-8 h-8 bg-tech-purple text-white rounded-full flex items-center justify-center mr-4 font-bold rank-number">
+                                            ${index + 1}
+                                        </div>
+                                        <div class="flex-1">
+                                            <h4 class="font-bold text-gray-900">${item.text}</h4>
+                                            <p class="text-sm text-gray-600">${item.description}</p>
+                                        </div>
+                                        <div class="text-gray-400 ml-2">⋮⋮</div>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+                
+                // Initialize drag and drop functionality
+                this.initializeDragAndDrop();
+                
+                // Save initial ranking
+                const ranking = question.items.map(item => item.id);
+                this.saveResponse({ ranking });
+            }
+
+            initializeDragAndDrop() {
+                const container = document.getElementById('rankingContainer');
+                let draggedElement = null;
+                
+                // Add event listeners to all drag items
+                const dragItems = container.querySelectorAll('.drag-item');
+                
+                dragItems.forEach(item => {
+                    item.addEventListener('dragstart', (e) => {
+                        draggedElement = item;
+                        item.style.opacity = '0.5';
+                        e.dataTransfer.effectAllowed = 'move';
+                    });
+                    
+                    item.addEventListener('dragend', (e) => {
+                        item.style.opacity = '1';
+                        draggedElement = null;
+                        this.updateRankNumbers();
+                        this.saveRankingOrder();
+                    });
+                    
+                    item.addEventListener('dragover', (e) => {
+                        e.preventDefault();
+                        e.dataTransfer.dropEffect = 'move';
+                    });
+                    
+                    item.addEventListener('drop', (e) => {
+                        e.preventDefault();
+                        if (draggedElement && draggedElement !== item) {
+                            const container = item.parentNode;
+                            const draggedRect = draggedElement.getBoundingClientRect();
+                            const targetRect = item.getBoundingClientRect();
+                            
+                            if (draggedRect.top < targetRect.top) {
+                                container.insertBefore(draggedElement, item.nextSibling);
+                            } else {
+                                container.insertBefore(draggedElement, item);
+                            }
+                        }
+                    });
+                });
+            }
+
+            updateRankNumbers() {
+                const items = document.querySelectorAll('#rankingContainer .drag-item');
+                items.forEach((item, index) => {
+                    const rankNumber = item.querySelector('.rank-number');
+                    rankNumber.textContent = index + 1;
+                });
+            }
+
+            saveRankingOrder() {
+                const items = document.querySelectorAll('#rankingContainer .drag-item');
+                const ranking = Array.from(items).map(item => item.dataset.itemId);
+                this.saveResponse({ ranking });
+            }
+
+            updateScale(value) {
+                const question = this.questions[this.currentQuestionIndex];
+                const intValue = parseInt(value);
+                
+                document.getElementById('scaleValue').textContent = intValue;
+                
+                // Use fallback text if label/description doesn't exist for this value
+                const label = question.scale.labels[intValue] || `Level ${intValue}`;
+                const description = question.scale.descriptions[intValue] || `Selected value: ${intValue}`;
+                
+                document.getElementById('scaleLabel').textContent = label;
+                document.getElementById('scaleDescription').textContent = description;
+                
+                this.saveResponse({ scaleValue: intValue });
+            }
+
+            updateTextResponse(value) {
+                const question = this.questions[this.currentQuestionIndex];
+                document.getElementById('charCount').textContent = `${value.length}/${question.max_length || 500}`;
+                this.saveResponse({ textResponse: value });
+            }
 
             selectOption(optionId) {
                 // Clear previous selections
@@ -730,23 +716,24 @@ updateTextResponse(value) {
             }
 
             saveResponse(responseData) {
-    console.log('Saving response for question index:', this.currentQuestionIndex);
-    console.log('Question ID:', this.questions[this.currentQuestionIndex]?.id);
-    
-    this.answers[this.currentQuestionIndex] = {
-        questionId: this.questions[this.currentQuestionIndex].id,
-        questionType: this.questions[this.currentQuestionIndex].type,
-        ...responseData,
-        timestamp: new Date().toISOString(),
-        timeTaken: Date.now() - this.startTime
-    };
-    
-    console.log('Response saved:', this.answers[this.currentQuestionIndex]);
-    console.log('Answers collected so far:', this.answers.filter(a => a !== null).length);
-    
-    // Enable next button
-    document.getElementById('nextButton').disabled = false;
-}
+                console.log('Saving response for question index:', this.currentQuestionIndex);
+                console.log('Question ID:', this.questions[this.currentQuestionIndex]?.id);
+                
+                this.answers[this.currentQuestionIndex] = {
+                    questionId: this.questions[this.currentQuestionIndex].id,
+                    questionType: this.questions[this.currentQuestionIndex].type,
+                    ...responseData,
+                    timestamp: new Date().toISOString(),
+                    timeTaken: Date.now() - this.startTime
+                };
+                
+                console.log('Response saved:', this.answers[this.currentQuestionIndex]);
+                console.log('Answers collected so far:', this.answers.filter(a => a !== null).length);
+                
+                // Enable next button
+                document.getElementById('nextButton').disabled = false;
+            }
+
             updateNavigation() {
                 const prevBtn = document.getElementById('prevButton');
                 const nextBtn = document.getElementById('nextButton');
@@ -770,22 +757,22 @@ updateTextResponse(value) {
             }
 
             nextQuestion() {
-    if (this.isSubmitting) return; // Prevent multiple submissions
-    
-    console.log('Next question called. Current index:', this.currentQuestionIndex, 'Total questions:', this.questions.length);
-    
-    if (this.currentQuestionIndex < this.questions.length - 1) {
-        this.currentQuestionIndex++;
-        this.renderQuestion();
-    } else {
-        console.log('Reached end of quiz. Submitting...');
-        if (!this.isSubmitting) {
-            this.isSubmitting = true;
-            document.getElementById('nextButton').disabled = true; // Disable button
-            this.submitQuiz();
-        }
-    }
-}
+                if (this.isSubmitting) return; // Prevent multiple submissions
+                
+                console.log('Next question called. Current index:', this.currentQuestionIndex, 'Total questions:', this.questions.length);
+                
+                if (this.currentQuestionIndex < this.questions.length - 1) {
+                    this.currentQuestionIndex++;
+                    this.renderQuestion();
+                } else {
+                    console.log('Reached end of quiz. Submitting...');
+                    if (!this.isSubmitting) {
+                        this.isSubmitting = true;
+                        document.getElementById('nextButton').disabled = true; // Disable button
+                        this.submitQuiz();
+                    }
+                }
+            }
 
             async submitQuiz() {
     console.log(`Submitting ${this.selectedLevel} level quiz for enhanced AI analysis...`);
@@ -804,39 +791,38 @@ updateTextResponse(value) {
             }
         };
 
-        console.log('Submitting to server:', submissionData);
-        console.log('Number of answers:', submissionData.answers.length);
-
         const response = await fetch('/api/quiz/submit', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
+            credentials: 'same-origin',
             body: JSON.stringify(submissionData)
         });
 
-        console.log('Response status:', response.status);
-        console.log('Response ok:', response.ok);
-
         if (!response.ok) {
-            const errorText = await response.text();
-            console.log('Error response:', errorText);
-            throw new Error(`Server error: ${response.status} - ${errorText}`);
+            const errorData = await response.json();
+            throw new Error(errorData.message || 'Server error');
         }
 
         const data = await response.json();
-        console.log('Received results from server:', data);
         
-        this.displayResults(data.results || data);
+        // Check for enhanced results redirect
+        if (data.enhanced && data.redirectTo) {
+            // Store results for the enhanced page
+            sessionStorage.setItem('enhancedResults', JSON.stringify(data.results));
+            window.location.href = data.redirectTo;
+        } else {
+            // Fallback to basic results display
+            this.displayResults(data.results || data);
+        }
         
     } catch (error) {
-        console.error('Quiz submission error details:', error);
-        console.error('Error message:', error.message);
-        this.showScreen('levelSelection');
+        console.error('Quiz submission error:', error);
         alert('Failed to analyze your responses. Please try again.');
+        this.showScreen('levelSelection');
     }
 }
-
 
             animateLoadingSteps() {
                 const steps = [
@@ -862,48 +848,48 @@ updateTextResponse(value) {
             }
 
             displayResults(results) {
-    this.showScreen('resultsScreen');
-    
-    const container = document.getElementById('resultsScreen');
-    
-    // Handle the results structure from your backend
-    const topMatch = results.topMatch || results.results?.topMatch;
-    const allMatches = results.allMatches || results.results?.allMatches || [];
-    
-    if (!topMatch) {
-        console.error('No top match found in results:', results);
-        return;
-    }
-    
-    container.innerHTML = `
-        <div class="gradient-bg text-white rounded-xl p-8 text-center animate-bounce-in">
-            <h2 class="text-3xl font-bold mb-4">Your Enhanced ${this.selectedLevel.charAt(0).toUpperCase() + this.selectedLevel.slice(1)} Analysis is Ready!</h2>
-            <div class="glass-effect rounded-lg p-6 max-w-2xl mx-auto">
-                <h3 class="text-2xl font-bold mb-2">${topMatch.career}</h3>
-                <div class="text-4xl font-bold mb-2">${topMatch.percentage}% Match</div>
-                <p class="text-blue-100">${topMatch.reasoning || 'AI-powered career analysis based on your responses.'}</p>
-            </div>
-        </div>
-        
-        <div class="bg-white rounded-xl p-8 shadow-lg">
-            <h3 class="text-xl font-bold mb-4">AI Career Analysis Results</h3>
-            <div class="space-y-4">
-                <p><strong>Career:</strong> ${topMatch.career}</p>
-                <p><strong>Match Percentage:</strong> ${topMatch.percentage}%</p>
-                <p><strong>Reasoning:</strong> ${topMatch.reasoning || 'Based on your responses and preferences.'}</p>
-            </div>
-        </div>
-        
-        <div class="text-center space-y-4">
-            <button onclick="enhancedQuizApp.retakeQuiz()" class="bg-gradient-to-r from-tech-purple to-tech-cyan text-white px-8 py-3 rounded-xl font-bold hover:shadow-lg transition-all mr-4">
-                Try Another Level
-            </button>
-            <button onclick="window.location.href='/tech-clubs'" class="bg-white text-tech-purple border-2 border-tech-purple px-8 py-3 rounded-xl font-bold hover:bg-tech-purple hover:text-white transition-all">
-                Explore UC Davis Clubs
-            </button>
-        </div>
-    `;
-}
+                this.showScreen('resultsScreen');
+                
+                const container = document.getElementById('resultsScreen');
+                
+                // Handle the results structure from your backend
+                const topMatch = results.topMatch || results.results?.topMatch;
+                const allMatches = results.allMatches || results.results?.allMatches || [];
+                
+                if (!topMatch) {
+                    console.error('No top match found in results:', results);
+                    return;
+                }
+                
+                container.innerHTML = `
+                    <div class="gradient-bg text-white rounded-xl p-8 text-center animate-bounce-in">
+                        <h2 class="text-3xl font-bold mb-4">Your Enhanced ${this.selectedLevel.charAt(0).toUpperCase() + this.selectedLevel.slice(1)} Analysis is Ready!</h2>
+                        <div class="glass-effect rounded-lg p-6 max-w-2xl mx-auto">
+                            <h3 class="text-2xl font-bold mb-2">${topMatch.career}</h3>
+                            <div class="text-4xl font-bold mb-2">${topMatch.percentage}% Match</div>
+                            <p class="text-blue-100">${topMatch.reasoning || 'AI-powered career analysis based on your responses.'}</p>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white rounded-xl p-8 shadow-lg">
+                        <h3 class="text-xl font-bold mb-4">AI Career Analysis Results</h3>
+                        <div class="space-y-4">
+                            <p><strong>Career:</strong> ${topMatch.career}</p>
+                            <p><strong>Match Percentage:</strong> ${topMatch.percentage}%</p>
+                            <p><strong>Reasoning:</strong> ${topMatch.reasoning || 'Based on your responses and preferences.'}</p>
+                        </div>
+                    </div>
+                    
+                    <div class="text-center space-y-4">
+                        <button onclick="enhancedQuizApp.retakeQuiz()" class="bg-gradient-to-r from-tech-purple to-tech-cyan text-white px-8 py-3 rounded-xl font-bold hover:shadow-lg transition-all mr-4">
+                            Try Another Level
+                        </button>
+                        <button onclick="window.location.href='/tech-clubs'" class="bg-white text-tech-purple border-2 border-tech-purple px-8 py-3 rounded-xl font-bold hover:bg-tech-purple hover:text-white transition-all">
+                            Explore UC Davis Clubs
+                        </button>
+                    </div>
+                `;
+            }
 
             showScreen(screenId) {
                 const screens = ['introScreen', 'levelSelection', 'quizInterface', 'loadingScreen', 'resultsScreen'];

@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Enhanced Career Analysis - UC Davis Tech Quiz</title>
+    
+    <!-- External CSS -->
+    <link rel="stylesheet" href="/styles/navbar.css" />
+    <link rel="stylesheet" href="/styles/enhanced-results.css" />
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Navbar Scripts -->
+    <script src="/scripts/navbar-component.js" defer></script>
+    <script src="/scripts/navbar.js" defer></script>
+</head>
+<body>
+    <!-- Navbar - Will be dynamically loaded -->
+    <div id="navbar-container"></div>
+
+    <!-- Main Content -->
+    <main class="container">
+        
+        <!-- Top Match Card - Blue Gradient -->
+        <div class="top-match-card" id="topMatchCard">
+            <div class="confidence-badge" id="confidenceBadge">High Confidence</div>
+            <div class="match-layout">
+                <div class="match-content">
+                    <h3>Your closest match is</h3>
+                    <h1 id="topCareerName">DevOps Engineering</h1>
+                    <p id="topCareerDescription">
+                        Bridge development and operations through automation, infrastructure management, 
+                        and continuous delivery. Enable teams to deploy software faster and more reliably.
+                    </p>
+                </div>
+                <div class="percentage-display">
+                    <div class="percentage-circle">
+                        <svg viewBox="0 0 120 120">
+                            <circle cx="60" cy="60" r="54" fill="transparent" stroke="rgba(255,255,255,0.2)" stroke-width="8"/>
+                            <circle id="progressCircle" cx="60" cy="60" r="54" fill="transparent" stroke="white" stroke-width="8" 
+                                    stroke-dasharray="339.29" stroke-dashoffset="67.86" stroke-linecap="round"/>
+                        </svg>
+                        <div class="percentage-text" id="matchPercentage">78%</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recommended Clubs Section -->
+        <section class="clubs-section">
+    <div class="section-header">
+        <h2 class="section-title">Recommended Clubs</h2>
+        <span class="section-icon">🏛️</span>
+    </div>
+    
+    <div class="clubs-row" id="clubsRow">
+        <!-- Clubs will be dynamically populated -->
+    </div>
+</section>
+
+
+        <!-- Two Column Layout -->
+        <div class="two-column-layout">
+            <!-- Left Column -->
+            <div class="left-column">
+                <!-- Career Progression -->
+                <section class="career-progression">
+                    <div class="section-header">
+                        <h2>Career Progression</h2>
+                        <span class="section-icon">📈</span>
+                    </div>
+                    
+                    <div class="progression-steps" id="progressionSteps">
+                        <div class="progression-item">
+                            <div class="level-badge entry">Entry</div>
+                            <div class="progression-content">
+                                <h4>Junior DevOps Engineer, Cloud Engineer, Build Engineer</h4>
+                                <p>0-2 years • $80k - $125k</p>
+                            </div>
+                        </div>
+
+                        <div class="progression-item">
+                            <div class="level-badge mid">Mid</div>
+                            <div class="progression-content">
+                                <h4>DevOps Engineer, Site Reliability Engineer</h4>
+                                <p>2-5 years • $125k - $175k</p>
+                            </div>
+                        </div>
+
+                        <div class="progression-item">
+                            <div class="level-badge senior">Senior</div>
+                            <div class="progression-content">
+                                <h4>Senior DevOps Engineer, Principal SRE, Infrastructure Architect</h4>
+                                <p>5+ years • $175k - $275k</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Your Next Steps -->
+                <section class="next-steps">
+                    <div class="section-header">
+                        <h2>Your Next Steps</h2>
+                        <span class="section-icon">✅</span>
+                    </div>
+                    
+                    <div class="steps-list" id="stepsList">
+                        <div class="step-item">
+                            <div class="step-number">1</div>
+                            <div class="step-content">
+                                <h4>Explore DevOps Engineering courses</h4>
+                                <p>Start with introductory courses and informational interviews</p>
+                            </div>
+                        </div>
+
+                        <div class="step-item">
+                            <div class="step-number">2</div>
+                            <div class="step-content">
+                                <h4>Join relevant UC Davis clubs</h4>
+                                <p>Build experience and network in your field</p>
+                            </div>
+                        </div>
+
+                        <div class="step-item">
+                            <div class="step-number">3</div>
+                            <div class="step-content">
+                                <h4>Connect with Career Center</h4>
+                                <p>Get guidance and industry connections</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Right Column -->
+            <div class="right-column">
+                <!-- Career Matches -->
+                <section class="career-matches">
+                    <div class="section-header">
+                        <h2>Career Matches</h2>
+                        <span class="section-icon">🎯</span>
+                    </div>
+                    
+                    <div class="matches-list" id="matchesList">
+                        <div class="match-item">
+                            <div class="match-info">
+                                <h4>DevOps Engineering</h4>
+                                <p>Engineering</p>
+                            </div>
+                            <div class="match-score">
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 78%"></div>
+                                </div>
+                                <span class="percentage">78%</span>
+                            </div>
+                        </div>
+
+                        <div class="match-item">
+                            <div class="match-info">
+                                <h4>Cyber Security Engineering</h4>
+                                <p>Security</p>
+                            </div>
+                            <div class="match-score">
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 77%"></div>
+                                </div>
+                                <span class="percentage">77%</span>
+                            </div>
+                        </div>
+
+                        <div class="match-item">
+                            <div class="match-info">
+                                <h4>Hardware Engineering</h4>
+                                <p>Engineering</p>
+                            </div>
+                            <div class="match-score">
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 75%"></div>
+                                </div>
+                                <span class="percentage">75%</span>
+                            </div>
+                        </div>
+
+                        <div class="match-item">
+                            <div class="match-info">
+                                <h4>Data Science</h4>
+                                <p>Data</p>
+                            </div>
+                            <div class="match-score">
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 60%"></div>
+                                </div>
+                                <span class="percentage">60%</span>
+                            </div>
+                        </div>
+
+                        <div class="match-item">
+                            <div class="match-info">
+                                <h4>Product Management</h4>
+                                <p>Product</p>
+                            </div>
+                            <div class="match-score">
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 48%"></div>
+                                </div>
+                                <span class="percentage">48%</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Market Insights -->
+                <section class="market-insights">
+                    <div class="section-header">
+                        <h2>Market Insights</h2>
+                        <span class="section-icon">📊</span>
+                    </div>
+                    
+                    <div class="insights-grid">
+                        <div class="insight-item">
+                            <h3>Average Salary</h3>
+                            <p class="insight-value">$125k</p>
+                        </div>
+                        <div class="insight-item">
+                            <h3>Job Growth</h3>
+                            <p class="insight-value">+22%</p>
+                        </div>
+                        <div class="insight-item">
+                            <h3>Annual Openings</h3>
+                            <p class="insight-value">15,200</p>
+                        </div>
+                        <div class="insight-item">
+                            <h3>Work-Life Balance</h3>
+                            <p class="insight-value">7.5/10</p>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+            <button id="tryAnotherLevelBtn" class="btn btn-primary">
+                🚀 Try Another Level
+            </button>
+            <button id="shareResultsBtn" class="btn btn-secondary">
+                📱 Share Results
+            </button>
+            <a href="/tech-clubs" class="btn btn-outline">
+                🏛️ Explore All Clubs
+            </a>
+        </div>
+
+    </main>
+
+    <!-- Profile Script -->
+    <script src="/scripts/navbar-profile.js" defer></script>
+    <!-- Enhanced Results Script -->
+    <script src="/scripts/enhanced-results.js" defer></script>
+</body>
+</html>

@@ -449,8 +449,9 @@ function displayResults() {
 
     switchScreen('results');
 
-    if (!QuizState.results) {
-        showError('No results available');
+
+    if (QuizState.results.enhanced) {
+        window.location.href = `/enhanced-results?id=${QuizState.results.enhancedResultId}`;
         return;
     }
 

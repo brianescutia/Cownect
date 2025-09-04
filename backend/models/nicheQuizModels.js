@@ -167,18 +167,18 @@ const quizResultSchema = new mongoose.Schema({
 
     quizLevel: {
         type: String,
-        enum: ['beginner', 'intermediate', 'advanced'],
+        enum: ['beginner', 'intermediate', 'advanced', 'enhanced-beginner', 'enhanced-intermediate', 'enhanced-advanced'],
         required: true
     },
 
     // Store user answers for analysis
     answers: [{
         questionId: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'QuizQuestion'
+            type: String,  // Changed from ObjectId to String
+            required: true
         },
-        ranking: [Number], // Order of user's ranking (by option index)
-        timeTaken: Number  // Seconds spent on question
+        ranking: [mongoose.Schema.Types.Mixed], // More flexible for different answer types
+        timeTaken: Number
     }],
 
     // Calculated results

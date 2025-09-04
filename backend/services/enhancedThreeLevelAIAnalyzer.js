@@ -22,13 +22,14 @@ class EnhancedThreeLevelAIAnalyzer {
             console.log(`🤖 Starting enhanced AI career analysis for ${level} level...`);
 
             if (!this.openai) {
+                console.warn('⚠️ No OpenAI client - using fallback');
                 return this.getFallbackAnalysis(level);
             }
 
             // Build comprehensive analysis prompt
             const analysisPrompt = this.buildEnhancedPrompt(userResponses, questions, level, userProfile);
 
-            console.log('🧠 Sending to GPT-4 for deep analysis...');
+            console.log('🧠 Sending to GPT-4 with prompt length:', analysisPrompt.length);
 
             const completion = await this.openai.chat.completions.create({
                 model: "gpt-4-turbo-preview",
@@ -43,18 +44,25 @@ class EnhancedThreeLevelAIAnalyzer {
                     }
                 ],
                 max_tokens: 3000,
-                temperature: 0.3, // Lower temperature for more consistent analysis
+                temperature: 0.3,
                 response_format: { type: "json_object" }
             });
 
             const aiResponse = completion.choices[0].message.content;
-            const analysis = JSON.parse(aiResponse);
+            console.log('📝 Raw AI response:', aiResponse);
 
-            console.log('✅ Enhanced AI analysis complete');
+            const analysis = JSON.parse(aiResponse);
+            console.log('✅ Parsed AI analysis:', analysis.primaryRecommendation?.career);
+
             return this.formatEnhancedResults(analysis, level, userProfile);
 
         } catch (error) {
             console.error('💥 Enhanced AI analysis error:', error);
+            console.error('Error details:', {
+                message: error.message,
+                stack: error.stack,
+                name: error.name
+            });
             return this.getFallbackAnalysis(level);
         }
     }
@@ -99,24 +107,14 @@ ASSESSMENT TYPES YOU'LL SEE:
 
 
 ${[
-                'Software Engineering',
-                'Data Science',
-                'Product Management',
-                'UX/UI Design',
-                'DevOps Engineering',
-                'Cybersecurity',
-                'Mobile Development',
-                'Machine Learning Engineering',
-                'Game Development',
-                'Technical Writing',
-                'Product Design',
-                'Data Engineering',
-                'AI/ML Engineering',
-                'Cloud Architecture',
-                'Technical Product Management'
+                'Software Engineering', 'Data Science', 'UX/UI Design', 'Product Management',
+                'DevOps Engineering', 'Cybersecurity', 'Machine Learning Engineering',
+                'Web Development', 'Mobile Development', 'Game Development',
+                'Technical Writing', 'Developer Relations', 'Sales Engineering',
+                // ... add more careers or remove this constraint entirely
             ].join(', ')}
 
-            
+
 ANALYSIS APPROACH:
 1. Look for patterns across ALL response types (not just individual answers)
 2. Pay special attention to emotional language and authenticity in text responses
@@ -184,7 +182,6 @@ USER PROFILE:
 - Level: ${level} (${this.getLevelDescription(level)})
 - Major: ${userProfile.major || 'Not specified'}
 - Year: ${userProfile.year || 'Not specified'}
-- Experience Level: ${level}
 
 DETAILED RESPONSE ANALYSIS:
 
@@ -192,80 +189,79 @@ DETAILED RESPONSE ANALYSIS:
 
         userResponses.forEach((response, index) => {
             const question = questions[index];
-            if (!question) return;
+            if (!question) {
+                console.warn(`No question found for response ${index}`);
+                return;
+            }
 
-            prompt += `\nQUESTION ${index + 1}: ${question.question}
-Type: ${question.type}
-Category: ${question.category}
+            prompt += `\nQUESTION ${index + 1}: ${question.question}\n`;
+            prompt += `Type: ${question.type}\n`;
+            prompt += `Category: ${question.category}\n\n`;
 
-USER RESPONSE:
-`;
-
-            // Handle different response types
+            // Handle different response types with ACTUAL CONTENT
             switch (question.type) {
+                case 'short_response':
+                    if (response.textResponse) {
+                        prompt += `USER'S WRITTEN RESPONSE: "${response.textResponse}"\n`;
+                        prompt += `This reveals: Their authentic thoughts and experiences\n`;
+                    }
+                    break;
+
                 case 'visual_choice':
                 case 'multiple_choice':
+                case 'scenario':
                     if (response.selectedOption) {
-                        prompt += `Selected: ${response.selectedOption.title}\n`;
+                        prompt += `SELECTED OPTION: ${response.selectedOption.title}\n`;
                         prompt += `Description: ${response.selectedOption.description}\n`;
+                        prompt += `This choice suggests: ${this.interpretChoice(response.selectedOption, question.type)}\n`;
                     }
                     break;
 
                 case 'scale':
-                    if (response.scaleValue) {
-                        prompt += `Scale Value: ${response.scaleValue}/10\n`;
-                        const scaleLabel = question.scale.labels[response.scaleValue];
-                        if (scaleLabel) {
-                            prompt += `Meaning: ${scaleLabel}\n`;
-                        }
-                    }
-                    break;
-
-                case 'scenario':
-                    if (response.selectedOption) {
-                        prompt += `Chosen Approach: ${response.selectedOption.title}\n`;
-                        prompt += `Reasoning: ${response.selectedOption.description}\n`;
-                    }
-                    break;
-
-                case 'short_response':
-                    if (response.textResponse) {
-                        prompt += `Written Response: "${response.textResponse}"\n`;
+                    if (response.scaleValue !== undefined) {
+                        const scaleInfo = question.scale;
+                        prompt += `SCALE SELECTION: ${response.scaleValue}/${scaleInfo.max}\n`;
+                        prompt += `Label: ${scaleInfo.labels[response.scaleValue]}\n`;
+                        prompt += `Meaning: ${scaleInfo.descriptions[response.scaleValue]}\n`;
                     }
                     break;
 
                 case 'ranking':
-                    if (response.ranking) {
-                        prompt += `Ranking (1st to last preference):\n`;
+                    if (response.ranking && Array.isArray(response.ranking)) {
+                        prompt += `RANKING (most to least important):\n`;
                         response.ranking.forEach((itemId, rank) => {
-                            // Find item by ID instead of using array index
                             const item = question.items.find(i => i.id === itemId);
                             if (item) {
-                                prompt += `${rank + 1}. ${item.text || item.title || item.id}: ${item.description}\n`;
+                                prompt += `${rank + 1}. ${item.text}: ${item.description}\n`;
                             }
                         });
                     }
                     break;
             }
-
-            prompt += `Time Taken: ${response.timeTaken || 'Not recorded'} seconds\n`;
+            prompt += `\n`;
         });
 
-        prompt += `
+        prompt += `\nANALYSIS REQUIREMENTS:
+1. Focus on the SPECIFIC CONTENT of their written responses - these reveal authentic interests
+2. Look at their ACTUAL scale selections - these show true preferences
+3. Consider their CHOICE PATTERNS across scenarios - these indicate work style
+4. Match personality to careers based on WHAT THEY ACTUALLY SAID AND CHOSE
+5. Do NOT default to any specific career - analyze their unique profile
+6. Provide a career that matches their demonstrated interests and skills
 
-ANALYSIS INSTRUCTIONS:
-1. Analyze the psychological patterns across ALL response types
-2. Pay special attention to the written responses - they reveal authentic interests and experiences
-3. Look for consistency between stated preferences and actual behavioral choices in scenarios
-4. Consider their scale responses for technical comfort, risk tolerance, and decision-making style
-5. Match them to careers that fit their natural working style and personality
-6. Provide ${level}-appropriate guidance that matches their experience level
-7. Be specific about UC Davis opportunities and resources
-8. Consider both immediate next steps and longer-term career development
-
-For ${level} level students, focus on ${this.getLevelFocus(level)}.`;
+CRITICAL: Base your analysis on their actual responses, not generic patterns. If they wrote about loving design, don't recommend technical writing. If they selected high-risk options, don't recommend low-risk careers.`;
 
         return prompt;
+    }
+
+    // Add helper function
+    interpretChoice(selectedOption, questionType) {
+        const interpretations = {
+            'visual_choice': 'visual and aesthetic preferences',
+            'multiple_choice': 'problem-solving approach and values',
+            'scenario': 'leadership style and decision-making pattern'
+        };
+        return interpretations[questionType] || 'personal preferences and work style';
     }
 
     getLevelDescription(level) {

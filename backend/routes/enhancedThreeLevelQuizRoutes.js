@@ -3,30 +3,36 @@
 
 const express = require('express');
 const router = express.Router();
+const path = require('path');
+
 const { QuizResult } = require('../models/nicheQuizModels');
 const User = require('../models/User');
 const EnhancedThreeLevelAIAnalyzer = require('../services/enhancedThreeLevelAIAnalyzer');
 const { enhancedThreeLevelQuizQuestions } = require('../data/enhancedThreeLevelQuizData');
+const EnhancedQuizResult = require('../models/EnhancedQuizResult');
+const ClubRecommendationService = require('../services/ClubRecommendationService');
+const clubService = new ClubRecommendationService();
 
-// Initialize the enhanced analyzer
-const analyzer = new EnhancedThreeLevelAIAnalyzer();
+// =======================================
+// Helpers (paths, features, utilities)
+// =======================================
 
-// =============================================================================
-// HELPER FUNCTIONS (defined as regular functions, not router methods)
-// =============================================================================
+const PROJECT_ROOT = path.resolve(__dirname, '..', '..'); // -> /.../Cownect
+
+function sendEnhancedResultsHtml(res) {
+    const filePath = path.resolve(PROJECT_ROOT, 'frontend', 'pages', 'enhanced-results.html');
+    console.log('Serving enhanced-results from:', filePath);
+    return res.sendFile(filePath);
+}
 
 function getEstimatedTime(level, questionCount) {
     const timePerQuestion = {
-        beginner: 0.875,    // ~52 seconds per question
-        intermediate: 1.5,  // ~90 seconds per question  
-        advanced: 2.0       // ~2 minutes per question
+        beginner: 0.875,      // ~52 sec
+        intermediate: 1.5,    // ~90 sec
+        advanced: 2.0         // ~120 sec
     };
-
     const baseTime = questionCount * (timePerQuestion[level] || 1.0);
-    const minTime = Math.ceil(baseTime);
-    const maxTime = Math.ceil(baseTime * 1.5);
-
-    return `${minTime}-${maxTime} minutes`;
+    return `${Math.ceil(baseTime)}-${Math.ceil(baseTime * 1.5)} minutes`;
 }
 
 function getLevelFeatures(level) {
@@ -50,454 +56,483 @@ function getLevelFeatures(level) {
             'Career optimization insights'
         ]
     };
-
     return features[level] || features.intermediate;
 }
 
-function calculateLevelDistribution(results) {
-    return results.reduce((acc, result) => {
-        const level = result.quizLevel.replace('enhanced-', '');
-        acc[level] = (acc[level] || 0) + 1;
-        return acc;
-    }, {});
+function enhanceMarketData(marketData) {
+    if (!marketData) {
+        return {
+            avgSalary: '$95k - $180k',
+            jobGrowth: '+22%',
+            workLifeBalance: '7.5/10',
+            remoteOpportunities: '95%',
+            demandLevel: 'Very High',
+            keyInsight: 'Excellent career prospects with strong growth potential'
+        };
+    }
+    return {
+        avgSalary: marketData.avgSalary || '$95k - $180k',
+        jobGrowth: marketData.jobGrowth || '+22%',
+        workLifeBalance: marketData.workLifeBalance || '7.5/10',
+        remoteOpportunities: marketData.remoteOpportunities || '95%',
+        demandLevel: marketData.demandLevel || 'Very High',
+        keyInsight: `${marketData.avgSalary ? 'Strong' : 'Excellent'} career prospects with ${marketData.jobGrowth ? 'documented' : 'projected'} growth potential`
+    };
 }
 
-// =============================================================================
-// MIDDLEWARE
-// =============================================================================
+function enhanceNextSteps(nextSteps) {
+    if (!Array.isArray(nextSteps)) return [];
+    return nextSteps.slice(0, 3).map((step, i) => ({
+        step: typeof step === 'string' ? step : step.step || 'Take action toward your career goals',
+        category: ['immediate', 'short-term', 'long-term'][i] || 'immediate',
+        priority: ['high', 'medium', 'medium'][i] || 'medium',
+        timeframe: ['1-2 weeks', 'next semester', '6-12 months'][i] || '1-4 weeks',
+        difficulty: 'moderate',
+        resources: [],
+        completed: false
+    }));
+}
+
+function generateCareerProgression(careerName) {
+    const progressionMap = {
+        'Software Engineering': [
+            { level: 'Junior Developer', timeframe: '0-2 years', roles: ['Frontend Dev', 'Backend Dev'], skills: ['JavaScript', 'Git', 'APIs'], averageSalary: '$70k - $95k' },
+            { level: 'Senior Developer', timeframe: '3-5 years', roles: ['Full Stack Dev', 'Tech Lead'], skills: ['System Design', 'Mentoring'], averageSalary: '$95k - $130k' },
+            { level: 'Staff Engineer', timeframe: '5+ years', roles: ['Architect', 'Engineering Manager'], skills: ['Leadership', 'Strategy'], averageSalary: '$130k - $180k' }
+        ],
+        'Data Science': [
+            { level: 'Junior Data Scientist', timeframe: '0-2 years', roles: ['Data Analyst', 'ML Engineer'], skills: ['Python', 'SQL', 'Statistics'], averageSalary: '$75k - $100k' },
+            { level: 'Senior Data Scientist', timeframe: '3-5 years', roles: ['Lead Data Scientist'], skills: ['ML Ops', 'Business Strategy'], averageSalary: '$100k - $150k' },
+            { level: 'Principal Data Scientist', timeframe: '5+ years', roles: ['Data Science Manager'], skills: ['Leadership', 'Research'], averageSalary: '$150k - $200k' }
+        ]
+    };
+    return progressionMap[careerName] || [
+        { level: 'Entry Level', timeframe: '0-2 years', roles: ['Junior'], averageSalary: '$70k - $95k' },
+        { level: 'Mid Level', timeframe: '3-5 years', roles: ['Senior'], averageSalary: '$95k - $130k' },
+        { level: 'Senior Level', timeframe: '5+ years', roles: ['Lead'], averageSalary: '$130k+' }
+    ];
+}
+
+function categorizeCareer(careerName) {
+    const categoryMap = {
+        'Software Engineering': 'Engineering',
+        'Data Science': 'Data & Analytics',
+        'DevOps Engineering': 'Engineering',
+        'UX Design': 'Design',
+        'Product Management': 'Product',
+        'Cybersecurity': 'Security',
+        'AI/ML Engineering': 'AI & ML'
+    };
+    return categoryMap[careerName] || 'Technology';
+}
+
+function generateKeyStrengths(careerName) {
+    const strengthsMap = {
+        'Software Engineering': ['Problem solving', 'Technical implementation', 'System thinking'],
+        'Data Science': ['Analytical thinking', 'Pattern recognition', 'Statistical reasoning'],
+        'UX Design': ['User empathy', 'Design thinking', 'Creative problem solving']
+    };
+    return strengthsMap[careerName] || ['Technical aptitude', 'Problem solving', 'Analytical thinking'];
+}
+
+// =======================================
+// Middleware
+// =======================================
+
 const requireAuth = (req, res, next) => {
-    if (req.session && req.session.userId) {
-        return next();
-    }
+    if (req.session && req.session.userId) return next();
     return res.status(401).json({ error: 'Authentication required' });
 };
 
-// Rate limiting for quiz submissions
+// Simple submission cooldown (optional)
 const submissionCooldown = new Map();
-const COOLDOWN_MINUTES = 3; // Reduced for better UX
-
+const COOLDOWN_MINUTES = 3;
 const rateLimitQuizSubmission = (req, res, next) => {
     const userId = req.session.userId;
     const now = Date.now();
-    const lastSubmission = submissionCooldown.get(userId);
-
-    if (lastSubmission && (now - lastSubmission) < (COOLDOWN_MINUTES * 60 * 1000)) {
-        const remainingTime = Math.ceil((COOLDOWN_MINUTES * 60 * 1000 - (now - lastSubmission)) / 1000);
-        return res.status(429).json({
-            error: 'Please wait before taking another quiz',
-            remainingSeconds: remainingTime
-        });
+    const last = submissionCooldown.get(userId);
+    if (last && (now - last) < COOLDOWN_MINUTES * 60 * 1000) {
+        const remaining = Math.ceil((COOLDOWN_MINUTES * 60 * 1000 - (now - last)) / 1000);
+        return res.status(429).json({ error: 'Please wait before taking another quiz', remainingSeconds: remaining });
     }
-
     next();
 };
 
-// =============================================================================
-// QUIZ INTRODUCTION AND LEVEL INFO
-// =============================================================================
+// =======================================
+// Analyzer
+// =======================================
 
-// GET /api/quiz/enhanced/intro - Enhanced 3-level intro
-router.get('/enhanced/intro', async (req, res) => {
+const analyzer = new EnhancedThreeLevelAIAnalyzer();
+
+// =======================================
+// Routes: Intro + Questions
+// =======================================
+
+// GET /api/quiz/enhanced/intro
+router.get('/enhanced/intro', async (_req, res) => {
     try {
-        console.log('🎯 Serving enhanced 3-level quiz introduction...');
-
-        const levels = [
-            {
-                level: 'beginner',
-                title: 'Tech Explorer',
-                subtitle: 'New to tech? Discover your path.',
-                description: 'Perfect for students with no tech background who want to explore if tech is right for them.',
-                duration: '5-7 minutes',
-                questionCount: enhancedThreeLevelQuizQuestions.beginner.length,
-                icon: '🌱',
-                features: [
-                    'Beginner-friendly scenarios',
-                    'No tech jargon required',
-                    'Visual and scenario-based questions',
-                    'Discover natural aptitudes'
-                ],
-                idealFor: 'Complete beginners, undecided majors, exploring options',
-                questionTypes: ['scenario', 'visual_choice', 'scale', 'multiple_choice', 'ranking']
-            },
-            {
-                level: 'intermediate',
-                title: 'Tech Curious',
-                subtitle: 'Some experience? Find your specialization.',
-                description: 'Designed for students with some coding classes or tech exposure who want to find their ideal focus area.',
-                duration: '8-10 minutes',
-                questionCount: enhancedThreeLevelQuizQuestions.intermediate.length,
-                icon: '🚀',
-                features: [
-                    'Technical leadership scenarios',
-                    'Ethical decision-making',
-                    'User-centered design thinking',
-                    'Advanced career matching'
-                ],
-                idealFor: 'CS/STEM students, some coding experience, seeking specialization',
-                questionTypes: ['scenario', 'scale', 'visual_choice', 'short_response', 'ranking']
-            },
-            {
-                level: 'advanced',
-                title: 'Tech Insider',
-                subtitle: 'Experienced? Optimize your trajectory.',
-                description: 'For students with significant tech experience who want to refine their career strategy and leadership path.',
-                duration: '10-12 minutes',
-                questionCount: enhancedThreeLevelQuizQuestions.advanced.length,
-                icon: '⚡',
-                features: [
-                    'Strategic thinking scenarios',
-                    'Technical architecture decisions',
-                    'Leadership and mentorship',
-                    'Career optimization insights'
-                ],
-                idealFor: 'Advanced CS students, internship experience, technical leadership roles',
-                questionTypes: ['scenario', 'scale', 'short_response', 'visual_choice']
-            }
-        ];
-
-        const response = {
+        const levels = ['beginner', 'intermediate', 'advanced'].map(level => ({
+            level,
+            title: { beginner: 'Tech Explorer', intermediate: 'Tech Curious', advanced: 'Tech Insider' }[level],
+            subtitle: {
+                beginner: 'New to tech? Discover your path.',
+                intermediate: 'Some experience? Find your specialization.',
+                advanced: 'Experienced? Optimize your trajectory.'
+            }[level],
+            description: {
+                beginner: 'Perfect for students with no tech background who want to explore if tech is right for them.',
+                intermediate: 'For students with some tech exposure looking for an ideal focus area.',
+                advanced: 'For students with significant experience who want to refine their strategy.'
+            }[level],
+            duration: { beginner: '5-7 minutes', intermediate: '8-10 minutes', advanced: '10-12 minutes' }[level],
+            questionCount: (enhancedThreeLevelQuizQuestions[level] || []).length,
+            icon: { beginner: '🌱', intermediate: '🚀', advanced: '⚡' }[level],
+            features: getLevelFeatures(level),
+            questionTypes: [...new Set((enhancedThreeLevelQuizQuestions[level] || []).map(q => q.type))]
+        }));
+        res.json({
             levels,
             systemInfo: {
                 totalCareerOptions: 40,
                 analysisType: 'Enhanced AI with Psychological Profiling',
                 accuracy: '95%+ confidence scoring',
-                antiGaming: 'Multi-format question detection',
                 personalization: 'Level-specific guidance and insights'
-            },
-            features: [
-                '🎯 Level-appropriate question difficulty',
-                '🤖 Advanced AI analysis tailored to experience',
-                '📊 Multiple question formats prevent boredom',
-                '🎓 UC Davis specific recommendations',
-                '⚡ Instant comprehensive results',
-                '🛡️ Gaming-resistant design'
-            ]
-        };
-
-        console.log(`✅ Served enhanced 3-level intro with ${levels.length} levels`);
-        res.json(response);
-
-    } catch (error) {
-        console.error('💥 Error serving enhanced quiz intro:', error);
+            }
+        });
+    } catch (err) {
+        console.error('Intro error:', err);
         res.status(500).json({ error: 'Failed to load quiz introduction' });
     }
 });
 
-// =============================================================================
-// LOAD QUESTIONS FOR SPECIFIC LEVEL
-// =============================================================================
-
-// GET /api/quiz/enhanced/questions/:level - Load level-specific questions
+// GET /api/quiz/enhanced/questions/:level
 router.get('/enhanced/questions/:level', requireAuth, async (req, res) => {
     try {
         const { level } = req.params;
-        const validLevels = ['beginner', 'intermediate', 'advanced'];
+        const valid = ['beginner', 'intermediate', 'advanced'];
+        if (!valid.includes(level)) return res.status(400).json({ error: 'Invalid quiz level', validLevels: valid });
 
-        if (!validLevels.includes(level)) {
-            return res.status(400).json({
-                error: 'Invalid quiz level',
-                validLevels
-            });
-        }
+        const questions = enhancedThreeLevelQuizQuestions[level] || [];
+        if (questions.length === 0) return res.status(404).json({ error: 'No questions found for this level' });
 
-        console.log(`📚 Loading enhanced ${level} level questions for user: ${req.session.userEmail}`);
-
-        // Get questions for the specified level
-        const questions = enhancedThreeLevelQuizQuestions[level];
-
-        if (!questions || questions.length === 0) {
-            return res.status(404).json({
-                error: 'No questions found for this level',
-                suggestion: 'Please try another level or contact support'
-            });
-        }
-
-        // Format questions for frontend (secure - no internal data exposed)
-        const formattedQuestions = questions.map((q, index) => ({
+        const formatted = questions.map((q, i) => ({
             id: q.id,
-            questionNumber: index + 1,
+            questionNumber: i + 1,
             type: q.type,
             category: q.category,
             question: q.question,
             subtitle: q.subtitle || '',
-
-            // Include type-specific properties
             ...(q.options && { options: q.options }),
             ...(q.scale && { scale: q.scale }),
             ...(q.items && { items: q.items }),
             ...(q.placeholder && { placeholder: q.placeholder }),
             ...(q.max_length && { max_length: q.max_length }),
-
             totalQuestions: questions.length,
-            metadata: {
-                level: level,
-                enhanced: true,
-                aiPowered: true
-            }
+            metadata: { level, enhanced: true, aiPowered: true }
         }));
 
-        const response = {
+        res.json({
             level,
-            questions: formattedQuestions,
+            questions: formatted,
             metadata: {
                 totalQuestions: questions.length,
-                estimatedTime: getEstimatedTime(level, questions.length), // Fixed: using function directly
-                analysisType: `Enhanced AI Career Analysis - ${level.charAt(0).toUpperCase() + level.slice(1)} Level`,
-                questionTypes: [...new Set(questions.map(q => q.type))],
-                features: getLevelFeatures(level) // Fixed: using function directly
-            },
-            instructions: {
-                general: 'Answer authentically - there are no right or wrong answers',
-                scenario: 'Choose the approach that feels most natural to you',
-                scale: 'Move the slider to reflect your true preference',
-                visual_choice: 'Select the option that resonates most with you',
-                short_response: 'Share your authentic experience - AI analyzes patterns, not content',
-                ranking: 'Drag to order by personal importance',
-                multiple_choice: 'Pick the option that best represents your approach'
+                estimatedTime: getEstimatedTime(level, questions.length),
+                analysisType: `Enhanced AI Career Analysis - ${level[0].toUpperCase()}${level.slice(1)}`
             }
-        };
-
-        console.log(`✅ Served ${formattedQuestions.length} enhanced ${level} questions`);
-        res.json(response);
-
-    } catch (error) {
-        console.error('💥 Error loading enhanced questions:', error);
+        });
+    } catch (err) {
+        console.error('Questions error:', err);
         res.status(500).json({ error: 'Failed to load quiz questions' });
     }
 });
 
-// =============================================================================
-// ENHANCED QUIZ SUBMISSION AND ANALYSIS
-// =============================================================================
+// =======================================
+// Submit & Analyze
+// =======================================
 
-// POST /api/quiz/enhanced/submit - Submit and analyze enhanced quiz
-router.post('/enhanced/submit', requireAuth, rateLimitQuizSubmission, async (req, res) => {
+// POST /api/quiz/submit   (router mounted at /api/quiz)
+router.post('/submit', requireAuth, rateLimitQuizSubmission, async (req, res) => {
     try {
         const { level, answers, completionTime, metadata } = req.body;
         const userId = req.session.userId;
         const userEmail = req.session.userEmail;
 
-        console.log(`🧠 Processing enhanced quiz submission for ${userEmail}`);
-        console.log(`📊 Level: ${level}, Answers: ${answers?.length}, Time: ${completionTime}s`);
+        console.log(`📊 Processing enhanced quiz submission for ${userEmail}`);
 
-        // Validate input
-        if (!level || !answers || !Array.isArray(answers)) {
-            return res.status(400).json({
-                error: 'Invalid submission data',
-                required: ['level', 'answers array']
-            });
+        if (!level || !Array.isArray(answers)) {
+            return res.status(400).json({ error: 'Invalid submission data', required: ['level', 'answers array'] });
         }
 
-        const validLevels = ['beginner', 'intermediate', 'advanced'];
-        if (!validLevels.includes(level)) {
-            return res.status(400).json({
-                error: 'Invalid quiz level',
-                validLevels
-            });
-        }
-
-        // Record submission time for rate limiting
-        submissionCooldown.set(userId, Date.now());
-
-        // Get questions for validation
-        const questions = enhancedThreeLevelQuizQuestions[level];
-        if (!questions || questions.length === 0) {
-            return res.status(500).json({ error: 'Quiz questions not found for level' });
-        }
-
-        // Validate answer count
-        if (answers.length !== questions.length) {
-            return res.status(400).json({
-                error: `Expected ${questions.length} answers for ${level} level, received ${answers.length}`
-            });
-        }
-
-        // Get user profile for personalized analysis
         const userProfile = await User.findById(userId).select('major year name email');
 
-        // Run enhanced AI analysis
-        console.log('🤖 Running enhanced AI analysis...');
         const analysisResults = await analyzer.analyzeCareerFit(
             answers,
-            questions,
+            req.body.questions || [],
             level,
-            {
-                major: userProfile?.major,
-                year: userProfile?.year,
-                email: userEmail,
-                completionTime: completionTime
-            }
+            { major: userProfile?.major, year: userProfile?.year, email: userEmail, completionTime }
         );
+        if (!analysisResults?.success) throw new Error('AI analysis failed');
 
-        if (!analysisResults.success) {
-            throw new Error('Enhanced AI analysis failed to produce valid results');
+        const topCareer = analysisResults.results.topMatch.career;
+        const allMatches = analysisResults.results.allMatches || [];
+        const clubRecommendations = await clubService.getClubRecommendations(topCareer, allMatches);
+
+        // Try to save legacy QuizResult; ignore failure
+        let originalQuizResultId = null;
+        try {
+            const originalQuizResult = new QuizResult({
+                user: userId,
+                quizLevel: `enhanced-${level}`,  // may fail enum; caught below
+                answers: (answers || []).map(a => ({
+                    questionId: String(a.questionId),
+                    ranking: Array.isArray(a.ranking) ? a.ranking : [],
+                    timeTaken: a.timeTaken || 0
+                })),
+                topMatch: {
+                    careerName: topCareer,
+                    percentage: analysisResults.results.topMatch.percentage,
+                    reasoning: analysisResults.results.topMatch.reasoning
+                },
+                completionTime,
+                metadata: { ...metadata, enhanced: true }
+            });
+            await originalQuizResult.save();
+            originalQuizResultId = originalQuizResult._id;
+        } catch (saveError) {
+            console.error('⚠️ Failed to save to legacy QuizResult model:', saveError.message);
         }
 
-        // Save results to database
-        const quizResult = new QuizResult({
+        const enhancedResult = new EnhancedQuizResult({
             user: userId,
-            quizLevel: `enhanced-${level}`,
-            answers: answers,
-            enhancedAIAnalysis: analysisResults.results,
+            originalQuizResult: originalQuizResultId,
+            quizLevel: level,
             topMatch: {
-                careerName: analysisResults.results.topMatch.career,
+                career: topCareer,
                 percentage: analysisResults.results.topMatch.percentage,
+                confidence: analysisResults.results.topMatch.confidence || analysisResults.results.topMatch.percentage,
                 reasoning: analysisResults.results.topMatch.reasoning,
-                nextSteps: analysisResults.results.topMatch.nextSteps,
-                keyPatterns: analysisResults.results.topMatch.keyPatterns
+                personalizedInsights: analysisResults.results.aiInsights?.fullAnalysis,
+                keyPatterns: analysisResults.results.topMatch.keyPatterns || [],
+                marketData: enhanceMarketData(analysisResults.results.topMatch.marketData),
+                nextSteps: enhanceNextSteps(analysisResults.results.topMatch.nextSteps || []),
+                careerProgression: generateCareerProgression(topCareer)
             },
-            completionTime: completionTime,
-            metadata: {
-                version: '3.0-Enhanced',
-                analysisType: 'enhanced-three-level',
-                level: level,
-                aiModel: 'gpt-4-turbo',
-                questionTypes: [...new Set(questions.map(q => q.type))],
-                timestamp: new Date(),
-                ...metadata
+            allMatches: allMatches.slice(0, 3).map(match => ({
+                career: match.career,
+                category: match.category || categorizeCareer(match.career),
+                percentage: match.percentage,
+                confidence: match.confidence || match.percentage,
+                reasoning: 'Strong alignment with your interests and skills',
+                keyStrengths: generateKeyStrengths(match.career),
+                marketData: enhanceMarketData({}) // default/fallback set
+            })),
+            clubRecommendations: clubRecommendations.map(club => ({
+                clubId: club._id,
+                clubName: club.name,
+                relevanceScore: club.relevanceScore || 85,
+                careerRelevance: club.careerRelevance,
+                recommendationReason: club.recommendationReason,
+                suggestedActions: club.suggestedActions || []
+            })),
+            aiInsights: {
+                personalityProfile: analysisResults.results.personalityInsights?.workStyle,
+                workStyle: analysisResults.results.personalityInsights?.workStyle,
+                learningStyle: analysisResults.results.personalityInsights?.environment,
+                motivationFactors: analysisResults.results.personalityInsights?.strengths ? [analysisResults.results.personalityInsights.strengths] : [],
+                idealEnvironment: analysisResults.results.personalityInsights?.environment,
+                strengthsToLeverage: analysisResults.results.personalityInsights?.strengths ? [analysisResults.results.personalityInsights.strengths] : [],
+                potentialChallenges: analysisResults.results.personalityInsights?.challenges ? [analysisResults.results.personalityInsights.challenges] : [],
+                confidenceScore: analysisResults.results.qualityMetrics?.confidence || 90,
+                analysisQuality: (conf => (conf >= 95 ? 'excellent' : conf >= 85 ? 'good' : conf >= 75 ? 'fair' : 'needs-improvement'))(
+                    analysisResults.results.qualityMetrics?.confidence || 90
+                )
+            },
+            qualityMetrics: {
+                responseConsistency: analysisResults.results.qualityMetrics?.authenticity || 90,
+                analysisDepth: 95,
+                recommendationRelevance: 88,
+                aiConfidence: analysisResults.results.qualityMetrics?.confidence || 90,
+                dataCompleteness: 92
+            },
+            analytics: {
+                viewCount: 1,
+                sectionsViewed: ['top-match'],
+                actionsPerformed: [{ action: 'quiz-completed', data: { level, completionTime, careerMatch: topCareer } }]
             }
         });
 
-        await quizResult.save();
+        await enhancedResult.save();
 
-        // Format response
-        const response = {
+        // Frontend can navigate to /enhanced-results (or /enhanced-results/:id if you prefer)
+        return res.json({
             success: true,
             message: `Enhanced ${level} level career analysis completed successfully`,
-            analysisType: analysisResults.analysisType,
-            level: level,
+            enhanced: true,
+            redirectTo: '/pages/enhanced-results.html',
             results: {
-                // Enhanced top match
                 topMatch: {
-                    career: analysisResults.results.topMatch.career,
+                    career: topCareer,
                     percentage: analysisResults.results.topMatch.percentage,
-                    confidence: analysisResults.results.topMatch.confidence,
+                    confidence: analysisResults.results.topMatch.confidence || analysisResults.results.topMatch.percentage,
                     reasoning: analysisResults.results.topMatch.reasoning,
-                    keyPatterns: analysisResults.results.topMatch.keyPatterns,
-                    nextSteps: analysisResults.results.topMatch.nextSteps,
-                    marketData: analysisResults.results.topMatch.marketData,
-                    ucDavisResources: analysisResults.results.topMatch.ucDavisResources
+                    keyPatterns: analysisResults.results.topMatch.keyPatterns || [],
+                    marketData: enhanceMarketData(analysisResults.results.topMatch.marketData),
+                    nextSteps: enhanceNextSteps(analysisResults.results.topMatch.nextSteps || []),
+                    recommendedClubs: clubRecommendations.slice(0, 3)
                 },
-
-                // All career matches
-                allMatches: analysisResults.results.allMatches,
-
-                // Enhanced insights
+                allMatches: allMatches.slice(0, 3),
+                clubRecommendations: clubRecommendations.slice(0, 3),
                 personalityInsights: analysisResults.results.personalityInsights,
-                developmentAreas: analysisResults.results.developmentAreas,
-                levelSpecificGuidance: analysisResults.results.levelSpecificGuidance,
                 aiInsights: analysisResults.results.aiInsights,
-
-                // Quality metrics
                 qualityMetrics: analysisResults.results.qualityMetrics,
-
-                // Metadata
-                metadata: {
-                    level,
-                    completionTime,
-                    analysisVersion: '3.0-Enhanced',
-                    questionTypes: [...new Set(questions.map(q => q.type))],
-                    timestamp: analysisResults.timestamp
-                }
-            }
-        };
-
-        console.log(`✅ Enhanced ${level} analysis complete: ${analysisResults.results.topMatch.career} (${analysisResults.results.topMatch.percentage}%)`);
-        res.json(response);
-
+                enhancedResultId: enhancedResult._id,
+                originalQuizResultId: originalQuizResultId
+            },
+            timestamp: new Date().toISOString()
+        });
     } catch (error) {
         console.error('💥 Enhanced quiz submission error:', error);
-        res.status(500).json({
-            error: 'Enhanced career analysis failed',
-            message: error.message,
-            suggestion: 'Please try again or contact support if the issue persists'
-        });
+        return res.status(500).json({ error: 'Enhanced career analysis failed', message: error.message, fallback: true });
     }
 });
 
-// =============================================================================
-// ENHANCED QUIZ RESULTS AND HISTORY
-// =============================================================================
+// =======================================
+// Serve Results HTML + JSON APIs
+// =======================================
 
-// GET /api/quiz/enhanced/results - Get enhanced quiz history
-router.get('/enhanced/results', requireAuth, async (req, res) => {
+// GET /enhanced-results  (serves the HTML for the most recent result)
+router.get('/enhanced-results', requireAuth, async (req, res) => {
     try {
-        const { limit = 10, level } = req.query;
+        const userId = req.session.userId;
+        const enhancedResult = await EnhancedQuizResult
+            .findOne({ user: userId })
+            .sort({ createdAt: -1 })
+            .populate('clubRecommendations.clubId');
+
+        if (!enhancedResult) return res.redirect('/niche-quiz?message=no-results');
+
+        await enhancedResult.incrementViewCount();
+        return sendEnhancedResultsHtml(res);
+    } catch (err) {
+        console.error('Error loading enhanced results page:', err);
+        return res.status(500).redirect('/niche-quiz?error=results-error');
+    }
+});
+
+// GET /enhanced-results/:id  (serves the same HTML for a specific result)
+router.get('/enhanced-results/:id', requireAuth, async (req, res) => {
+    try {
+        const userId = req.session.userId;
+        const resultId = req.params.id;
+
+        const enhancedResult = await EnhancedQuizResult
+            .findOne({ _id: resultId, user: userId })
+            .populate('clubRecommendations.clubId');
+
+        if (!enhancedResult) return res.redirect('/niche-quiz?message=result-not-found');
+
+        await enhancedResult.incrementViewCount();
+        return sendEnhancedResultsHtml(res);
+    } catch (err) {
+        console.error('Error loading enhanced results page (by id):', err);
+        return res.status(500).redirect('/niche-quiz?error=results-error');
+    }
+});
+
+// GET /enhanced-results/:resultId (JSON data for the page’s XHR)
+router.get('/enhanced-results/:resultId/data', requireAuth, async (req, res) => {
+    try {
+        const userId = req.session.userId;
+        const resultId = req.params.resultId;
+
+        const enhancedResult = await EnhancedQuizResult
+            .findOne({ _id: resultId, user: userId })
+            .populate('clubRecommendations.clubId');
+
+        if (!enhancedResult) return res.status(404).json({ error: 'No enhanced results found' });
+
+        res.json({ success: true, results: enhancedResult.getFormattedForAPI() });
+    } catch (err) {
+        console.error('Error fetching enhanced results JSON:', err);
+        res.status(500).json({ error: 'Failed to fetch enhanced results' });
+    }
+});
+
+// Optional: UI prefs / interactions (unchanged patterns)
+router.post('/api/enhanced-results/:resultId/ui-preferences', requireAuth, async (req, res) => {
+    try {
+        const { resultId } = req.params;
+        const { collapsedSections, preferredView, customNotes } = req.body;
         const userId = req.session.userId;
 
-        console.log(`📊 Fetching enhanced quiz results for user: ${req.session.userEmail}`);
+        const result = await EnhancedQuizResult.findOne({ _id: resultId, user: userId });
+        if (!result) return res.status(404).json({ error: 'Result not found' });
 
-        // Build query for enhanced results
-        let query = {
-            user: userId,
-            quizLevel: { $regex: '^enhanced-' }
-        };
-
-        // Filter by specific level if requested
-        if (level && ['beginner', 'intermediate', 'advanced'].includes(level)) {
-            query.quizLevel = `enhanced-${level}`;
-        }
-
-        const results = await QuizResult.find(query)
-            .sort({ createdAt: -1 })
-            .limit(parseInt(limit))
-            .lean();
-
-        if (results.length === 0) {
-            return res.json({
-                results: [],
-                message: 'No enhanced quiz results found',
-                suggestion: 'Take your first enhanced AI-powered career assessment!'
-            });
-        }
-
-        // Format results for frontend
-        const formattedResults = results.map(result => ({
-            id: result._id,
-            level: result.quizLevel.replace('enhanced-', ''),
-            completedAt: result.createdAt,
-            topMatch: result.topMatch,
-            qualityScore: result.enhancedAIAnalysis?.qualityMetrics?.authenticity ||
-                result.qualityMetrics?.overall || 90,
-            analysisVersion: result.metadata?.version || '3.0',
-            questionTypes: result.metadata?.questionTypes || [],
-            personalityInsights: result.enhancedAIAnalysis?.personalityInsights,
-            keyPatterns: result.topMatch?.keyPatterns || []
-        }));
-
-        const response = {
-            results: formattedResults,
-            summary: {
-                totalQuizzes: results.length,
-                mostRecentLevel: results[0]?.quizLevel?.replace('enhanced-', ''),
-                enhancedAnalyses: results.length,
-                averageQuality: Math.round(
-                    formattedResults.reduce((sum, r) => sum + r.qualityScore, 0) / formattedResults.length
-                ),
-                levelDistribution: calculateLevelDistribution(results) // Fixed: using function directly
-            }
-        };
-
-        console.log(`✅ Served ${formattedResults.length} enhanced quiz results`);
-        res.json(response);
-
-    } catch (error) {
-        console.error('💥 Error fetching enhanced quiz results:', error);
-        res.status(500).json({ error: 'Failed to fetch enhanced quiz results' });
+        await result.updateUIPreferences({ collapsedSections, preferredView, customNotes });
+        res.json({ success: true, message: 'UI preferences updated' });
+    } catch (err) {
+        console.error('Error updating UI preferences:', err);
+        res.status(500).json({ error: 'Failed to update preferences' });
     }
 });
 
-// =============================================================================
-// ERROR HANDLING
-// =============================================================================
-router.use((error, req, res, next) => {
-    console.error('🚨 Enhanced quiz router error:', error);
+router.post('/api/enhanced-results/:resultId/bookmark-club', requireAuth, async (req, res) => {
+    try {
+        const { resultId } = req.params;
+        const { clubId } = req.body;
+        const userId = req.session.userId;
 
-    res.status(500).json({
-        error: 'Enhanced quiz system error',
-        message: error.message,
-        timestamp: new Date().toISOString()
-    });
+        const result = await EnhancedQuizResult.findOne({ _id: resultId, user: userId });
+        if (!result) return res.status(404).json({ error: 'Result not found' });
+
+        await result.bookmarkClub(clubId);
+        res.json({ success: true, message: 'Club bookmarked' });
+    } catch (err) {
+        console.error('Error bookmarking club:', err);
+        res.status(500).json({ error: 'Failed to bookmark club' });
+    }
+});
+
+router.post('/api/enhanced-results/:resultId/rate-club', requireAuth, async (req, res) => {
+    try {
+        const { resultId } = req.params;
+        const { clubId, rating, helpful } = req.body;
+        const userId = req.session.userId;
+
+        const result = await EnhancedQuizResult.findOne({ _id: resultId, user: userId });
+        if (!result) return res.status(404).json({ error: 'Result not found' });
+
+        await result.rateClubRecommendation(clubId, rating, helpful);
+        res.json({ success: true, message: 'Club recommendation rated' });
+    } catch (err) {
+        console.error('Error rating club recommendation:', err);
+        res.status(500).json({ error: 'Failed to rate club recommendation' });
+    }
+});
+
+router.post('/api/enhanced-results/:resultId/complete-step', requireAuth, async (req, res) => {
+    try {
+        const { resultId } = req.params;
+        const { stepIndex, userNotes } = req.body;
+        const userId = req.session.userId;
+
+        const result = await EnhancedQuizResult.findOne({ _id: resultId, user: userId });
+        if (!result) return res.status(404).json({ error: 'Result not found' });
+
+        await result.completeStep(stepIndex, userNotes);
+        res.json({ success: true, message: 'Step marked as completed', progressPercentage: result.progressPercentage });
+    } catch (err) {
+        console.error('Error completing step:', err);
+        res.status(500).json({ error: 'Failed to complete step' });
+    }
+});
+
+// =======================================
+// Error handler (router-level)
+// =======================================
+router.use((error, _req, res, _next) => {
+    console.error('🚨 Enhanced quiz router error:', error);
+    res.status(500).json({ error: 'Enhanced quiz system error', message: error.message, timestamp: new Date().toISOString() });
 });
 
 module.exports = router;
