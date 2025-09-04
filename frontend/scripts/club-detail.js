@@ -373,14 +373,12 @@ function updateHeroImage(club) {
     if (heroImage) {
         // Use heroImageUrl if available, otherwise use logoUrl, otherwise default
         const imageUrl = club.heroImageUrl || club.logoUrl || '../assets/default-club-hero.jpg';
+        const imagePosition = club.heroImagePosition || 'center center';
 
-        heroImage.src = imageUrl;
-        heroImage.onerror = function () {
-            // If image fails to load, use default
-            this.src = '../assets/default-club-hero.jpg';
-        };
-
-        console.log(' Updated big hero image for:', club.name);
+        heroImage.style.backgroundImage = `url('${imageUrl}')`;
+        heroImage.style.backgroundPosition = imagePosition;
+        heroImage.style.backgroundSize = 'cover';
+        heroImage.style.backgroundRepeat = 'no-repeat';
     }
 }
 
