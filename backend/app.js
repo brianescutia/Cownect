@@ -15,8 +15,6 @@ const Event = require('./models/eventModel'); // Import Event model for events A
 const passport = require('passport');
 require('./googleAuth');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
-const { AICareerAnalyzer, aiOnlyQuizQuestions } = require('./services/aiCareerAnalyzer');
-const { nextGenQuizQuestions, expandedCareerOptions } = require('./data/nextGenQuizData');
 const EnhancedAICareerAnalyzer = require('./services/enhancedThreeLevelAIAnalyzer');
 
 
@@ -26,7 +24,6 @@ const EnhancedAICareerAnalyzer = require('./services/enhancedThreeLevelAIAnalyze
 const app = express();
 const port = process.env.PORT || 3000;
 const isProduction = process.env.NODE_ENV === 'production';
-const aiAnalyzer = new AICareerAnalyzer();
 const enhancedAnalyzer = new EnhancedAICareerAnalyzer();
 
 
@@ -39,6 +36,8 @@ const enhancedAnalyzer = new EnhancedAICareerAnalyzer();
 // Basic Express Middleware
 app.use(express.static(path.join(__dirname, '../frontend')));  // Serve static files
 app.use(express.urlencoded({ extended: true }));               // Parse form data
+app.use('/', express.static(path.join(__dirname, '..', 'frontend')));
+
 app.use(express.json());                                       // Parse JSON data
 
 // SESSION CONFIGURATION - Like setting up a wristband system at a concert
@@ -252,7 +251,6 @@ app.get('/auth/google/callback',
   }
 );
 
-app.use('/api/quiz', require('./routes/enhancedThreeLevelQuizRoutes'));
 
 
 // In your backend directory
@@ -1478,6 +1476,46 @@ app.get('/api/clubs/metadata', async (req, res) => {
 });
 
 // =============================================================================
+// ENHANCED RESULTS ROUTES - Direct mount for HTML pages
+// =============================================================================
+
+// Serve the enhanced results HTML page
+app.get('/enhanced-results', requireAuth, async (req, res) => {
+  try {
+    const userId = req.session.userId;
+    const path = require('path');
+
+    // Simply serve the HTML page - the JavaScript will load the data
+    res.sendFile(path.join(__dirname, '../frontend/pages/enhanced-results.html'));
+  } catch (err) {
+    console.error('Error loading enhanced results page:', err);
+    res.redirect('/enhanced-quiz?error=results-error');
+  }
+});
+
+// API endpoint for fetching results data
+app.get('/api/enhanced-results/:resultId/data', requireAuth, async (req, res) => {
+  try {
+    const userId = req.session.userId;
+    const resultId = req.params.resultId;
+
+    const EnhancedQuizResult = require('./models/EnhancedQuizResult');
+    const enhancedResult = await EnhancedQuizResult
+      .findOne({ _id: resultId, user: userId })
+      .populate('clubRecommendations.clubId');
+
+    if (!enhancedResult) {
+      return res.status(404).json({ error: 'No enhanced results found' });
+    }
+
+    res.json({ success: true, results: enhancedResult.getFormattedForAPI() });
+  } catch (err) {
+    console.error('Error fetching enhanced results JSON:', err);
+    res.status(500).json({ error: 'Failed to fetch enhanced results' });
+  }
+});
+
+// =============================================================================
 // ADD THESE ROUTES TO YOUR backend/app.js FILE
 // =============================================================================
 // Insert these routes after your existing club routes
@@ -2012,8 +2050,10 @@ app.get('/api/quiz/intro', async (req, res) => {
 // =============================================================================
 
 // Add the enhanced 3-level quiz routes
-app.use('/api/quiz', require('./routes/enhancedThreeLevelQuizRoutes'));
+const enhancedQuizRoutes = require('./routes/enhancedThreeLevelQuizRoutes');
+app.use('/api/quiz', enhancedQuizRoutes);
 
+console.log('✅ Enhanced 3-Level Quiz Routes integrated at /api/quiz');
 // =============================================================================
 // ENHANCED QUIZ PAGE ROUTES
 // =============================================================================
@@ -2202,77 +2242,109 @@ function getNextSuggestedLevel(enhancedResults) {
   return null; // All levels completed
 }
 
+
+
 console.log('✅ Enhanced 3-Level Quiz Routes integrated successfully');
 app.get('/api/quiz/next-gen/intro', async (req, res) => {
   try {
     console.log('🚀 Serving next-generation quiz introduction...');
 
     const response = {
-      title: "AI-Powered Career Discovery",
-      description: "Revolutionary assessment that analyzes your unique thinking patterns",
-      features: [
-        "🧠 Advanced AI psychology analysis",
-        "🎯 Multiple engaging question formats",
-        "🛡️ Gaming-resistant design",
-        "🎓 UC Davis integration",
-        "💼 Industry-grade insights",
-        "⚡ Instant comprehensive results"
-      ],
-      questionTypes: [
-        {
-          type: "visual_choice",
-          name: "Visual Preferences",
-          description: "Choose from visual scenarios that resonate with you",
-          icon: "👁️"
+      success: true,
+      message: 'AI career analysis completed successfully',
+      enhanced: true, // Add this flag
+      redirectTo: '/enhanced-results', // Add this redirect
+      results: {
+        // Top match with all required fields
+        topMatch: {
+          career: aiResults.results.topMatch.career,
+          percentage: aiResults.results.topMatch.percentage,
+          confidence: aiResults.results.topMatch.confidence || 'High',
+          reasoning: aiResults.results.topMatch.reasoning,
+
+          // Add career progression data
+          careerProgression: [
+            {
+              level: 'Entry',
+              roles: ['Junior UX Designer', 'UI Designer'],
+              timeline: '0-2 years',
+              salary: { min: 70, max: 95 }
+            },
+            {
+              level: 'Mid',
+              roles: ['UX Designer', 'Senior UI Designer'],
+              timeline: '2-5 years',
+              salary: { min: 95, max: 130 }
+            },
+            {
+              level: 'Senior',
+              roles: ['Lead UX Designer', 'Design Manager'],
+              timeline: '5+ years',
+              salary: { min: 130, max: 180 }
+            }
+          ],
+
+          // Add next steps
+          nextSteps: [
+            'Learn design fundamentals and user research methods',
+            'Build a portfolio with 3-5 design projects',
+            'Join UC Davis Design Club and UX groups',
+            'Apply for UX design internships and entry-level positions'
+          ],
+
+          // Add market data
+          marketData: {
+            avgSalary: '$85k - $140k',
+            jobGrowthRate: '+13%',
+            annualOpenings: 23900,
+            workLifeBalance: '8.2/10'
+          }
         },
-        {
-          type: "scale",
-          name: "Preference Scales",
-          description: "Rate your comfort and interest levels",
-          icon: "📊"
-        },
-        {
-          type: "scenario",
-          name: "Real Scenarios",
-          description: "Choose how you'd handle realistic situations",
-          icon: "🎭"
-        },
-        {
-          type: "short_response",
-          name: "Personal Insights",
-          description: "Share your authentic experiences and motivations",
-          icon: "✍️"
-        },
-        {
-          type: "ranking",
-          name: "Priority Ranking",
-          description: "Rank values and preferences by importance",
-          icon: "📋"
-        }
-      ],
-      metadata: {
-        totalQuestions: nextGenQuizQuestions.comprehensive.length,
-        estimatedTime: "8-12 minutes",
-        careerOptions: expandedCareerOptions.length,
-        analysisEngine: "GPT-4 Turbo",
-        accuracyRate: "95%+",
-        universitites: ["UC Davis optimized"]
-      },
-      testimonials: [
-        {
-          quote: "This quiz revealed career paths I never considered. The AI analysis was incredibly insightful!",
-          student: "Computer Science Senior, UC Davis"
-        },
-        {
-          quote: "Way more engaging than typical career assessments. The variety kept me interested throughout.",
-          student: "Undeclared Sophomore, UC Davis"
-        },
-        {
-          quote: "The results were so accurate it felt like the AI really understood my personality.",
-          student: "Data Science Graduate, UC Davis"
-        }
-      ]
+
+        // All career matches (top 5)
+        allMatches: [
+          { career: 'UX/UI Design', category: 'Design', percentage: 85 },
+          { career: 'Product Design', category: 'Design', percentage: 78 },
+          { career: 'Web Design', category: 'Design', percentage: 72 },
+          { career: 'Software Engineering', category: 'Engineering', percentage: 65 },
+          { career: 'Product Management', category: 'Product', percentage: 58 }
+        ],
+
+        // Club recommendations with proper structure
+        clubRecommendations: [
+          {
+            _id: 'design-interactive',
+            name: 'Design Interactive',
+            logoUrl: '/assets/design-interactive.png',
+            tags: ['design', 'ux-ui'],
+            relevanceScore: 95,
+            recommendationReason: 'Perfect for developing UX/UI design skills'
+          },
+          {
+            _id: 'hci-club',
+            name: 'HCI Club',
+            logoUrl: '/assets/hci-club.png',
+            tags: ['human-computer-interaction', 'design'],
+            relevanceScore: 88,
+            recommendationReason: 'Great for user research and interaction design'
+          },
+          {
+            _id: 'creative-tech',
+            name: 'Creative Tech Club',
+            logoUrl: '/assets/creative-tech.png',
+            tags: ['creativity', 'technology'],
+            relevanceScore: 82,
+            recommendationReason: 'Combines creativity with technical skills'
+          }
+        ]
+      }
     };
+
+    req.session.enhancedResults = response.results;
+
+    console.log('✅ AI analysis complete:', response.results.topMatch.career, `(${response.results.topMatch.percentage}%)`);
+    res.json(response);
+
 
     console.log(`✅ Served next-gen quiz intro with ${response.metadata.totalQuestions} questions`);
     res.json(response);
@@ -2452,11 +2524,25 @@ app.post('/api/quiz/submit', requireAuth, async (req, res) => {
       });
     }
 
-    console.log('🧠 Running AI-powered career analysis...');
+    console.log('🤖 Sending to AI analyzer:', {
+      answersCount: answers.length,
+      level: level,
+      questionsCount: questions.length,
+      userProfile: {
+        major: userProfile?.major,
+        year: userProfile?.year,
+        email: userEmail
+      },
+      sampleAnswer: answers[0] // Show first answer structure
+    });
 
-    // Run AI analysis (no weights involved)
+    // Initialize AI analyzer
     const EnhancedAIAnalyzer = require('./services/enhancedThreeLevelAIAnalyzer');
     const enhancedAnalyzer = new EnhancedAIAnalyzer();
+
+    console.log('🧠 Running AI-powered career analysis...');
+
+    // Run AI analysis
     const aiResults = await enhancedAnalyzer.analyzeCareerFit(
       answers,
       questions,
@@ -2470,9 +2556,39 @@ app.post('/api/quiz/submit', requireAuth, async (req, res) => {
       }
     );
 
+    console.log('🎯 AI Results received:', {
+      success: aiResults.success,
+      analysisType: aiResults.analysisType,
+      topCareer: aiResults.results?.topMatch?.career,
+      percentage: aiResults.results?.topMatch?.percentage,
+      hasAllMatches: !!aiResults.results?.allMatches,
+      allMatchesCount: aiResults.results?.allMatches?.length
+    });
+
     if (!aiResults.success) {
+      console.error('❌ AI analysis failed:', aiResults);
       throw new Error('AI analysis failed to produce valid results');
     }
+
+    // Validate AI results structure
+    if (!aiResults.results?.topMatch?.career) {
+      console.error('❌ Invalid AI results structure:', aiResults.results);
+      throw new Error('AI returned invalid results structure');
+    }
+
+    // Get club recommendations AFTER AI analysis is complete
+    const ClubRecommendationService = require('./services/ClubRecommendationService');
+    const clubService = new ClubRecommendationService();
+
+    const clubRecommendations = await clubService.getClubRecommendations(
+      aiResults.results.topMatch.career,
+      aiResults.results.allMatches
+    );
+
+    // Helper functions for additional data
+    const careerProgression = getCareerProgression(aiResults.results.topMatch.career);
+    const marketData = getMarketData(aiResults.results.topMatch.career);
+    const nextSteps = getNextSteps(aiResults.results.topMatch.career, level);
 
     // Save results to database
     try {
@@ -2482,7 +2598,6 @@ app.post('/api/quiz/submit', requireAuth, async (req, res) => {
         user: userId,
         quizLevel: level,
         answers: answers,
-        // No skill scores - AI analysis instead
         aiAnalysis: aiResults.results,
         topMatch: {
           careerName: aiResults.results.topMatch.career,
@@ -2508,173 +2623,180 @@ app.post('/api/quiz/submit', requireAuth, async (req, res) => {
       // Continue without saving - don't fail the request
     }
 
-
-
-    app.post('/api/quiz/next-gen/submit', requireAuth, async (req, res) => {
-      try {
-        const { answers, completionTime, metadata } = req.body;
-        const userId = req.session.userId;
-        const userEmail = req.session.userEmail;
-
-        console.log(`🤖 Processing next-gen quiz for ${userEmail}`);
-        console.log(`📊 Answers: ${answers?.length}, Time: ${completionTime}s`);
-
-        // Validate input
-        if (!answers || !Array.isArray(answers)) {
-          return res.status(400).json({
-            error: 'Invalid submission data',
-            required: ['answers array']
-          });
-        }
-
-        // Get user profile for personalized analysis
-        const User = require('./models/User');
-        const userProfile = await User.findById(userId).select('major year name email');
-
-        // Get questions for context
-        const questions = nextGenQuizQuestions.comprehensive;
-
-        if (answers.length !== questions.length) {
-          return res.status(400).json({
-            error: `Expected ${questions.length} answers, received ${answers.length}`
-          });
-        }
-
-        console.log('🧠 Running enhanced AI career analysis...');
-
-        // Run enhanced AI analysis
-        const aiResults = await enhancedAnalyzer.analyzeCareerFit(
-          answers,
-          questions,
-          {
-            major: userProfile?.major,
-            year: userProfile?.year,
-            university: 'UC Davis',
-            completionTime: completionTime,
-            email: userEmail
-          }
-        );
-
-        if (!aiResults.success) {
-          throw new Error('Enhanced AI analysis failed to produce valid results');
-        }
-
-        // Save results to database (enhanced format)
-        try {
-          const QuizResult = require('./models/nicheQuizModels').QuizResult;
-
-          const quizResult = new QuizResult({
-            user: userId,
-            quizLevel: 'next-gen-comprehensive',
-            answers: answers,
-            enhancedAIAnalysis: aiResults.results,
-            topMatch: {
-              careerName: aiResults.results.topMatch.career,
-              percentage: aiResults.results.topMatch.percentage,
-              reasoning: aiResults.results.topMatch.reasoning,
-              nextSteps: aiResults.results.topMatch.nextSteps,
-              keyPatterns: aiResults.results.topMatch.keyPatterns
-            },
-            completionTime: completionTime,
-            metadata: {
-              version: '4.0-NextGen',
-              analysisType: 'enhanced-ai',
-              aiModel: 'gpt-4-turbo',
-              questionTypes: [...new Set(questions.map(q => q.type))],
-              timestamp: new Date(),
-              ...metadata
-            }
-          });
-
-          await quizResult.save();
-          console.log('💾 Enhanced quiz result saved to database');
-        } catch (saveError) {
-          console.error('⚠️ Failed to save enhanced quiz result:', saveError);
-          // Continue without saving - don't fail the request
-        }
-
-        // Format response for frontend
-        const response = {
-          success: true,
-          message: 'Enhanced AI career analysis completed successfully',
-          analysisType: 'Next-Generation AI Career Discovery',
-          version: '4.0',
-          results: {
-            // Enhanced top match
-            topMatch: {
-              career: aiResults.results.topMatch.career,
-              percentage: aiResults.results.topMatch.percentage,
-              confidence: aiResults.results.topMatch.confidence,
-              reasoning: aiResults.results.topMatch.reasoning,
-              keyPatterns: aiResults.results.topMatch.keyPatterns,
-              nextSteps: aiResults.results.topMatch.nextSteps,
-              marketData: aiResults.results.topMatch.marketData,
-              ucDavisResources: aiResults.results.topMatch.ucDavisResources
-            },
-
-            // All career matches
-            allMatches: aiResults.results.allMatches,
-
-            // Enhanced insights
-            personalityInsights: aiResults.results.personalityInsights,
-            developmentAreas: aiResults.results.developmentAreas,
-            aiInsights: aiResults.results.aiInsights,
-
-            // Quality metrics
-            qualityMetrics: aiResults.results.qualityMetrics,
-
-            // Metadata
-            metadata: {
-              completionTime,
-              analysisVersion: '4.0-NextGen',
-              aiPowered: true,
-              questionTypes: [...new Set(questions.map(q => q.type))],
-              timestamp: aiResults.timestamp
-            }
-          }
-        };
-
-        console.log(`✅ Enhanced AI analysis complete: ${aiResults.results.topMatch.career} (${aiResults.results.topMatch.percentage}%)`);
-        res.json(response);
-
-      } catch (error) {
-        console.error('💥 Enhanced quiz submission error:', error);
-        res.status(500).json({
-          error: 'Enhanced AI career analysis failed',
-          message: error.message,
-          suggestion: 'Please try again or contact support if the issue persists'
-        });
+    // Format the response
+    const response = {
+      success: true,
+      message: 'AI career analysis completed successfully',
+      results: {
+        topMatch: {
+          career: aiResults.results.topMatch.career,
+          percentage: aiResults.results.topMatch.percentage,
+          confidence: aiResults.results.topMatch.confidence || 'High',
+          reasoning: aiResults.results.topMatch.reasoning,
+          careerProgression: careerProgression,
+          nextSteps: nextSteps,
+          marketData: marketData
+        },
+        allMatches: aiResults.results.allMatches || getDefaultMatches(aiResults.results.topMatch.career),
+        clubRecommendations: clubRecommendations
       }
+    };
+
+    console.log(`✅ Enhanced AI analysis complete: ${aiResults.results.topMatch.career} (${aiResults.results.topMatch.percentage}%)`);
+
+    // Final validation before sending response
+    if (!response.results.topMatch.career || response.results.topMatch.career === 'undefined') {
+      console.error('❌ Final response validation failed - no career determined');
+      throw new Error('Failed to determine career match');
+    }
+
+    res.json(response);
+
+  } catch (error) {
+    console.error('💥 Quiz submission error:', error);
+    console.error('Error stack:', error.stack);
+
+    res.status(500).json({
+      error: 'AI career analysis failed',
+      message: error.message,
+      suggestion: 'Please try again or contact support if the issue persists'
     });
+  }
+});
+
+
+
+app.post('/api/quiz/next-gen/submit', requireAuth, async (req, res) => {
+  try {
+    const { answers, completionTime, metadata } = req.body;
+    const userId = req.session.userId;
+    const userEmail = req.session.userEmail;
+
+    console.log(`🤖 Processing next-gen quiz for ${userEmail}`);
+    console.log(`📊 Answers: ${answers?.length}, Time: ${completionTime}s`);
+
+    // Validate input
+    if (!answers || !Array.isArray(answers)) {
+      return res.status(400).json({
+        error: 'Invalid submission data',
+        required: ['answers array']
+      });
+    }
+
+    // Get user profile for personalized analysis
+    const User = require('./models/User');
+    const userProfile = await User.findById(userId).select('major year name email');
+
+    // Get questions for context - fix the variable reference
+    const { nextGenQuizQuestions } = require('./data/nextGenQuizData'); // Make sure this path is correct
+    const questions = nextGenQuizQuestions.comprehensive;
+
+    if (answers.length !== questions.length) {
+      return res.status(400).json({
+        error: `Expected ${questions.length} answers, received ${answers.length}`
+      });
+    }
+
+    console.log('🧠 Running enhanced AI career analysis...');
+
+    // Initialize the analyzer properly
+    const EnhancedAIAnalyzer = require('./services/enhancedThreeLevelAIAnalyzer');
+    const enhancedAnalyzer = new EnhancedAIAnalyzer();
+
+    // Run enhanced AI analysis
+    const aiResults = await enhancedAnalyzer.analyzeCareerFit(
+      answers,
+      questions,
+      'comprehensive', // Add the level parameter
+      {
+        major: userProfile?.major,
+        year: userProfile?.year,
+        university: 'UC Davis',
+        completionTime: completionTime,
+        email: userEmail
+      }
+    );
+
+    if (!aiResults.success) {
+      throw new Error('Enhanced AI analysis failed to produce valid results');
+    }
+
+    // Get club recommendations
+    const ClubRecommendationService = require('./services/ClubRecommendationService');
+    const clubService = new ClubRecommendationService();
+
+    const clubRecommendations = await clubService.getClubRecommendations(
+      aiResults.results.topMatch.career,
+      aiResults.results.allMatches
+    );
+
+    // Get additional data using helper functions
+    const careerProgression = getCareerProgression(aiResults.results.topMatch.career);
+    const marketData = getMarketData(aiResults.results.topMatch.career);
+    const nextSteps = getNextSteps(aiResults.results.topMatch.career, 'advanced'); // Next-gen is advanced level
+
+    // Save results to database (enhanced format)
+    try {
+      const QuizResult = require('./models/nicheQuizModels').QuizResult;
+
+      const quizResult = new QuizResult({
+        user: userId,
+        quizLevel: 'next-gen-comprehensive',
+        answers: answers,
+        enhancedAIAnalysis: aiResults.results,
+        topMatch: {
+          careerName: aiResults.results.topMatch.career,
+          percentage: aiResults.results.topMatch.percentage,
+          reasoning: aiResults.results.topMatch.reasoning,
+          nextSteps: aiResults.results.topMatch.nextSteps,
+          keyPatterns: aiResults.results.topMatch.keyPatterns
+        },
+        completionTime: completionTime,
+        metadata: {
+          version: '4.0-NextGen',
+          analysisType: 'enhanced-ai',
+          aiModel: 'gpt-4-turbo',
+          questionTypes: [...new Set(questions.map(q => q.type))],
+          timestamp: new Date(),
+          ...metadata
+        }
+      });
+
+      await quizResult.save();
+      console.log('💾 Enhanced quiz result saved to database');
+    } catch (saveError) {
+      console.error('⚠️ Failed to save enhanced quiz result:', saveError);
+      // Continue without saving - don't fail the request
+    }
 
     // Format response for frontend
     const response = {
       success: true,
-      message: 'AI career analysis completed successfully',
-      analysisType: 'AI-Powered Career Assessment',
+      message: 'Enhanced AI career analysis completed successfully',
+      analysisType: 'Next-Generation AI Career Discovery',
+      version: '4.0',
       results: {
-        // Top match with AI reasoning
+        // Enhanced top match with additional data
         topMatch: {
           career: aiResults.results.topMatch.career,
           percentage: aiResults.results.topMatch.percentage,
           confidence: aiResults.results.topMatch.confidence,
           reasoning: aiResults.results.topMatch.reasoning,
-          personalityProfile: aiResults.results.topMatch.personalityProfile,
-          nextSteps: aiResults.results.topMatch.nextSteps,
-          marketData: aiResults.results.topMatch.marketData,
-          ucDavisResources: aiResults.results.topMatch.ucDavisResources
+          keyPatterns: aiResults.results.topMatch.keyPatterns,
+          nextSteps: nextSteps, // Use helper function result
+          careerProgression: careerProgression, // Add career progression
+          marketData: marketData // Add market data
         },
 
         // All career matches
         allMatches: aiResults.results.allMatches,
 
-        // Work style analysis
-        workStyle: aiResults.results.workStyle,
+        // Club recommendations
+        clubRecommendations: clubRecommendations,
 
-        // Skills to develop
-        skillGaps: aiResults.results.skillGaps,
-
-        // AI insights
+        // Enhanced insights
+        personalityInsights: aiResults.results.personalityInsights,
+        developmentAreas: aiResults.results.developmentAreas,
         aiInsights: aiResults.results.aiInsights,
 
         // Quality metrics
@@ -2682,23 +2804,22 @@ app.post('/api/quiz/submit', requireAuth, async (req, res) => {
 
         // Metadata
         metadata: {
-          level,
           completionTime,
-          analysisVersion: '3.0-AI',
+          analysisVersion: '4.0-NextGen',
           aiPowered: true,
-          weightless: true,
+          questionTypes: [...new Set(questions.map(q => q.type))],
           timestamp: aiResults.timestamp
         }
       }
     };
 
-    console.log(`✅ AI analysis complete: ${aiResults.results.topMatch.career} (${aiResults.results.topMatch.percentage}%)`);
+    console.log(`✅ Enhanced AI analysis complete: ${aiResults.results.topMatch.career} (${aiResults.results.topMatch.percentage}%)`);
     res.json(response);
 
   } catch (error) {
-    console.error('💥 AI quiz submission error:', error);
+    console.error('💥 Enhanced quiz submission error:', error);
     res.status(500).json({
-      error: 'AI career analysis failed',
+      error: 'Enhanced AI career analysis failed',
       message: error.message,
       suggestion: 'Please try again or contact support if the issue persists'
     });
@@ -3468,6 +3589,225 @@ app.get('/api/test/openai', async (req, res) => {
     });
   }
 });
+
+// =============================================================================
+// HELPER FUNCTIONS FOR ENHANCED QUIZ RESULTS
+// Add these RIGHT BEFORE your app.listen() at the bottom of app.js
+// =============================================================================
+
+function getCareerProgression(careerName) {
+  const progressions = {
+    'UX/UI Design': [
+      {
+        level: 'Entry',
+        roles: ['Junior UX Designer', 'UI Designer'],
+        timeline: '0-2 years',
+        salary: { min: 70, max: 95 }
+      },
+      {
+        level: 'Mid',
+        roles: ['UX Designer', 'Senior UI Designer'],
+        timeline: '2-5 years',
+        salary: { min: 95, max: 130 }
+      },
+      {
+        level: 'Senior',
+        roles: ['Lead UX Designer', 'Design Manager'],
+        timeline: '5+ years',
+        salary: { min: 130, max: 180 }
+      }
+    ],
+    'Software Engineering': [
+      {
+        level: 'Entry',
+        roles: ['Junior Developer', 'Software Engineer I'],
+        timeline: '0-2 years',
+        salary: { min: 85, max: 110 }
+      },
+      {
+        level: 'Mid',
+        roles: ['Software Engineer II', 'Senior Developer'],
+        timeline: '2-5 years',
+        salary: { min: 110, max: 150 }
+      },
+      {
+        level: 'Senior',
+        roles: ['Staff Engineer', 'Principal Engineer'],
+        timeline: '5+ years',
+        salary: { min: 150, max: 220 }
+      }
+    ],
+    'Data Science': [
+      {
+        level: 'Entry',
+        roles: ['Data Analyst', 'Junior Data Scientist'],
+        timeline: '0-2 years',
+        salary: { min: 75, max: 100 }
+      },
+      {
+        level: 'Mid',
+        roles: ['Data Scientist', 'ML Engineer'],
+        timeline: '2-5 years',
+        salary: { min: 100, max: 140 }
+      },
+      {
+        level: 'Senior',
+        roles: ['Senior Data Scientist', 'Data Science Manager'],
+        timeline: '5+ years',
+        salary: { min: 140, max: 200 }
+      }
+    ],
+    'DevOps Engineering': [
+      {
+        level: 'Entry',
+        roles: ['Junior DevOps Engineer', 'Cloud Engineer'],
+        timeline: '0-2 years',
+        salary: { min: 80, max: 125 }
+      },
+      {
+        level: 'Mid',
+        roles: ['DevOps Engineer', 'Site Reliability Engineer'],
+        timeline: '2-5 years',
+        salary: { min: 125, max: 175 }
+      },
+      {
+        level: 'Senior',
+        roles: ['Senior DevOps Engineer', 'Principal SRE'],
+        timeline: '5+ years',
+        salary: { min: 175, max: 275 }
+      }
+    ]
+  };
+
+  return progressions[careerName] || progressions['Software Engineering'];
+}
+
+function getMarketData(careerName) {
+  const marketData = {
+    'UX/UI Design': {
+      avgSalary: '$85k - $140k',
+      jobGrowthRate: '+13%',
+      annualOpenings: 23900,
+      workLifeBalance: '8.2/10'
+    },
+    'Software Engineering': {
+      avgSalary: '$110k - $180k',
+      jobGrowthRate: '+22%',
+      annualOpenings: 189200,
+      workLifeBalance: '7.5/10'
+    },
+    'Data Science': {
+      avgSalary: '$95k - $165k',
+      jobGrowthRate: '+22%',
+      annualOpenings: 13500,
+      workLifeBalance: '7.8/10'
+    },
+    'DevOps Engineering': {
+      avgSalary: '$125k - $200k',
+      jobGrowthRate: '+25%',
+      annualOpenings: 15200,
+      workLifeBalance: '7.5/10'
+    }
+  };
+
+  return marketData[careerName] || marketData['Software Engineering'];
+}
+
+function getNextSteps(careerName, level) {
+  const stepsByCareer = {
+    'UX/UI Design': {
+      'beginner': [
+        'Learn design fundamentals and user research methods',
+        'Build a portfolio with 3-5 design projects',
+        'Join UC Davis Design Club and UX groups'
+      ],
+      'intermediate': [
+        'Master advanced design tools (Figma, Adobe Creative Suite)',
+        'Complete user research projects with real users',
+        'Apply for UX design internships'
+      ],
+      'advanced': [
+        'Lead design projects and mentor junior designers',
+        'Specialize in areas like interaction design or design systems',
+        'Build industry connections and pursue senior roles'
+      ]
+    },
+    'Software Engineering': {
+      'beginner': [
+        'Master fundamental programming concepts',
+        'Build 3-5 portfolio projects',
+        'Join UC Davis programming clubs like #include'
+      ],
+      'intermediate': [
+        'Learn system design and software architecture',
+        'Contribute to open source projects',
+        'Apply for software engineering internships'
+      ],
+      'advanced': [
+        'Lead technical projects and mentor junior developers',
+        'Specialize in areas like backend, frontend, or mobile',
+        'Build industry connections and pursue senior roles'
+      ]
+    },
+    'Data Science': {
+      'beginner': [
+        'Learn Python/R and basic statistics',
+        'Complete data analysis projects',
+        'Join AI Student Collective at UC Davis'
+      ],
+      'intermediate': [
+        'Master machine learning algorithms',
+        'Build end-to-end ML projects',
+        'Apply for data science internships'
+      ],
+      'advanced': [
+        'Specialize in deep learning or specific domains',
+        'Publish research or contribute to ML communities',
+        'Pursue senior data science roles'
+      ]
+    }
+  };
+
+  const defaultSteps = [
+    'Build foundational skills in your chosen field',
+    'Create portfolio projects to showcase abilities',
+    'Connect with UC Davis Career Center for guidance'
+  ];
+
+  return stepsByCareer[careerName]?.[level] || defaultSteps;
+}
+
+function getDefaultMatches(topCareer) {
+  const relatedCareers = {
+    'UX/UI Design': [
+      { career: 'UX/UI Design', category: 'Design', percentage: 85 },
+      { career: 'Product Design', category: 'Design', percentage: 78 },
+      { career: 'Web Design', category: 'Design', percentage: 72 },
+      { career: 'Software Engineering', category: 'Engineering', percentage: 65 },
+      { career: 'Product Management', category: 'Product', percentage: 58 }
+    ],
+    'Software Engineering': [
+      { career: 'Software Engineering', category: 'Engineering', percentage: 90 },
+      { career: 'Web Development', category: 'Engineering', percentage: 82 },
+      { career: 'Mobile Development', category: 'Engineering', percentage: 75 },
+      { career: 'DevOps Engineering', category: 'Engineering', percentage: 68 },
+      { career: 'Data Engineering', category: 'Data', percentage: 60 }
+    ],
+    'Data Science': [
+      { career: 'Data Science', category: 'Data', percentage: 88 },
+      { career: 'Machine Learning Engineering', category: 'AI', percentage: 80 },
+      { career: 'Data Engineering', category: 'Data', percentage: 73 },
+      { career: 'Software Engineering', category: 'Engineering', percentage: 65 },
+      { career: 'Research Scientist', category: 'Research', percentage: 58 }
+    ]
+  };
+
+  return relatedCareers[topCareer] || relatedCareers['Software Engineering'];
+}
+
+// =============================================================================
+// START SERVER - Your existing app.listen() should be right after these functions
+// =============================================================================
 // =============================================================================
 // START SERVER
 // =============================================================================
