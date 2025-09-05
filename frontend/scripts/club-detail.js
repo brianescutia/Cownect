@@ -371,7 +371,7 @@ function showError(message) {
 function updateHeroImage(club) {
     const heroImage = document.getElementById('clubHeroImage');
     if (heroImage) {
-        // Use heroImageUrl if available, otherwise use logoUrl, otherwise default
+        // Use heroImageUrl if available, otherwise fall back to logoUrl
         const imageUrl = club.heroImageUrl || club.logoUrl || '../assets/default-club-hero.jpg';
         const imagePosition = club.heroImagePosition || 'center center';
 

@@ -136,6 +136,9 @@ function renderClubsWithPagination(clubs) {
         // Create the expandable tags HTML
         const tagsHTML = createExpandableTagsHTML(club.tags);
 
+        // Use the 'about' field for the short description, fallback to truncated description
+        const shortDescription = club.about || club.description.substring(0, 150) + '...';
+
         return `
             <div class="club-card clickable-card" data-club-id="${club._id}">
                 <div class="card-top">
@@ -146,7 +149,7 @@ function renderClubsWithPagination(clubs) {
                     </div>
                 </div>
                 <h3 class="club-name">${club.name}</h3>
-                <p class="club-description">${club.description}</p>
+                <p class="club-description">${shortDescription}</p>
                 ${tagsHTML}
             </div>
         `;

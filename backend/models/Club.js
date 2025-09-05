@@ -173,7 +173,10 @@ const clubSchema = new mongoose.Schema({
     updatedAt: {
         type: Date,
         default: Date.now
-    }
+    },
+    about: {
+        type: String,
+    },
 }, {
     timestamps: true,
     toJSON: { virtuals: true },
