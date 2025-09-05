@@ -134,6 +134,18 @@ const userSchema = new mongoose.Schema({
         default: true
     },
 
+    connectionRequests: [{
+        from: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+        message: String,
+        sentAt: { type: Date, default: Date.now },
+        status: { type: String, enum: ['pending', 'accepted', 'rejected'], default: 'pending' }
+    }],
+
+    connections: [{
+        user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+        connectedAt: { type: Date, default: Date.now }
+    }],
+
     // AUTHENTICATION FIELDS
     password: {
         type: String,

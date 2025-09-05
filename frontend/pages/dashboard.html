@@ -13,6 +13,7 @@
   <script src="/scripts/dashboard.js" defer></script>
  <script src="/scripts/navbar-component.js?v=3" defer></script>
 <script src="/scripts/navbar.js?v=3" defer></script>
+<script>src ="/scripts/matching-system.js" </script>
 </head>
 
 <body>
@@ -257,6 +258,17 @@
         </div>
       </div>
       <button class="view-all-matches-btn" onclick="showMatchingModal()" style="display: none;">View All Matches</button>
+    </section>
+
+     <section class="connections-card">
+      <h2>🤝 Connection Requests</h2>
+      <div id="connectionsList" class="connections-list">
+        <div class="empty-state">
+          <div class="empty-state-icon">📬</div>
+          <div class="empty-state-text">No connection requests yet</div>
+          <div class="empty-state-subtext">When someone wants to connect, you'll see it here!</div>
+        </div>
+      </div>
     </section>
 
   </main>

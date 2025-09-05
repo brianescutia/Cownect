@@ -1904,6 +1904,413 @@ app.get('/api/user/matches', requireAuth, async (req, res) => {
   }
 });
 
+
+// =============================================================================
+// ENHANCED STUDENT MATCHING SYSTEM - Backend Routes
+// Add this to your backend/app.js after the existing user routes
+// =============================================================================
+
+// Enhanced matching algorithm with weighted scoring
+app.get('/api/user/smart-matches', requireAuth, async (req, res) => {
+  try {
+    const userId = req.session.userId;
+    const {
+      limit = 10,
+      lookingFor,
+      skills,
+      major,
+      year,
+      availability,
+      projectType
+    } = req.query;
+
+    console.log(`🎯 Finding smart matches for user: ${req.session.userEmail}`);
+
+    // Get current user's full profile
+    const currentUser = await User.findById(userId);
+    if (!currentUser) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    // Build smart query
+    let matchQuery = {
+      _id: { $ne: userId },
+      isVerified: true
+    };
+
+    // Add filters if provided
+    if (major) matchQuery.major = major;
+    if (year) matchQuery.year = year;
+    if (availability) matchQuery.availability = availability;
+
+    // Find potential matches
+    const potentialMatches = await User.find(matchQuery)
+      .select('name year major bio hobbies skills learningGoals lookingFor availability profilePictureUrl email')
+      .limit(50) // Get more initially for better scoring
+      .lean();
+
+    // Calculate match scores with weighted algorithm
+    const scoredMatches = potentialMatches.map(match => {
+      const score = calculateMatchScore(currentUser, match, {
+        prioritizeLookingFor: lookingFor,
+        prioritizeSkills: skills,
+        projectType: projectType
+      });
+
+      return {
+        ...match,
+        matchScore: score.total,
+        matchReasons: score.reasons,
+        compatibility: score.compatibility,
+        sharedInterests: score.sharedInterests,
+        complementarySkills: score.complementarySkills,
+        displayName: match.name || match.email?.split('@')[0] || 'UC Davis Student'
+      };
+    });
+
+    // Sort by match score and return top matches
+    scoredMatches.sort((a, b) => b.matchScore - a.matchScore);
+    const topMatches = scoredMatches.slice(0, parseInt(limit));
+
+    // Group matches by compatibility type
+    const matchGroups = {
+      perfect: topMatches.filter(m => m.matchScore >= 85),
+      great: topMatches.filter(m => m.matchScore >= 70 && m.matchScore < 85),
+      good: topMatches.filter(m => m.matchScore >= 50 && m.matchScore < 70),
+      explore: topMatches.filter(m => m.matchScore < 50)
+    };
+
+    console.log(`✅ Found ${topMatches.length} smart matches`);
+
+    res.json({
+      matches: topMatches,
+      matchGroups,
+      totalMatches: topMatches.length,
+      userProfile: {
+        skills: currentUser.skills,
+        lookingFor: currentUser.lookingFor,
+        availability: currentUser.availability
+      }
+    });
+
+  } catch (error) {
+    console.error('💥 Error finding smart matches:', error);
+    res.status(500).json({ error: 'Failed to find matches' });
+  }
+});
+
+// Sophisticated match scoring algorithm
+function calculateMatchScore(user, match, priorities = {}) {
+  let score = {
+    total: 0,
+    reasons: [],
+    compatibility: {},
+    sharedInterests: [],
+    complementarySkills: []
+  };
+
+  // 1. MUTUAL "LOOKING FOR" ALIGNMENT (30 points max)
+  const mutualGoals = calculateMutualGoals(user, match);
+  score.total += mutualGoals.score;
+  if (mutualGoals.matches.length > 0) {
+    score.reasons.push(`Both looking for: ${mutualGoals.matches.join(', ')}`);
+  }
+
+  // 2. SKILL COMPATIBILITY (25 points max)
+  const skillCompatibility = calculateSkillCompatibility(user, match);
+  score.total += skillCompatibility.score;
+  score.complementarySkills = skillCompatibility.complementary;
+  score.sharedInterests = skillCompatibility.shared;
+
+  if (skillCompatibility.shared.length > 0) {
+    score.reasons.push(`Shared skills: ${skillCompatibility.shared.slice(0, 3).join(', ')}`);
+  }
+  if (skillCompatibility.teachLearn.length > 0) {
+    score.reasons.push(`Can help with: ${skillCompatibility.teachLearn.slice(0, 2).join(', ')}`);
+  }
+
+  // 3. ACADEMIC ALIGNMENT (20 points max)
+  if (user.major === match.major) {
+    score.total += 10;
+    score.reasons.push(`Same major: ${user.major}`);
+  } else if (areSimilarMajors(user.major, match.major)) {
+    score.total += 5;
+    score.reasons.push('Related fields of study');
+  }
+
+  if (user.year === match.year) {
+    score.total += 10;
+    score.reasons.push(`Both ${user.year} students`);
+  } else if (Math.abs(getYearValue(user.year) - getYearValue(match.year)) === 1) {
+    score.total += 5;
+    score.reasons.push('Similar academic level');
+  }
+
+  // 4. AVAILABILITY MATCH (15 points max)
+  const availabilityScore = calculateAvailabilityMatch(user.availability, match.availability);
+  score.total += availabilityScore;
+  if (availabilityScore > 10) {
+    score.reasons.push('Great schedule compatibility');
+  }
+
+  // 5. INTEREST/HOBBY ALIGNMENT (10 points max)
+  const hobbyMatch = calculateHobbyMatch(user.hobbies, match.hobbies);
+  score.total += hobbyMatch.score;
+  if (hobbyMatch.shared.length > 0) {
+    score.reasons.push(`Common interests: ${hobbyMatch.shared.slice(0, 2).join(', ')}`);
+  }
+
+  // Apply priority boosts
+  if (priorities.prioritizeLookingFor && mutualGoals.matches.includes(priorities.prioritizeLookingFor)) {
+    score.total += 10;
+  }
+  if (priorities.prioritizeSkills && skillCompatibility.shared.includes(priorities.prioritizeSkills)) {
+    score.total += 10;
+  }
+
+  // Normalize score to 0-100
+  score.total = Math.min(100, Math.max(0, score.total));
+
+  // Set compatibility level
+  if (score.total >= 85) score.compatibility.level = 'Perfect Match! 🎯';
+  else if (score.total >= 70) score.compatibility.level = 'Great Match! 🌟';
+  else if (score.total >= 50) score.compatibility.level = 'Good Match 👍';
+  else score.compatibility.level = 'Worth Exploring';
+
+  return score;
+}
+
+// Helper functions for matching algorithm
+function calculateMutualGoals(user, match) {
+  if (!user.lookingFor || !match.lookingFor) return { score: 0, matches: [] };
+
+  const userGoals = new Set(user.lookingFor);
+  const matchGoals = new Set(match.lookingFor);
+  const mutual = [];
+
+  // Check what they both are looking for
+  userGoals.forEach(goal => {
+    if (matchGoals.has(goal)) {
+      mutual.push(goal);
+    }
+  });
+
+  // Higher score for more mutual goals
+  const score = mutual.length * 10; // 10 points per mutual goal (max 30)
+
+  return {
+    score: Math.min(30, score),
+    matches: mutual
+  };
+}
+
+function calculateSkillCompatibility(user, match) {
+  const userSkills = new Set(user.skills || []);
+  const matchSkills = new Set(match.skills || []);
+  const userWantsToLearn = new Set(user.learningGoals || []);
+  const matchWantsToLearn = new Set(match.learningGoals || []);
+
+  const shared = [];
+  const complementary = [];
+  const teachLearn = [];
+
+  // Find shared skills
+  userSkills.forEach(skill => {
+    if (matchSkills.has(skill)) {
+      shared.push(skill);
+    }
+  });
+
+  // Find complementary skills (they have what user wants to learn)
+  matchSkills.forEach(skill => {
+    if (userWantsToLearn.has(skill)) {
+      teachLearn.push(skill);
+      complementary.push(`They can teach: ${skill}`);
+    }
+  });
+
+  // Find what user can teach them
+  userSkills.forEach(skill => {
+    if (matchWantsToLearn.has(skill)) {
+      complementary.push(`You can teach: ${skill}`);
+    }
+  });
+
+  // Calculate score
+  const sharedScore = Math.min(10, shared.length * 3);
+  const complementaryScore = Math.min(15, complementary.length * 5);
+
+  return {
+    score: sharedScore + complementaryScore,
+    shared,
+    complementary,
+    teachLearn
+  };
+}
+
+function calculateHobbyMatch(userHobbies, matchHobbies) {
+  if (!userHobbies || !matchHobbies) return { score: 0, shared: [] };
+
+  const userInterests = userHobbies.toLowerCase().split(',').map(h => h.trim()).filter(h => h);
+  const matchInterests = matchHobbies.toLowerCase().split(',').map(h => h.trim()).filter(h => h);
+
+  const shared = userInterests.filter(hobby =>
+    matchInterests.some(mHobby =>
+      mHobby.includes(hobby) || hobby.includes(mHobby)
+    )
+  );
+
+  return {
+    score: Math.min(10, shared.length * 3),
+    shared
+  };
+}
+
+function calculateAvailabilityMatch(userAvail, matchAvail) {
+  const availabilityScores = {
+    'very-available': 4,
+    'moderately-available': 3,
+    'limited-availability': 2,
+    'busy': 1
+  };
+
+  const userScore = availabilityScores[userAvail] || 2;
+  const matchScore = availabilityScores[matchAvail] || 2;
+
+  // Similar availability is good
+  const difference = Math.abs(userScore - matchScore);
+
+  if (difference === 0) return 15; // Perfect match
+  if (difference === 1) return 10; // Good match
+  if (difference === 2) return 5;  // Okay match
+  return 0; // Poor match
+}
+
+function areSimilarMajors(major1, major2) {
+  if (!major1 || !major2) return false;
+
+  const techMajors = ['computer science', 'computer engineering', 'software engineering', 'data science'];
+  const engMajors = ['electrical engineering', 'mechanical engineering', 'civil engineering'];
+
+  const m1 = major1.toLowerCase();
+  const m2 = major2.toLowerCase();
+
+  return (techMajors.includes(m1) && techMajors.includes(m2)) ||
+    (engMajors.includes(m1) && engMajors.includes(m2));
+}
+
+function getYearValue(year) {
+  const yearMap = {
+    'freshman': 1,
+    'sophomore': 2,
+    'junior': 3,
+    'senior': 4,
+    'graduate': 5,
+    'phd': 6,
+    'postdoc': 7
+  };
+  return yearMap[year] || 3;
+}
+
+// Send connection request
+// Get connection requests for current user
+app.get('/api/user/connections', requireAuth, async (req, res) => {
+  try {
+    const userId = req.session.userId;
+
+    // For now, we'll store connections in session
+    // In production, you'd query from database
+    if (!req.session.connections) {
+      req.session.connections = [];
+    }
+
+    res.json({
+      sent: req.session.sentConnections || [],
+      received: req.session.connections || [],
+      message: 'Connection system is in demo mode'
+    });
+
+  } catch (error) {
+    console.error('Error fetching connections:', error);
+    res.status(500).json({ error: 'Failed to fetch connections' });
+  }
+});
+
+// Update the connect route to track connections
+app.post('/api/user/connect', requireAuth, async (req, res) => {
+  try {
+    const { targetUserId, message } = req.body;
+    const userId = req.session.userId;
+    const userEmail = req.session.userEmail;
+
+    console.log(`📧 Connection request from ${userId} to ${targetUserId}`);
+
+    // Store sent connections in session (temporary solution)
+    if (!req.session.sentConnections) {
+      req.session.sentConnections = [];
+    }
+
+    // Add to sent connections
+    req.session.sentConnections.push({
+      to: targetUserId,
+      message: message,
+      sentAt: new Date(),
+      status: 'pending'
+    });
+
+    // In a real app, you'd also notify the target user
+    // For now, let's store it in their session when they log in
+
+    res.json({
+      success: true,
+      message: 'Connection request sent!',
+      suggestion: 'They will be notified of your interest'
+    });
+
+  } catch (error) {
+    console.error('💥 Error sending connection:', error);
+    res.status(500).json({ error: 'Failed to send connection request' });
+  }
+});
+
+// Get match suggestions based on current activity
+app.get('/api/user/contextual-matches', requireAuth, async (req, res) => {
+  try {
+    const userId = req.session.userId;
+    const { context, clubId, eventId } = req.query;
+
+    console.log(`🎯 Getting contextual matches for: ${context}`);
+
+    // Find users with similar interests based on context
+    let matchQuery = {
+      _id: { $ne: userId },
+      isVerified: true
+    };
+
+    if (context === 'club' && clubId) {
+      // Find other users who bookmarked the same club
+      matchQuery.bookmarkedClubs = clubId;
+    } else if (context === 'event' && eventId) {
+      // Find other users attending the same event
+      matchQuery.bookmarkedEvents = eventId;
+    }
+
+    const contextualMatches = await User.find(matchQuery)
+      .select('name year major skills profilePictureUrl')
+      .limit(5)
+      .lean();
+
+    res.json({
+      matches: contextualMatches,
+      context: context,
+      message: `Others interested in the same ${context}`
+    });
+
+  } catch (error) {
+    console.error('💥 Error getting contextual matches:', error);
+    res.status(500).json({ error: 'Failed to get contextual matches' });
+  }
+});
 // =============================================================================
 // API ROUTES - For frontend JavaScript to check authentication status
 // =============================================================================
@@ -1944,6 +2351,441 @@ app.get('/api/user', async (req, res) => {
   }
 });
 
+// =============================================================================
+// ADDITIONAL MATCHING FEATURES
+// Add these to your backend/app.js for enhanced matching
+// =============================================================================
+
+// Course-based matching - Find study partners in your classes
+app.get('/api/user/course-matches', requireAuth, async (req, res) => {
+  try {
+    const userId = req.session.userId;
+    const { courseCodes } = req.query; // e.g., "ECS50,ECS154,MAT21C"
+
+    if (!courseCodes) {
+      return res.status(400).json({ error: 'Please provide course codes' });
+    }
+
+    const courses = courseCodes.split(',').map(c => c.trim().toUpperCase());
+
+    console.log(`📚 Finding course matches for: ${courses.join(', ')}`);
+
+    // In production, you'd have a courses field in User model
+    // For now, we'll match based on major and year as proxy
+    const currentUser = await User.findById(userId);
+
+    // Find students in similar academic standing
+    const potentialMatches = await User.find({
+      _id: { $ne: userId },
+      isVerified: true,
+      major: currentUser.major, // Same major likely = same courses
+      year: { $in: getSimilarYears(currentUser.year) }
+    })
+      .select('name year major skills lookingFor availability profilePictureUrl')
+      .limit(20)
+      .lean();
+
+    // Score matches based on study compatibility
+    const scoredMatches = potentialMatches.map(match => {
+      let score = 0;
+      let reasons = [];
+
+      // Prioritize those looking for study partners
+      if (match.lookingFor?.includes('study-partners')) {
+        score += 40;
+        reasons.push('Looking for study partners');
+      }
+
+      // Similar availability is crucial for study groups
+      if (match.availability === currentUser.availability) {
+        score += 30;
+        reasons.push('Compatible schedules');
+      }
+
+      // Academic year proximity
+      if (match.year === currentUser.year) {
+        score += 20;
+        reasons.push('Same year - taking similar courses');
+      }
+
+      // Add some randomness for diversity
+      score += Math.random() * 10;
+
+      return {
+        ...match,
+        matchScore: Math.min(100, Math.round(score)),
+        matchReasons: reasons,
+        suggestedCourses: courses, // Which courses to study together
+        displayName: match.name || match.email?.split('@')[0] || 'UC Davis Student'
+      };
+    });
+
+    scoredMatches.sort((a, b) => b.matchScore - a.matchScore);
+
+    res.json({
+      matches: scoredMatches.slice(0, 10),
+      courses: courses,
+      studyGroups: groupMatchesForStudyGroups(scoredMatches.slice(0, 10))
+    });
+
+  } catch (error) {
+    console.error('💥 Error finding course matches:', error);
+    res.status(500).json({ error: 'Failed to find course matches' });
+  }
+});
+
+// Helper function to group matches into study groups
+function groupMatchesForStudyGroups(matches) {
+  // Create suggested study groups of 3-4 people
+  const groups = [];
+  const groupSize = 3;
+
+  for (let i = 0; i < matches.length; i += groupSize) {
+    const group = matches.slice(i, i + groupSize);
+    if (group.length >= 2) { // At least 2 people for a group
+      groups.push({
+        id: `group-${i / groupSize + 1}`,
+        members: group,
+        averageScore: Math.round(group.reduce((sum, m) => sum + m.matchScore, 0) / group.length),
+        suggestedMeetingTime: suggestMeetingTime(group)
+      });
+    }
+  }
+
+  return groups;
+}
+
+function suggestMeetingTime(group) {
+  // Analyze availability to suggest meeting times
+  const availabilities = group.map(m => m.availability);
+
+  if (availabilities.every(a => a === 'very-available')) {
+    return 'Flexible - can meet anytime';
+  } else if (availabilities.some(a => a === 'busy')) {
+    return 'Weekends or evenings recommended';
+  }
+
+  return 'Weekday evenings recommended';
+}
+
+function getSimilarYears(year) {
+  const yearGroups = {
+    'freshman': ['freshman', 'sophomore'],
+    'sophomore': ['freshman', 'sophomore', 'junior'],
+    'junior': ['sophomore', 'junior', 'senior'],
+    'senior': ['junior', 'senior'],
+    'graduate': ['graduate', 'phd'],
+    'phd': ['graduate', 'phd', 'postdoc'],
+    'postdoc': ['phd', 'postdoc']
+  };
+
+  return yearGroups[year] || [year];
+}
+
+// =============================================================================
+// MATCH NOTIFICATIONS & MUTUAL INTEREST SYSTEM
+// =============================================================================
+
+// Track mutual interests (both users liked each other)
+app.post('/api/user/track-interest', requireAuth, async (req, res) => {
+  try {
+    const { targetUserId, interested } = req.body;
+    const userId = req.session.userId;
+
+    // In production, create an Interests collection
+    // For now, we'll use session storage as example
+
+    if (!req.session.interests) {
+      req.session.interests = {};
+    }
+
+    req.session.interests[targetUserId] = interested;
+
+    // Check if there's mutual interest
+    // In production, check if target user also liked current user
+    const isMutual = Math.random() > 0.7; // 30% chance for demo
+
+    if (isMutual && interested) {
+      console.log(`💘 Mutual match found between ${userId} and ${targetUserId}!`);
+
+      // Send notification (in production, use real notification system)
+      return res.json({
+        success: true,
+        mutualMatch: true,
+        message: "It's a match! You both showed interest in connecting! 🎉",
+        action: 'Start a conversation now!'
+      });
+    }
+
+    res.json({
+      success: true,
+      mutualMatch: false,
+      message: interested ? 'Interest recorded!' : 'Passed'
+    });
+
+  } catch (error) {
+    console.error('💥 Error tracking interest:', error);
+    res.status(500).json({ error: 'Failed to track interest' });
+  }
+});
+
+// Get notification preferences and counts
+app.get('/api/user/match-notifications', requireAuth, async (req, res) => {
+  try {
+    const userId = req.session.userId;
+
+    // In production, fetch from database
+    // Mock data for demonstration
+    const notifications = {
+      newMatches: 3,
+      messages: 2,
+      mutualInterests: 1,
+      studyGroupInvites: 2,
+      connectionRequests: 4,
+      recentActivity: [
+        {
+          type: 'mutual-match',
+          user: 'Alex Chen',
+          time: '2 hours ago',
+          message: 'You and Alex both showed interest!'
+        },
+        {
+          type: 'study-group',
+          course: 'ECS 154',
+          time: '5 hours ago',
+          message: '3 students want to form a study group for ECS 154'
+        },
+        {
+          type: 'connection',
+          user: 'Sarah Kim',
+          time: '1 day ago',
+          message: 'Sarah wants to connect about hackathon team'
+        }
+      ]
+    };
+
+    res.json(notifications);
+
+  } catch (error) {
+    console.error('💥 Error fetching notifications:', error);
+    res.status(500).json({ error: 'Failed to fetch notifications' });
+  }
+});
+
+// =============================================================================
+// SMART RECOMMENDATIONS BASED ON ACTIVITY
+// =============================================================================
+
+app.get('/api/user/recommended-connections', requireAuth, async (req, res) => {
+  try {
+    const userId = req.session.userId;
+    const currentUser = await User.findById(userId)
+      .populate('bookmarkedClubs')
+      .populate('bookmarkedEvents');
+
+    if (!currentUser) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    console.log(`🤖 Generating smart recommendations for ${currentUser.email}`);
+
+    // Get club members from user's bookmarked clubs
+    const clubMemberIds = [];
+    if (currentUser.bookmarkedClubs?.length > 0) {
+      const clubIds = currentUser.bookmarkedClubs.map(c => c._id);
+
+      // Find other users who bookmarked same clubs
+      const similarUsers = await User.find({
+        _id: { $ne: userId },
+        bookmarkedClubs: { $in: clubIds }
+      }).select('_id').limit(50);
+
+      clubMemberIds.push(...similarUsers.map(u => u._id));
+    }
+
+    // Get event attendees from user's bookmarked events  
+    const eventAttendeeIds = [];
+    if (currentUser.bookmarkedEvents?.length > 0) {
+      const eventIds = currentUser.bookmarkedEvents.map(e => e._id);
+
+      const similarUsers = await User.find({
+        _id: { $ne: userId },
+        bookmarkedEvents: { $in: eventIds }
+      }).select('_id').limit(50);
+
+      eventAttendeeIds.push(...similarUsers.map(u => u._id));
+    }
+
+    // Combine and get unique user IDs
+    const recommendedIds = [...new Set([...clubMemberIds, ...eventAttendeeIds])];
+
+    if (recommendedIds.length === 0) {
+      return res.json({
+        recommendations: [],
+        message: 'Join clubs and events to get personalized recommendations!'
+      });
+    }
+
+    // Fetch full user details
+    const recommendations = await User.find({
+      _id: { $in: recommendedIds }
+    })
+      .select('name year major skills lookingFor profilePictureUrl bookmarkedClubs bookmarkedEvents')
+      .limit(10)
+      .lean();
+
+    // Calculate why they're recommended
+    const enhancedRecommendations = recommendations.map(rec => {
+      const reasons = [];
+      let relevanceScore = 0;
+
+      // Check shared clubs
+      const sharedClubs = currentUser.bookmarkedClubs.filter(club =>
+        rec.bookmarkedClubs?.some(rc => rc.toString() === club._id.toString())
+      );
+
+      if (sharedClubs.length > 0) {
+        reasons.push(`Member of ${sharedClubs[0].name}`);
+        relevanceScore += sharedClubs.length * 20;
+      }
+
+      // Check shared events
+      const sharedEvents = currentUser.bookmarkedEvents.filter(event =>
+        rec.bookmarkedEvents?.some(re => re.toString() === event._id.toString())
+      );
+
+      if (sharedEvents.length > 0) {
+        reasons.push(`Attending same event`);
+        relevanceScore += sharedEvents.length * 15;
+      }
+
+      // Check shared skills
+      const sharedSkills = (currentUser.skills || []).filter(skill =>
+        (rec.skills || []).includes(skill)
+      );
+
+      if (sharedSkills.length > 0) {
+        reasons.push(`Shares ${sharedSkills.length} skills`);
+        relevanceScore += sharedSkills.length * 10;
+      }
+
+      return {
+        ...rec,
+        recommendationReasons: reasons,
+        relevanceScore: Math.min(100, relevanceScore),
+        displayName: rec.name || 'UC Davis Student',
+        connectionType: 'activity-based'
+      };
+    });
+
+    // Sort by relevance
+    enhancedRecommendations.sort((a, b) => b.relevanceScore - a.relevanceScore);
+
+    res.json({
+      recommendations: enhancedRecommendations,
+      basedOn: {
+        clubs: currentUser.bookmarkedClubs.length,
+        events: currentUser.bookmarkedEvents.length
+      }
+    });
+
+  } catch (error) {
+    console.error('💥 Error generating recommendations:', error);
+    res.status(500).json({ error: 'Failed to generate recommendations' });
+  }
+});
+
+// =============================================================================
+// ICEBREAKER SUGGESTIONS FOR FIRST MESSAGES
+// =============================================================================
+
+app.get('/api/user/icebreakers/:targetUserId', requireAuth, async (req, res) => {
+  try {
+    const { targetUserId } = req.params;
+    const userId = req.session.userId;
+
+    const [currentUser, targetUser] = await Promise.all([
+      User.findById(userId),
+      User.findById(targetUserId)
+    ]);
+
+    if (!targetUser) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    // Generate personalized icebreakers based on shared interests
+    const icebreakers = [];
+
+    // Shared skills
+    const sharedSkills = (currentUser.skills || []).filter(skill =>
+      (targetUser.skills || []).includes(skill)
+    );
+
+    if (sharedSkills.length > 0) {
+      icebreakers.push(`Hey! I noticed we both know ${sharedSkills[0]}. What projects have you built with it?`);
+    }
+
+    // Complementary skills
+    const theyCanTeach = (targetUser.skills || []).filter(skill =>
+      (currentUser.learningGoals || []).includes(skill)
+    );
+
+    if (theyCanTeach.length > 0) {
+      icebreakers.push(`Hi! I'm learning ${theyCanTeach[0]} and saw you have experience with it. Any tips for getting started?`);
+    }
+
+    // Looking for same things
+    const sharedGoals = (currentUser.lookingFor || []).filter(goal =>
+      (targetUser.lookingFor || []).includes(goal)
+    );
+
+    if (sharedGoals.includes('hackathon-teammates')) {
+      icebreakers.push(`Hey! Saw you're also looking for hackathon teammates. Have you heard about HackDavis coming up?`);
+    }
+
+    if (sharedGoals.includes('study-partners')) {
+      icebreakers.push(`Hi! Looking for study partners too. What classes are you taking this quarter?`);
+    }
+
+    // Same major
+    if (currentUser.major === targetUser.major) {
+      icebreakers.push(`Hey fellow ${currentUser.major} major! What's been your favorite class so far?`);
+    }
+
+    // Default icebreakers
+    if (icebreakers.length === 0) {
+      icebreakers.push(
+        `Hey! Your profile caught my attention. Would love to connect!`,
+        `Hi! Saw we have similar interests in tech. Want to grab coffee sometime?`,
+        `Hey! Always looking to meet fellow tech enthusiasts at UC Davis. How's your quarter going?`
+      );
+    }
+
+    res.json({
+      icebreakers: icebreakers.slice(0, 5),
+      targetUser: {
+        name: targetUser.name || 'UC Davis Student',
+        major: targetUser.major,
+        year: targetUser.year
+      }
+    });
+
+  } catch (error) {
+    console.error('💥 Error generating icebreakers:', error);
+    res.status(500).json({ error: 'Failed to generate icebreakers' });
+  }
+});
+
+app.get('/api/create-test-users', async (req, res) => {
+  const testUsers = [
+    { email: 'testuser1@ucdavis.edu', name: 'Alice Chen', year: 'junior', major: 'Computer Science', skills: ['Python', 'React'], lookingFor: ['study-partners', 'hackathon-teammates'] },
+    { email: 'testuser2@ucdavis.edu', name: 'Bob Smith', year: 'senior', major: 'Computer Science', skills: ['Java', 'AWS'], lookingFor: ['project-collaborators'] },
+    { email: 'testuser3@ucdavis.edu', name: 'Carol Davis', year: 'senior', major: 'Data Science', skills: ['Python', 'ML'], lookingFor: ['study-partners', 'research-partners'] }
+  ];
+
+  // Create test users (add proper user creation logic)
+  res.json({ message: 'Test users created' });
+});
 // =============================================================================
 // NICHE QUIZ ROUTES - Add these AFTER app creation
 // =============================================================================

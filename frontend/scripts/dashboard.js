@@ -558,7 +558,7 @@ async function loadTestResults() {
 
 async function loadPotentialMatches() {
     try {
-        const response = await fetch('/api/user/matches?limit=3');
+        const response = await fetch('/api/user/smart-matches?limit=3');
         if (!response.ok) return;
 
         const matchData = await response.json();
@@ -693,11 +693,16 @@ function createMiniClubCard(club) {
     const clubCard = document.createElement('div');
     clubCard.className = 'mini-club-card';
     clubCard.innerHTML = `
-        <div class="mini-club-logo" style="background-image: url('${club.logoUrl || '/assets/default-club-logo.png'}'); background-size: cover;"></div>
+        <div class="mini-club-logo" style="background-image: url('${club.logoUrl || '/assets/default-club-logo.png'}');"></div>
         <div class="mini-club-name">${club.name}</div>
-        <div class="mini-club-description">${truncateText(club.description, 60)}</div>
-        <div class="mini-club-tags">${formatTags(club.tags)}</div>
     `;
+
+    // Make it clickable to go to club page
+    clubCard.style.cursor = 'pointer';
+    clubCard.onclick = () => {
+        window.location.href = `/club/${club._id}`;
+    };
+
     return clubCard;
 }
 
@@ -751,21 +756,216 @@ function createMatchItem(match) {
     const matchItem = document.createElement('div');
     matchItem.className = 'match-item';
 
+    const displayName = match.displayName || match.name || 'UC Davis Student';
+    const year = match.year || 'Student';
+    const major = match.major || 'Technology';
+    const matchScore = match.matchScore || 0;
+
     matchItem.innerHTML = `
         <div class="match-avatar">
             ${match.profilePictureUrl ?
-            `<img src="${match.profilePictureUrl}" alt="${match.displayName}">` :
-            `<span class="match-initials">${match.displayName.split(' ').map(n => n[0]).join('').substring(0, 2)}</span>`
+            `<img src="${match.profilePictureUrl}" alt="${displayName}">` :
+            `<span class="match-initials">${displayName.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase()}</span>`
         }
         </div>
         <div class="match-info">
-            <div class="match-name">${match.displayName}</div>
-            <div class="match-details">${match.year} • ${match.major}</div>
-            <div class="match-score">${match.matchScore}% match</div>
+            <div class="match-name">${displayName}</div>
+            <div class="match-details">${year} • ${major}</div>
+            <div class="match-score">${matchScore}% match</div>
         </div>
+        <button class="quick-connect-btn" 
+            onclick="connectWithUser('${match._id}', '${displayName}', this)" 
+            style="...">
+        Connect
+    </button>
     `;
     return matchItem;
 }
+
+// Add this function to dashboard.js
+function showMatchingModal() {
+    // Create the modal if it doesn't exist
+    let modal = document.getElementById('matchingModal');
+
+    if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'matchingModal';
+        modal.className = 'modal-overlay';
+        modal.innerHTML = `
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>🎯 Your Potential Matches</h3>
+                    <button class="modal-close" onclick="closeMatchingModal()">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <p style="text-align: center; padding: 2rem; color: #666;">
+                        <strong>Coming Soon!</strong><br><br>
+                        We're building an amazing matching experience with:<br><br>
+                        • Smart filters by major, year, and interests<br>
+                        • Swipe mode for quick connections<br>
+                        • Study group formation<br>
+                        • Direct messaging<br><br>
+                        For now, you can see potential matches below!
+                    </p>
+                    <div id="allMatchesList" style="padding: 1rem;">
+                        <!-- Matches will load here -->
+                    </div>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(modal);
+    }
+
+    modal.style.display = 'flex';
+    loadAllMatches(); // Load all matches
+}
+
+function closeMatchingModal() {
+    const modal = document.getElementById('matchingModal');
+    if (modal) modal.style.display = 'none';
+}
+
+async function loadAllMatches() {
+    try {
+        const response = await fetch('/api/user/smart-matches?limit=20');
+        const data = await response.json();
+
+        const matchesList = document.getElementById('allMatchesList');
+        if (!matchesList) return;
+
+        if (data.matches && data.matches.length > 0) {
+            matchesList.innerHTML = data.matches.map(match => `
+                <div style="padding: 1rem; margin: 0.5rem 0; background: #f9fafb; border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <strong>${match.displayName || match.name || 'UC Davis Student'}</strong><br>
+                        <span style="color: #666;">${match.year || 'Student'} • ${match.major || 'Technology'}</span><br>
+                        <span style="color: #5F96C5;">${match.matchScore || 0}% match</span>
+                    </div>
+                    <button onclick="connectWithUser('${match._id}', '${match.displayName || match.name}')" 
+                            style="padding: 0.5rem 1rem; background: #5F96C5; color: white; border: none; border-radius: 6px; cursor: pointer;">
+                        Connect
+                    </button>
+                </div>
+            `).join('');
+        } else {
+            matchesList.innerHTML = '<p style="text-align: center; color: #666;">No matches found. Try updating your profile!</p>';
+        }
+    } catch (error) {
+        console.error('Error loading matches:', error);
+    }
+}
+
+// Add this function to dashboard.js
+// Fix the connectWithUser function
+async function connectWithUser(userId, userName, buttonElement) {
+    if (!userId) {
+        alert('Unable to connect - user ID missing');
+        return;
+    }
+
+    // Show confirmation
+    const message = prompt(`Send a connection message to ${userName}:`,
+        `Hi! I found you through Cownect's matching system. Would love to connect about our shared interests at UC Davis!`);
+
+    if (!message) return; // User cancelled
+
+    try {
+        const response = await fetch('/api/user/connect', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                targetUserId: userId,
+                message: message
+            })
+        });
+
+        if (response.ok) {
+            alert(`Connection request sent to ${userName}! 🎉\n\nThey'll be notified of your interest.`);
+
+            // Update button to show "Requested" - FIX: use buttonElement parameter
+            if (buttonElement) {
+                buttonElement.textContent = 'Request Sent ✓';
+                buttonElement.disabled = true;
+                buttonElement.style.background = '#10B981';
+            }
+        } else {
+            alert('Failed to send connection request. Please try again.');
+        }
+    } catch (error) {
+        console.error('Error connecting:', error);
+        alert('Error sending connection request');
+    }
+}
+
+// Make it global
+window.connectWithUser = connectWithUser;
+
+// Initialize the enhanced matching system
+document.addEventListener('DOMContentLoaded', async () => {
+    // Your existing initialization code...
+
+    // Add the enhanced matching UI
+    if (typeof StudentMatchingSystem !== 'undefined') {
+        window.matchingSystem = new StudentMatchingSystem();
+    }
+});
+
+// Add to dashboard.js
+async function loadConnections() {
+    try {
+        const response = await fetch('/api/user/connections');
+        const data = await response.json();
+
+        const connectionsList = document.getElementById('connectionsList');
+        if (!connectionsList) return;
+
+        if (data.sent.length === 0 && data.received.length === 0) {
+            // Keep empty state
+            return;
+        }
+
+        connectionsList.innerHTML = `
+            <div class="connections-tabs">
+                <h4>Sent Requests (${data.sent.length})</h4>
+                ${data.sent.map(conn => `
+                    <div class="connection-item sent">
+                        <div class="connection-info">
+                            <p>To: User ${conn.to.substring(0, 8)}...</p>
+                            <p class="connection-message">"${conn.message}"</p>
+                            <span class="connection-time">${new Date(conn.sentAt).toLocaleDateString()}</span>
+                        </div>
+                        <span class="connection-status pending">Pending</span>
+                    </div>
+                `).join('')}
+                
+                <h4 style="margin-top: 1rem;">Received Requests (${data.received.length})</h4>
+                ${data.received.length > 0 ? data.received.map(conn => `
+                    <div class="connection-item received">
+                        <div class="connection-info">
+                            <p>From: ${conn.from}</p>
+                            <p class="connection-message">"${conn.message}"</p>
+                        </div>
+                        <div class="connection-actions">
+                            <button onclick="acceptConnection('${conn.from}')">Accept</button>
+                            <button onclick="rejectConnection('${conn.from}')">Decline</button>
+                        </div>
+                    </div>
+                `).join('') : '<p style="color: #999;">No requests received yet</p>'}
+            </div>
+        `;
+
+    } catch (error) {
+        console.error('Error loading connections:', error);
+    }
+}
+
+// Call this when dashboard loads
+document.addEventListener('DOMContentLoaded', async () => {
+    // ... your existing code ...
+    await loadConnections(); // Add this line
+});
 
 // =============================================================================
 // UTILITY FUNCTIONS
@@ -833,5 +1033,7 @@ function showDashboardMessage(message, type = 'info') {
 
 window.handleImageUpload = handleImageUpload;
 window.saveProfile = saveProfile;
+window.showMatchingModal = showMatchingModal;
+window.closeMatchingModal = closeMatchingModal;
 
 console.log('✅ Enhanced Dashboard with full profile management and matching loaded!');

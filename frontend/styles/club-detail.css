@@ -22,7 +22,7 @@ body {
 }
 
 /* =============================================================================
-   HERO IMAGE - CENTERED
+   HERO IMAGE - MUCH SHORTER TO MATCH FIGMA
    =============================================================================
 */
 
@@ -32,20 +32,21 @@ body {
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center center;
-    /* fallback, will be overridden by JS */
     border-radius: 15px;
 }
 
 .club-hero-image {
-    width: 90rem;
-    height: 25rem;
-    margin: 2rem auto;
-    position: center;
+    width: 1155px;
+    /* 750px + 25px + 380px to match content width */
+    height: 200px;
+    /* Much shorter height to match Figma */
+    margin: 2rem 0 2rem 100px;
+    /* Shifted to align with content */
+    position: relative;
     border-radius: 15px;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
     background: linear-gradient(135deg, #5F96C5, #4a8bc2);
 }
-
 
 .club-hero-image div {
     width: 100%;
@@ -66,9 +67,9 @@ body {
     margin: 1rem 0;
     display: flex;
     justify-content: flex-start;
-    /* Shift right */
-}
+    padding-left: 100px;
 
+}
 
 .club-title {
     font-size: 3rem;
@@ -92,7 +93,6 @@ body {
     margin: 1rem 0;
     justify-content: flex-start;
     padding-left: 100px;
-    /* Shift right to match name box */
 }
 
 /* =============================================================================
@@ -156,7 +156,6 @@ body {
     transform: scale(1.1);
 }
 
-/* Fallback styling if you don't have a custom symbol image */
 .default-symbol {
     width: 24px;
     height: 24px;
@@ -334,6 +333,8 @@ body {
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
+    overflow: hidden;
+    position: relative;
 }
 
 .events-header {
@@ -360,6 +361,10 @@ body {
     align-items: center;
     gap: 1rem;
     flex: 1;
+    overflow: hidden;
+    /* Prevent cards from extending outside */
+    padding: 0.25rem 0;
+    /* Small padding to contain hover effects */
 }
 
 .carousel-btn {
@@ -423,7 +428,7 @@ body {
 }
 
 .event-card:hover {
-    transform: translateY(-5px);
+    transform: translateY(-3px) scale(1.02);
     box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
 }
 
@@ -618,7 +623,6 @@ body {
     color: #4a8bc2;
 }
 
-
 .bookmark-btn:hover {
     background: rgba(95, 150, 197, 0.1);
     transform: translateY(-2px);
@@ -628,7 +632,6 @@ body {
     width: 16px;
     height: 16px;
 }
-
 
 /* =============================================================================
    BACK SECTION - SHIFTED RIGHT
@@ -640,7 +643,6 @@ body {
     max-width: 1400px;
     margin: 2rem 0;
     padding-left: 100px;
-    /* Shift right to match other content */
 }
 
 .back-btn {
@@ -740,21 +742,32 @@ body {
         padding: 0 1rem;
     }
 
+    .club-hero-image {
+        width: 95%;
+        max-width: 1155px;
+        margin-left: 50px;
+        height: 180px;
+    }
+
     .club-name-section,
     .content-grid,
     .back-section {
         padding-left: 50px;
-        /* Reduce shift on smaller screens */
     }
 }
 
 @media (max-width: 1200px) {
+    .club-hero-image {
+        width: 100%;
+        max-width: 800px;
+        margin: 2rem auto;
+        height: 160px;
+    }
 
     .club-name-section,
     .content-grid,
     .back-section {
         padding-left: 0;
-        /* Remove shift on mobile */
         justify-content: center;
     }
 
@@ -790,6 +803,11 @@ body {
 }
 
 @media (max-width: 768px) {
+    .club-hero-image {
+        height: 140px;
+        margin: 1rem auto;
+    }
+
     .side-by-side-boxes {
         flex-direction: column;
         gap: 15px;
