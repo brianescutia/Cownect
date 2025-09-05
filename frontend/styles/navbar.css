@@ -163,8 +163,8 @@ ul.nav-links {
 .navbar-profile-circle,
 .navbar .navbar-profile-circle,
 #navbarProfileCircle {
-    width: 45px !important;
-    height: 45px !important;
+    width: 55px !important;
+    height: 55px !important;
     border-radius: 50% !important;
     background: linear-gradient(135deg, #5F96C5, #4a8bc2) !important;
     display: flex !important;

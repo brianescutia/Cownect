@@ -129,11 +129,7 @@
     overflow: hidden;
 }
 
-.level-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 15px 40px rgba(95, 150, 197, 0.2);
-    border-color: rgba(95, 150, 197, 0.5);
-}
+
 
 .level-card:hover::before {
     content: '';

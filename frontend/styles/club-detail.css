@@ -118,9 +118,12 @@ body {
     background: rgba(255, 255, 255, 0.7);
     backdrop-filter: blur(12px);
     border-radius: 15px;
-    border: 1px solid rgba(0, 4, 255, 0.25);
+    border: 3px solid rgba(95, 150, 197, 0.3);
     padding: 1.5rem;
-    box-shadow: 0 8px 32px rgba(0, 4, 255, 0.1);
+    box-shadow:
+        0 4px 20px rgba(0, 0, 0, 0.25),
+        0 0 0 1px rgba(255, 255, 255, 0.8),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9);
     display: flex;
     flex-direction: column;
     box-sizing: border-box;
@@ -218,9 +221,12 @@ body {
     background: rgba(255, 255, 255, 0.7);
     backdrop-filter: blur(12px);
     border-radius: 15px;
-    border: 1px solid rgba(0, 4, 255, 0.45);
+    border: 3px solid rgba(95, 150, 197, 0.3);
     padding: 1.5rem;
-    box-shadow: 0 8px 32px rgba(0, 4, 255, 0.1);
+    box-shadow:
+        0 4px 20px rgba(0, 0, 0, 0.25),
+        0 0 0 1px rgba(255, 255, 255, 0.8),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9);
     box-sizing: border-box;
 }
 
@@ -319,9 +325,12 @@ body {
     background: rgba(255, 255, 255, 0.7);
     backdrop-filter: blur(12px);
     border-radius: 15px;
-    border: 1px solid rgba(0, 4, 255, 0.25);
+    border: 3px solid rgba(95, 150, 197, 0.3);
     padding: 1.5rem;
-    box-shadow: 0 8px 32px rgba(0, 4, 255, 0.1);
+    box-shadow:
+        0 4px 20px rgba(0, 0, 0, 0.25),
+        0 0 0 1px rgba(255, 255, 255, 0.8),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9);
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
@@ -553,9 +562,12 @@ body {
     background: rgba(255, 255, 255, 0.7);
     backdrop-filter: blur(12px);
     border-radius: 15px;
-    border: 1px solid rgba(0, 4, 255, 0.25);
+    border: 3px solid rgba(95, 150, 197, 0.3);
     padding: 1.5rem;
-    box-shadow: 0 8px 32px rgba(0, 4, 255, 0.1);
+    box-shadow:
+        0 4px 20px rgba(0, 0, 0, 0.25),
+        0 0 0 1px rgba(255, 255, 255, 0.8),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9);
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
