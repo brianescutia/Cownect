@@ -21,10 +21,13 @@ const Club = require('./models/Club');
 const { CareerField, QuizQuestion, QuizResult } = require('./models/nicheQuizModels');
 const Event = require('./models/eventModel');
 
+
 // NOW load Google Auth AFTER trust proxy is set
 require('./googleAuth');
 
 // Load services
+const MentorMatcher = require('./services/MentorMatcher'); // We'll create this service
+
 const EnhancedAICareerAnalyzer = require('./services/enhancedThreeLevelAIAnalyzer');
 const enhancedAnalyzer = new EnhancedAICareerAnalyzer();
 
@@ -1600,6 +1603,178 @@ app.get('/api/quiz/debug/:level', requireAuth, async (req, res) => {
   }
 });
 
+
+
+app.get('/mentor-matching', requireAuth, (req, res) => {
+  console.log('Mentor matching page accessed by:', req.session.userEmail);
+  res.sendFile(path.join(__dirname, '../frontend/pages/mentor-matching.html'));
+});
+
+// Get quiz questions
+app.get('/api/mentor-matching/questions', requireAuth, (req, res) => {
+  const questions = [
+    {
+      id: 1,
+      question: "What's your primary career interest?",
+      options: [
+        "Product Management",
+        "Software Engineering",
+        "UX/UI Design",
+        "Data Science",
+        "Entrepreneurship",
+        "Consulting"
+      ]
+    },
+    {
+      id: 2,
+      question: "What stage are you at in your career journey?",
+      options: [
+        "Just starting to explore",
+        "Have some experience, looking to grow",
+        "Preparing for internships",
+        "Transitioning to full-time roles",
+        "Considering career pivot"
+      ]
+    },
+    {
+      id: 3,
+      question: "What type of mentorship are you looking for?",
+      options: [
+        "Career guidance and advice",
+        "Technical skill development",
+        "Interview preparation",
+        "Industry insights",
+        "Networking and connections",
+        "Personal development"
+      ]
+    },
+    {
+      id: 4,
+      question: "Which industry interests you most?",
+      options: [
+        "Big Tech (FAANG)",
+        "Startups",
+        "Finance/FinTech",
+        "Healthcare/Biotech",
+        "E-commerce/Retail",
+        "Gaming/Entertainment"
+      ]
+    },
+    {
+      id: 5,
+      question: "What's most important to you in a mentor?",
+      options: [
+        "Similar background/journey",
+        "Industry experience",
+        "Technical expertise",
+        "Leadership experience",
+        "Availability and responsiveness",
+        "Personality fit"
+      ]
+    }
+  ];
+
+  res.json({ questions });
+});
+
+// Submit quiz and get mentor matches
+app.post('/api/mentor-matching/submit', requireAuth, async (req, res) => {
+  try {
+    const { answers } = req.body;
+    const userId = req.session.userId;
+    const userEmail = req.session.userEmail;
+
+    console.log(`📊 Processing mentor matching for ${userEmail}`);
+    console.log('📝 User answers:', answers);
+
+    // Get user profile for better matching
+    const user = await User.findById(userId).select('name year major skills lookingFor');
+
+    // Initialize the mentor matcher service
+    const matcher = new MentorMatcher();
+
+    // Analyze answers and get matched mentors
+    const matchedMentors = await matcher.findMatches(answers, user);
+
+    // Save the matching result to database (optional)
+    try {
+      const MentorMatchResult = require('./models/MentorMatchResult');
+      const matchResult = new MentorMatchResult({
+        user: userId,
+        answers: answers,
+        matchedMentors: matchedMentors.map(m => ({
+          mentorId: m.id,
+          name: m.name,
+          matchScore: m.matchScore,
+          expressoUrl: m.expressoUrl
+        })),
+        createdAt: new Date()
+      });
+      await matchResult.save();
+      console.log('💾 Mentor match result saved');
+    } catch (saveError) {
+      console.warn('⚠️ Failed to save mentor match result:', saveError);
+    }
+
+    res.json({
+      success: true,
+      mentors: matchedMentors,
+      message: 'Successfully matched with mentors'
+    });
+
+  } catch (error) {
+    console.error('💥 Error in mentor matching:', error);
+    res.status(500).json({
+      error: 'Failed to match mentors',
+      message: error.message
+    });
+  }
+});
+
+// Get user's mentor match history
+app.get('/api/mentor-matching/history', requireAuth, async (req, res) => {
+  try {
+    const userId = req.session.userId;
+
+    const MentorMatchResult = require('./models/MentorMatchResult');
+    const history = await MentorMatchResult.find({ user: userId })
+      .sort({ createdAt: -1 })
+      .limit(5)
+      .lean();
+
+    res.json({
+      success: true,
+      history: history,
+      totalMatches: history.length
+    });
+
+  } catch (error) {
+    console.error('💥 Error fetching mentor match history:', error);
+    res.status(500).json({ error: 'Failed to fetch history' });
+  }
+});
+
+// Track when user clicks to schedule with a mentor
+app.post('/api/mentor-matching/track-click', requireAuth, async (req, res) => {
+  try {
+    const { mentorId, mentorName, expressoUrl } = req.body;
+    const userId = req.session.userId;
+
+    console.log(`📅 User ${req.session.userEmail} scheduling with mentor ${mentorName}`);
+
+    // Track this interaction (optional)
+    // You could save this to track which mentors are most popular
+
+    res.json({
+      success: true,
+      message: 'Click tracked successfully'
+    });
+
+  } catch (error) {
+    console.error('💥 Error tracking mentor click:', error);
+    res.status(500).json({ error: 'Failed to track click' });
+  }
+});
 // =============================================================================
 // ADD THESE ROUTES TO YOUR backend/app.js FILE
 // =============================================================================

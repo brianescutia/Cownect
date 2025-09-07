@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mentor Matching - Cownect</title>
+    <link rel="stylesheet" href="../styles/mentor-matching.css">
+    <link rel="stylesheet" href="../styles/navbar.css">
+</head>
+<body>
+    <!-- Dynamic navbar will be injected by navbar-component.js -->
+
+    <!-- Main Content -->
+    <div class="mentor-matching-wrapper">
+        <!-- Initial Form Page -->
+        <div class="form-container" id="formContainer">
+            <h1 class="page-title">Mentor Matching</h1>
+            
+            <div class="form-section">
+                <label class="form-label">Add or select your major</label>
+                <div class="tag-input-container">
+                    <div class="tags-display" id="majorTags"></div>
+                    <input type="text" 
+                           class="tag-input" 
+                           id="majorInput" 
+                           placeholder="search for majors...">
+                </div>
+            </div>
+
+            <div class="form-section">
+                <label class="form-label">Add or select your career interests</label>
+                <div class="tag-input-container">
+                    <div class="tags-display" id="careerTags"></div>
+                    <input type="text" 
+                           class="tag-input" 
+                           id="careerInput" 
+                           placeholder="search for careers...">
+                </div>
+            </div>
+
+            <div class="form-section">
+                <label class="form-label">Add or select your hobbies</label>
+                <div class="tag-input-container">
+                    <div class="tags-display" id="hobbiesTags"></div>
+                    <input type="text" 
+                           class="tag-input" 
+                           id="hobbiesInput" 
+                           placeholder="search for hobbies...">
+                </div>
+            </div>
+
+            <div class="form-section">
+                <label class="form-label">What type of mentorship are you looking for?</label>
+                <div class="tag-input-container">
+                    <div class="tags-display" id="mentorshipTags"></div>
+                    <input type="text" 
+                           class="tag-input" 
+                           id="mentorshipInput" 
+                           placeholder="e.g., career guidance, interview prep...">
+                </div>
+            </div>
+
+            <div class="form-section">
+                <label class="form-label">Preferred industry or company type</label>
+                <div class="tag-input-container">
+                    <div class="tags-display" id="industryTags"></div>
+                    <input type="text" 
+                           class="tag-input" 
+                           id="industryInput" 
+                           placeholder="e.g., Big Tech, Startups, Finance...">
+                </div>
+            </div>
+
+            <div class="form-navigation">
+                <span></span> <!-- Empty span for spacing -->
+                <button class="next-btn" onclick="submitAndFindMentors()">
+                    Next
+                    <svg class="arrow-icon" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                        <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Results Page -->
+
+
+        <div class="results-container" id="resultsContainer" style="display: none;">
+            <h1 class="results-title">Match found!</h1>
+            <p class="results-subtitle">Based on your interests and hobbies, we've found multiple possible mentor matches for you:</p>
+            
+            <div class="mentor-cards" id="mentorCards">
+                <!-- Mentor cards will be dynamically inserted here -->
+            </div>
+
+            <p class="disclaimer">By selecting "Schedule a Coffee Chat", you will be exiting this website and rerouted to expresso.</p>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="../scripts/navbar-component.js"></script>
+    <script src="../scripts/navbar.js"></script>
+    <script src="../scripts/mentor-matching.js"></script>
+</body>
+</html>

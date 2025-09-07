@@ -1,0 +1,361 @@
+/* =============================================================================
+   MENTOR MATCHING STYLES
+   Save as: frontend/styles/mentor-matching.css
+   ============================================================================= */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    background: #f5f5f5;
+    min-height: 100vh;
+}
+
+.mentor-matching-wrapper {
+    padding: 80px 20px 40px;
+    min-height: 100vh;
+}
+
+/* Form Container */
+.form-container {
+    max-width: 900px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 20px;
+    padding: 50px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.page-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 40px;
+    color: #333;
+}
+
+/* Form Sections */
+.form-section {
+    margin-bottom: 35px;
+}
+
+.form-label {
+    display: block;
+    font-size: 1.1rem;
+    color: #666;
+    margin-bottom: 12px;
+    font-weight: 500;
+}
+
+/* Tag Input Container */
+.tag-input-container {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    min-height: 50px;
+    padding: 8px;
+    background: white;
+    border: 2px solid #e0e0e0;
+    border-radius: 12px;
+    transition: border-color 0.3s ease;
+}
+
+.tag-input-container:focus-within {
+    border-color: #007bff;
+}
+
+.tags-display {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-right: 8px;
+}
+
+/* Individual Tags */
+.tag {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 12px;
+    background: #007bff;
+    color: white;
+    border-radius: 20px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    gap: 8px;
+    animation: slideIn 0.2s ease;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.tag-remove {
+    cursor: pointer;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.2rem;
+    line-height: 1;
+    padding: 0;
+    margin-left: 4px;
+    opacity: 0.8;
+    transition: opacity 0.2s;
+}
+
+.tag-remove:hover {
+    opacity: 1;
+}
+
+/* Tag Input Field */
+.tag-input {
+    flex: 1;
+    min-width: 200px;
+    border: none;
+    outline: none;
+    font-size: 1rem;
+    padding: 6px;
+    color: #666;
+    background: transparent;
+}
+
+.tag-input::placeholder {
+    color: #999;
+}
+
+/* Navigation */
+.form-navigation {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 50px;
+}
+
+.next-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 30px;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 50px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.next-btn:hover {
+    background: #0056b3;
+    transform: translateX(5px);
+}
+
+.arrow-icon {
+    width: 20px;
+    height: 20px;
+}
+
+/* Results Container */
+.results-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 20px;
+    padding: 50px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.results-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 15px;
+    color: #333;
+}
+
+.results-subtitle {
+    text-align: center;
+    color: #666;
+    font-size: 1.1rem;
+    margin-bottom: 50px;
+}
+
+/* Mentor Cards Grid */
+.mentor-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 30px;
+    margin-bottom: 40px;
+}
+
+/* Individual Mentor Card */
+.mentor-card {
+    background: white;
+    border: 2px solid #e0e0e0;
+    border-radius: 20px;
+    padding: 30px;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.mentor-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.mentor-avatar {
+    width: 150px;
+    height: 150px;
+    margin: 0 auto 20px;
+    border-radius: 50%;
+    overflow: hidden;
+    background: #f0f0f0;
+}
+
+.mentor-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.mentor-name {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.mentor-badges {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.badge {
+    padding: 4px 12px;
+    background: #e3f2fd;
+    color: #007bff;
+    border-radius: 12px;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+
+
+/* Mentor Card Sections */
+.section-label {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #555;
+    margin-bottom: 10px;
+    margin-top: 15px;
+}
+
+.hobby-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 15px;
+}
+
+.hobby-tag {
+    display: inline-block;
+    padding: 3px 10px;
+    background: white;
+    border: 2px solid #007bff;
+    color: #007bff;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+/* Schedule Button */
+.schedule-btn {
+    width: 100%;
+    padding: 12px 24px;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 50px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.schedule-btn:hover {
+    background: #0056b3;
+    transform: scale(1.02);
+}
+
+/* Disclaimer */
+.disclaimer {
+    text-align: center;
+    color: #999;
+    font-size: 0.9rem;
+    font-style: italic;
+    margin-top: 30px;
+}
+
+/* Loading State */
+.loading {
+    text-align: center;
+    padding: 60px;
+}
+
+.spinner {
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #007bff;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 20px;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+
+    .form-container,
+    .results-container {
+        padding: 30px 20px;
+    }
+
+    .page-title,
+    .results-title {
+        font-size: 2rem;
+    }
+
+    .mentor-cards {
+        grid-template-columns: 1fr;
+    }
+
+    .tag-input {
+        min-width: 150px;
+    }
+}

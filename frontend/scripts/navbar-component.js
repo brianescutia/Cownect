@@ -1,5 +1,6 @@
 // =============================================================================
-// DYNAMIC NAVBAR COMPONENT - NO INJECTED CSS
+// DYNAMIC NAVBAR COMPONENT - WITH MENTOR MATCHING
+// Replace your existing navbar-component.js with this version
 // =============================================================================
 
 console.log('🔧 Dynamic Navbar Component loaded');
@@ -34,9 +35,8 @@ const NAVBAR_CONFIG = {
         },
         {
             text: "Mentor Matching",
-            href: "#",
-            id: "mentor-matching",
-            onclick: "showMatchingModal()"
+            href: "/mentor-matching",
+            id: "mentor-matching"
         }
     ]
 };
@@ -61,7 +61,7 @@ function generateNavbarHTML() {
                         <li>
                             <a href="${link.href}" 
                                class="nav-link${currentPage === link.id ? ' active' : ''}"
-                               ${link.onclick ? `onclick="${link.onclick}"` : ''}>
+                               ${link.onclick ? `onclick="${link.onclick}; return false;"` : ''}>
                                 ${link.text}
                             </a>
                         </li>
@@ -92,6 +92,7 @@ function getCurrentPageId() {
         '/events': 'events',
         '/niche-landing': 'niche-test',
         '/niche-quiz': 'niche-test',
+        '/mentor-matching': 'mentor-matching',
         '/dashboard': 'dashboard'
     };
 
@@ -99,6 +100,7 @@ function getCurrentPageId() {
         return pageMap[path];
     }
 
+    // Check for partial matches
     if (path.includes('tech-clubs') || path.includes('club-detail')) {
         return 'tech-clubs';
     }
@@ -107,6 +109,9 @@ function getCurrentPageId() {
     }
     if (path.includes('niche')) {
         return 'niche-test';
+    }
+    if (path.includes('mentor')) {
+        return 'mentor-matching';
     }
 
     return null;
@@ -180,21 +185,12 @@ function goToDashboard() {
     window.location.href = '/dashboard';
 }
 
-function showMatchingModal() {
-    if (window.showMatchingModal && typeof window.showMatchingModal === 'function') {
-        window.showMatchingModal();
-    } else {
-        console.log('🔔 Matching modal function not available on this page');
-        window.location.href = '/dashboard';
-    }
-}
-
 // =============================================================================
 // AUTO-INITIALIZATION
 // =============================================================================
 
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('📄 DOM loaded, initializing clean navbar...');
+    console.log('🔄 DOM loaded, initializing clean navbar...');
     injectNavbar();
     setupNavigationListeners();
     console.log('✅ Clean navbar initialization complete');
@@ -223,6 +219,5 @@ window.injectNavbar = injectNavbar;
 window.updateNavbarActiveState = updateNavbarActiveState;
 window.refreshNavbar = refreshNavbar;
 window.goToDashboard = goToDashboard;
-window.showMatchingModal = showMatchingModal;
 
 console.log('✅ Clean Navbar Component ready');
