@@ -1,5 +1,5 @@
 /* =============================================================================
-   CLUB DETAIL PAGE STYLING - CLEAN VERSION
+   CLUB DETAIL PAGE STYLING - FIXED WITH CLICKABLE SOCIAL ICONS
    =============================================================================
 */
 
@@ -68,7 +68,6 @@ body {
     display: flex;
     justify-content: flex-start;
     padding-left: 100px;
-
 }
 
 .club-title {
@@ -175,6 +174,10 @@ body {
     line-height: 1.6;
     flex: 1;
     margin: 0 0 1rem 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-wrap: break-word;
+    hyphens: auto;
 }
 
 .club-stats {
@@ -227,6 +230,9 @@ body {
         0 0 0 1px rgba(255, 255, 255, 0.8),
         inset 0 1px 0 rgba(255, 255, 255, 0.9);
     box-sizing: border-box;
+    overflow: hidden;
+    word-wrap: break-word;
+    hyphens: auto;
 }
 
 .info-box h3 {
@@ -245,6 +251,9 @@ body {
 
 .focus-header h3 {
     margin: 0;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #2c3e50;
 }
 
 .focus-symbol {
@@ -266,7 +275,7 @@ body {
     opacity: 0.7;
     transition: opacity 0.3s ease, transform 0.3s ease;
     flex-shrink: 0;
-    transform: translateY(-7px)
+    transform: translateY(-7px);
 }
 
 .joining-symbol:hover {
@@ -282,6 +291,13 @@ body {
     line-height: 1;
 }
 
+.how-to-join-header h3 {
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #2c3e50;
+}
+
 .info-box ul {
     list-style: none;
     padding: 0;
@@ -293,6 +309,8 @@ body {
     margin-bottom: 0.5rem;
     padding-left: 1rem;
     position: relative;
+    font-size: 0.9rem;
+    line-height: 1.4;
 }
 
 .info-box li::before {
@@ -303,10 +321,15 @@ body {
     font-weight: bold;
 }
 
+.meeting-info {
+    margin-top: 0;
+}
+
 .meeting-info p {
     color: #4a5568;
-    margin: 0.5rem 0;
-    font-size: 0.95rem;
+    margin: 0.4rem 0;
+    font-size: 0.9rem;
+    line-height: 1.4;
 }
 
 .meeting-info strong {
@@ -335,18 +358,20 @@ body {
     flex-direction: column;
     overflow: hidden;
     position: relative;
+    word-wrap: break-word;
+    hyphens: auto;
 }
 
 .events-header {
     text-align: center;
-    margin-bottom: 1.5rem;
+    margin-bottom: 1rem;
 }
 
 .events-header h2 {
     font-size: 1.5rem;
     font-weight: 600;
     color: #2c3e50;
-    margin: 0 0 0.5rem 0;
+    margin: 0 0 0.25rem 0;
 }
 
 .events-header p {
@@ -362,9 +387,7 @@ body {
     gap: 1rem;
     flex: 1;
     overflow: hidden;
-    /* Prevent cards from extending outside */
     padding: 0.25rem 0;
-    /* Small padding to contain hover effects */
 }
 
 .carousel-btn {
@@ -525,6 +548,10 @@ body {
     line-height: 1.3;
     margin: 0 0 0.75rem 0;
     flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-wrap: break-word;
+    hyphens: auto;
 }
 
 .event-meta {
@@ -553,22 +580,24 @@ body {
 }
 
 /* =============================================================================
-   RIGHT COLUMN - CONTACTS BOX
+   RIGHT COLUMN - CONTACTS BOX WITH CLICKABLE SOCIAL ICONS UNDERNEATH
    =============================================================================
 */
-
 .right-column {
     width: 380px;
+    position: relative;
+    margin-bottom: 60px;
+    /* Space for icons underneath */
 }
 
 .contacts-box {
     width: 380px;
-    height: 285px;
+    height: 450px;
     background: rgba(255, 255, 255, 0.7);
     backdrop-filter: blur(12px);
     border-radius: 15px;
     border: 3px solid rgba(95, 150, 197, 0.3);
-    padding: 1.5rem;
+    padding: 2rem 1.5rem 1.5rem 1.5rem;
     box-shadow:
         0 4px 20px rgba(0, 0, 0, 0.25),
         0 0 0 1px rgba(255, 255, 255, 0.8),
@@ -576,51 +605,200 @@ body {
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
+    overflow: hidden;
+    position: relative;
 }
 
 .contacts-box h2 {
-    font-size: 1.3rem;
+    font-size: 1.4rem;
     font-weight: 600;
     color: #2c3e50;
-    margin: 0 0 1rem 0;
+    margin: 0 0 1.5rem 0;
+    text-align: center;
 }
 
 .contact-info {
-    margin-bottom: 1.5rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    overflow: visible;
+    margin-bottom: 0;
 }
 
 .contact-item {
-    margin-bottom: 1rem;
+    margin-bottom: 0;
 }
 
 .contact-item strong {
     color: #2c3e50;
-    font-size: 0.9rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    display: block;
+    margin-bottom: 0.5rem;
+    border-bottom: 1px solid rgba(95, 150, 197, 0.2);
+    padding-bottom: 0.25rem;
 }
 
 .contact-item p {
     color: #4a5568;
+    font-size: 0.95rem;
+    line-height: 1.4;
     margin: 0.25rem 0;
-    font-size: 0.85rem;
+    word-wrap: break-word;
 }
 
-.social-links {
+/* Alternative approach: Use margin-top instead of absolute positioning */
+.contacts-box+.social-links {
+    margin-top: 10px;
     display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    margin-bottom: 1.5rem;
+    flex-direction: row;
+    justify-content: center;
+    gap: 1rem;
+    position: relative;
+    z-index: 10;
+}
+
+/* Fallback: If the above doesn't work, try this more specific selector */
+.right-column>.social-links {
+    margin-top: 10px !important;
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: center !important;
+    gap: 1rem !important;
+    position: relative !important;
+    z-index: 10 !important;
 }
 
 .social-link {
-    color: #5F96C5;
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     text-decoration: none;
-    font-weight: 500;
-    font-size: 0.9rem;
-    transition: color 0.3s ease;
+    transition: all 0.3s ease;
+    background: rgba(255, 255, 255, 0.95);
+    border: 2px solid rgba(95, 150, 197, 0.3);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
+    position: relative;
+    overflow: hidden;
+    font-size: 0;
+    text-indent: -9999px;
+    color: transparent;
 }
 
 .social-link:hover {
-    color: #4a8bc2;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+}
+
+/* Website icon */
+.social-link[href*="website"]::before,
+.social-link:first-child::before {
+    content: "🌐";
+    font-size: 1.3rem;
+    text-indent: 0;
+    color: initial;
+}
+
+.social-link[href*="website"]:hover,
+.social-link:first-child:hover {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-color: transparent;
+}
+
+/* Discord icon */
+.social-link[href*="discord"]::before {
+    content: "💬";
+    font-size: 1.3rem;
+    text-indent: 0;
+    color: initial;
+}
+
+.social-link[href*="discord"]:hover {
+    background: #5865F2;
+    border-color: transparent;
+}
+
+/* FIXED Instagram icon - clean symbol */
+.social-link[href*="instagram"] {
+    background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+    border-color: transparent;
+}
+
+.social-link[href*="instagram"]::before {
+    content: "";
+    width: 18px;
+    height: 18px;
+    border: 2px solid white;
+    border-radius: 4px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-indent: 0;
+}
+
+.social-link[href*="instagram"]::after {
+    content: "";
+    width: 5px;
+    height: 5px;
+    background: white;
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+}
+
+.social-link[href*="instagram"]:hover {
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 8px 25px rgba(188, 24, 136, 0.4);
+}
+
+/* Twitter icon */
+.social-link[href*="twitter"]::before {
+    content: "🐦";
+    font-size: 1.3rem;
+    text-indent: 0;
+    color: initial;
+}
+
+.social-link[href*="twitter"]:hover {
+    background: #1DA1F2;
+    border-color: transparent;
+}
+
+/* FOOTER FIX: Prevent conflicts with club detail social icons */
+.footer-social .social-link {
+    background: rgba(255, 255, 255, 0.1) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    color: #bdc3c7 !important;
+    width: 40px !important;
+    height: 40px !important;
+    border-radius: 8px !important;
+}
+
+.footer-social .social-link:hover {
+    background: rgba(95, 150, 197, 0.2) !important;
+    border-color: rgba(95, 150, 197, 0.5) !important;
+    color: #5F96C5 !important;
+}
+
+/* Remove pseudo-elements from footer social links */
+.footer-social .social-link::before,
+.footer-social .social-link::after {
+    display: none !important;
+}
+
+/* Ensure footer uses SVG icons only */
+.footer-social .social-link svg {
+    fill: currentColor !important;
+    width: 20px !important;
+    height: 20px !important;
 }
 
 .bookmark-btn:hover {
@@ -634,36 +812,35 @@ body {
 }
 
 /* =============================================================================
-   BACK SECTION - SHIFTED RIGHT
+   BACK SECTION - REMOVED (Now integrated into club name section)
    =============================================================================
 */
-
-.back-section {
-    width: 100%;
-    max-width: 1400px;
-    margin: 2rem 0;
-    padding-left: 100px;
-}
-
 .back-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    background: rgba(255, 255, 255, 0.15);
-    backdrop-filter: blur(12px);
-    color: #5F96C5;
-    text-decoration: none;
-    padding: 0.75rem 1.5rem;
-    border-radius: 10px;
-    font-weight: 500;
-    border: 1px solid rgba(95, 150, 197, 0.3);
-    transition: all 0.3s ease;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 0.5rem !important;
+    background: rgba(255, 255, 255, 0.15) !important;
+    backdrop-filter: blur(12px) !important;
+    color: #5F96C5 !important;
+    text-decoration: none !important;
+    padding: 0.75rem 1rem !important;
+    border-radius: 10px !important;
+    font-weight: 500 !important;
+    border: 1px solid rgba(95, 150, 197, 0.3) !important;
+    transition: all 0.3s ease !important;
+    font-size: 1rem !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1) !important;
+    margin-left: 110px !important;
 }
 
 .back-btn:hover {
-    background: rgba(95, 150, 197, 0.1);
-    transform: translateY(-2px);
+    background: rgba(95, 150, 197, 0.1) !important;
+    transform: translateY(-2px) !important;
+    color: #4a8bc2 !important;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15) !important;
 }
+
+/* Old back section styles removed - button now appears under club name */
 
 /* =============================================================================
    LOADING & ERROR STATES
@@ -799,6 +976,22 @@ body {
         width: 100%;
         max-width: 500px;
         margin: 0 auto;
+        height: auto;
+        min-height: 400px;
+    }
+
+    .social-links {
+        left: 50%;
+        transform: translateX(-50%);
+        bottom: -50px;
+    }
+
+    .info-box {
+        width: 100%;
+        max-width: 400px;
+        height: auto;
+        min-height: 200px;
+        margin: 0 auto;
     }
 }
 
@@ -828,5 +1021,87 @@ body {
     .about-symbol {
         width: 20px;
         height: 20px;
+    }
+
+    .contacts-box {
+        padding: 1.5rem;
+        min-height: 350px;
+    }
+
+    .contacts-box h2 {
+        font-size: 1.2rem;
+        margin-bottom: 1.25rem;
+    }
+
+    .contact-item strong {
+        font-size: 1rem;
+    }
+
+    .contact-item p {
+        font-size: 0.9rem;
+    }
+
+    .social-links {
+        gap: 0.75rem;
+        bottom: -40px;
+    }
+
+    .social-link {
+        width: 32px;
+        height: 32px;
+    }
+
+    .social-link::before {
+        font-size: 1.1rem;
+    }
+
+    .social-link[href*="instagram"]::before {
+        width: 16px;
+        height: 16px;
+        border-width: 2px;
+        border-radius: 4px;
+    }
+
+    .social-link[href*="instagram"]::after {
+        width: 5px;
+        height: 5px;
+    }
+}
+
+@media (max-width: 480px) {
+    .event-card {
+        min-width: 250px;
+        height: 350px;
+    }
+
+    .event-content {
+        padding: 0.75rem;
+    }
+
+    .event-details {
+        gap: 1rem;
+    }
+
+    .contacts-box {
+        padding: 1.25rem;
+        min-height: 320px;
+    }
+
+    .contact-info {
+        gap: 1.25rem;
+    }
+
+    .social-links {
+        gap: 0.5rem;
+        bottom: -35px;
+    }
+
+    .social-link {
+        width: 30px;
+        height: 30px;
+    }
+
+    .social-link::before {
+        font-size: 1rem;
     }
 }

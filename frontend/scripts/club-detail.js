@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const pathParts = window.location.pathname.split('/');
         const clubId = pathParts[pathParts.length - 1];
 
-        console.log(' Loading club details for ID:', clubId);
+        console.log('🔄 Loading club details for ID:', clubId);
 
         if (!clubId || clubId === 'club') {
             showError('No club ID provided');
@@ -28,10 +28,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         setupEventsCarousel();
         setupBookmarkButton();
 
-        console.log(' Club detail page initialized with real data');
+        console.log('✅ Club detail page initialized with real data');
 
     } catch (error) {
-        console.error(' Error initializing club detail page:', error);
+        console.error('💥 Error initializing club detail page:', error);
         showError('Failed to load club details');
     }
 });
@@ -42,7 +42,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 async function loadClubDetails(clubId) {
     try {
-        console.log(` Loading details for club: ${clubId}`);
+        console.log(`🔄 Loading details for club: ${clubId}`);
 
         const response = await fetch(`/api/clubs/${clubId}`);
 
@@ -51,14 +51,14 @@ async function loadClubDetails(clubId) {
         }
 
         currentClub = await response.json();
-        console.log(' Real club data loaded:', currentClub);
+        console.log('📊 Real club data loaded:', currentClub);
 
         // Update page content with real data
         updatePageContent(currentClub);
         hideLoading();
 
     } catch (error) {
-        console.error(' Error loading club details:', error);
+        console.error('💥 Error loading club details:', error);
         showError('Club not found');
     }
 }
@@ -90,13 +90,13 @@ function updatePageContent(club) {
     // Update meeting information with real data
     updateMeetingInfo(club.meetingInfo);
 
-    // Update contact information with real data
+    // Update contact information with clickable social links
     updateContactInfo(club);
 
+    // Update hero image
     updateHeroImage(club);
 
-
-    console.log('✅ Page content updated with real UC Davis data');
+    console.log('✅ Page content updated with functional social links');
 }
 
 // =============================================================================
@@ -146,7 +146,7 @@ function updateContactInfo(club) {
     if (!contactsBox) return;
 
     // Build contact info HTML
-    let contactHTML = '<h2> Contact & Links</h2><div class="contact-info">';
+    let contactHTML = '<h2>📧 Contact & Links</h2><div class="contact-info">';
 
     // Add officers if available
     if (club.officers && club.officers.length > 0) {
@@ -173,31 +173,137 @@ function updateContactInfo(club) {
 
     contactHTML += '</div>';
 
-    // Add social links
-    contactHTML += '<div class="social-links">';
-
-    if (club.websiteUrl) {
-        contactHTML += `<a href="${club.websiteUrl}" target="_blank" class="social-link">🌐</a>`;
-    }
-
-    if (club.instagramUrl) {
-        contactHTML += `<a href="${club.instagramUrl}" target="_blank" class="social-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <rect x="2" y="2" width="20" height="20" rx="5" ry="5" stroke="currentColor" stroke-width="2"/>
-  <path d="m16 11.37a4 4 0 1 1-7.91-1.1 4 4 0 0 1 7.91 1.1z" stroke="currentColor" stroke-width="2"/>
-  <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" stroke="currentColor" stroke-width="2"/>
-</svg> </a>`;
-    }
-
-    // Add default links if none available
-    if (!club.websiteUrl && !club.instagramUrl) {
-        contactHTML += `
-            <a href="#" class="social-link">🌐 Website</a>
-            <a href="#" class="social-link">💬 Discord</a>
-            <a href="#" class="social-link">📱 Instagram</a>
-        `;
-    }
-
+    // Close the contact box
     contactsBox.innerHTML = contactHTML;
+
+    // Create social links underneath the contact box
+    createSocialLinks(club);
+
+    // Add click tracking for analytics and handle no-link scenarios
+    setupSocialLinkTracking();
+}
+
+function createSocialLinks(club) {
+    // Remove any existing social links
+    const existingSocialLinks = document.querySelector('.social-links');
+    if (existingSocialLinks) {
+        existingSocialLinks.remove();
+    }
+
+    // Create new social links container
+    const socialLinksContainer = document.createElement('div');
+    socialLinksContainer.className = 'social-links';
+
+    // Website link
+    if (club.websiteUrl) {
+        const websiteLink = document.createElement('a');
+        websiteLink.href = club.websiteUrl;
+        websiteLink.target = '_blank';
+        websiteLink.className = 'social-link';
+        websiteLink.setAttribute('data-club-link', 'website');
+        socialLinksContainer.appendChild(websiteLink);
+    }
+
+    // Instagram link  
+    if (club.instagramUrl) {
+        const instagramLink = document.createElement('a');
+        instagramLink.href = club.instagramUrl;
+        instagramLink.target = '_blank';
+        instagramLink.className = 'social-link';
+        instagramLink.setAttribute('data-club-link', 'instagram');
+        socialLinksContainer.appendChild(instagramLink);
+    }
+
+    // Discord link
+    if (club.discordUrl) {
+        const discordLink = document.createElement('a');
+        discordLink.href = club.discordUrl;
+        discordLink.target = '_blank';
+        discordLink.className = 'social-link';
+        discordLink.setAttribute('data-club-link', 'discord');
+        socialLinksContainer.appendChild(discordLink);
+    }
+
+    // Twitter link
+    if (club.twitterUrl) {
+        const twitterLink = document.createElement('a');
+        twitterLink.href = club.twitterUrl;
+        twitterLink.target = '_blank';
+        twitterLink.className = 'social-link';
+        twitterLink.setAttribute('data-club-link', 'twitter');
+        socialLinksContainer.appendChild(twitterLink);
+    }
+
+    // Add default links if no club links are available
+    if (!club.websiteUrl && !club.instagramUrl && !club.discordUrl && !club.twitterUrl) {
+        const defaultWebsite = document.createElement('a');
+        defaultWebsite.href = '#';
+        defaultWebsite.className = 'social-link';
+        defaultWebsite.setAttribute('data-club-link', 'website');
+        socialLinksContainer.appendChild(defaultWebsite);
+
+        const defaultInstagram = document.createElement('a');
+        defaultInstagram.href = '#';
+        defaultInstagram.className = 'social-link';
+        defaultInstagram.setAttribute('data-club-link', 'instagram');
+        socialLinksContainer.appendChild(defaultInstagram);
+    }
+
+    // Add the social links container to the right column (underneath contacts box)
+    const rightColumn = document.querySelector('.right-column');
+    if (rightColumn && socialLinksContainer.children.length > 0) {
+        rightColumn.appendChild(socialLinksContainer);
+        console.log('✅ Social links created:', socialLinksContainer.children.length, 'links');
+    }
+}
+
+function setupSocialLinkTracking() {
+    const socialLinks = document.querySelectorAll('.social-link[data-club-link]');
+
+    socialLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+            const platform = link.getAttribute('data-club-link');
+            const clubName = document.getElementById('clubName')?.textContent || 'Unknown Club';
+
+            // Analytics tracking (replace with your analytics service)
+            console.log(`📊 Social link clicked: ${platform} for ${clubName}`);
+
+            // If link has no href or href="#", prevent default and show message
+            if (!link.href || link.href.endsWith('#')) {
+                e.preventDefault();
+                showNoLinkMessage(platform);
+            }
+        });
+    });
+}
+
+function showNoLinkMessage(platform) {
+    const message = `${platform.charAt(0).toUpperCase() + platform.slice(1)} link not available for this club.`;
+
+    // Create a simple toast notification
+    const toast = document.createElement('div');
+    toast.style.cssText = `
+        position: fixed;
+        top: 100px;
+        right: 20px;
+        background: rgba(0, 0, 0, 0.8);
+        color: white;
+        padding: 1rem 1.5rem;
+        border-radius: 8px;
+        z-index: 1000;
+        font-size: 0.9rem;
+        animation: slideIn 0.3s ease;
+    `;
+    toast.textContent = message;
+
+    document.body.appendChild(toast);
+
+    // Remove toast after 3 seconds
+    setTimeout(() => {
+        if (toast.parentNode) {
+            toast.parentNode.removeChild(toast);
+        }
+    }, 3000);
 }
 
 // =============================================================================
@@ -302,7 +408,7 @@ function setupEventsCarousel() {
         startX = 0;
     });
 
-    console.log(' Events carousel set up');
+    console.log('✅ Events carousel set up');
 }
 
 function slideCarousel(direction) {
@@ -321,24 +427,24 @@ function slideCarousel(direction) {
 // =============================================================================
 
 function hideLoading() {
-    console.log(' Hiding loading overlay...');
+    console.log('🔄 Hiding loading overlay...');
 
     const loadingOverlay = document.getElementById('loadingOverlay');
     const clubContainer = document.getElementById('clubDetailContainer');
 
     if (loadingOverlay) {
         loadingOverlay.style.display = 'none';
-        console.log(' Loading overlay hidden');
+        console.log('✅ Loading overlay hidden');
     }
 
     if (clubContainer) {
         clubContainer.style.display = 'block';
-        console.log(' Club container shown');
+        console.log('✅ Club container shown');
     }
 }
 
 function showError(message) {
-    console.log(' Showing error:', message);
+    console.log('💥 Showing error:', message);
 
     const loadingOverlay = document.getElementById('loadingOverlay');
     const clubContainer = document.getElementById('clubDetailContainer');
@@ -358,12 +464,13 @@ function showError(message) {
         if (errorText) {
             errorText.textContent = message;
         }
-        console.log(' Error container shown');
+        console.log('✅ Error container shown');
     } else {
-        console.warn(' Error container not found');
+        console.warn('⚠️ Error container not found');
         alert(`Error: ${message}`);
     }
 }
+
 // =============================================================================
 // UPDATE THE BIG HERO IMAGE AT TOP OF PAGE
 // =============================================================================
@@ -407,7 +514,7 @@ window.slideCarousel = slideCarousel;
 
 // Debug function
 window.debugClubDetail = () => {
-    console.log(' Club Detail Debug:');
+    console.log('🐛 Club Detail Debug:');
     console.log('  Current club:', currentClub);
     console.log('  Officers:', currentClub?.officers);
     console.log('  Meeting info:', currentClub?.meetingInfo);

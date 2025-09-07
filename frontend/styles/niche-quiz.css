@@ -14,7 +14,9 @@
     margin: 0 auto;
     padding: 1rem 2rem 2rem 2rem;
     min-height: calc(100vh - 200px);
-    font-family: 'Rethink Sans', sans-serif;
+    font-family: var(--font-primary);
+
+
 }
 
 /* Active navigation link */
@@ -460,7 +462,9 @@
     border-radius: 20px;
     font-weight: 600;
     color: #5F96C5;
-    font-family: 'Courier New', monospace;
+    font-family: var(--font-primary);
+
+
 }
 
 /* =============================================================================

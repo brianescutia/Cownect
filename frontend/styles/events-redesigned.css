@@ -10,7 +10,9 @@
 }
 
 body {
-    font-family: 'Rethink Sans', sans-serif;
+    font-family: var(--font-primary);
+
+
     background: #f8fafb;
     min-height: 100vh;
     color: #2c3e50;

@@ -6,7 +6,9 @@
 /* Reset + base */
 body {
     margin: 0;
-    font-family: 'Rethink Sans', sans-serif;
+    font-family: var(--font-primary);
+
+
     background: #f5fcff;
     position: relative;
     overflow-x: hidden;

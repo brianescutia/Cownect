@@ -1,0 +1,403 @@
+/* =============================================================================
+   COWNECT WEBSITE - FONT STANDARDIZATION
+   Apply consistent typography across all pages
+   =============================================================================
+*/
+
+/* =============================================================================
+   FONT IMPORTS - Standard Google Fonts
+   =============================================================================
+*/
+
+/* Import Rethink Sans as primary font family */
+@import url('https://fonts.googleapis.com/css2?family=Rethink+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500;1,600&display=swap');
+
+/* Backup: Import Inter as fallback (modern sans-serif) */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+/* =============================================================================
+   FONT VARIABLES - Consistent Typography System
+   =============================================================================
+*/
+
+:root {
+    /* Font Families */
+    --font-primary: 'Rethink Sans', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+    --font-secondary: 'Inter', 'Rethink Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+    --font-monospace: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', 'Source Code Pro', monospace;
+
+    /* Font Weights */
+    --font-weight-light: 300;
+    --font-weight-normal: 400;
+    --font-weight-medium: 500;
+    --font-weight-semibold: 600;
+    --font-weight-bold: 700;
+    --font-weight-extrabold: 800;
+
+    /* Font Sizes - Responsive Scale */
+    --font-size-xs: 0.75rem;
+    /* 12px */
+    --font-size-sm: 0.875rem;
+    /* 14px */
+    --font-size-base: 1rem;
+    /* 16px - Base size */
+    --font-size-lg: 1.125rem;
+    /* 18px */
+    --font-size-xl: 1.25rem;
+    /* 20px */
+    --font-size-2xl: 1.5rem;
+    /* 24px */
+    --font-size-3xl: 1.875rem;
+    /* 30px */
+    --font-size-4xl: 2.25rem;
+    /* 36px */
+    --font-size-5xl: 3rem;
+    /* 48px */
+    --font-size-6xl: 3.75rem;
+    /* 60px */
+
+    /* Line Heights */
+    --line-height-tight: 1.25;
+    --line-height-normal: 1.5;
+    --line-height-relaxed: 1.75;
+
+    /* Letter Spacing */
+    --letter-spacing-tight: -0.025em;
+    --letter-spacing-normal: 0;
+    --letter-spacing-wide: 0.025em;
+}
+
+/* =============================================================================
+   GLOBAL FONT APPLICATION
+   =============================================================================
+*/
+
+/* Base font application to all elements */
+* {
+    font-family: var(--font-primary);
+}
+
+body {
+    font-family: var(--font-primary);
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-normal);
+    line-height: var(--line-height-normal);
+    letter-spacing: var(--letter-spacing-normal);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* =============================================================================
+   HEADING STANDARDIZATION
+   =============================================================================
+*/
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: var(--font-primary);
+    font-weight: var(--font-weight-bold);
+    line-height: var(--line-height-tight);
+    letter-spacing: var(--letter-spacing-tight);
+    margin: 0;
+}
+
+h1 {
+    font-size: var(--font-size-4xl);
+    font-weight: var(--font-weight-extrabold);
+}
+
+h2 {
+    font-size: var(--font-size-3xl);
+    font-weight: var(--font-weight-bold);
+}
+
+h3 {
+    font-size: var(--font-size-2xl);
+    font-weight: var(--font-weight-semibold);
+}
+
+h4 {
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-semibold);
+}
+
+h5 {
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-medium);
+}
+
+h6 {
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-medium);
+}
+
+/* =============================================================================
+   TEXT ELEMENT STANDARDIZATION
+   =============================================================================
+*/
+
+p {
+    font-family: var(--font-primary);
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-normal);
+    line-height: var(--line-height-normal);
+}
+
+/* Links */
+a {
+    font-family: inherit;
+    text-decoration: none;
+    color: inherit;
+}
+
+/* Lists */
+ul,
+ol,
+li {
+    font-family: var(--font-primary);
+    font-size: var(--font-size-base);
+    line-height: var(--line-height-normal);
+}
+
+/* Form Elements */
+input,
+textarea,
+select,
+button {
+    font-family: var(--font-primary);
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-normal);
+}
+
+/* Labels */
+label {
+    font-family: var(--font-primary);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+}
+
+/* Small text */
+small {
+    font-family: var(--font-primary);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-normal);
+}
+
+/* =============================================================================
+   COMPONENT-SPECIFIC FONT OVERRIDES
+   =============================================================================
+*/
+
+/* Navbar */
+.navbar,
+.navbar * {
+    font-family: var(--font-primary) !important;
+}
+
+/* Footer */
+.cownect-footer,
+.cownect-footer * {
+    font-family: var(--font-primary) !important;
+}
+
+/* Dashboard */
+.dashboard-container,
+.dashboard-container * {
+    font-family: var(--font-primary) !important;
+}
+
+/* Club Cards */
+.club-card,
+.club-card * {
+    font-family: var(--font-primary) !important;
+}
+
+/* Event Cards */
+.event-card,
+.event-card * {
+    font-family: var(--font-primary) !important;
+}
+
+/* Profile Forms */
+.profile-form,
+.profile-form * {
+    font-family: var(--font-primary) !important;
+}
+
+/* Results Pages */
+.results-container,
+.results-container *,
+.enhanced-results,
+.enhanced-results *,
+.container,
+.container * {
+    font-family: var(--font-primary) !important;
+}
+
+/* =============================================================================
+   UTILITY CLASSES FOR CONSISTENT TYPOGRAPHY
+   =============================================================================
+*/
+
+/* Font Sizes */
+.text-xs {
+    font-size: var(--font-size-xs);
+}
+
+.text-sm {
+    font-size: var(--font-size-sm);
+}
+
+.text-base {
+    font-size: var(--font-size-base);
+}
+
+.text-lg {
+    font-size: var(--font-size-lg);
+}
+
+.text-xl {
+    font-size: var(--font-size-xl);
+}
+
+.text-2xl {
+    font-size: var(--font-size-2xl);
+}
+
+.text-3xl {
+    font-size: var(--font-size-3xl);
+}
+
+.text-4xl {
+    font-size: var(--font-size-4xl);
+}
+
+/* Font Weights */
+.font-light {
+    font-weight: var(--font-weight-light);
+}
+
+.font-normal {
+    font-weight: var(--font-weight-normal);
+}
+
+.font-medium {
+    font-weight: var(--font-weight-medium);
+}
+
+.font-semibold {
+    font-weight: var(--font-weight-semibold);
+}
+
+.font-bold {
+    font-weight: var(--font-weight-bold);
+}
+
+.font-extrabold {
+    font-weight: var(--font-weight-extrabold);
+}
+
+/* Line Heights */
+.leading-tight {
+    line-height: var(--line-height-tight);
+}
+
+.leading-normal {
+    line-height: var(--line-height-normal);
+}
+
+.leading-relaxed {
+    line-height: var(--line-height-relaxed);
+}
+
+/* Letter Spacing */
+.tracking-tight {
+    letter-spacing: var(--letter-spacing-tight);
+}
+
+.tracking-normal {
+    letter-spacing: var(--letter-spacing-normal);
+}
+
+.tracking-wide {
+    letter-spacing: var(--letter-spacing-wide);
+}
+
+/* =============================================================================
+   RESPONSIVE FONT SIZES
+   =============================================================================
+*/
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+    :root {
+        --font-size-4xl: 2rem;
+        /* Smaller on mobile */
+        --font-size-3xl: 1.75rem;
+        --font-size-2xl: 1.375rem;
+    }
+
+    body {
+        font-size: var(--font-size-lg);
+        /* Slightly larger body text on mobile */
+    }
+}
+
+/* Large screens */
+@media (min-width: 1200px) {
+    :root {
+        --font-size-5xl: 3.5rem;
+        --font-size-6xl: 4.5rem;
+    }
+}
+
+/* =============================================================================
+   OVERRIDE ANY EXISTING FONT DECLARATIONS
+   =============================================================================
+*/
+
+/* Force Rethink Sans on specific problematic selectors */
+.match-content .career-title,
+.section-title,
+.club-name,
+.event-title,
+.user-display-name,
+.footer-brand-name {
+    font-family: var(--font-primary) !important;
+}
+
+/* Remove any Inter font declarations */
+body[style*="Inter"],
+*[style*="Inter"] {
+    font-family: var(--font-primary) !important;
+}
+
+/* =============================================================================
+   ACCESSIBILITY IMPROVEMENTS
+   =============================================================================
+*/
+
+/* Improve readability for users who prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        font-variation-settings: normal;
+    }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    body {
+        font-weight: var(--font-weight-medium);
+    }
+}
+
+/* Print styles */
+@media print {
+    * {
+        font-family: 'Times New Roman', serif !important;
+    }
+}

@@ -5,19 +5,17 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Club Details | Cownect</title>
+  <link rel="stylesheet" href="/styles/fonts.css" />
   <link rel="stylesheet" href="/styles/navbar.css" />
   <link rel="stylesheet" href="/styles/tech-clubs.css" />
   <link rel="stylesheet" href="/styles/club-detail.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Rethink+Sans&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/styles/footer.css" />
-
 
   <script src="/scripts/club-detail.js" defer></script>
   <script src="/scripts/bookmark.js" defer></script>
   <script src="/scripts/navbar-component.js" defer></script>
   <script src="/scripts/navbar.js" defer></script>
   <script src="/scripts/footer.js" defer></script>
-
 </head>
 
 <body>
@@ -46,6 +44,11 @@
       </div>
     </section>
 
+    <!-- Back Button Section -->
+    <section class="back-button-section">
+      <a href="/tech-clubs" class="back-btn">← Back to All Clubs</a>
+    </section>
+
     <!-- Content Grid -->
     <div class="content-grid">
 
@@ -56,7 +59,7 @@
         <section class="about-box">
           <div class="about-header">
             <h2>About</h2>
-            <img src="../assets/about-symbol.png" alt="About Symbol" class="about-symbol" />
+            <img src="/assets/about-symbol.png" alt="About Symbol" class="about-symbol" />
           </div>
 
           <p id="clubDescription" class="club-description">Loading club description...</p>
@@ -68,9 +71,8 @@
           <div class="info-box">
             <div class="focus-header">
               <h3>Why Should I Join</h3>
-              <img src="../assets/focus-areas.png" alt="Focus Symbol" class="focus-symbol" />
+              <img src="/assets/focus-areas.png" alt="Focus Symbol" class="focus-symbol" />
             </div>
-            <h3></h3>
             <ul>
               <li>Machine Learning</li>
               <li>Computer Vision</li>
@@ -82,7 +84,7 @@
           <div class="info-box">
             <div class="how-to-join-header">
               <h3>Events</h3>
-              <img src="../assets/how-to-join.png" alt="Focus Symbol" class="joining-symbol" />
+              <img src="/assets/how-to-join.png" alt="Focus Symbol" class="joining-symbol" />
             </div>
             <div class="meeting-info">
               <p><strong>Location:</strong> Kemper Hall 1131</p>
@@ -113,7 +115,7 @@
                     <span class="month">DEC</span>
                   </div>
                   <button class="event-bookmark" data-event-id="1">
-                    <img src="../assets/bookmark.png" alt="Bookmark Event" />
+                    <img src="/assets/bookmark.png" alt="Bookmark Event" />
                   </button>
                 </div>
                 <div class="event-details">
@@ -134,7 +136,7 @@
                     <span class="month">DEC</span>
                   </div>
                   <button class="event-bookmark" data-event-id="2">
-                    <img src="../assets/bookmark.png" alt="Bookmark Event" />
+                    <img src="/assets/bookmark.png" alt="Bookmark Event" />
                   </button>
                 </div>
                 <div class="event-details">
@@ -155,7 +157,7 @@
                     <span class="month">DEC</span>
                   </div>
                   <button class="event-bookmark" data-event-id="3">
-                    <img src="../assets/bookmark.png" alt="Bookmark Event" />
+                    <img src="/assets/bookmark.png" alt="Bookmark Event" />
                   </button>
                 </div>
                 <div class="event-details">
@@ -176,7 +178,7 @@
                     <span class="month">JAN</span>
                   </div>
                   <button class="event-bookmark" data-event-id="4">
-                    <img src="../assets/bookmark.png" alt="Bookmark Event" />
+                    <img src="/assets/bookmark.png" alt="Bookmark Event" />
                   </button>
                 </div>
                 <div class="event-details">
@@ -221,23 +223,15 @@
               <p>info@aiclub.ucdavis.edu</p>
             </div>
           </div>
-
-          <div class="social-links">
-            <a href="#" class="social-link">🌐 Website</a>
-            <a href="#" class="social-link">💬 Discord</a>
-            <a href="#" class="social-link">📱 Instagram</a>
-            <a href="#" class="social-link">🐦 Twitter</a>
-          </div>
         </section>
+
+        <!-- Social links will be dynamically added here by JavaScript -->
 
       </div>
 
     </div>
 
-    <!-- Back to Clubs Button -->
-    <section class="back-section">
-      <a href="/tech-clubs" class="back-btn">← Back to All Clubs</a>
-    </section>
+    <!-- Back to Clubs Button removed from here - now appears under club name -->
 
   </main>
 

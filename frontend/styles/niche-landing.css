@@ -2,7 +2,9 @@
 
 body {
     margin: 0;
-    font-family: 'Helvetica', sans-serif;
+    font-family: var(--font-primary);
+
+
     background-color: var(--bg-color);
     min-height: 100vh;
     background-image: none !important;
@@ -31,7 +33,9 @@ body {
 }
 
 .trust-badge span {
-    font-family: 'Rethink Sans', sans-serif;
+    font-family: var(--font-primary);
+
+
     font-size: 0.9rem;
     font-weight: 500;
     color: #0077B6;
@@ -48,7 +52,9 @@ body {
 }
 
 .hero-content h1 {
-    font-family: 'Inter', sans-serif;
+    font-family: var(--font-primary);
+
+
     font-size: 3.5rem;
     font-weight: 600;
     line-height: 1.2;
@@ -56,7 +62,9 @@ body {
 }
 
 .gradient-text {
-    font-family: 'Inter', sans-serif;
+    font-family: var(--font-primary);
+
+
     background: linear-gradient(135deg, #90cdf4, #3182ce, #2b6cb0);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -65,7 +73,9 @@ body {
 }
 
 .hero-content p {
-    font-family: 'Rethink Sans', sans-serif;
+    font-family: var(--font-primary);
+
+
     font-weight: 500;
     font-size: 1rem;
     line-height: 1.6;
@@ -99,7 +109,9 @@ body {
 }
 
 .quiz-details {
-    font-family: 'Rethink Sans', sans-serif;
+    font-family: var(--font-primary);
+
+
     font-size: 0.8rem;
     color: #6b7280;
     font-weight: 500;
@@ -156,7 +168,9 @@ body {
 }
 
 .feature-card h4 {
-    font-family: 'Inter', sans-serif;
+    font-family: var(--font-primary);
+
+
     font-size: 1.3rem;
     font-weight: 600;
     color: #1e293b;
@@ -164,7 +178,9 @@ body {
 }
 
 .feature-card p {
-    font-family: 'Rethink Sans', sans-serif;
+    font-family: var(--font-primary);
+
+
     font-size: 1rem;
     color: #64748b;
     line-height: 1.5;
