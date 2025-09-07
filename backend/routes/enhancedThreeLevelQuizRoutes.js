@@ -8,11 +8,22 @@ const path = require('path');
 const { QuizResult } = require('../models/nicheQuizModels');
 const User = require('../models/User');
 const EnhancedThreeLevelAIAnalyzer = require('../services/enhancedThreeLevelAIAnalyzer');
-const { enhancedThreeLevelQuizQuestions } = require('../data/enhancedThreeLevelQuizData');
+
+// FIX: More robust import with debugging
+let enhancedThreeLevelQuizQuestions;
+try {
+    const quizData = require('../data/enhancedThreeLevelQuizData');
+    enhancedThreeLevelQuizQuestions = quizData.enhancedThreeLevelQuizQuestions;
+    console.log('🔍 Enhanced routes - Questions loaded:', Object.keys(enhancedThreeLevelQuizQuestions || {}));
+    console.log('📊 Beginner questions count:', (enhancedThreeLevelQuizQuestions?.beginner || []).length);
+} catch (error) {
+    console.error('💥 Failed to load questions in routes:', error);
+    enhancedThreeLevelQuizQuestions = {};
+}
+
 const EnhancedQuizResult = require('../models/EnhancedQuizResult');
 const ClubRecommendationService = require('../services/ClubRecommendationService');
 const clubService = new ClubRecommendationService();
-
 // =======================================
 // Helpers (paths, features, utilities)
 // =======================================
@@ -251,6 +262,10 @@ router.get('/enhanced/questions/:level', requireAuth, async (req, res) => {
 // =======================================
 
 // POST /api/quiz/submit   (router mounted at /api/quiz)
+
+// Fixed Quiz Submission Route 
+// Replace your existing /api/quiz/submit route in backend/routes/enhancedThreeLevelQuizRoutes.js
+
 router.post('/submit', requireAuth, rateLimitQuizSubmission, async (req, res) => {
     try {
         const { level, answers, completionTime, metadata } = req.body;
@@ -258,32 +273,160 @@ router.post('/submit', requireAuth, rateLimitQuizSubmission, async (req, res) =>
         const userEmail = req.session.userEmail;
 
         console.log(`📊 Processing enhanced quiz submission for ${userEmail}`);
+        console.log(`📝 Submission data:`, {
+            level,
+            answersCount: answers?.length,
+            completionTime,
+            answersSample: answers?.slice(0, 2) // Log first 2 answers for debugging
+        });
 
+        // Validate input data
         if (!level || !Array.isArray(answers)) {
-            return res.status(400).json({ error: 'Invalid submission data', required: ['level', 'answers array'] });
+            console.error('❌ Invalid submission data:', { level, answersType: typeof answers });
+            return res.status(400).json({
+                error: 'Invalid submission data',
+                required: ['level', 'answers array']
+            });
         }
 
+        // Get user profile for personalized analysis
         const userProfile = await User.findById(userId).select('major year name email');
+        console.log(`👤 User profile:`, {
+            major: userProfile?.major,
+            year: userProfile?.year,
+            email: userEmail
+        });
 
+        // Get questions for the specified level
+        const questions = enhancedThreeLevelQuizQuestions[level] || [];
+        console.log(`❓ Questions available for ${level}:`, questions.length);
+
+        if (questions.length === 0) {
+            console.error(`❌ No questions found for level: ${level}`);
+            return res.status(500).json({ error: `No questions available for ${level} level` });
+        }
+
+        // Validate answers match questions
+        if (answers.length !== questions.length) {
+            console.error(`❌ Answer count mismatch: Expected ${questions.length}, got ${answers.length}`);
+            return res.status(400).json({
+                error: `Expected ${questions.length} answers, received ${answers.length}`
+            });
+        }
+
+        // Process and validate answers format
+        const processedAnswers = answers.map((answer, index) => {
+            const question = questions[index];
+            if (!question) {
+                console.warn(`⚠️ No question found for answer index ${index}`);
+                return answer;
+            }
+
+            // Ensure answer has the expected structure based on question type
+            const processedAnswer = {
+                questionId: answer.questionId || index,
+                questionType: question.type,
+                category: question.category,
+                timeTaken: answer.timeTaken || 0,
+                timestamp: answer.timestamp || Date.now()
+            };
+
+            // Process different answer types
+            switch (question.type) {
+                case 'short_response':
+                    processedAnswer.textResponse = answer.textResponse || answer.response || '';
+                    break;
+
+                case 'multiple_choice':
+                case 'scenario':
+                case 'visual_choice':
+                    if (answer.selectedOption) {
+                        processedAnswer.selectedOption = answer.selectedOption;
+                    } else if (answer.selected !== undefined) {
+                        // Find the selected option from the question
+                        const selectedIndex = parseInt(answer.selected);
+                        if (question.options && question.options[selectedIndex]) {
+                            processedAnswer.selectedOption = question.options[selectedIndex];
+                        }
+                    }
+                    break;
+
+                case 'scale':
+                    processedAnswer.scaleValue = answer.scaleValue || answer.value;
+                    break;
+
+                case 'ranking':
+                    processedAnswer.ranking = answer.ranking || [];
+                    break;
+
+                default:
+                    console.warn(`⚠️ Unknown question type: ${question.type}`);
+                    processedAnswer.rawAnswer = answer;
+            }
+
+            return processedAnswer;
+        });
+
+        console.log(`🔄 Processed answers sample:`, {
+            totalProcessed: processedAnswers.length,
+            firstAnswer: processedAnswers[0],
+            answerTypes: processedAnswers.map(a => a.questionType)
+        });
+
+        // Initialize AI analyzer and run analysis
+        console.log('🧠 Starting AI analysis...');
         const analysisResults = await analyzer.analyzeCareerFit(
-            answers,
-            req.body.questions || [],
+            processedAnswers,
+            questions,
             level,
-            { major: userProfile?.major, year: userProfile?.year, email: userEmail, completionTime }
+            {
+                major: userProfile?.major,
+                year: userProfile?.year,
+                email: userEmail,
+                completionTime: completionTime,
+                university: 'UC Davis'
+            }
         );
-        if (!analysisResults?.success) throw new Error('AI analysis failed');
+
+        console.log('🎯 AI Analysis results:', {
+            success: analysisResults?.success,
+            topCareer: analysisResults?.results?.topMatch?.career,
+            confidence: analysisResults?.results?.topMatch?.percentage,
+            hasAllMatches: !!analysisResults?.results?.allMatches,
+            matchesCount: analysisResults?.results?.allMatches?.length
+        });
+
+        if (!analysisResults?.success) {
+            console.error('❌ AI analysis failed:', analysisResults);
+            throw new Error('AI analysis failed to produce valid results');
+        }
+
+        // Validate AI results structure
+        if (!analysisResults.results?.topMatch?.career) {
+            console.error('❌ Invalid AI results structure:', analysisResults.results);
+            throw new Error('AI returned invalid results structure');
+        }
 
         const topCareer = analysisResults.results.topMatch.career;
         const allMatches = analysisResults.results.allMatches || [];
-        const clubRecommendations = await clubService.getClubRecommendations(topCareer, allMatches);
 
-        // Try to save legacy QuizResult; ignore failure
+        // Get club recommendations
+        console.log('🏛️ Getting club recommendations...');
+        const clubRecommendations = await clubService.getClubRecommendations(topCareer, allMatches);
+        console.log(`📚 Found ${clubRecommendations.length} club recommendations`);
+
+        // Generate additional data
+        const careerProgression = getCareerProgression(topCareer);
+        const marketData = getMarketData(topCareer);
+        const nextSteps = getNextSteps(topCareer, level);
+
+        // Save to legacy QuizResult model (optional, ignore errors)
         let originalQuizResultId = null;
         try {
-            const originalQuizResult = new QuizResult({
+            const legacyResult = new QuizResult({
                 user: userId,
-                quizLevel: `enhanced-${level}`,  // may fail enum; caught below
-                answers: (answers || []).map(a => ({
+                quizLevel: `enhanced-${level}`,
+                answers: processedAnswers.map(a => ({
                     questionId: String(a.questionId),
                     ranking: Array.isArray(a.ranking) ? a.ranking : [],
                     timeTaken: a.timeTaken || 0
@@ -294,14 +437,18 @@ router.post('/submit', requireAuth, rateLimitQuizSubmission, async (req, res) =>
                     reasoning: analysisResults.results.topMatch.reasoning
                 },
                 completionTime,
-                metadata: { ...metadata, enhanced: true }
+                metadata: { ...metadata, enhanced: true, aiPowered: true }
             });
-            await originalQuizResult.save();
-            originalQuizResultId = originalQuizResult._id;
+
+            await legacyResult.save();
+            originalQuizResultId = legacyResult._id;
+            console.log('💾 Saved to legacy QuizResult model');
         } catch (saveError) {
-            console.error('⚠️ Failed to save to legacy QuizResult model:', saveError.message);
+            console.warn('⚠️ Failed to save to legacy model (continuing):', saveError.message);
         }
 
+        // Create enhanced result
+        console.log('💾 Creating enhanced result...');
         const enhancedResult = new EnhancedQuizResult({
             user: userId,
             originalQuizResult: originalQuizResultId,
@@ -313,18 +460,17 @@ router.post('/submit', requireAuth, rateLimitQuizSubmission, async (req, res) =>
                 reasoning: analysisResults.results.topMatch.reasoning,
                 personalizedInsights: analysisResults.results.aiInsights?.fullAnalysis,
                 keyPatterns: analysisResults.results.topMatch.keyPatterns || [],
-                marketData: enhanceMarketData(analysisResults.results.topMatch.marketData),
-                nextSteps: enhanceNextSteps(analysisResults.results.topMatch.nextSteps || []),
-                careerProgression: generateCareerProgression(topCareer)
+                marketData: enhanceMarketData(marketData),
+                nextSteps: enhanceNextSteps(nextSteps),
+                careerProgression: careerProgression
             },
             allMatches: allMatches.slice(0, 3).map(match => ({
                 career: match.career,
                 category: match.category || categorizeCareer(match.career),
                 percentage: match.percentage,
                 confidence: match.confidence || match.percentage,
-                reasoning: 'Strong alignment with your interests and skills',
-                keyStrengths: generateKeyStrengths(match.career),
-                marketData: enhanceMarketData({}) // default/fallback set
+                reasoning: match.reasoning || 'Strong alignment with your interests and skills',
+                keyStrengths: generateKeyStrengths(match.career)
             })),
             clubRecommendations: clubRecommendations.map(club => ({
                 clubId: club._id,
@@ -338,14 +484,15 @@ router.post('/submit', requireAuth, rateLimitQuizSubmission, async (req, res) =>
                 personalityProfile: analysisResults.results.personalityInsights?.workStyle,
                 workStyle: analysisResults.results.personalityInsights?.workStyle,
                 learningStyle: analysisResults.results.personalityInsights?.environment,
-                motivationFactors: analysisResults.results.personalityInsights?.strengths ? [analysisResults.results.personalityInsights.strengths] : [],
+                motivationFactors: analysisResults.results.personalityInsights?.strengths ?
+                    [analysisResults.results.personalityInsights.strengths] : [],
                 idealEnvironment: analysisResults.results.personalityInsights?.environment,
-                strengthsToLeverage: analysisResults.results.personalityInsights?.strengths ? [analysisResults.results.personalityInsights.strengths] : [],
-                potentialChallenges: analysisResults.results.personalityInsights?.challenges ? [analysisResults.results.personalityInsights.challenges] : [],
+                strengthsToLeverage: analysisResults.results.personalityInsights?.strengths ?
+                    [analysisResults.results.personalityInsights.strengths] : [],
+                potentialChallenges: analysisResults.results.personalityInsights?.challenges ?
+                    [analysisResults.results.personalityInsights.challenges] : [],
                 confidenceScore: analysisResults.results.qualityMetrics?.confidence || 90,
-                analysisQuality: (conf => (conf >= 95 ? 'excellent' : conf >= 85 ? 'good' : conf >= 75 ? 'fair' : 'needs-improvement'))(
-                    analysisResults.results.qualityMetrics?.confidence || 90
-                )
+                analysisQuality: getAnalysisQuality(analysisResults.results.qualityMetrics?.confidence || 90)
             },
             qualityMetrics: {
                 responseConsistency: analysisResults.results.qualityMetrics?.authenticity || 90,
@@ -357,18 +504,30 @@ router.post('/submit', requireAuth, rateLimitQuizSubmission, async (req, res) =>
             analytics: {
                 viewCount: 1,
                 sectionsViewed: ['top-match'],
-                actionsPerformed: [{ action: 'quiz-completed', data: { level, completionTime, careerMatch: topCareer } }]
+                actionsPerformed: [{
+                    action: 'quiz-completed',
+                    data: {
+                        level,
+                        completionTime,
+                        careerMatch: topCareer,
+                        totalAnswers: processedAnswers.length
+                    }
+                }]
             }
         });
 
         await enhancedResult.save();
+        console.log(`✅ Enhanced result saved with ID: ${enhancedResult._id}`);
 
-        // Frontend can navigate to /enhanced-results (or /enhanced-results/:id if you prefer)
-        return res.json({
+        // Store results in session for immediate access
+        req.session.latestQuizResult = enhancedResult._id.toString();
+
+        // Format response for frontend
+        const response = {
             success: true,
             message: `Enhanced ${level} level career analysis completed successfully`,
             enhanced: true,
-            redirectTo: '/pages/enhanced-results.html',
+            redirectTo: '/enhanced-results',
             results: {
                 topMatch: {
                     career: topCareer,
@@ -376,9 +535,9 @@ router.post('/submit', requireAuth, rateLimitQuizSubmission, async (req, res) =>
                     confidence: analysisResults.results.topMatch.confidence || analysisResults.results.topMatch.percentage,
                     reasoning: analysisResults.results.topMatch.reasoning,
                     keyPatterns: analysisResults.results.topMatch.keyPatterns || [],
-                    marketData: enhanceMarketData(analysisResults.results.topMatch.marketData),
-                    nextSteps: enhanceNextSteps(analysisResults.results.topMatch.nextSteps || []),
-                    recommendedClubs: clubRecommendations.slice(0, 3)
+                    marketData: enhanceMarketData(marketData),
+                    nextSteps: enhanceNextSteps(nextSteps),
+                    careerProgression: careerProgression
                 },
                 allMatches: allMatches.slice(0, 3),
                 clubRecommendations: clubRecommendations.slice(0, 3),
@@ -388,13 +547,40 @@ router.post('/submit', requireAuth, rateLimitQuizSubmission, async (req, res) =>
                 enhancedResultId: enhancedResult._id,
                 originalQuizResultId: originalQuizResultId
             },
+            debug: {
+                processedAnswersCount: processedAnswers.length,
+                questionsCount: questions.length,
+                aiAnalysisSuccess: analysisResults.success,
+                topCareerMatch: topCareer
+            },
             timestamp: new Date().toISOString()
-        });
+        };
+
+        console.log(`✅ Enhanced analysis complete: ${topCareer} (${analysisResults.results.topMatch.percentage}%)`);
+        res.json(response);
+
     } catch (error) {
         console.error('💥 Enhanced quiz submission error:', error);
-        return res.status(500).json({ error: 'Enhanced career analysis failed', message: error.message, fallback: true });
+        console.error('Error stack:', error.stack);
+
+        res.status(500).json({
+            error: 'Enhanced career analysis failed',
+            message: error.message,
+            suggestion: 'Please try again or contact support if the issue persists',
+            debug: {
+                errorType: error.name,
+                timestamp: new Date().toISOString()
+            }
+        });
     }
 });
+
+function getAnalysisQuality(confidence) {
+    if (confidence >= 95) return 'excellent';
+    if (confidence >= 85) return 'good';
+    if (confidence >= 75) return 'fair';
+    return 'needs-improvement';
+}
 
 // =======================================
 // Serve Results HTML + JSON APIs
@@ -527,6 +713,197 @@ router.post('/api/enhanced-results/:resultId/complete-step', requireAuth, async 
     }
 });
 
+
+// Add these helper functions to your backend/routes/enhancedThreeLevelQuizRoutes.js
+// Put them at the bottom of the file, before module.exports = router;
+
+function getCareerProgression(careerName) {
+    const progressions = {
+        'Technical Writing': [
+            {
+                level: 'Entry',
+                roles: ['Junior Technical Writer', 'Documentation Specialist'],
+                timeline: '0-2 years',
+                salary: { min: 55, max: 75 }
+            },
+            {
+                level: 'Mid',
+                roles: ['Technical Writer', 'Senior Documentation Specialist'],
+                timeline: '2-5 years',
+                salary: { min: 75, max: 105 }
+            },
+            {
+                level: 'Senior',
+                roles: ['Senior Technical Writer', 'Documentation Manager'],
+                timeline: '5+ years',
+                salary: { min: 105, max: 140 }
+            }
+        ],
+        'UX/UI Design': [
+            {
+                level: 'Entry',
+                roles: ['Junior UX Designer', 'UI Designer'],
+                timeline: '0-2 years',
+                salary: { min: 70, max: 95 }
+            },
+            {
+                level: 'Mid',
+                roles: ['UX Designer', 'Senior UI Designer'],
+                timeline: '2-5 years',
+                salary: { min: 95, max: 130 }
+            },
+            {
+                level: 'Senior',
+                roles: ['Lead UX Designer', 'Design Manager'],
+                timeline: '5+ years',
+                salary: { min: 130, max: 180 }
+            }
+        ],
+        'Software Engineering': [
+            {
+                level: 'Entry',
+                roles: ['Junior Developer', 'Software Engineer I'],
+                timeline: '0-2 years',
+                salary: { min: 85, max: 110 }
+            },
+            {
+                level: 'Mid',
+                roles: ['Software Engineer II', 'Senior Developer'],
+                timeline: '2-5 years',
+                salary: { min: 110, max: 150 }
+            },
+            {
+                level: 'Senior',
+                roles: ['Staff Engineer', 'Principal Engineer'],
+                timeline: '5+ years',
+                salary: { min: 150, max: 220 }
+            }
+        ],
+        'Data Science': [
+            {
+                level: 'Entry',
+                roles: ['Data Analyst', 'Junior Data Scientist'],
+                timeline: '0-2 years',
+                salary: { min: 75, max: 100 }
+            },
+            {
+                level: 'Mid',
+                roles: ['Data Scientist', 'ML Engineer'],
+                timeline: '2-5 years',
+                salary: { min: 100, max: 140 }
+            },
+            {
+                level: 'Senior',
+                roles: ['Senior Data Scientist', 'Data Science Manager'],
+                timeline: '5+ years',
+                salary: { min: 140, max: 200 }
+            }
+        ]
+    };
+
+    return progressions[careerName] || progressions['Software Engineering'];
+}
+
+function getMarketData(careerName) {
+    const marketData = {
+        'Technical Writing': {
+            avgSalary: '$75k - $120k',
+            jobGrowth: '+7% (2022-2032)',
+            demand: 'Moderate',
+            workLifeBalance: '8.5/10',
+            remoteOpportunities: '90%'
+        },
+        'UX/UI Design': {
+            avgSalary: '$85k - $140k',
+            jobGrowth: '+13% (2022-2032)',
+            demand: 'High',
+            workLifeBalance: '7.2/10',
+            remoteOpportunities: '80%'
+        },
+        'Software Engineering': {
+            avgSalary: '$110k - $180k',
+            jobGrowth: '+22% (2022-2032)',
+            demand: 'Very High',
+            workLifeBalance: '7.5/10',
+            remoteOpportunities: '95%'
+        },
+        'Data Science': {
+            avgSalary: '$95k - $165k',
+            jobGrowth: '+22% (2022-2032)',
+            demand: 'Very High',
+            workLifeBalance: '7.8/10',
+            remoteOpportunities: '90%'
+        }
+    };
+
+    return marketData[careerName] || marketData['Software Engineering'];
+}
+
+function getNextSteps(careerName, level) {
+    const stepsByCareer = {
+        'Technical Writing': {
+            'beginner': [
+                'Learn technical writing fundamentals and documentation tools',
+                'Build a portfolio with 3-5 writing samples',
+                'Join technical writing communities and practice'
+            ],
+            'intermediate': [
+                'Master advanced documentation tools (GitBook, Confluence)',
+                'Specialize in a technical domain (API docs, user guides)',
+                'Apply for technical writing internships'
+            ],
+            'advanced': [
+                'Lead documentation strategy for complex projects',
+                'Mentor junior writers and establish best practices',
+                'Pursue senior technical writing or content strategy roles'
+            ]
+        },
+        'UX/UI Design': {
+            'beginner': [
+                'Learn design fundamentals and user research methods',
+                'Build a portfolio with 3-5 design projects',
+                'Join UC Davis Design Club and UX groups'
+            ],
+            'intermediate': [
+                'Master advanced design tools (Figma, Adobe Creative Suite)',
+                'Complete user research projects with real users',
+                'Apply for UX design internships'
+            ],
+            'advanced': [
+                'Lead design projects and mentor junior designers',
+                'Specialize in areas like interaction design or design systems',
+                'Build industry connections and pursue senior roles'
+            ]
+        }
+    };
+
+    const defaultSteps = [
+        'Build foundational skills in your chosen field',
+        'Create portfolio projects to showcase abilities',
+        'Connect with UC Davis Career Center for guidance'
+    ];
+
+    return stepsByCareer[careerName]?.[level] || defaultSteps;
+}
+
+function getDefaultMatches(topCareer) {
+    const relatedCareers = {
+        'Technical Writing': [
+            { career: 'Technical Writing', category: 'Communication', percentage: 85 },
+            { career: 'UX Writing', category: 'Design', percentage: 78 },
+            { career: 'Developer Relations', category: 'Communication', percentage: 72 },
+            { career: 'Product Management', category: 'Product', percentage: 65 }
+        ],
+        'UX/UI Design': [
+            { career: 'UX/UI Design', category: 'Design', percentage: 85 },
+            { career: 'Product Design', category: 'Design', percentage: 78 },
+            { career: 'Web Design', category: 'Design', percentage: 72 },
+            { career: 'Software Engineering', category: 'Engineering', percentage: 65 }
+        ]
+    };
+
+    return relatedCareers[topCareer] || relatedCareers['Software Engineering'];
+}
 // =======================================
 // Error handler (router-level)
 // =======================================

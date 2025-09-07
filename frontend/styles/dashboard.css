@@ -1829,6 +1829,578 @@ body {
     color: #92400E;
 }
 
+
+/* =============================================================================
+   DASHBOARD RESULTS MODAL STYLES
+   Add these styles to dashboard.css
+   =============================================================================
+*/
+
+/* =============================================================================
+   MODAL OVERLAY AND CONTAINER
+   =============================================================================
+*/
+
+.results-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(8px);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    animation: modalFadeIn 0.3s ease-out;
+}
+
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
+        backdrop-filter: blur(0px);
+    }
+
+    to {
+        opacity: 1;
+        backdrop-filter: blur(8px);
+    }
+}
+
+.results-modal-container {
+    background: white;
+    border-radius: 20px;
+    width: 100%;
+    max-width: 1200px;
+    max-height: 90vh;
+    overflow: hidden;
+    box-shadow: 0 24px 48px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    animation: modalSlideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes modalSlideIn {
+    from {
+        transform: translateY(30px) scale(0.95);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+    }
+}
+
+/* =============================================================================
+   MODAL HEADER
+   =============================================================================
+*/
+
+.results-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem 2rem;
+    border-bottom: 1px solid #e2e8f0;
+    background: #f8fafc;
+    flex-shrink: 0;
+}
+
+.results-modal-header h3 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin: 0;
+}
+
+.results-modal-close {
+    background: none;
+    border: none;
+    color: #64748b;
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.results-modal-close:hover {
+    background: #e2e8f0;
+    color: #1e293b;
+    transform: scale(1.1);
+}
+
+.results-modal-close svg {
+    width: 24px;
+    height: 24px;
+}
+
+/* =============================================================================
+   MODAL CONTENT
+   =============================================================================
+*/
+
+.results-modal-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0;
+    background: #f8fafc;
+}
+
+/* Custom scrollbar for modal */
+.results-modal-content::-webkit-scrollbar {
+    width: 8px;
+}
+
+.results-modal-content::-webkit-scrollbar-track {
+    background: #f1f5f9;
+}
+
+.results-modal-content::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
+}
+
+.results-modal-content::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}
+
+/* =============================================================================
+   MODAL-SPECIFIC RESULTS STYLING
+   =============================================================================
+*/
+
+/* Adjust the top match card for modal */
+.results-modal-content .top-match-card {
+    margin: 2rem 2rem 1.5rem 2rem;
+    border-radius: 16px;
+}
+
+/* Adjust sections spacing for modal */
+.results-modal-content .clubs-section,
+.results-modal-content .content-section {
+    margin: 0 2rem 1.5rem 2rem;
+    border-radius: 16px;
+}
+
+.results-modal-content .two-column-layout {
+    margin: 0 2rem 1.5rem 2rem;
+    gap: 1.5rem;
+}
+
+.results-modal-content .action-buttons {
+    margin: 1.5rem 2rem 2rem 2rem;
+    gap: 1rem;
+}
+
+/* Adjust font sizes for modal view */
+.results-modal-content .career-title,
+.results-modal-content #topCareerName {
+    font-size: 2.2rem;
+}
+
+.results-modal-content .section-title {
+    font-size: 1.3rem;
+}
+
+.results-modal-content .match-content h3 {
+    font-size: 0.95rem;
+}
+
+/* =============================================================================
+   MODAL LOADING STATE
+   =============================================================================
+*/
+
+.modal-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 4rem 2rem;
+    text-align: center;
+}
+
+.modal-loading .loading-spinner {
+    width: 50px;
+    height: 50px;
+    border: 4px solid #e2e8f0;
+    border-top: 4px solid #3b82f6;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 1.5rem;
+}
+
+.modal-loading p {
+    color: #64748b;
+    font-size: 1.1rem;
+    font-weight: 500;
+}
+
+/* =============================================================================
+   MODAL ERROR STATE
+   =============================================================================
+*/
+
+.modal-error {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 4rem 2rem;
+    text-align: center;
+}
+
+.modal-error .error-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    opacity: 0.6;
+}
+
+.modal-error h3 {
+    font-size: 1.5rem;
+    color: #1e293b;
+    margin-bottom: 0.5rem;
+}
+
+.modal-error p {
+    color: #64748b;
+    font-size: 1rem;
+    margin-bottom: 2rem;
+    max-width: 400px;
+}
+
+.error-close-btn {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.error-close-btn:hover {
+    background: linear-gradient(135deg, #dc2626, #b91c1c);
+    transform: translateY(-1px);
+}
+
+/* =============================================================================
+   ENHANCED TEST RESULT ITEMS (CLICKABLE)
+   =============================================================================
+*/
+
+.test-result-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+    position: relative;
+    overflow: hidden;
+}
+
+.test-result-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.test-result-item:hover {
+    transform: translateX(5px);
+    box-shadow: 0 8px 25px rgba(59, 130, 246, 0.15);
+    border-color: rgba(59, 130, 246, 0.2);
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.05), rgba(99, 102, 241, 0.02));
+}
+
+.test-result-item:hover::before {
+    opacity: 1;
+}
+
+.test-result-item:active {
+    transform: translateX(3px) scale(0.98);
+}
+
+/* Add a subtle "view results" indicator */
+.test-result-item::after {
+    content: '→';
+    position: absolute;
+    right: 1rem;
+    color: #3b82f6;
+    font-weight: bold;
+    font-size: 1.2rem;
+    opacity: 0;
+    transform: translateX(-10px);
+    transition: all 0.3s ease;
+}
+
+.test-result-item:hover::after {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+/* =============================================================================
+   RESPONSIVE DESIGN FOR MODAL
+   =============================================================================
+*/
+
+@media (max-width: 1024px) {
+    .results-modal-container {
+        max-width: 95%;
+        max-height: 95vh;
+    }
+
+    .results-modal-content .two-column-layout {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .results-modal-content .clubs-row {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .results-modal-overlay {
+        padding: 0.5rem;
+    }
+
+    .results-modal-container {
+        max-width: 100%;
+        max-height: 100vh;
+        border-radius: 0;
+    }
+
+    .results-modal-header {
+        padding: 1rem 1.5rem;
+    }
+
+    .results-modal-header h3 {
+        font-size: 1.3rem;
+    }
+
+    .results-modal-content .top-match-card,
+    .results-modal-content .clubs-section,
+    .results-modal-content .content-section {
+        margin-left: 1rem;
+        margin-right: 1rem;
+    }
+
+    .results-modal-content .two-column-layout {
+        margin-left: 1rem;
+        margin-right: 1rem;
+    }
+
+    .results-modal-content .action-buttons {
+        margin-left: 1rem;
+        margin-right: 1rem;
+        flex-direction: column;
+    }
+
+    .results-modal-content .clubs-row {
+        grid-template-columns: 1fr;
+    }
+
+    .results-modal-content .match-layout {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+        text-align: center;
+    }
+
+    .results-modal-content .career-title,
+    .results-modal-content #topCareerName {
+        font-size: 1.8rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .results-modal-header {
+        padding: 0.75rem 1rem;
+    }
+
+    .results-modal-content .top-match-card {
+        padding: 1.5rem;
+    }
+
+    .results-modal-content .career-title,
+    .results-modal-content #topCareerName {
+        font-size: 1.5rem;
+    }
+
+    .results-modal-content .percentage-circle {
+        width: 100px;
+        height: 100px;
+    }
+
+    .results-modal-content .percentage-text {
+        font-size: 1.5rem;
+    }
+}
+
+/* =============================================================================
+   MODAL ANIMATIONS FOR SMOOTH TRANSITIONS
+   =============================================================================
+*/
+
+.results-modal-content .top-match-card,
+.results-modal-content .clubs-section,
+.results-modal-content .content-section {
+    animation: modalContentSlideIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+.results-modal-content .clubs-section {
+    animation-delay: 0.1s;
+}
+
+.results-modal-content .left-column .content-section:nth-child(1) {
+    animation-delay: 0.2s;
+}
+
+.results-modal-content .left-column .content-section:nth-child(2) {
+    animation-delay: 0.3s;
+}
+
+.results-modal-content .right-column .content-section:nth-child(1) {
+    animation-delay: 0.4s;
+}
+
+.results-modal-content .right-column .content-section:nth-child(2) {
+    animation-delay: 0.5s;
+}
+
+.results-modal-content .action-buttons {
+    animation: modalContentSlideIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) both;
+    animation-delay: 0.6s;
+}
+
+@keyframes modalContentSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* =============================================================================
+   ENHANCED CLICKABLE STYLING FOR TEST RESULTS
+   =============================================================================
+*/
+
+.test-results-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding-right: 8px;
+    max-height: 280px;
+    overflow-y: auto;
+}
+
+.test-results-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.test-results-list::-webkit-scrollbar-thumb {
+    background: rgba(95, 150, 197, 0.5);
+    border-radius: 3px;
+}
+
+.test-results-list::-webkit-scrollbar-thumb:hover {
+    background: rgba(95, 150, 197, 0.8);
+}
+
+/* Add tooltip for better UX */
+.test-result-item {
+    position: relative;
+}
+
+.test-result-item:hover {
+    /* Add a subtle tooltip */
+}
+
+.test-result-item:hover .test-info::after {
+    content: 'Click to view full results';
+    position: absolute;
+    bottom: -2rem;
+    left: 0;
+    background: rgba(59, 130, 246, 0.9);
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    white-space: nowrap;
+    z-index: 10;
+    animation: tooltipFadeIn 0.2s ease;
+}
+
+@keyframes tooltipFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-5px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* =============================================================================
+   FOCUS ACCESSIBILITY
+   =============================================================================
+*/
+
+.results-modal-close:focus,
+.test-result-item:focus {
+    outline: 2px solid #3b82f6;
+    outline-offset: 2px;
+}
+
+.error-close-btn:focus {
+    outline: 2px solid #ef4444;
+    outline-offset: 2px;
+}
+
+/* Ensure modal content is accessible */
+.results-modal-overlay[aria-hidden="true"] {
+    display: none;
+}
+
+/* =============================================================================
+   HIGH-DPI DISPLAY OPTIMIZATIONS
+   =============================================================================
+*/
+
+@media (-webkit-min-device-pixel-ratio: 2),
+(min-resolution: 192dpi) {
+    .results-modal-container {
+        box-shadow: 0 24px 48px rgba(0, 0, 0, 0.15);
+    }
+
+    .test-result-item:hover {
+        box-shadow: 0 8px 25px rgba(59, 130, 246, 0.12);
+    }
+}
+
 /* Animations */
 @keyframes slideIn {
     from {

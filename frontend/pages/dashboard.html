@@ -241,15 +241,21 @@
 
     <!-- Test Results Card -->
     <section class="test-results-card">
-      <h2>Recent Test Results</h2>
-      <div class="test-results-list" id="testResultsList">
-        <div class="empty-state">
-          <div class="empty-state-icon">🧪</div>
-          <div class="empty-state-text">No test results yet</div>
-          <div class="empty-state-subtext">Take a niche quiz to discover your ideal career path!</div>
-        </div>
+  <h2>Recent Test Results</h2>
+  <div class="test-results-list" id="testResultsList">
+    <div class="empty-state">
+      <div class="empty-state-icon">🧪</div>
+      <div class="empty-state-text">No test results yet</div>
+      <div class="empty-state-subtext">
+        Take a niche quiz to discover your ideal career path!
+        <br><br>
+        <small style="color: #94a3b8; font-style: italic;">
+          Click on any result to view detailed analysis
+        </small>
       </div>
-    </section>
+    </div>
+  </div>
+</section>
 
     <!-- Potential Matches Card -->
     <section class="potential-matches-card">
@@ -399,6 +405,311 @@
     window.findMatches = findMatches;
   </script>
 
+
+  <script>
+  // Include the enhanced-results.css styles for modal content
+  function loadModalResultsStyles() {
+    // Check if styles are already loaded
+    if (document.getElementById('modal-results-styles')) return;
+
+    const link = document.createElement('link');
+    link.id = 'modal-results-styles';
+    link.rel = 'stylesheet';
+    link.href = '/styles/enhanced-results.css';
+    document.head.appendChild(link);
+    
+    console.log('📄 Enhanced results styles loaded for modal');
+  }
+
+  // Load styles when DOM is ready
+  document.addEventListener('DOMContentLoaded', () => {
+    loadModalResultsStyles();
+  });
+
+  // Enhanced Test Result Item Creation with Modal Integration
+  function createTestResultItem(result) {
+    const resultItem = document.createElement('div');
+    resultItem.className = 'test-result-item enhanced-clickable';
+
+    const testDate = new Date(result.createdAt || result.date || Date.now());
+    const formattedDate = testDate.toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric'
+    });
+
+    let testName = 'Career Assessment';
+    let percentage = 75;
+    let confidenceLevel = 'Medium';
+
+    if (result.topMatch) {
+      testName = result.topMatch.careerName || 'Career Assessment';
+      percentage = Math.round(result.topMatch.percentage || 75);
+      
+      // Determine confidence based on percentage
+      if (percentage >= 80) confidenceLevel = 'High';
+      else if (percentage >= 60) confidenceLevel = 'Medium';
+      else confidenceLevel = 'Low';
+    }
+
+    // Enhanced result item with better visual hierarchy
+    resultItem.innerHTML = `
+      <div class="test-info">
+        <div class="test-name-row">
+          <div class="test-name">${testName}</div>
+          <div class="test-confidence ${confidenceLevel.toLowerCase()}-confidence">
+            ${confidenceLevel} Confidence
+          </div>
+        </div>
+        <div class="test-meta">
+          <span class="test-date">${formattedDate}</span>
+          ${result.quizLevel ? `<span class="test-level">${result.quizLevel} level</span>` : ''}
+        </div>
+      </div>
+      <div class="test-score-container">
+        <div class="test-score">${percentage}%</div>
+        <div class="view-indicator">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="m9 18 6-6-6-6"/>
+          </svg>
+        </div>
+      </div>
+    `;
+
+    // Add click handler to open results modal
+    resultItem.addEventListener('click', () => {
+      const resultId = result.id || result._id || `sample-result-${Date.now()}`;
+      console.log('🎯 Opening results modal for:', testName, resultId);
+      
+      // Add loading state
+      resultItem.classList.add('opening-modal');
+      
+      // Open modal after brief delay for UX
+      setTimeout(() => {
+        openResultsModal(resultId);
+        resultItem.classList.remove('opening-modal');
+      }, 150);
+    });
+
+    // Enhanced hover effects with better performance
+    let hoverTimeout;
+    resultItem.addEventListener('mouseenter', () => {
+      clearTimeout(hoverTimeout);
+      resultItem.style.transform = 'translateX(8px)';
+      resultItem.style.background = 'linear-gradient(135deg, rgba(59, 130, 246, 0.08), rgba(99, 102, 241, 0.04))';
+      resultItem.style.borderColor = 'rgba(59, 130, 246, 0.3)';
+    });
+
+    resultItem.addEventListener('mouseleave', () => {
+      hoverTimeout = setTimeout(() => {
+        resultItem.style.transform = 'translateX(0)';
+        resultItem.style.background = 'rgba(255, 255, 255, 0.9)';
+        resultItem.style.borderColor = 'transparent';
+      }, 50);
+    });
+
+    // Keyboard accessibility
+    resultItem.setAttribute('tabindex', '0');
+    resultItem.setAttribute('role', 'button');
+    resultItem.setAttribute('aria-label', `View detailed results for ${testName} (${percentage}% match)`);
+    
+    resultItem.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        resultItem.click();
+      }
+    });
+
+    return resultItem;
+  }
+
+  // Update the test results display function
+  function updateTestResultsDisplay() {
+    const testResultsList = document.getElementById('testResultsList');
+    if (!testResultsList) return;
+
+    if (!dashboardState.testResults || dashboardState.testResults.length === 0) {
+      testResultsList.innerHTML = `
+        <div class="empty-state">
+          <div class="empty-state-icon">🧪</div>
+          <div class="empty-state-text">No test results yet</div>
+          <div class="empty-state-subtext">
+            Take a <a href="/enhanced-quiz" style="color: #3b82f6; text-decoration: none; font-weight: 500;">career assessment quiz</a> to discover your ideal career path!
+            <br><br>
+            <small style="color: #94a3b8; font-style: italic;">
+              Results will appear here and can be clicked to view detailed analysis
+            </small>
+          </div>
+        </div>
+      `;
+      return;
+    }
+
+    testResultsList.innerHTML = '';
+    
+    // Add a header for better UX when there are results
+    if (dashboardState.testResults.length > 0) {
+      const headerDiv = document.createElement('div');
+      headerDiv.className = 'results-header';
+      headerDiv.innerHTML = `
+        <p style="color: #64748b; font-size: 0.9rem; margin-bottom: 1rem; text-align: center;">
+          Click any result to view detailed career analysis
+        </p>
+      `;
+      testResultsList.appendChild(headerDiv);
+    }
+
+    // Create enhanced result items
+    dashboardState.testResults.forEach((result, index) => {
+      const resultItem = createTestResultItem(result);
+      
+      // Add staggered animation
+      resultItem.style.opacity = '0';
+      resultItem.style.transform = 'translateY(20px)';
+      
+      setTimeout(() => {
+        resultItem.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+        resultItem.style.opacity = '1';
+        resultItem.style.transform = 'translateY(0)';
+      }, index * 100);
+      
+      testResultsList.appendChild(resultItem);
+    });
+
+    console.log(`✅ Updated test results display with ${dashboardState.testResults.length} clickable results`);
+  }
+
+  // Add CSS for enhanced test result styling
+  const enhancedTestResultStyles = `
+    <style id="enhanced-test-results-styles">
+      .test-result-item.enhanced-clickable {
+        border: 2px solid transparent;
+        position: relative;
+        cursor: pointer;
+        user-select: none;
+      }
+
+      .test-result-item.opening-modal {
+        transform: translateX(3px) scale(0.98) !important;
+        opacity: 0.8;
+      }
+
+      .test-name-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 0.25rem;
+      }
+
+      .test-confidence {
+        font-size: 0.7rem;
+        padding: 2px 6px;
+        border-radius: 8px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      .high-confidence {
+        background: linear-gradient(135deg, #dcfce7, #bbf7d0);
+        color: #15803d;
+      }
+
+      .medium-confidence {
+        background: linear-gradient(135deg, #fef3c7, #fde68a);
+        color: #d97706;
+      }
+
+      .low-confidence {
+        background: linear-gradient(135deg, #fee2e2, #fecaca);
+        color: #dc2626;
+      }
+
+      .test-meta {
+        display: flex;
+        gap: 0.75rem;
+        align-items: center;
+      }
+
+      .test-level {
+        font-size: 0.75rem;
+        color: #3b82f6;
+        background: rgba(59, 130, 246, 0.1);
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-weight: 500;
+      }
+
+      .test-score-container {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .view-indicator {
+        color: #3b82f6;
+        opacity: 0;
+        transform: translateX(-5px);
+        transition: all 0.3s ease;
+      }
+
+      .test-result-item:hover .view-indicator {
+        opacity: 1;
+        transform: translateX(0);
+      }
+
+      .results-header {
+        border-bottom: 1px solid rgba(59, 130, 246, 0.1);
+        margin-bottom: 1rem;
+        padding-bottom: 0.75rem;
+      }
+
+      /* Loading animation for when opening modal */
+      @keyframes pulse-blue {
+        0%, 100% { 
+          background: rgba(59, 130, 246, 0.05);
+        }
+        50% { 
+          background: rgba(59, 130, 246, 0.15);
+        }
+      }
+
+      .test-result-item.opening-modal {
+        animation: pulse-blue 0.8s ease-in-out infinite;
+      }
+
+      /* Improved focus states for accessibility */
+      .test-result-item:focus {
+        outline: 2px solid #3b82f6;
+        outline-offset: 2px;
+        transform: translateX(5px);
+      }
+
+      /* Better responsiveness */
+      @media (max-width: 768px) {
+        .test-name-row {
+          flex-direction: column;
+          gap: 0.25rem;
+        }
+
+        .test-confidence {
+          align-self: flex-start;
+        }
+
+        .test-meta {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 0.25rem;
+        }
+      }
+    </style>
+  `;
+
+  // Inject enhanced styles
+  document.head.insertAdjacentHTML('beforeend', enhancedTestResultStyles);
+
+  console.log('✅ Enhanced test results modal integration loaded');
+</script>
 </body>
 
 </html>

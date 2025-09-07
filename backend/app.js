@@ -1515,6 +1515,91 @@ app.get('/api/enhanced-results/:resultId/data', requireAuth, async (req, res) =>
   }
 });
 
+// Add this debug route to your backend/app.js file
+// Put it after your existing quiz routes (around line 1400)
+
+app.get('/api/quiz/debug/:level', requireAuth, async (req, res) => {
+  try {
+    const { level } = req.params;
+    console.log(`🔍 Debug route accessed for level: ${level}`);
+
+    // Load questions using the same import as your main route
+    const { enhancedThreeLevelQuizQuestions } = require('./data/enhancedThreeLevelQuizData');
+    const questions = enhancedThreeLevelQuizQuestions[level] || [];
+
+    console.log(`📊 Found ${questions.length} questions for ${level}`);
+
+    // Create sample answers for testing
+    const sampleAnswers = questions.map((q, index) => {
+      const answer = {
+        questionId: q.id,
+        questionNumber: index + 1
+      };
+
+      // Create different sample answers based on question type
+      switch (q.type) {
+        case 'scale':
+          answer.scaleValue = Math.floor(Math.random() * 6) + 1;
+          break;
+        case 'multiple_choice':
+          answer.selectedOption = q.options[0];
+          break;
+        case 'short_response':
+          answer.textResponse = `Sample response for question ${index + 1}`;
+          break;
+        case 'ranking':
+          answer.ranking = q.items?.map(item => item.id) || [];
+          break;
+        case 'visual_choice':
+          answer.selectedOption = q.options[0];
+          break;
+        case 'scenario':
+          answer.selectedOption = q.options[0];
+          break;
+        default:
+          answer.textResponse = 'Default sample response';
+      }
+
+      answer.timeTaken = Math.floor(Math.random() * 30) + 10;
+      return answer;
+    });
+
+    res.json({
+      success: true,
+      level: level,
+      questionsFound: questions.length,
+      questionsLoaded: !!enhancedThreeLevelQuizQuestions,
+      availableLevels: Object.keys(enhancedThreeLevelQuizQuestions || {}),
+      sampleQuestions: questions.slice(0, 3).map(q => ({
+        id: q.id,
+        type: q.type,
+        question: q.question?.substring(0, 100) + '...',
+        hasOptions: !!q.options,
+        hasItems: !!q.items,
+        hasScale: !!q.scale,
+        optionsCount: q.options?.length || 0,
+        itemsCount: q.items?.length || 0
+      })),
+      sampleAnswers: sampleAnswers.slice(0, 3),
+      debug: {
+        importWorking: true,
+        dataFileLoaded: true,
+        serverTime: new Date().toISOString()
+      }
+    });
+
+  } catch (error) {
+    console.error('💥 Debug route error:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Debug failed',
+      message: error.message,
+      stack: error.stack,
+      level: req.params.level
+    });
+  }
+});
+
 // =============================================================================
 // ADD THESE ROUTES TO YOUR backend/app.js FILE
 // =============================================================================
@@ -3330,6 +3415,8 @@ app.get('/api/quiz/questions/:level', requireAuth, async (req, res) => {
 
 //  ENHANCED QUIZ SUBMISSION WITH REAL SCORING
 //  SUBMIT QUIZ AND CALCULATE DYNAMIC RESULTS
+// FIXED VERSION - Replace your existing /api/quiz/submit route in backend/app.js
+
 app.post('/api/quiz/submit', requireAuth, async (req, res) => {
   try {
     const { level, answers, completionTime, metadata } = req.body;
@@ -3351,18 +3438,23 @@ app.post('/api/quiz/submit', requireAuth, async (req, res) => {
     const User = require('./models/User');
     const userProfile = await User.findById(userId).select('major year name email');
 
-    // Get questions for context
+    // 🔥 FIX: Get questions from your data file, not from request body
     const { enhancedThreeLevelQuizQuestions } = require('./data/enhancedThreeLevelQuizData');
     const questions = enhancedThreeLevelQuizQuestions[level] || [];
 
     if (questions.length === 0) {
-      return res.status(500).json({ error: 'Quiz questions not found' });
+      return res.status(500).json({ error: 'Quiz questions not found for this level' });
     }
 
-    // Validate answers match questions
+    // 🔥 FIX: Validate answers match questions
     if (answers.length !== questions.length) {
       return res.status(400).json({
-        error: `Expected ${questions.length} answers, received ${answers.length}`
+        error: `Expected ${questions.length} answers, received ${answers.length}`,
+        debug: {
+          expectedQuestions: questions.length,
+          receivedAnswers: answers.length,
+          level: level
+        }
       });
     }
 
@@ -3375,7 +3467,12 @@ app.post('/api/quiz/submit', requireAuth, async (req, res) => {
         year: userProfile?.year,
         email: userEmail
       },
-      sampleAnswer: answers[0] // Show first answer structure
+      sampleAnswer: answers[0], // Show first answer structure
+      sampleQuestion: {
+        id: questions[0]?.id,
+        type: questions[0]?.type,
+        question: questions[0]?.question?.substring(0, 50) + '...'
+      }
     });
 
     // Initialize AI analyzer
@@ -3384,10 +3481,10 @@ app.post('/api/quiz/submit', requireAuth, async (req, res) => {
 
     console.log('🧠 Running AI-powered career analysis...');
 
-    // Run AI analysis
+    // 🔥 FIX: Pass the actual questions to the analyzer
     const aiResults = await enhancedAnalyzer.analyzeCareerFit(
       answers,
-      questions,
+      questions, // ✅ Now this has the actual questions
       level,
       {
         major: userProfile?.major,
@@ -3454,6 +3551,7 @@ app.post('/api/quiz/submit', requireAuth, async (req, res) => {
           aiModel: 'gpt-4-turbo',
           weightless: true,
           timestamp: new Date(),
+          questionsUsed: questions.length, // 🔥 ADD: Track questions used
           ...metadata
         }
       });
@@ -3481,6 +3579,13 @@ app.post('/api/quiz/submit', requireAuth, async (req, res) => {
         },
         allMatches: aiResults.results.allMatches || getDefaultMatches(aiResults.results.topMatch.career),
         clubRecommendations: clubRecommendations
+      },
+      debug: { // 🔥 ADD: Debug info to help troubleshoot
+        level: level,
+        questionsProcessed: questions.length,
+        answersReceived: answers.length,
+        aiPowered: true,
+        timestamp: new Date().toISOString()
       }
     };
 
