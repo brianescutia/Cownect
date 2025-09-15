@@ -463,18 +463,20 @@ app.get('/api/events', requireAuth, async (req, res) => {
 });
 
 //  GET FEATURED EVENTS - Top 3 events for the main display
+// FIXED VERSION
 app.get('/api/events/featured', requireAuth, async (req, res) => {
   try {
-    console.log(' Fetching featured events...');
+    console.log('📋 Fetching featured events...');
 
     const featuredEvents = await Event.find({
       isActive: true,
-      date: { $gte: new Date() } // Only upcoming events
+      featured: true,  // ✅ ADD THIS - only get featured events
+      status: 'published'
     })
       .populate('createdBy', 'email')
       .sort({
-        date: 1,           // Soonest first
-        createdAt: -1      // Then newest first
+        featuredPriority: 1,  // ✅ Sort by priority first
+        date: 1               // Then by date
       })
       .limit(3)
       .lean();
@@ -492,11 +494,11 @@ app.get('/api/events/featured', requireAuth, async (req, res) => {
       imageUrl: event.imageUrl || '/assets/default-event-image.jpg'
     }));
 
-    console.log(` Found ${enhancedFeaturedEvents.length} featured events`);
+    console.log(`✅ Found ${enhancedFeaturedEvents.length} featured events`);
     res.json(enhancedFeaturedEvents);
 
   } catch (error) {
-    console.error(' Error fetching featured events:', error);
+    console.error('💥 Error fetching featured events:', error);
     res.status(500).json({ error: 'Failed to fetch featured events' });
   }
 });
@@ -645,6 +647,314 @@ app.post('/api/events', requireAuth, async (req, res) => {
   }
 });
 
+
+// =============================================================================
+// ADD EVENTS DYNAMICALLY - Add these routes to your backend/app.js
+// Place after your existing event routes (around line 500-600)
+// =============================================================================
+
+// CREATE NEW EVENT (Enhanced version with all fields)
+app.post('/api/events/create', requireAuth, async (req, res) => {
+  try {
+    const {
+      title,
+      date,
+      time,
+      location,
+      description,
+      imageUrl,
+      category,
+      tags,
+      featured,
+      featuredPriority,
+      maxAttendees,
+      registrationRequired,
+      registrationUrl
+    } = req.body;
+
+    // Validate required fields
+    if (!title || !date || !location || !description) {
+      return res.status(400).json({
+        error: 'Title, date, location, and description are required'
+      });
+    }
+
+    // Check featured events limit (only 3 allowed)
+    if (featured) {
+      const featuredCount = await Event.countDocuments({ featured: true });
+      if (featuredCount >= 3) {
+        // Find the lowest priority featured event to potentially replace
+        const lowestPriority = await Event.findOne({ featured: true })
+          .sort({ featuredPriority: -1 });
+
+        return res.status(400).json({
+          error: 'Already have 3 featured events. Remove one first or set featured to false.',
+          suggestion: `Consider replacing: "${lowestPriority.title}" (Priority ${lowestPriority.featuredPriority})`
+        });
+      }
+
+      // Validate featured priority
+      if (featuredPriority && (featuredPriority < 1 || featuredPriority > 3)) {
+        return res.status(400).json({
+          error: 'Featured priority must be between 1 and 3'
+        });
+      }
+
+      // Check if priority is already taken
+      const existingPriority = await Event.findOne({
+        featured: true,
+        featuredPriority: featuredPriority
+      });
+      if (existingPriority) {
+        return res.status(400).json({
+          error: `Priority ${featuredPriority} is already taken by "${existingPriority.title}"`
+        });
+      }
+    }
+
+    const newEvent = new Event({
+      title,
+      date: new Date(date),
+      time: time || 'Time TBD',
+      location,
+      description,
+      imageUrl: imageUrl || '/assets/default-event-image.jpg',
+      category: category || 'Other',
+      tags: tags || [],
+      featured: featured || false,
+      featuredPriority: featured ? featuredPriority : null,
+      maxAttendees: maxAttendees || null,
+      registrationRequired: registrationRequired || false,
+      registrationUrl: registrationUrl || null,
+      status: 'published',
+      isActive: true,
+      createdBy: req.session.userId,
+      attendees: []
+    });
+
+    await newEvent.save();
+
+    console.log('✅ New event created:', newEvent.title);
+    res.status(201).json({
+      success: true,
+      message: 'Event created successfully',
+      event: newEvent
+    });
+
+  } catch (error) {
+    console.error('💥 Error creating event:', error);
+    res.status(500).json({ error: 'Failed to create event' });
+  }
+});
+
+// UPDATE EVENT (Including featured status)
+app.put('/api/events/:id/update', requireAuth, async (req, res) => {
+  try {
+    const eventId = req.params.id;
+    const updates = req.body;
+
+    // Find the event
+    const event = await Event.findById(eventId);
+    if (!event) {
+      return res.status(404).json({ error: 'Event not found' });
+    }
+
+    // Handle featured status changes
+    if ('featured' in updates) {
+      if (updates.featured && !event.featured) {
+        // Trying to make it featured
+        const featuredCount = await Event.countDocuments({
+          featured: true,
+          _id: { $ne: eventId }
+        });
+
+        if (featuredCount >= 3) {
+          return res.status(400).json({
+            error: 'Cannot make this event featured. Already have 3 featured events.'
+          });
+        }
+
+        // Set priority if not provided
+        if (!updates.featuredPriority) {
+          // Find next available priority
+          const existingPriorities = await Event.find({ featured: true })
+            .select('featuredPriority');
+          const usedPriorities = existingPriorities.map(e => e.featuredPriority);
+
+          for (let i = 1; i <= 3; i++) {
+            if (!usedPriorities.includes(i)) {
+              updates.featuredPriority = i;
+              break;
+            }
+          }
+        }
+      } else if (!updates.featured && event.featured) {
+        // Removing featured status
+        updates.featuredPriority = null;
+      }
+    }
+
+    // Update the event
+    Object.keys(updates).forEach(key => {
+      if (key !== '_id' && key !== 'createdBy' && key !== 'attendees') {
+        event[key] = updates[key];
+      }
+    });
+
+    await event.save();
+
+    console.log(`✅ Event updated: ${event.title}`);
+    res.json({
+      success: true,
+      message: 'Event updated successfully',
+      event: event
+    });
+
+  } catch (error) {
+    console.error('💥 Error updating event:', error);
+    res.status(500).json({ error: 'Failed to update event' });
+  }
+});
+
+// DELETE EVENT
+app.delete('/api/events/:id', requireAuth, async (req, res) => {
+  try {
+    const eventId = req.params.id;
+
+    const event = await Event.findById(eventId);
+    if (!event) {
+      return res.status(404).json({ error: 'Event not found' });
+    }
+
+    // Soft delete (mark as inactive)
+    event.isActive = false;
+    event.status = 'cancelled';
+    await event.save();
+
+    // Or hard delete:
+    // await Event.findByIdAndDelete(eventId);
+
+    console.log(`🗑️ Event deleted: ${event.title}`);
+    res.json({
+      success: true,
+      message: 'Event deleted successfully'
+    });
+
+  } catch (error) {
+    console.error('💥 Error deleting event:', error);
+    res.status(500).json({ error: 'Failed to delete event' });
+  }
+});
+
+// GET FEATURED EVENTS MANAGEMENT INFO
+app.get('/api/events/featured/manage', requireAuth, async (req, res) => {
+  try {
+    const featuredEvents = await Event.find({ featured: true })
+      .sort({ featuredPriority: 1 })
+      .select('title date featuredPriority _id');
+
+    const regularEvents = await Event.find({
+      featured: false,
+      isActive: true,
+      date: { $gte: new Date() }
+    })
+      .sort({ date: 1 })
+      .limit(10)
+      .select('title date _id');
+
+    res.json({
+      featured: featuredEvents.map(e => ({
+        id: e._id,
+        title: e.title,
+        date: e.date,
+        priority: e.featuredPriority
+      })),
+      suggestions: regularEvents.map(e => ({
+        id: e._id,
+        title: e.title,
+        date: e.date,
+        suggestion: 'Could be featured'
+      })),
+      availablePriorities: [1, 2, 3].filter(p =>
+        !featuredEvents.some(e => e.featuredPriority === p)
+      )
+    });
+
+  } catch (error) {
+    console.error('💥 Error getting featured management info:', error);
+    res.status(500).json({ error: 'Failed to get featured events info' });
+  }
+});
+
+// SWAP FEATURED EVENTS
+app.post('/api/events/featured/swap', requireAuth, async (req, res) => {
+  try {
+    const { removeEventId, addEventId, priority } = req.body;
+
+    if (!removeEventId || !addEventId) {
+      return res.status(400).json({
+        error: 'Both removeEventId and addEventId are required'
+      });
+    }
+
+    // Remove featured status from old event
+    await Event.findByIdAndUpdate(removeEventId, {
+      featured: false,
+      featuredPriority: null
+    });
+
+    // Add featured status to new event
+    await Event.findByIdAndUpdate(addEventId, {
+      featured: true,
+      featuredPriority: priority || 1
+    });
+
+    console.log(`🔄 Swapped featured events`);
+    res.json({
+      success: true,
+      message: 'Featured events swapped successfully'
+    });
+
+  } catch (error) {
+    console.error('💥 Error swapping featured events:', error);
+    res.status(500).json({ error: 'Failed to swap featured events' });
+  }
+});
+
+// BULK CREATE EVENTS (For testing or importing)
+app.post('/api/events/bulk-create', requireAuth, async (req, res) => {
+  try {
+    const { events } = req.body;
+
+    if (!Array.isArray(events) || events.length === 0) {
+      return res.status(400).json({ error: 'Events array is required' });
+    }
+
+    // Validate and prepare events
+    const eventsToCreate = events.map(event => ({
+      ...event,
+      createdBy: req.session.userId,
+      status: 'published',
+      isActive: true,
+      attendees: [],
+      featured: false, // Don't allow bulk featured events
+      imageUrl: event.imageUrl || '/assets/default-event-image.jpg'
+    }));
+
+    const createdEvents = await Event.insertMany(eventsToCreate);
+
+    console.log(`✅ Bulk created ${createdEvents.length} events`);
+    res.json({
+      success: true,
+      message: `Successfully created ${createdEvents.length} events`,
+      events: createdEvents
+    });
+
+  } catch (error) {
+    console.error('💥 Error bulk creating events:', error);
+    res.status(500).json({ error: 'Failed to bulk create events' });
+  }
+});
 // =============================================================================
 // EVENT BOOKMARK API ENDPOINTS
 // Add these to your main backend file (app.js or routes file)

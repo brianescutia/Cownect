@@ -49,6 +49,7 @@ const eventSchema = new mongoose.Schema({
             'Competition',
             'Research',
             'Social',
+            'Conference',
             'Other'
         ],
         default: 'Other'
