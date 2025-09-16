@@ -50,6 +50,8 @@ const eventSchema = new mongoose.Schema({
             'Research',
             'Social',
             'Conference',
+            'Academic',
+            'Professional',
             'Other'
         ],
         default: 'Other'
@@ -303,8 +305,8 @@ module.exports = mongoose.model('Event', eventSchema);
 // async function migrateEvents() {
 //     await Event.updateMany(
 //         { imageUrl: { $exists: false } },
-//         { 
-//             $set: { 
+//         {
+//             $set: {
 //                 imageUrl: '/assets/default-event-image.jpg',
 //                 category: 'Other',
 //                 tags: [],
