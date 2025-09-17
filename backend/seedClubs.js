@@ -585,7 +585,7 @@ const clubData = [
         description: "Interdisciplinary community exploring the intersection of food, science, and technology through tastings, product development, entrepreneurship, and industry panels, encouraging innovation and collaboration on sustainable, tasty solutions.",
         tags: ["agtech", "innovation", "sustainability", "research", "networking", "professional", "technical", "collaboration"],
         category: "Data Science",
-        logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/engineerswithoutbordersatucdavis/logo/01JVQTJTQ58FYRWR41JDSBJY9S.webp",
+        logoUrl: "https://i.imgur.com/QagceHq.jpeg",
         memberCount: 28,
         websiteUrl: "https://foodtechclub.ucdavis.edu/",
         instagramUrl: "https://www.instagram.com/foodtechclub/#",
@@ -631,7 +631,7 @@ const clubData = [
         description: "Pre-professional organization preparing students for HR careers through case competitions, workshops, and company networking, developing skills in recruiting, organizational behavior, and strategic people operations.",
         tags: ["leadership", "networking", "professional", "workshops", "enterprise", "social", "communication"],
         category: "Data Science",
-        logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/engineerswithoutbordersatucdavis/logo/01JVQTJTQ58FYRWR41JDSBJY9S.webp",
+        logoUrl: "https://media.licdn.com/dms/image/v2/D4D0BAQFPWZ8uQQYfyQ/company-logo_200_200/company-logo_200_200/0/1727326225643?e=1761177600&v=beta&t=8WqEumZ62onSsb1UXmSBeA41_ILx0XFIIfizBPuyhmM",
         memberCount: 28,
         websiteUrl: "https://hrmaucd.wixsite.com/human-resources-mana",
         instagramUrl: "https://www.instagram.com/hrma.davis/",
@@ -654,7 +654,7 @@ const clubData = [
         description: "Student group exploring neurotechnology, brain-computer interfaces, and computational neuroscience through projects, journal clubs, and workshops, bridging engineering and neuroscience with hands-on tools and collaborative teams.",
         tags: ["Hardware", "Research", "AI/ML", "Build Projects"],  // Neurotech @ UCDavis
         category: "Data Science",
-        logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/engineerswithoutbordersatucdavis/logo/01JVQTJTQ58FYRWR41JDSBJY9S.webp",
+        logoUrl: "https://media.licdn.com/dms/image/v2/C560BAQH6yppMXTSqTg/company-logo_200_200/company-logo_200_200/0/1630615164361?e=1761177600&v=beta&t=oNH8QEUWan_Zqi7Hioakw0z3LIz7j4odNCcAuQM9xVs",
         memberCount: 28,
         websiteUrl: "https://neurotechdavis.com/",
         instagramUrl: "https://www.instagram.com/neurotechdavis/?hl=en",
@@ -677,7 +677,7 @@ const clubData = [
         description: "Selective product management fellowship teaching frameworks, case interviewing, and execution through sprints and mentorship, enabling students to ship portfolio-worthy products and prepare for PM internships.",
         tags: ["Software", "Professional Dev", "Mentorship", "Workshops"],  // Product Space
         category: "Data Science",
-        logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/engineerswithoutbordersatucdavis/logo/01JVQTJTQ58FYRWR41JDSBJY9S.webp",
+        logoUrl: "https://media.licdn.com/dms/image/v2/D560BAQGRGtmg8tJLwg/company-logo_200_200/company-logo_200_200/0/1698806691901/product_space_national_logo?e=1761177600&v=beta&t=jpUCtBIevbqs4aaGamt5gZXRUTYIead8mKBJ1pNbZNI",
         memberCount: 28,
         websiteUrl: "https://www.davisproductspace.org/",
         instagramUrl: "https://www.instagram.com/davisproductspace/",
@@ -746,7 +746,7 @@ const clubData = [
         description: "Hands-on engineering community building electronics, embedded systems, and mechanical prototypes, teaching PCB design, fabrication, and testing while promoting collaborative projects, tool training, and maker culture.",
         tags: ["Hardware", "Electrical", "Build Projects", "Workshops"],  // The Hardware Club
         category: "Data Science",
-        logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/thedavisconsultinggroup/logo/01JVQV6P3927RF799RFKZC351H.png",
+        logoUrl: "https://media.licdn.com/dms/image/v2/D560BAQHnhOmgzwq0fA/company-logo_200_200/company-logo_200_200/0/1722545626738?e=1761177600&v=beta&t=-NN48SDegcYmBSGtyBEFCu5CtDjEa_CAJ-6JHfSQJLE",
         memberCount: 28,
         websiteUrl: "https://lu.ma/8q63clzo",
         instagramUrl: "https://www.instagram.com/thc.ucd/?hl=en",
@@ -792,7 +792,7 @@ const clubData = [
         description: "Student-led rocketry and space systems team designing, building, and launching high-power rockets and payloads while learning avionics, propulsion, and systems engineering through competitions and industry mentorship.",
         tags: ["Aerospace", "Hardware", "Build Projects", "Competitions"],  // Aggie Space Initiative
         category: "Data Science",
-        logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/womeningamingatucdavis/logo/01JVQVD5W4R4CB318YPWJEZ9VQ.png",
+        logoUrl: "https://media.licdn.com/dms/image/v2/D560BAQEtmAeY3giDIA/company-logo_200_200/company-logo_200_200/0/1727700825665?e=1761177600&v=beta&t=Er2ZSfgPzjnyztQ2ZX-kOsWR6Y4QUxlTmQyS-WqUhx8",
         memberCount: 28,
         websiteUrl: "linktr.ee/aggiespaceinitiative",
         instagramUrl: "https://www.instagram.com/aggiespaceinitiative/",
@@ -815,7 +815,7 @@ const clubData = [
         description: "Connects biomedical engineering students to research labs, design teams, and professional development through talks, workshops, mentorship, and networking, supporting academic success and preparation for industry or graduate programs.",
         tags: ["Biomedical", "Research", "Networking", "Professional Dev"],  // Biomedical Engineering Society
         category: "Data Science",
-        logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/womeningamingatucdavis/logo/01JVQVD5W4R4CB318YPWJEZ9VQ.png",
+        logoUrl: "https://media.licdn.com/dms/image/v2/D560BAQHS7gLd6JxGxA/company-logo_200_200/B56ZeUy5ShHQAI-/0/1750548060216?e=1761177600&v=beta&t=F6YOZWEwR2QK_uC5C5G3wd-_9exLMXybOzKVqLShimI",
         memberCount: 28,
         websiteUrl: "https://linktr.ee/bmesatucd",
         instagramUrl: "https://www.instagram.com/ucdbmes/?hl=en",
@@ -838,7 +838,7 @@ const clubData = [
         description: "Electrical and computer engineering organization offering labs, workshops, and project teams, supporting technical growth from soldering and embedded systems to signal processing, communications, and professional networking.",
         tags: ["Electrical", "Hardware", "Workshops", "Professional Dev"],  // IEEE
         category: "Data Science",
-        logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/womeningamingatucdavis/logo/01JVQVD5W4R4CB318YPWJEZ9VQ.png",
+        logoUrl: "https://media.licdn.com/dms/image/v2/D560BAQFcIp76IEyx-Q/company-logo_200_200/company-logo_200_200/0/1701579696830/ieee_student_branch_at_uc_davis_logo?e=1761177600&v=beta&t=oO3M28J5bYoZTYjpuomYyFfaOtJf0gGIG6HtqONNyLE",
         memberCount: 28,
         websiteUrl: "https://ieeeucdavis.weebly.com/",
         instagramUrl: "https://www.instagram.com/ieee.ucd/",
@@ -861,7 +861,7 @@ const clubData = [
         description: "National engineering honor society recognizing academic excellence and service, offering professional development, networking, and outreach opportunities while fostering character, leadership, and ethical responsibility among engineers.",
         tags: ["Honor Society", "Networking", "Professional Dev"],  // Tau Beta Pi
         category: "Data Science",
-        logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/womeningamingatucdavis/logo/01JVQVD5W4R4CB318YPWJEZ9VQ.png",
+        logoUrl: "https://i.imgur.com/WA6iRc6.jpeg",
         memberCount: 28,
         websiteUrl: "https://tbp.engineering.ucdavis.edu/",
         instagramUrl: "https://www.instagram.com/tbp.ca.lambda/",
@@ -884,7 +884,7 @@ const clubData = [
         description: "Student developers learn Swift, SwiftUI, and iOS architecture through workshops and project sprints, building polished apps, practicing code reviews, and demoing products to peers and recruiters.",
         tags: ["mobile", "programming", "workshops", "projects", "collaboration", "technical", "academic", "innovation"],
         category: "Data Science",
-        logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/womeningamingatucdavis/logo/01JVQVD5W4R4CB318YPWJEZ9VQ.png",
+        logoUrl: "https://media.licdn.com/dms/image/v2/D5603AQG1FanCgVr9vQ/profile-displayphoto-shrink_400_400/B56ZRMAtvaGQAg-/0/1736442043615?e=1761177600&v=beta&t=FY4Yf1DXgtPglbHPTzm9ysF7TwKJuWE7dSvfYutAEFk",
         memberCount: 28,
         websiteUrl: "https://swiftcodingucd.org/",
         instagramUrl: "https://www.instagram.com/swiftcodingclub.davis/",
@@ -1139,7 +1139,7 @@ const clubData = [
         description: "Empowers women engineers through workshops, mentorship programs, community service, and industry connections, hosting events for all engineering students regardless of gender with one-third male membership.",
         tags: ["Women in Tech", "Mentorship", "Professional Dev", "Networking"],  // Society of Women Engineers
         category: "Engineering",
-        logoUrl: "https://images.squarespace-cdn.com/content/v1/61c35cc6b25c02093da041b8/a2d2a547-d300-468a-b56f-5862a26bea89/SWE_Logo_U_of_Cali_Davis_White.png",
+        logoUrl: "https://media.licdn.com/dms/image/v2/C4E0BAQGsf9TzINI38g/company-logo_200_200/company-logo_200_200/0/1630611427686/swe_at_uc_davis_logo?e=1761177600&v=beta&t=FOsnStbTo144YXaBKRsNfMoG8xLhGQ2GjOQsT5a4B2w",
         memberCount: 100,
         websiteUrl: "https://www.sweucd.org/",
         instagramUrl: "https://www.instagram.com/swe.ucd/",
@@ -1277,10 +1277,10 @@ const clubData = [
         description: "Promotes career development for Asian scientists and engineers through tours, resume workshops, networking events, and community volunteer opportunities across multiple disciplines.",
         tags: ["Asian/Pacific", "Professional Dev", "Networking", "Workshops"],  // SASE
         category: "Engineering",
-        logoUrl: "https://lh3.googleusercontent.com/z8TFbRpw-66HyxMPxq4CgByJRVwfKwkh2xJD7p58Gchoy4ViqE-2Q1VJy52aVHbqpOpfCmrna9jrAFue8z2PnjfPZjdGcDTU_qMp9KWBcrUNpw6qHKkHl17BU_4Kgxu54_X017RqLqw",
+        logoUrl: "https://media.licdn.com/dms/image/v2/C510BAQHhsWr4N5w_6g/company-logo_200_200/company-logo_200_200/0/1631367175815?e=1761177600&v=beta&t=d8NQ6SaF--08CGFC8X5xGfAGkMthjj-9OIsxbBAvwTA",
         memberCount: 40,
         websiteUrl: "https://www.saseconnect.org/",
-        instagramUrl: "https://www.instagram.com/sase.at.ucd/",
+        instagramUrl: "https://media.licdn.com/dms/image/v2/C510BAQHhsWr4N5w_6g/company-logo_200_200/company-logo_200_200/0/1631367175815?e=1761177600&v=beta&t=d8NQ6SaF--08CGFC8X5xGfAGkMthjj-9OIsxbBAvwTA",
         contactEmail: "ideas@saseconnect.org",
         meetingInfo: {
             frequency: "Bi-weekly",
@@ -1394,7 +1394,7 @@ const clubData = [
         description: "Provides supportive machining environment for underrepresented genders to develop hands-on engineering skills, confidence, and critical thinking through practical fabrication and tool training.",
         tags: ["Women in Tech", "Hardware", "Mechanical", "Workshops"],  // Women Machinists' Club
         category: "Engineering",
-        logoUrl: "",
+        logoUrl: "https://i.imgur.com/ix9RRAr.jpeg",
         memberCount: 25,
         websiteUrl: "https://aggielife.ucdavis.edu/womenmachinistsclub/home/",
         instagramUrl: "https://www.instagram.com/wmcatucd/",
@@ -1418,7 +1418,7 @@ const clubData = [
         description: "Women-led robotics projects with weekly study sessions, networking opportunities, and resume-building experiences for women in STEM fields.",
         tags: ["Women in Tech", "Robotics", "Hardware", "Build Projects"],  // Women in Robotics
         category: "Hardware",
-        logoUrl: "https://instagram.fsac1-2.fna.fbcdn.net/v/t51.2885-19/505740384_17845673943502006_7373307103104342762_n.jpg",
+        logoUrl: "https://i.imgur.com/VZhHxeO.jpeg",
         memberCount: 30,
         websiteUrl: "",
         instagramUrl: "https://www.instagram.com/wiratucd/",
@@ -1442,7 +1442,7 @@ const clubData = [
         description: "International scientific association improving water quality and supply, promoting future environmental engineers through networking between professionals, graduates, and undergraduates.",
         tags: ["Civil", "Professional Dev", "Networking"],  // AWWA
         category: "Engineering",
-        logoUrl: "https://instagram.fsac1-1.fna.fbcdn.net/v/t51.2885-19/125514655_361093698333959_7118362199308583774_n.jpg",
+        logoUrl: "https://media.licdn.com/dms/image/v2/C4E03AQHwVhe7Sqe6JQ/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1605858764172?e=1761177600&v=beta&t=naB8HCXBdjAhw7xe3B3a8xoQz8KUHztFeqO-xN4pjME",
         memberCount: 30,
         websiteUrl: "https://awwaucdavis.weebly.com/",
         instagramUrl: "https://www.instagram.com/awwaucd/",
@@ -1466,7 +1466,7 @@ const clubData = [
         description: "Develops partnerships ensuring North American manufacturing competitiveness through events, media, workforce development, and education foundation supporting next-generation manufacturing talent.",
         tags: ["Mechanical", "Professional Dev", "Workshops", "Networking"],  // SME
         category: "Engineering",
-        logoUrl: "https://instagram.fsac1-2.fna.fbcdn.net/v/t51.2885-19/274271670_152270060561210_475991940151288067_n.jpg",
+        logoUrl: "https://sme.ucdavis.edu/sites/g/files/dgvnsk13296/files/styles/thumbnail/public/media/images/logo_0.png",
         memberCount: 35,
         websiteUrl: "https://sme.ucdavis.edu/",
         instagramUrl: "https://www.instagram.com/smeatucdavis",
@@ -1490,7 +1490,7 @@ const clubData = [
         description: "Fosters interdisciplinary collaboration within engineering, connecting like-minded engineers with career advancement opportunities through networking and professional development events.",
         tags: ["Networking", "Professional Dev", "Beginner Friendly"],  // DUEN
         category: "Engineering",
-        logoUrl: "https://instagram.fsac1-2.fna.fbcdn.net/v/t51.2885-19/540115829_18002233538805195_301655972216627620_n.jpg",
+        logoUrl: "https://media.licdn.com/dms/image/v2/D560BAQEOXeSf7DnC5w/company-logo_200_200/company-logo_200_200/0/1723172690916?e=1761177600&v=beta&t=JJSmzylxUEC1VQpTaLgUIdvu4FKS9kjFHlkq5nvTQZo",
         memberCount: 45,
         websiteUrl: "https://duendavis.com/",
         instagramUrl: "https://www.instagram.com/duen_ucd/",
@@ -1514,7 +1514,7 @@ const clubData = [
         description: "Student-led team of 30 engineering and CS students designing and building remote-controlled aircraft year-round for research projects and SAE Aero Design competitions.",
         tags: ["Aerospace", "Competitions", "Build Projects"],  // AMAT
         category: "Engineering",
-        logoUrl: "https://instagram.fsac1-2.fna.fbcdn.net/v/t51.2885-19/270938256_721194368858074_4713616020603929976_n.jpg",
+        logoUrl: "https://media.licdn.com/dms/image/v2/C560BAQFeSsRjpDnLJg/company-logo_200_200/company-logo_200_200/0/1639967503726?e=1761177600&v=beta&t=-EN0XcUdI-JWxm7g_emSbhmYQ0bGeIbVIfGAZL82ydo",
         memberCount: 30,
         websiteUrl: "https://amat.engineering.ucdavis.edu/",
         instagramUrl: "https://www.instagram.com/amatdavis/",
@@ -1537,7 +1537,7 @@ const clubData = [
         description: "Student-run bi-propellant liquid-fueled rocketry team building UC Davis's first liquid rocket, enabling students to design, build, test, and launch rockets for years to come.",
         tags: ["Aerospace", "Hardware", "Build Projects", "Research"],  // APRL
         category: "Engineering",
-        logoUrl: "https://instagram.fsac1-2.fna.fbcdn.net/v/t51.2885-19/383229886_2025632337836763_1312390169527183636_n.jpg",
+        logoUrl: "https://media.licdn.com/dms/image/v2/D4D0BAQHOkeOyUTSP2Q/company-logo_200_200/company-logo_200_200/0/1698303556644/apropulsionlab_logo?e=1761177600&v=beta&t=e5JMIDD7aMmK34OSk6XHJ3eW30WmrjRjgI_ouacRSlQ",
         memberCount: 40,
         websiteUrl: "https://aprl.space/",
         instagramUrl: "https://www.instagram.com/aprl.davis/",
@@ -1561,7 +1561,7 @@ const clubData = [
         description: "Helps Korean-American scientists and engineers develop full career potential through professional development, networking, and mentorship opportunities in STEM fields.",
         tags: ["Asian/Pacific", "Professional Dev", "Networking", "Mentorship"],  // KSEA
         category: "Engineering",
-        logoUrl: "https://instagram.fsac1-2.fna.fbcdn.net/v/t51.2885-19/451333646_404825829246489_7973121566971559542_n.jpg",
+        logoUrl: "https://i.imgur.com/vrsz79B.jpeg",
         memberCount: 30,
         websiteUrl: "https://www.ucdksea.com/",
         instagramUrl: "https://www.instagram.com/kseadavis/",
@@ -1583,7 +1583,7 @@ const clubData = [
         name: "FACE (Female Association of Civil Engineers)",
         description: "ASCE subgroup supporting women and non-binary civil engineering students through events, mentorship, and community building with $25,000+ annual budget serving 150+ members.",
         tags: ["Women in Tech", "Civil", "Networking", "Mentorship"],  // FACERetry        category: "Engineering",
-        logoUrl: "https://instagram.fsac1-2.fna.fbcdn.net/v/t51.2885-19/270104144_4484803278314215_1217895411511640605_n.jpg",
+        logoUrl: "https://i.imgur.com/ocq9J4r.jpeg",
         memberCount: 50,
         websiteUrl: "https://asceucdavis.weebly.com/",
         instagramUrl: "https://www.instagram.com/ucd_face/",
@@ -1757,7 +1757,7 @@ module.exports = { clubData, seedClubs };
 // ✅ COMPLETED FEATURES:
 // - All 50 clubs from your CSV processed and included
 // - Real data preserved from spreadsheet (logos, websites, contacts)
-// - Intelligent tag generation based on club names/descriptions  
+// - Intelligent tag generation based on club names/descriptions
 // - Smart categorization into appropriate technology areas
 // - Complete officer information where available from contact data
 // - Realistic filler data for missing information
