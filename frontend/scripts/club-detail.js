@@ -204,7 +204,7 @@ function createSocialLinks(club) {
 
         // Add icon image
         const websiteIcon = document.createElement('img');
-        websiteIcon.src = '/assets/social-icons/website-icon.png';
+        websiteIcon.src = '/assets/website-icon.png';
         websiteIcon.alt = 'Website';
         websiteLink.appendChild(websiteIcon);
 
@@ -221,7 +221,7 @@ function createSocialLinks(club) {
 
         // Add Instagram PNG icon
         const instagramIcon = document.createElement('img');
-        instagramIcon.src = '/assets/social-icons/instagram-icon.png';
+        instagramIcon.src = '/assets/instagram-icon.png';
         instagramIcon.alt = 'Instagram';
         instagramLink.appendChild(instagramIcon);
 
@@ -238,7 +238,7 @@ function createSocialLinks(club) {
 
         // Add Discord PNG icon
         const discordIcon = document.createElement('img');
-        discordIcon.src = '/assets/social-icons/discord-icon.png';
+        discordIcon.src = '/assets/discord-icon.png';
         discordIcon.alt = 'Discord';
         discordLink.appendChild(discordIcon);
 
@@ -255,7 +255,7 @@ function createSocialLinks(club) {
 
         // Add Twitter PNG icon
         const twitterIcon = document.createElement('img');
-        twitterIcon.src = '/assets/social-icons/twitter-icon.png';
+        twitterIcon.src = '/assets/twitter-icon.png';
         twitterIcon.alt = 'Twitter';
         twitterLink.appendChild(twitterIcon);
 
@@ -279,7 +279,7 @@ function createSocialLinks(club) {
         defaultInstagram.className = 'social-link';
         defaultInstagram.setAttribute('data-club-link', 'instagram');
         const instagramIcon = document.createElement('img');
-        instagramIcon.src = '/assets/instagram-icon.png';
+        instagramIcon.src = './assets/instagram-icon.png';
         instagramIcon.alt = 'Instagram';
         defaultInstagram.appendChild(instagramIcon);
         socialLinksContainer.appendChild(defaultInstagram);
