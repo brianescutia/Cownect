@@ -1089,16 +1089,16 @@ app.get('/api/set-hero-images', requireAuth, async (req, res) => {
         position: "center center"
       },
       "Davis Filmmaking Society": {
-        url: "https://scontent-sjc3-1.xx.fbcdn.net/v/t39.30808-6/484339313_9598920923463421_8129779707304310584_n.jpg?_nc_cat=106&ccb=1-7&_nc_sid=3a1ebe&_nc_ohc=HKWUi9c4fYUQ7kNvwH7NXcU&_nc_oc=AdnaVLTjTam22xwP-_5I7fBdhvRowq3fOEoHxXdZaO9Sqyyy8nCvDJ3Wwl4aDkh4wXu0F594PzqNqaspGJXy0XZk&_nc_zt=23&_nc_ht=scontent-sjc3-1.xx&_nc_gid=b-pUQTSfmhjwsQJZz4S_Ng&oh=00_AfQERQglKyUNngpTJaKoARKmgG-6fQBaQV0SrToJEhVxVg&oe=688F51CA",
-        position: "top center"
+        url: "https://i.imgur.com/oOstsVa.jpeg",
+        position: "center 63%"
       },
       "Google Developer Student Club": {
         url: "https://storage.googleapis.com/creatorspace-public/users%2Fcln22djyd00i1p301whvmgxbp%2FAXLN0jmEde3yHgMf-IMG_4612.JPG",
         position: "center 40%"
       },
       "HackDavis": {
-        url: "https://miro.medium.com/v2/resize:fit:1400/1*YQl_MmSsFEmQUGleWrX1LA.jpeg",
-        position: "center 40%"
+        url: "https://hackdavis.io/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Fcarousel3.d2b91e0e.jpeg&w=1920&q=75",
+        position: "center 60%"
       },
       "Women in Computer Science": {
         url: "https://engineering.ucdavis.edu/sites/g/files/dgvnsk2151/files/styles/sf_landscape_16x9/public/media/images/wics-04.jpg?h=a1e1a043&itok=1dnFRIkJ",
@@ -1114,7 +1114,7 @@ app.get('/api/set-hero-images', requireAuth, async (req, res) => {
       },
       "AI Student Collective": {
         url: "https://engineering.ucdavis.edu/sites/g/files/dgvnsk2151/files/styles/sf_landscape_16x9/public/media/images/Main%20image-min.jpeg?h=ef24a1e5&itok=P-9uR0eq",
-        position: "center bottom 20%"
+        position: "center 60%"
       },
       "Aggie Sports Analytics": {
         url: "https://miro.medium.com/v2/resize:fit:1400/1*2uw7JZHySrkL1rEbSjnHqg.jpeg",
@@ -1126,15 +1126,15 @@ app.get('/api/set-hero-images', requireAuth, async (req, res) => {
       },
       "AggieWorks": {
         url: "https://framerusercontent.com/images/0aiCYbgzl1BvB9G6sioq0BFcoo4.jpg",
-        position: "center 45%"
+        position: "center center"
       },
       "BAJA SAE": {
         url: "https://engineering.ucdavis.edu/sites/g/files/dgvnsk2151/files/media/images/Baja%20SAE%202024_0.jpg",
-        position: "center 25%"
+        position: "center 30%"
       },
       "Club of Future Female Engineers": {
         url: "https://static.wixstatic.com/media/951871_b03f214dacca47e293a79cacd95bca70~mv2.png/v1/fill/w_770,h_442,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/IMG_3156_HEIC.png",
-        position: "center center"
+        position: "center"
       },
       "CodeLab": {
         url: "https://codelabdavis.com/images/community/cohort-events/FinalPresentation.png",
@@ -1142,7 +1142,7 @@ app.get('/api/set-hero-images', requireAuth, async (req, res) => {
       },
       "Computer Science Tutoring Club": {
         url: "https://media.licdn.com/dms/image/v2/D4D22AQEUtzkpkSSyZQ/feedshare-shrink_800/B4DZQ.qDxEHYAg-/0/1736218001720?e=2147483647&v=beta&t=o2C0RGx87MOfpzC_N_ESoq-o9ozV6_i07Pe2424PVek",
-        position: "center 40%"
+        position: "center 32%"
       },
       "Davis Data Science Club": {
         url: "https://media.licdn.com/dms/image/v2/C561BAQEKjNmWZGeiug/company-background_10000/company-background_10000/0/1649187010603/data_science_club_at_utdallas_cover?e=2147483647&v=beta&t=Xy4BZ4WGD_eEmJTBCTZCaHqIspUJbxRjxzqlr80dW6E",
@@ -1154,7 +1154,7 @@ app.get('/api/set-hero-images', requireAuth, async (req, res) => {
       },
       "Girls Who Code at UC Davis": {
         url: "https://lettersandsciencemag.ucdavis.edu/sites/g/files/dgvnsk15406/files/media/images/Girls_Who_Code_HerHacks-1%20%281%29.jpg",
-        position: "center 55%"
+        position: "center 65%"
       },
       "Cognitive Science Student Association": {
         url: "https://aggielife.ucdavis.edu/upload/ucdavis/2023/web_upload_2808047IMG_3689JPG_314203711_crop.jpg",
@@ -1162,7 +1162,7 @@ app.get('/api/set-hero-images', requireAuth, async (req, res) => {
       },
       "ColorStack": {
         url: "https://media.licdn.com/dms/image/v2/D4D22AQFpmZiIb_aMeQ/feedshare-shrink_800/feedshare-shrink_800/0/1722911594792?e=2147483647&v=beta&t=C6BJc_zTvQdtzkw3tw0cSKC-IVDg7tEXDJIMS6aWoYg",
-        position: "center 45%"
+        position: "center 40%"
       },
       "Cyclone RoboSub": {
         url: "https://cyclone-robosub.github.io/gallery/dirty-hands.jpg",
@@ -1189,8 +1189,8 @@ app.get('/api/set-hero-images', requireAuth, async (req, res) => {
         position: "center 50%"
       },
       "Human Resources Managment Association (HRMA)": {
-        url: "https://cpe.ucdavis.edu/sites/g/files/dgvnsk15476/files/styles/sf_title_banner/public/media/images/hr.jpg?h=4b9994bd&itok=uVWXvkcD",
-        position: "center center"
+        url: "https://i.imgur.com/KjHVHsJ.png",
+        position: "top"
       },
       "Nuerotech @ UCDavis": {
         url: "https://neurotechdavis.com/assets/aboutheader20232024-DjZ4AXfB.jpeg",
@@ -1210,7 +1210,7 @@ app.get('/api/set-hero-images', requireAuth, async (req, res) => {
       },
       "The Hardware Club @ UC Davis": {
         url: "https://images.lumacdn.com/cdn-cgi/image/format=auto,fit=cover,dpr=2,background=white,quality=75,width=300,height=300/event-covers/xv/9ebb60dc-82dd-4011-8f4e-2206e6d738c4.png",
-        position: "center 89%"
+        position: "center 100%"
       },
       "Women in Gaming at UC Davis": {
         url: "https://campusrecreation.ucdavis.edu/sites/g/files/dgvnsk6556/files/styles/sf_landscape_16x9/public/media/images/51606528997_183fb3175b_c.jpg?h=827069f2&itok=ebRnUAG0",
@@ -1218,31 +1218,31 @@ app.get('/api/set-hero-images', requireAuth, async (req, res) => {
       },
       "Aggie Space initiative": {
         url: "https://engineering.ucdavis.edu/sites/g/files/dgvnsk2151/files/styles/sf_slideshow_full/public/media/images/ASI%2015.jpg?h=7a8a8cdf&itok=ijUelDyM",
-        position: "center 30%"
+        position: "center 20%"
       },
       "Biomedical Engineering Society (BES)": {
         url: "https://givingserviceproduction.blob.core.windows.net/giveupload/220a3411-2f93-460c-80e0-ed01fdb02eda-BMES-3-small.png",
-        position: "center center"
+        position: "center 30%"
       },
       "IEEE (Institute of Electrical & Electronics Engineers)": {
-        url: "https://mae.ucdavis.edu/sites/g/files/dgvnsk6286/files/styles/sf_landscape_16x9/public/media/images/IMG-20240531-WA0006.jpg?h=854a7be2&itok=IM8Lqwt-",
-        position: "center 25%"
+        url: "https://ieeeucdavis.weebly.com/uploads/1/2/0/2/120265173/20191003-173856-copy_orig.jpg",
+        position: "center 29%"
       },
       "Tau Beta Pi": {
         url: "https://engineering.ucdavis.edu/sites/g/files/dgvnsk2151/files/styles/sf_landscape_16x9/public/media/images/Bent%20Monument%201.png?h=c673cd1c&itok=fSUoghtH",
         position: "center center"
       },
       "Swift Coding Club": {
-        url: "https://swiftcodingucd.org/homepageImages/image2.jpeg",
-        position: "center 40%"
+        url: "https://i.imgur.com/tIsC2IE.png",
+        position: "center 20%"
       },
       "Finance and Investment Club": {
         url: "https://images.squarespace-cdn.com/content/v1/6397cf97e73677755585fd57/38d3a78c-3610-4bb4-a887-d47957076b18/DSC05856-2.jpg",
-        position: "center 30%"
+        position: "center 40%"
       },
       "IDSA at UC Davis": {
         url: "https://media.licdn.com/dms/image/v2/D5622AQE41VQnrm7V5Q/feedshare-shrink_800/B56ZUaSY9RHsAk-/0/1739902783962?e=2147483647&v=beta&t=P7rsYp8XTjLCKAnd4VKCw3sv8vZy0epSPMFVG7nv6pU",
-        position: "center 60%"
+        position: "center 50%"
       },
       "Project Catalyst": {
         url: "https://pub-1030958593964b819d564f7f21715215.r2.dev/projectcatalyst/gallery/01JVQT7JGX3XQVDQFXTVZB9DZ7.png",
@@ -1250,15 +1250,15 @@ app.get('/api/set-hero-images', requireAuth, async (req, res) => {
       },
       "SACNAS": {
         url: "https://lettersandsciencemag.ucdavis.edu/sites/g/files/dgvnsk15406/files/styles/sf_landscape_16x9/public/media/images/SACNAS-Group-Photo-2-Jace-Kuske.jpg?h=6eb229a4&itok=Lamhp2tc",
-        position: "center 60%"
+        position: "center 50%"
       },
       "Science Says": {
-        url: "https://davissciencesays.ucdavis.edu/sites/g/files/dgvnsk6006/files/inline-images/EEOXdGEUwAMP_1Z.jpg",
-        position: "center 1%"
+        url: "https://davissciencesays.ucdavis.edu/sites/g/files/dgvnsk6006/files/styles/sf_landscape_16x9/public/media/images/Screenshot%202024-05-30%20160518.png?h=8f846866&itok=TOX0axhi",
+        position: "center 20%"
       },
       "Construction Management Club": {
         url: "https://engineering.ucdavis.edu/sites/g/files/dgvnsk2151/files/styles/sf_landscape_16x9/public/media/images/IMG_9594.jpeg?h=558d796c&itok=6F_C8O-j",
-        position: "center 25%"
+        position: "center 38%"
       },
       "EBSA": {
         url: "https://images.squarespace-cdn.com/content/v1/60ee8314f3a4b9650c3822c5/0d3b293f-3809-4409-a9d4-5c6d8cda8784/DSC02286.JPG",
@@ -1266,7 +1266,7 @@ app.get('/api/set-hero-images', requireAuth, async (req, res) => {
       },
       "Materials Advantage Student Chapter": {
         url: "https://mse.engineering.ucdavis.edu/sites/g/files/dgvnsk4451/files/media/images/MaterialsMagicShow2023.jpg",
-        position: "center 80%"
+        position: "center 70%"
       },
       "American Institute of Chemical Engineers": {
         url: "https://aiche.ucdavis.edu/sites/g/files/dgvnsk5996/files/styles/sf_image_banner/public/media/images/IMG_2282_1_80.jpeg?itok=9hOLB5ns",
@@ -1277,8 +1277,90 @@ app.get('/api/set-hero-images', requireAuth, async (req, res) => {
         position: "center center"
       },
       "Davis Robotics Club": {
-        url: "https://www.totalphase.com/media/blog/2024/09/robot-7925618_1280-1024x576.webp",
+        url: "https://sdmntpreastus.oaiusercontent.com/files/00000000-8ca8-61f9-8cec-72aa15b58f2d/raw?se=2025-09-17T22%3A16%3A59Z&sp=r&sv=2024-08-04&sr=b&scid=c7d7a6d1-0eaf-5f68-afc1-e65cd1ce6cfd&skoid=b0fd38cc-3d33-418f-920e-4798de4acdd1&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2025-09-17T17%3A56%3A36Z&ske=2025-09-18T17%3A56%3A36Z&sks=b&skv=2024-08-04&sig=NylID/DX4ug4%2BDzJcg0FvoSj36Y7u2TbXvnqK0s1RZk%3D",
         position: "center 25%"
+      },
+      "Advanced Modeling and Aeronautics Team (AMAT)": {
+        url: "https://amat.engineering.ucdavis.edu/sites/g/files/dgvnsk15876/files/styles/sf_hero_banner_large/public/media/images/IMG_8593.jpg?h=71976bb4&itok=eJIw5Orv",
+        position: "center 18%"
+      },
+      "Aggie Propulsion and Rocketry Lab (APRL)": {
+        url: "https://aprl.space/img/APRL_photos/projects/Heavy.jpg",
+        position: "center 50%"
+      },
+      "AISES (American Indian Science and Engineering Society)": {
+        url: "https://i.imgur.com/OSXoxEh.jpeg",
+        position: "center 55%"
+      },
+      "ASCE (American Society of Civil Engineers)": {
+        url: "https://cee.engineering.ucdavis.edu/sites/g/files/dgvnsk6911/files/styles/sf_title_banner/public/2019-05/banner_asce.jpg?h=8add6289&itok=j5o9AtHQ",
+        position: "center 5%"
+      },
+      "AWWA (American Water Works Association)": {
+        url: "https://awwaucdavis.weebly.com/uploads/1/0/4/1/104153338/img-7523_orig.jpg",
+        position: "center 40%"
+      },
+      "CALESS (Chicano and Latino Engineers and Scientists Society)": {
+        url: "https://caless.engineering.ucdavis.edu/files/2018/10/1-1.png",
+        position: "center 30%"
+      },
+      "Davis Undergraduate Engineering Network (DUEN)": {
+        url: "https://duendavis.com/_next/image?url=%2Flanding-content%2Fcover1.jpeg&w=3840&q=75",
+        position: "center 40%"
+      },
+      "EcoCAR": {
+        url: "https://engineering.ucdavis.edu/sites/g/files/dgvnsk2151/files/styles/sf_landscape_16x9/public/media/images/ecocar%20ev%20challenge%20workshop%20-%20uc%20davis%202.jpg?h=10d202d3&itok=z0P9rQEt",
+        position: "center 50%"
+      },
+      "Eta Kappa Nu": {
+        url: "https://hkn.ieee.org/wp-content/uploads/2025/04/Nu_Mu_Installation_Group3-600x344.jpg",
+        position: "center 22%"
+      },
+      "FACE (Female Association of Civil Engineers)": {
+        url: "https://asceucdavis.weebly.com/uploads/6/8/4/9/68492279/published/image.png?1675299248",
+        position: "center 39%"
+      },
+      "Formula Racing at UC Davis (FRUCD)": {
+        url: "https://fsae.ucdavis.edu/sites/g/files/dgvnsk14196/files/styles/sf_landscape_16x9/public/media/images/Screenshot%202024-07-09%20154138.png?h=02ccf5cd&itok=yYYYht_1",
+        position: "center 30%"
+      },
+      "Korean-American Scientists and Engineers Association (KSEA)": {
+        url: "https://www.ucdksea.com/images/home/sixth.jpeg",
+        position: "center 62%"
+      },
+      "National Society of Black Engineers (NSBE)": {
+        url: "https://i.imgur.com/0LSYhWP.jpeg",
+        position: "center 17%"
+      },
+      "oSTEM (Out in STEM)": {
+        url: "https://i.imgur.com/m7E6GBC.jpeg",
+        position: "center 30%"
+      },
+      "PASE (Pilipinx Americans in Science and Engineering)": {
+        url: "https://i.imgur.com/SPhpycI.jpeg",
+        position: "center 34%"
+      },
+      "SASE (Society of Asian Scientists and Engineers)": {
+        url: "https://i.imgur.com/DfddzlE.jpeg",
+        position: "center 40%"
+      },
+      "Society of Manufacturing Engineers (SME)": {
+        url: "https://sme.ucdavis.edu/sites/g/files/dgvnsk13296/files/styles/sf_landscape_16x9/public/media/images/IMG_0247.jpg?h=71976bb4&itok=0ZF7a8tF",
+        position: "center 30%"
+      },
+      "Society of Women Engineers (SWE)": {
+        url: "https://i.imgur.com/hAt8eHH.jpeg",
+        position: "center 60%"
+      },
+      "Space and Satellite Systems (SSS) Club": {
+        url: "https://engineering.ucdavis.edu/sites/g/files/dgvnsk2151/files/styles/sf_landscape_16x9/public/media/images/rsz_52519248117_7940247f05_o.jpg?h=a6da1f3e&itok=Ss0D7a-F",
+        position: "center 10%"
+      },
+      "Women in Robotics (WIR)": {
+        url: "https://css-tricks.com/wp-content/uploads/2013/11/a-blue-box.png",
+      },
+      "Women Machinists' Club (WMC)": {
+        url: "https://css-tricks.com/wp-content/uploads/2013/11/a-blue-box.png",
       }
     };
     let updated = 0;
