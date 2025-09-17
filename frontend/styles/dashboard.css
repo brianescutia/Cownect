@@ -85,16 +85,16 @@ body {
     padding: 2rem;
     display: grid;
     grid-template-columns: 1fr 1fr;
-    grid-template-rows: auto auto auto auto;
+    grid-template-rows: auto auto;
     gap: 2rem;
     grid-template-areas:
         "user-profile saved-clubs"
         "user-profile upcoming-events"
-        "test-results potential-matches"
-        "connections connections";
-    /* ← ADD THIS LINE */
+        "test-results test-results";
+    /* Test results now spans full width */
     justify-content: center;
 }
+
 
 /* =============================================================================
    ENHANCED USER PROFILE CARD
@@ -104,7 +104,10 @@ body {
 .user-profile-card {
     grid-area: user-profile;
     width: 100%;
-    min-height: 900px;
+    min-height: 825px;
+    /* Reduced from 900px */
+    max-height: 925px;
+    /* Reduced from 100vh */
     background: rgba(255, 255, 255, 0.7);
     backdrop-filter: blur(12px);
     border: 1px solid rgba(255, 255, 255, 0.8);
@@ -115,7 +118,6 @@ body {
     gap: 1.5rem;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
     overflow-y: auto;
-    max-height: 100vh;
 }
 
 /* Profile Header */
@@ -389,6 +391,7 @@ body {
 .saved-clubs-card,
 .upcoming-events-card,
 .test-results-card {
+    grid-area: test-results;
     width: 100%;
     height: 350px;
     background: rgba(255, 255, 255, 0.7);
@@ -1015,6 +1018,86 @@ body {
    RESPONSIVE DESIGN
    =============================================================================
 */
+
+
+/* Hide potential matches card completely */
+.potential-matches-card {
+    display: none !important;
+}
+
+/* Hide connections card completely */
+.connections-card {
+    display: none !important;
+}
+
+/* Hide matching modal completely */
+#matchingModal,
+.modal-overlay {
+    display: none !important;
+}
+
+/* Hide networking sections in profile form */
+.form-section:nth-child(2),
+/* Networking & Matching section */
+.form-section:nth-child(3) {
+    /* Contact & Social section */
+    display: none !important;
+}
+
+/* Hide any matching-related buttons */
+.view-all-matches-btn,
+.quick-connect-btn,
+.connect-btn,
+.message-btn {
+    display: none !important;
+}
+
+/* =============================================================================
+   RESPONSIVE DESIGN - Updated for simplified layout
+   =============================================================================
+*/
+
+@media (max-width: 1200px) {
+    .dashboard-container {
+        grid-template-columns: 1fr;
+        grid-template-areas:
+            "user-profile"
+            "saved-clubs"
+            "upcoming-events"
+            "test-results";
+    }
+
+    .user-profile-card {
+        min-height: auto;
+        max-height: none;
+    }
+
+    .test-results-card {
+        width: 100%;
+    }
+}
+
+@media (max-width: 768px) {
+    .dashboard-container {
+        padding: 1rem;
+        gap: 1.5rem;
+    }
+
+    .user-profile-card {
+        padding: 1.5rem;
+        min-height: auto;
+    }
+}
+
+@media (max-width: 480px) {
+    .dashboard-container {
+        padding: 0.5rem;
+    }
+
+    .user-profile-card {
+        padding: 1rem;
+    }
+}
 
 @media (max-width: 1200px) {
     .dashboard-container {

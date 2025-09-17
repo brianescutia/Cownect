@@ -62,7 +62,7 @@ async function initializeDashboard() {
 
 async function loadUserProfile() {
     try {
-        console.log('👤 Loading enhanced user profile...');
+        console.log('👤 Loading user profile...');
 
         const response = await fetch('/api/user/profile');
 
@@ -81,7 +81,7 @@ async function loadUserProfile() {
         populateProfileForm(userData);
         updateNavbarProfile(userData);
 
-        console.log('✅ Enhanced user profile loaded:', userData.email);
+        console.log('✅ User profile loaded:', userData.email);
         return userData;
     } catch (error) {
         console.error('❌ Error loading user profile:', error);
@@ -102,8 +102,9 @@ function updateUserProfileDisplay(userData) {
         userDisplayName.textContent = userData.displayName || 'UC Davis Student';
     }
 
-    // Update profile completion
-    updateProfileCompletion(userData.profileCompleteness || 0);
+    // Calculate profile completion based on BASIC INFO ONLY
+    const completionPercentage = calculateBasicProfileCompletion(userData);
+    updateProfileCompletion(completionPercentage);
 
     // Update profile image
     if (userData.profilePictureUrl) {
@@ -114,6 +115,49 @@ function updateUserProfileDisplay(userData) {
 
     console.log('🎨 User profile display updated');
 }
+
+// NEW FUNCTION: Calculate completion based on basic info only
+function calculateBasicProfileCompletion(userData) {
+    const requiredFields = [
+        'name',
+        'year',
+        'major',
+        'bio'
+    ];
+
+    const optionalFields = [
+        'hobbies',
+        'profilePictureUrl'
+    ];
+
+    let completedRequired = 0;
+    let completedOptional = 0;
+
+    // Check required fields (worth 80% total)
+    requiredFields.forEach(field => {
+        if (userData[field] && userData[field].toString().trim() !== '') {
+            completedRequired++;
+        }
+    });
+
+    // Check optional fields (worth 20% total)
+    optionalFields.forEach(field => {
+        if (userData[field] && userData[field].toString().trim() !== '') {
+            completedOptional++;
+        }
+    });
+
+    // Calculate percentage
+    const requiredPercentage = (completedRequired / requiredFields.length) * 80;
+    const optionalPercentage = (completedOptional / optionalFields.length) * 20;
+
+    const totalPercentage = Math.round(requiredPercentage + optionalPercentage);
+
+    console.log(`📊 Profile completion: ${totalPercentage}% (${completedRequired}/${requiredFields.length} required, ${completedOptional}/${optionalFields.length} optional)`);
+
+    return totalPercentage;
+}
+
 
 function updateProfileCompletion(percentage) {
     const completionFill = document.getElementById('completionFill');
@@ -183,17 +227,13 @@ function updateNavbarProfile(userData) {
 }
 
 function populateProfileForm(userData) {
-    // Basic fields
+    // Only populate BASIC fields
     const basicFields = [
         { id: 'profileName', value: userData.name || '' },
         { id: 'profileYear', value: userData.year || '' },
         { id: 'profileMajor', value: userData.major || '' },
         { id: 'profileBio', value: userData.bio || '' },
-        { id: 'profileHobbies', value: userData.hobbies || '' },
-        { id: 'profileLinkedin', value: userData.linkedinUrl || '' },
-        { id: 'profileSkills', value: (userData.skills || []).join(', ') },
-        { id: 'profileLearningGoals', value: (userData.learningGoals || []).join(', ') },
-        { id: 'profileAvailability', value: userData.availability || '' }
+        { id: 'profileHobbies', value: userData.hobbies || '' }
     ];
 
     basicFields.forEach(field => {
@@ -203,37 +243,21 @@ function populateProfileForm(userData) {
         }
     });
 
-    // Checkboxes for lookingFor
-    const lookingForContainer = document.getElementById('profileLookingFor');
-    if (lookingForContainer && userData.lookingFor) {
-        const checkboxes = lookingForContainer.querySelectorAll('input[type="checkbox"]');
-        checkboxes.forEach(checkbox => {
-            checkbox.checked = userData.lookingFor.includes(checkbox.value);
-        });
-    }
-
-    // Checkboxes for contact preferences
-    const contactContainer = document.getElementById('profileContactPreferences');
-    if (contactContainer && userData.contactPreferences) {
-        const checkboxes = contactContainer.querySelectorAll('input[type="checkbox"]');
-        checkboxes.forEach(checkbox => {
-            checkbox.checked = userData.contactPreferences.includes(checkbox.value);
-        });
-    }
-
-    console.log('📝 Enhanced profile form populated');
+    console.log('📝 Basic profile form populated');
 }
 
 function setupProfileFormListeners() {
-    // Get all form fields
-    const formFields = [
-        'profileName', 'profileYear', 'profileMajor', 'profileBio',
-        'profileHobbies', 'profileLinkedin', 'profileSkills',
-        'profileLearningGoals', 'profileAvailability'
+    // Only listen to BASIC form fields
+    const basicFormFields = [
+        'profileName',
+        'profileYear',
+        'profileMajor',
+        'profileBio',
+        'profileHobbies'
     ];
 
-    // Add listeners to basic fields
-    formFields.forEach(fieldId => {
+    // Add listeners to basic fields only
+    basicFormFields.forEach(fieldId => {
         const field = document.getElementById(fieldId);
         if (field) {
             field.addEventListener('input', markProfileUnsaved);
@@ -241,19 +265,7 @@ function setupProfileFormListeners() {
         }
     });
 
-    // Add listeners to checkboxes
-    const checkboxContainers = ['profileLookingFor', 'profileContactPreferences'];
-    checkboxContainers.forEach(containerId => {
-        const container = document.getElementById(containerId);
-        if (container) {
-            const checkboxes = container.querySelectorAll('input[type="checkbox"]');
-            checkboxes.forEach(checkbox => {
-                checkbox.addEventListener('change', markProfileUnsaved);
-            });
-        }
-    });
-
-    console.log('🎧 Enhanced profile form listeners set up');
+    console.log('🎧 Basic profile form listeners set up');
 }
 
 function markProfileUnsaved() {
@@ -282,40 +294,24 @@ function updateSaveButtonState() {
 
 async function saveProfile() {
     try {
-        console.log('💾 Saving enhanced profile...');
+        console.log('💾 Saving basic profile...');
 
         const saveBtn = document.getElementById('saveProfileBtn');
         const originalText = saveBtn.textContent;
         saveBtn.textContent = 'Saving...';
         saveBtn.disabled = true;
 
-        // Collect all form data
+        // Collect ONLY basic form data
         const profileData = {
-            // Basic information
+            // Basic information only
             name: document.getElementById('profileName').value.trim(),
             year: document.getElementById('profileYear').value,
             major: document.getElementById('profileMajor').value.trim(),
             bio: document.getElementById('profileBio').value.trim(),
-            hobbies: document.getElementById('profileHobbies').value.trim(),
-            linkedinUrl: document.getElementById('profileLinkedin').value.trim(),
-
-            // Skills and learning
-            skills: document.getElementById('profileSkills').value
-                .split(',').map(s => s.trim()).filter(s => s),
-            learningGoals: document.getElementById('profileLearningGoals').value
-                .split(',').map(s => s.trim()).filter(s => s),
-            availability: document.getElementById('profileAvailability').value,
-
-            // Looking for (checkboxes)
-            lookingFor: Array.from(document.querySelectorAll('#profileLookingFor input:checked'))
-                .map(checkbox => checkbox.value),
-
-            // Contact preferences (checkboxes)
-            contactPreferences: Array.from(document.querySelectorAll('#profileContactPreferences input:checked'))
-                .map(checkbox => checkbox.value)
+            hobbies: document.getElementById('profileHobbies').value.trim()
         };
 
-        console.log('📊 Enhanced profile data to save:', profileData);
+        console.log('📊 Basic profile data to save:', profileData);
 
         // Validate required fields
         if (!profileData.name || !profileData.year || !profileData.major || !profileData.bio) {
@@ -337,23 +333,23 @@ async function saveProfile() {
             throw new Error(result.error || 'Failed to save profile');
         }
 
-        console.log('✅ Enhanced profile saved successfully:', result);
+        console.log('✅ Basic profile saved successfully:', result);
 
         // Update state and UI
         dashboardState.user = { ...dashboardState.user, ...result.user };
         dashboardState.profileUnsaved = false;
 
-        updateUserProfileDisplay(result.user);
+        // Recalculate completion percentage based on basic info only
+        const completionPercentage = calculateBasicProfileCompletion(result.user);
+        updateProfileCompletion(completionPercentage);
+
         updateNavbarProfile(result.user);
         updateSaveButtonState();
-
-        // Reload potential matches since profile changed
-        await loadPotentialMatches();
 
         showDashboardMessage('Profile saved successfully! 🎉', 'success');
 
     } catch (error) {
-        console.error('❌ Error saving enhanced profile:', error);
+        console.error('❌ Error saving basic profile:', error);
         showDashboardMessage(error.message, 'error');
     } finally {
         const saveBtn = document.getElementById('saveProfileBtn');
@@ -361,6 +357,7 @@ async function saveProfile() {
         saveBtn.disabled = false;
     }
 }
+
 
 // =============================================================================
 // PROFILE PICTURE UPLOAD
