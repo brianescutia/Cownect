@@ -623,6 +623,113 @@ button {
     background-color: #64748b;
 }
 
+/* Filter Container */
+#filterTags {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    background: #f8f9fa;
+    border-radius: 12px;
+    margin: 1.5rem auto;
+    max-width: 600px;
+    position: relative;
+}
+
+#filterTags.hidden {
+    display: none;
+}
+
+/* Filter Category Buttons */
+.filter-pill {
+    background: white;
+    border: 1px solid #dee2e6;
+    padding: 0.6rem 1.2rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #495057;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.filter-pill:hover {
+    background: #4a90e2;
+    color: white;
+    border-color: #4a90e2;
+}
+
+.filter-pill.active {
+    background: #4a90e2;
+    color: white;
+    border-color: #4a90e2;
+}
+
+/* Dropdown */
+.filter-dropdown {
+    position: absolute;
+    top: calc(100% + 10px);
+    left: 0;
+    right: 0;
+    background: white;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    padding: 1rem;
+    display: none;
+    z-index: 100;
+}
+
+.filter-dropdown.active {
+    display: block;
+}
+
+/* Filter Options */
+.filter-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.filter-tag {
+    padding: 0.4rem 0.8rem;
+    border-radius: 16px;
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    color: #495057;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.filter-tag:hover {
+    background: #e3f2fd;
+    border-color: #4a90e2;
+}
+
+.filter-tag.active {
+    background: #4a90e2;
+    color: white;
+    border-color: #4a90e2;
+}
+
+/* Clear button */
+.clear-all-btn {
+    background: #6c757d;
+    color: white;
+    border: none;
+    padding: 0.6rem 1.2rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.clear-all-btn:hover {
+    background: #5a6268;
+}
+
 @keyframes fadeInTag {
     from {
         opacity: 0;

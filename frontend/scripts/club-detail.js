@@ -201,36 +201,64 @@ function createSocialLinks(club) {
         websiteLink.target = '_blank';
         websiteLink.className = 'social-link';
         websiteLink.setAttribute('data-club-link', 'website');
+
+        // Add icon image
+        const websiteIcon = document.createElement('img');
+        websiteIcon.src = '/assets/social-icons/website-icon.png';
+        websiteIcon.alt = 'Website';
+        websiteLink.appendChild(websiteIcon);
+
         socialLinksContainer.appendChild(websiteLink);
     }
 
-    // Instagram link  
+    // Instagram link with PNG icon
     if (club.instagramUrl) {
         const instagramLink = document.createElement('a');
         instagramLink.href = club.instagramUrl;
         instagramLink.target = '_blank';
         instagramLink.className = 'social-link';
         instagramLink.setAttribute('data-club-link', 'instagram');
+
+        // Add Instagram PNG icon
+        const instagramIcon = document.createElement('img');
+        instagramIcon.src = '/assets/social-icons/instagram-icon.png';
+        instagramIcon.alt = 'Instagram';
+        instagramLink.appendChild(instagramIcon);
+
         socialLinksContainer.appendChild(instagramLink);
     }
 
-    // Discord link
+    // Discord link with PNG icon
     if (club.discordUrl) {
         const discordLink = document.createElement('a');
         discordLink.href = club.discordUrl;
         discordLink.target = '_blank';
         discordLink.className = 'social-link';
         discordLink.setAttribute('data-club-link', 'discord');
+
+        // Add Discord PNG icon
+        const discordIcon = document.createElement('img');
+        discordIcon.src = '/assets/social-icons/discord-icon.png';
+        discordIcon.alt = 'Discord';
+        discordLink.appendChild(discordIcon);
+
         socialLinksContainer.appendChild(discordLink);
     }
 
-    // Twitter link
+    // Twitter link with PNG icon
     if (club.twitterUrl) {
         const twitterLink = document.createElement('a');
         twitterLink.href = club.twitterUrl;
         twitterLink.target = '_blank';
         twitterLink.className = 'social-link';
         twitterLink.setAttribute('data-club-link', 'twitter');
+
+        // Add Twitter PNG icon
+        const twitterIcon = document.createElement('img');
+        twitterIcon.src = '/assets/social-icons/twitter-icon.png';
+        twitterIcon.alt = 'Twitter';
+        twitterLink.appendChild(twitterIcon);
+
         socialLinksContainer.appendChild(twitterLink);
     }
 
@@ -240,16 +268,24 @@ function createSocialLinks(club) {
         defaultWebsite.href = '#';
         defaultWebsite.className = 'social-link';
         defaultWebsite.setAttribute('data-club-link', 'website');
+        const websiteIcon = document.createElement('img');
+        websiteIcon.src = '/assets/website-icon.png';
+        websiteIcon.alt = 'Website';
+        defaultWebsite.appendChild(websiteIcon);
         socialLinksContainer.appendChild(defaultWebsite);
 
         const defaultInstagram = document.createElement('a');
         defaultInstagram.href = '#';
         defaultInstagram.className = 'social-link';
         defaultInstagram.setAttribute('data-club-link', 'instagram');
+        const instagramIcon = document.createElement('img');
+        instagramIcon.src = '/assets/instagram-icon.png';
+        instagramIcon.alt = 'Instagram';
+        defaultInstagram.appendChild(instagramIcon);
         socialLinksContainer.appendChild(defaultInstagram);
     }
 
-    // Add the social links container to the right column (underneath contacts box)
+    // Add the social links container to the right column
     const rightColumn = document.querySelector('.right-column');
     if (rightColumn && socialLinksContainer.children.length > 0) {
         rightColumn.appendChild(socialLinksContainer);

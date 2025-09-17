@@ -18,7 +18,7 @@ const clubData = [
     {
         name: "#include",
         description: "A student organization advancing diversity and inclusion in computing through mentorship, workshops, and community projects, empowering underrepresented students to thrive academically, professionally, and socially across UC Davis.",
-        tags: ["diversity", "webdev", "mentorship", "programming", "projects", "collaboration", "workshops", "professional"],
+        tags: ["Software", "Web Dev", "Mentorship", "Women in Tech"],
         category: "Software",
         logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/include/logo/01JVQTV8FKBWV72CV6JXC5RR6D.png",
         memberCount: 45,
@@ -64,7 +64,7 @@ const clubData = [
     {
         name: "Davis Robotics Club",
         description: "Multidisciplinary team building robots across mechanical, electrical, and software subteams, offering hands-on prototyping, embedded programming, controls, and competitions that strengthen engineering fundamentals and collaborative teamwork.",
-        tags: ["robotics", "hardware", "programming", "engineering", "competition", "collaboration", "technical", "projects"],
+        tags: ["Robotics", "Hardware", "Competitions", "Build Projects"],  // Davis Robotics
         category: "Hardware",
         logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/davisroboticsclub/logo/01JVQTRFMKPY1MVTTKGWWFW1J5.png",
         memberCount: 38,
@@ -86,7 +86,7 @@ const clubData = [
     {
         name: "Game Development and Arts Club",
         description: "Collaborative club uniting programmers, artists, designers, and musicians to build games through jams, workshops, and project teams, emphasizing portfolio development, playtesting, and cross-disciplinary teamwork.",
-        tags: ["gamedev", "programming", "creative", "design", "collaboration", "projects", "graphics", "technical"],
+        tags: ["Game Dev", "Software", "Build Projects", "Beginner Friendly"],  // Game Dev & Arts
         category: "Software",
         logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/gamedevelopment&artsclub/logo/01JVQTBP5QEDJRFZ8ADKPSJ8MG.png",
         memberCount: 29,
@@ -108,7 +108,7 @@ const clubData = [
     {
         name: "Girls Who Code at UC Davis",
         description: "Inclusive community for women and nonbinary students learning programming through workshops, mentorship, and projects, building confidence, technical skills, and supportive networks that empower growth and career readiness.",
-        tags: ["diversity", "programming", "mentorship", "workshops", "hackathon", "networking", "professional", "social"],
+        tags: ["Women in Tech", "Software", "Mentorship", "Beginner Friendly"],  // Girls Who Code
         category: "Technology",
         logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/girlswhocodeatucdavis/logo/01JVQT3NJD1BQ0NZQPBZ9X3WY2.jpeg",
         memberCount: 45,
@@ -131,7 +131,7 @@ const clubData = [
     {
         name: "Google Developer Student Club",
         description: "Student developers explore Google technologies through talks, codelabs, and solution challenges, building real projects for community needs while improving technical depth, teamwork, and professional exposure.",
-        tags: ["programming", "webdev", "mobile", "cloud", "mentorship", "projects", "workshops", "networking", "professional", "technical"],
+        tags: ["Software", "Web Dev", "Workshops", "Professional Dev"],  // Google Developer Student Club
         category: "Technology",
         logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/googledeveloperstudentclub/logo/01JVQTC50RE87ZS8QG971KQ1F4.png",
         memberCount: 52,
@@ -154,7 +154,7 @@ const clubData = [
     {
         name: "HackDavis",
         description: "UC Davis’s flagship hackathon and builder community hosting workshops, mentorship, and the annual event, empowering students to form teams, prototype solutions, and showcase creative technology projects to sponsors.",
-        tags: ["hackathon", "social", "innovation", "competition", "programming", "projects", "sustainability", "networking"],
+        tags: ["Hackathons", "Software", "Networking", "Build Projects"],  // HackDavis
         category: "Technology",
         logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/hackdavis/logo/01JVQSS38XXHZJYKQR48EHZRJ5.png",
         memberCount: 30,
@@ -177,7 +177,7 @@ const clubData = [
     {
         name: "Women in Computer Science",
         description: "Organization supporting women and nonbinary students in computing through mentorship, technical workshops, interview preparation, and community events that foster belonging, confidence, and career advancement.",
-        tags: ["diversity", "programming", "mentorship", "professional", "workshops", "networking", "academic", "social"],
+        tags: ["Women in Tech", "Software", "Mentorship", "Professional Dev"],  // Women in Computer Science
         category: "Technology",
         logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/womenincomputerscience/logo/01JVQT439C2QTFM5XZZH3XYHQ5.png",
         memberCount: 48,
@@ -224,7 +224,7 @@ const clubData = [
     {
         name: "Quantum Computing Society at Davis",
         description: "Community learning quantum theory, algorithms, and programming tools through seminars and hack sessions, building foundational intuition while practicing Qiskit and exploring emerging applications across disciplines.",
-        tags: ["research", "technical", "innovation", "academic", "programming", "workshops", "collaboration"],
+        tags: ["Software", "Research", "Workshops", "AI/ML"],  // Quantum Computing Society
         category: "Technology",
         logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/quantumcomputingatdavis/logo/01JVQV37N2Y49KJG8ED57EABVX.png",
         memberCount: 26,
@@ -246,7 +246,7 @@ const clubData = [
     {
         name: "AI Student Collective",
         description: "Community for learning artificial intelligence and machine learning through lectures, study groups, code labs, and projects, connecting students with research opportunities, Kaggle practice, and industry speakers across disciplines.",
-        tags: ["ai", "ml", "research", "networking", "mentorship", "competition", "diversity", "leadership", "technical", "professional"],
+        tags: ["AI/ML", "Research", "Workshops", "Networking"],  // AI Student Collective
         category: "Data Science",
         logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/aistudentcollective/logo/01JVQTJ8NSSAKD84YNAEMTJVPY.png",
         memberCount: 38,
@@ -268,7 +268,7 @@ const clubData = [
     {
         name: "Aggie Sports Analytics",
         description: "Student analysts apply statistics and machine learning to sports data, producing reports, visualizations, and presentations while hosting workshops, guest talks, and projects with campus teams and partners.",
-        tags: ["data", "analytics", "programming", "statistics", "projects", "research", "collaboration", "technical"],
+        tags: ["Data Science", "Software", "Build Projects"],  // Aggie Sports Analytics
         category: "Data Science",
         logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/aggiesportsanalytics/logo/01JVQVDCBWM2P6KSJCNQFJW5CW.png",
         memberCount: 22,
@@ -291,7 +291,7 @@ const clubData = [
     {
         name: "AggieWorks",
         description: "Cross-functional student product organization designing, building, and shipping real software for campus and community clients, practicing product thinking, agile processes, code reviews, and collaborative teamwork each quarter.",
-        tags: ["engineering", "programming", "product", "collaboration", "projects", "professional", "startup", "technical"],
+        tags: ["Software", "Web Dev", "Build Projects", "Professional Dev"],  // AggieWorks
         category: "Technology",
         logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/aggieworks/logo/01JVQTEG716WKSBDF0EJ3N2HKX.png",
         memberCount: 31,
@@ -314,7 +314,7 @@ const clubData = [
     {
         name: "BAJA SAE",
         description: "Designs, fabricates, and races off-road vehicles for Baja SAE, giving students hands-on experience with CAD, manufacturing, powertrain, suspension, and project management while competing nationally against other universities.",
-        tags: ["engineering", "hardware", "design", "competition", "collaboration", "technical", "projects", "manufacturing"],
+        tags: ["Mechanical", "Hardware", "Competitions", "Build Projects"],  // BAJA SAE
         category: "Engineering",
         logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/bajasae/logo/01JVQV3PMQKE7HMQW7Q06QCZ0K.png",
         memberCount: 67,
@@ -335,7 +335,7 @@ const clubData = [
     {
         name: "Club of Future Female Engineers",
         description: "Supportive network empowering women engineers with mentorship programs, technical workshops, leadership opportunities, and community events, fostering confidence, collaboration, and career readiness across engineering disciplines at UC Davis.",
-        tags: ["diversity", "engineering", "mentorship", "networking", "professional", "academic", "leadership", "social"],
+        tags: ["Women in Tech", "Electrical", "Mentorship", "Networking"],  // Club of Future Female Engineers
         category: "Engineering",
         logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/cluboffuturefemengineers/logo/01JVQSTV7XKMKCND24B1CBND1R.jpeg",
         memberCount: 28,
@@ -358,7 +358,7 @@ const clubData = [
     {
         name: "CodeLab",
         description: "Project-based coding club where students learn by building full-stack apps in small teams, attending workshops, receiving code reviews, and showcasing demos that strengthen resumes and practical software skills.",
-        tags: ["programming", "webdev", "mobile", "collaboration", "workshops", "projects", "technical", "academic"],
+        tags: ["Software", "Web Dev", "Build Projects", "Beginner Friendly"],  // CodeLab
         category: "Software",
         logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/codelab/logo/01JVQTKM7H8T6X9VRZH4WDKRZY.png",
         memberCount: 42,
@@ -380,7 +380,7 @@ const clubData = [
     {
         name: "Cognitive Science Student Association",
         description: "Explores cognition, neuroscience, psychology, linguistics, and computation through speakers, research opportunities, journal clubs, and interdisciplinary projects connecting students interested in minds, behavior, and intelligent systems.",
-        tags: ["ai", "research", "academic", "collaboration", "workshops", "networking", "technical", "innovation"],
+        tags: ["AI/ML", "Research", "Networking"],  // Cognitive Science Student Association
         category: "Technology",
         logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/cognitivesciencestudentassociation/logo/01JVQTG5FEKCG40GG6CTWPTQGN.jpeg",
         memberCount: 35,
@@ -402,7 +402,7 @@ const clubData = [
     {
         name: "ColorStack",
         description: "Community supporting Black and Latinx computer science students with mentorship, study groups, interview preparation, industry connections, and inclusive events that build confidence, technical skills, belonging, and strong professional networks.",
-        tags: ["diversity", "programming", "mentorship", "professional", "networking", "academic", "social", "leadership"],
+        tags: ["Software", "Mentorship", "Professional Dev"],  // ColorStack
         category: "Technology",
         logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/colorstack/logo/01JVQTJMA0DY89R14DZZVP6CBC.jpeg",
         memberCount: 29,
@@ -425,7 +425,7 @@ const clubData = [
     {
         name: "Computer Science Tutoring Club",
         description: "Peer-led organization offering tutoring, review sessions, and study guides for foundational CS courses, providing teaching experience, community service opportunities, and stronger understanding through collaborative problem-solving and practice.",
-        tags: ["programming", "tutoring", "academic", "mentorship", "workshops", "interviewing", "professional", "collaboration"],
+        tags: ["Software", "Mentorship", "Beginner Friendly", "Workshops"],  // Computer Science Tutoring Club
         category: "Software",
         logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/computersciencetutoringclub/logo/01JVQSV4T9N4VTC3KF4NA13EP4.png",
         memberCount: 55,
@@ -448,7 +448,7 @@ const clubData = [
     {
         name: "Cyber Security Club at UC Davis",
         description: "Hands-on cybersecurity community hosting talks, blue and red team labs, and CTF practices, teaching offensive and defensive skills, ethical hacking, and career pathways through competitions and collaborations.",
-        tags: ["cybersecurity", "hacking", "security", "ctf", "competition", "networking", "technical", "research"],
+        tags: ["Cybersecurity", "Software", "Competitions", "Workshops"],  // Cyber Security Club
         category: "Technology",
         logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/cybersecurityclubatucdavis/logo/01JVQT6PPGW013WGV5JQH595WF.png",
         memberCount: 35,
@@ -471,7 +471,7 @@ const clubData = [
     {
         name: "Cyclone RoboSub",
         description: "Student team builds autonomous underwater vehicles for RoboSub, integrating perception, controls, and software with mechanical systems, developing robust autonomy and teamwork through rigorous testing and international competition.",
-        tags: ["robotics", "programming", "hardware", "competition", "engineering", "automation", "technical", "collaboration"],
+        tags: ["Robotics", "Hardware", "Competitions", "Build Projects"],  // Cyclone RoboSub
         category: "Hardware",
         logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/cyclonerobosub/logo/01JVQSTHD9QJZD0C2PYJSQ50SY.png",
         memberCount: 42,
@@ -494,7 +494,7 @@ const clubData = [
     {
         name: "Davis Data Driven Change",
         description: "Applies data science to community challenges by partnering with nonprofits and agencies, building analytics pipelines, dashboards, and reports that enable evidence-based decisions and measurable social impact.",
-        tags: ["data", "social", "research", "analytics", "projects", "collaboration", "nonprofit", "technical"],
+        tags: ["Data Science", "Build Projects", "Networking"],  // Davis Data Driven Change
         category: "Data Science",
         logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/davisdatadrivenchange(d3c)/logo/01JVQT63Z6FZVJ36WRKW33BNTT.png",
         memberCount: 28,
@@ -516,7 +516,7 @@ const clubData = [
     {
         name: "Davis Data Science Club",
         description: "Large community offering workshops, mentorship, and project teams where students practice Python, statistics, machine learning, and data engineering while preparing for competitions, internships, and research opportunities.",
-        tags: ["data", "analytics", "programming", "ml", "projects", "networking", "workshops", "technical"],
+        tags: ["Data Science", "Workshops", "Mentorship", "Build Projects"],  // Davis Data Science Club
         category: "Data Science",
         logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/davisdatascienceclub/logo/01JVQTWEV1HTQ0DQGY1BJVMW82.png",
         memberCount: 28,
@@ -538,7 +538,7 @@ const clubData = [
     {
         name: "Engineering Collaborative Council",
         description: "Council coordinating engineering clubs, resources, and large student events, fostering collaboration, leadership development, and shared initiatives that strengthen the engineering community and support impactful, student-led projects.",
-        tags: ["engineering", "leadership", "networking", "collaboration", "professional", "academic", "social"],
+        tags: ["Networking", "Professional Dev"],  // Engineering Collaborative Council
         category: "Data Science",
         logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/engineeringcollaborativecouncil/logo/01JVQSREBNV1HEC71JE2Y0MMH1.png",
         memberCount: 28,
@@ -560,7 +560,7 @@ const clubData = [
     {
         name: "Engineers Without Borders at UC Davis",
         description: "Human-centered engineering organization designing and implementing sustainable projects with community partners, providing cross-cultural collaboration, technical design experience, and professional development focused on real-world impact.",
-        tags: ["engineering", "social", "sustainability", "collaboration", "projects", "nonprofit", "leadership", "technical"],
+        tags: ["Civil", "Build Projects", "Networking"],  // Engineers Without Borders
         category: "Data Science",
         logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/engineerswithoutbordersatucdavis/logo/01JVQTJTQ58FYRWR41JDSBJY9S.webp",
         memberCount: 28,
@@ -652,7 +652,7 @@ const clubData = [
     {
         name: "Nuerotech @ UCDavis",
         description: "Student group exploring neurotechnology, brain-computer interfaces, and computational neuroscience through projects, journal clubs, and workshops, bridging engineering and neuroscience with hands-on tools and collaborative teams.",
-        tags: ["research", "innovation", "technical", "hardware", "programming", "networking", "academic", "collaboration"],
+        tags: ["Hardware", "Research", "AI/ML", "Build Projects"],  // Neurotech @ UCDavis
         category: "Data Science",
         logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/engineerswithoutbordersatucdavis/logo/01JVQTJTQ58FYRWR41JDSBJY9S.webp",
         memberCount: 28,
@@ -675,7 +675,7 @@ const clubData = [
     {
         name: "Product Space @ UC Davis",
         description: "Selective product management fellowship teaching frameworks, case interviewing, and execution through sprints and mentorship, enabling students to ship portfolio-worthy products and prepare for PM internships.",
-        tags: ["product", "design", "leadership", "mentorship", "networking", "professional", "collaboration", "workshops"],
+        tags: ["Software", "Professional Dev", "Mentorship", "Workshops"],  // Product Space
         category: "Data Science",
         logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/engineerswithoutbordersatucdavis/logo/01JVQTJTQ58FYRWR41JDSBJY9S.webp",
         memberCount: 28,
@@ -698,7 +698,7 @@ const clubData = [
     {
         name: "SacHacks",
         description: "Community organizing Sacramento-region hackathons and tech events, connecting students to mentors, sponsors, and peers while promoting collaboration, learning, and entrepreneurship across schools and clubs.",
-        tags: ["hackathon", "programming", "innovation", "competition", "networking", "projects", "collaboration", "social"],
+        tags: ["Hackathons", "Software", "Networking", "Competitions"],  // SacHacks
         category: "Data Science",
         logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/sachacks/logo/01JVQV9MNH56BVJ05PJSDTWQ63.png",
         memberCount: 28,
@@ -744,7 +744,7 @@ const clubData = [
     {
         name: "The Hardware Club @ UC Davis ",
         description: "Hands-on engineering community building electronics, embedded systems, and mechanical prototypes, teaching PCB design, fabrication, and testing while promoting collaborative projects, tool training, and maker culture.",
-        tags: ["hardware", "electronics", "robotics", "collaboration", "projects", "technical", "workshops", "innovation"],
+        tags: ["Hardware", "Electrical", "Build Projects", "Workshops"],  // The Hardware Club
         category: "Data Science",
         logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/thedavisconsultinggroup/logo/01JVQV6P3927RF799RFKZC351H.png",
         memberCount: 28,
@@ -767,7 +767,7 @@ const clubData = [
     {
         name: "Women in Gaming at UC Davis",
         description: "Community for women and nonbinary gamers and creators hosting meetups, game jams, workshops, and panels, promoting inclusive spaces, creative collaboration, and pathways into the games industry.",
-        tags: ["gamedev", "diversity", "design", "creative", "collaboration", "social", "workshops", "community"],
+        tags: ["Game Dev", "Women in Tech", "Build Projects", "Networking"],  // Women in Gaming
         category: "Data Science",
         logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/womeningamingatucdavis/logo/01JVQVD5W4R4CB318YPWJEZ9VQ.png",
         memberCount: 28,
@@ -790,7 +790,7 @@ const clubData = [
     {
         name: "Aggie Space initiative ",
         description: "Student-led rocketry and space systems team designing, building, and launching high-power rockets and payloads while learning avionics, propulsion, and systems engineering through competitions and industry mentorship.",
-        tags: ["research", "engineering", "innovation", "collaboration", "projects", "technical", "hardware", "academic"],
+        tags: ["Aerospace", "Hardware", "Build Projects", "Competitions"],  // Aggie Space Initiative
         category: "Data Science",
         logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/womeningamingatucdavis/logo/01JVQVD5W4R4CB318YPWJEZ9VQ.png",
         memberCount: 28,
@@ -813,7 +813,7 @@ const clubData = [
     {
         name: "Biomedical Engineering Society (BES)",
         description: "Connects biomedical engineering students to research labs, design teams, and professional development through talks, workshops, mentorship, and networking, supporting academic success and preparation for industry or graduate programs.",
-        tags: ["engineering", "research", "healthcare", "networking", "academic", "professional", "technical", "collaboration"],
+        tags: ["Biomedical", "Research", "Networking", "Professional Dev"],  // Biomedical Engineering Society
         category: "Data Science",
         logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/womeningamingatucdavis/logo/01JVQVD5W4R4CB318YPWJEZ9VQ.png",
         memberCount: 28,
@@ -836,7 +836,7 @@ const clubData = [
     {
         name: "IEEE (Institute of Electrical & Electronics Engineers)",
         description: "Electrical and computer engineering organization offering labs, workshops, and project teams, supporting technical growth from soldering and embedded systems to signal processing, communications, and professional networking.",
-        tags: ["engineering", "networking", "professional", "workshops", "technical", "research", "collaboration", "academic"],
+        tags: ["Electrical", "Hardware", "Workshops", "Professional Dev"],  // IEEE
         category: "Data Science",
         logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/womeningamingatucdavis/logo/01JVQVD5W4R4CB318YPWJEZ9VQ.png",
         memberCount: 28,
@@ -859,7 +859,7 @@ const clubData = [
     {
         name: "Tau Beta Pi",
         description: "National engineering honor society recognizing academic excellence and service, offering professional development, networking, and outreach opportunities while fostering character, leadership, and ethical responsibility among engineers.",
-        tags: ["engineering", "academic", "leadership", "professional", "networking", "mentorship", "volunteering", "social"],
+        tags: ["Honor Society", "Networking", "Professional Dev"],  // Tau Beta Pi
         category: "Data Science",
         logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/womeningamingatucdavis/logo/01JVQVD5W4R4CB318YPWJEZ9VQ.png",
         memberCount: 28,
@@ -1018,29 +1018,7 @@ const clubData = [
         ],
         about: "Helps students practice science communication through writing, media, and outreach that engages the public."
     },
-    {
-        name: "College Bowl",
-        description: "Competitive academic quiz team practicing buzzer-based trivia weekly and traveling to tournaments, developing rapid recall, teamwork, and broad knowledge across science, history, literature, arts, and current events.",
-        tags: ["competition", "academic", "collaboration", "social", "presentation", "research", "networking"],
-        category: "Data Science",
-        logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/collegebowl/logo/01JVQSPFJMBF3S2XGFGPCQHNGC.jpeg",
-        memberCount: 28,
-        websiteUrl: "https://collegebowlatucd.wixsite.com/collegebowlatucd",
-        instagramUrl: "https://www.instagram.com/collegebowlatucd/#",
-        contactEmail: "asumitran@ucdavis.edu",
-        meetingInfo: {
-            frequency: "Bi-weekly",
-            day: "Sunday",
-            time: "4:00 PM - 6:00 PM",
-            location: "Shields Library Study Rooms"
-        },
-        focusAreas: ["Fast recall", "Team tournaments", "Weekly practice", "Travel opportunities"],
-        officers: [
-            { position: "President", name: "Adithi Sumitran", email: "asumitran@ucdavis.edu" },
-            { position: "Vice President", name: "Matthew Torre", email: "mtorre@ucdavis.edu" }
-        ],
-        about: "Practices buzzer trivia and competes in tournaments that build teamwork, fast recall, and broad academic knowledge."
-    },
+
     {
         name: "Construction Management Club",
         description: "Bridges students with the construction industry through site visits, competitions, technical workshops, and networking, developing practical skills in estimating, scheduling, safety, and leadership while exploring diverse career paths.",
@@ -1133,6 +1111,497 @@ const clubData = [
         ],
         about: "Provides professional development, industry networking, and academic support for students in chemical engineering."
     },
+    {
+        name: "ASCE (American Society of Civil Engineers)",
+        description: "Active organization promoting civil engineering success through biweekly meetings, company presentations, job site visits, nationally recognized design teams, and community volunteer events for well-rounded engineering development.",
+        tags: ["Civil", "Competitions", "Professional Dev", "Build Projects"],  // ASCE
+        category: "Engineering",
+        logoUrl: "https://asceucdavis.weebly.com/uploads/6/8/4/9/68492279/editor/12446-492377944150318-984996476-n-2.jpg?1598393442",
+        memberCount: 150,
+        websiteUrl: "http://asceucdavis.weebly.com/",
+        instagramUrl: "https://www.instagram.com/asce_ucd/",
+        contactEmail: "ucd.asce.president@gmail.com",
+        meetingInfo: {
+            frequency: "Bi-weekly",
+            day: "Varies",
+            time: "TBD",
+            location: "Engineering Building"
+        },
+        focusAreas: ["Design teams", "Site visits", "Company presentations", "Community volunteering"],
+        officers: [
+            { position: "President", name: "Freesia Finn", email: "ucd.asce.president@gmail.com" }
+        ],
+        about: "Promotes future engineers through networking, hands-on design teams, and community engagement opportunities."
+    },
+
+    {
+        name: "Society of Women Engineers (SWE)",
+        description: "Empowers women engineers through workshops, mentorship programs, community service, and industry connections, hosting events for all engineering students regardless of gender with one-third male membership.",
+        tags: ["Women in Tech", "Mentorship", "Professional Dev", "Networking"],  // Society of Women Engineers
+        category: "Engineering",
+        logoUrl: "https://images.squarespace-cdn.com/content/v1/61c35cc6b25c02093da041b8/a2d2a547-d300-468a-b56f-5862a26bea89/SWE_Logo_U_of_Cali_Davis_White.png",
+        memberCount: 100,
+        websiteUrl: "https://www.sweucd.org/",
+        instagramUrl: "https://www.instagram.com/swe.ucd/",
+        contactEmail: "sweofficers@ucdavis.edu",
+        meetingInfo: {
+            frequency: "Weekly",
+            day: "Thursday",
+            time: "6:00 PM - 7:30 PM",
+            location: "Kemper Hall"
+        },
+        focusAreas: ["Night with Industry", "Big-Lil Sis mentorship", "Project Aspire", "Professional development"],
+        officers: [
+            { position: "President", name: "Ria Rajadnya", email: "sweofficers@ucdavis.edu" }
+        ],
+        about: "Free chapter offering workshops, mentorship, community service, and industry connections to all engineering students."
+    },
+
+    {
+        name: "Formula Racing at UC Davis (FRUCD)",
+        description: "Design and build electric racecars for SAE competition, emphasizing drivetrain innovation, safety, and energy efficiency while presenting to industry professionals and gaining real-world engineering experience.",
+        tags: ["Mechanical", "Electrical", "Competitions", "Build Projects"],  // Formula Racing (FRUCD)
+        category: "Engineering",
+        logoUrl: "https://fsae.ucdavis.edu/sites/g/files/dgvnsk14196/files/styles/sf_small_width/public/media/images/SAE.jpeg",
+        memberCount: 50,
+        websiteUrl: "https://fsae.ucdavis.edu/",
+        instagramUrl: "https://www.instagram.com/frucdavis/",
+        contactEmail: "formularacingatucdavis@gmail.com",
+        meetingInfo: {
+            frequency: "Weekly",
+            day: "Multiple Days",
+            time: "Varies",
+            location: "Engineering Student Design Center"
+        },
+        focusAreas: ["Electric vehicle design", "Competition preparation", "Industry presentations", "Hands-on fabrication"],
+        officers: [
+            { position: "Team Lead", name: "Heather Lin", email: "formularacingatucdavis@gmail.com" }
+        ],
+        about: "Builds electric racecars for SAE competition, emphasizing innovation, safety, and professional presentation skills."
+    },
+
+    {
+        name: "EcoCAR",
+        description: "Cross-disciplinary team developing connected and autonomous vehicle technology for Cadillac LYRIQ through specialized subteams covering propulsion, controls, CAD modeling, equity initiatives, and project management.",
+        tags: ["Mechanical", "Electrical", "Competitions", "Build Projects"],  // EcoCAR
+        category: "Engineering",
+        logoUrl: "https://ecocar.ucdavis.edu/sites/g/files/dgvnsk12666/files/media/images/ucd_ev_2022_outline_logo_white.jpg",
+        memberCount: 40,
+        websiteUrl: "https://ecocar.ucdavis.edu/",
+        instagramUrl: "https://www.instagram.com/ucdavisecocar/",
+        contactEmail: "ecocar-cav@ucdavis.edu",
+        meetingInfo: {
+            frequency: "Weekly",
+            day: "Monday",
+            time: "5:00 PM - 7:00 PM",
+            location: "Engineering Student Design Center"
+        },
+        focusAreas: ["Autonomous systems", "Vehicle connectivity", "Powertrain modeling", "Equity in mobility"],
+        officers: [
+            { position: "Team Lead", name: "James Giller", email: "ecocar-cav@ucdavis.edu" }
+        ],
+        about: "Develops connected autonomous vehicle technology through specialized subteams covering all aspects of automotive engineering."
+    },
+
+    {
+        name: "Space and Satellite Systems (SSS) Club",
+        description: "Undergraduate-led aerospace club developing satellites, rovers, and drones with custom components, providing hands-on space technology experience and industry-relevant skills through fully student-managed projects.",
+        tags: ["Aerospace", "Hardware", "Build Projects", "Research"],  // Space and Satellite Systems
+        category: "Engineering",
+        logoUrl: "https://static.wixstatic.com/media/f86cee_bf06e0565d8c47b0b74dd5f78d73dbd8~mv2.png",
+        memberCount: 60,
+        websiteUrl: "https://www.spacesystemsclub.org/",
+        instagramUrl: "https://www.instagram.com/spacesystemsclub/",
+        contactEmail: "spacesystemsclub@gmail.com",
+        meetingInfo: {
+            frequency: "Weekly",
+            day: "Wednesday",
+            time: "7:00 PM - 9:00 PM",
+            location: "Engineering Building III"
+        },
+        focusAreas: ["CubeSat development", "Rover projects", "Drone systems", "Custom components"],
+        officers: [
+            { position: "President", name: "Aaron Wong", email: "spacesystemsclub@gmail.com" }
+        ],
+        about: "Develops satellites, rovers, and drones with custom components to provide hands-on space technology experience."
+    },
+
+    {
+        name: "National Society of Black Engineers (NSBE)",
+        description: "Increases culturally responsible Black engineers through leadership development, networking, technical expertise, community impact, and comprehensive support from pre-college through professional careers in STEM.",
+        tags: ["Professional Dev", "Mentorship", "Networking"],  // NSBE
+        category: "Engineering",
+        logoUrl: "https://assets.nsbe.org/file/w_,,q_80/NSBEWebsite/nsbelogo_gold_withname-1-2.svg",
+        memberCount: 45,
+        websiteUrl: "https://nsbe.org/",
+        instagramUrl: "https://www.instagram.com/ucdnsbe/",
+        contactEmail: "nsbe@ucdavis.edu",
+        meetingInfo: {
+            frequency: "Weekly",
+            day: "Tuesday",
+            time: "6:00 PM - 7:30 PM",
+            location: "Kemper Hall 1131"
+        },
+        focusAreas: ["Academic excellence", "Professional development", "Community impact", "NSBE Jr. program"],
+        officers: [
+            { position: "President", name: "Contact NSBE", email: "nsbe@ucdavis.edu" }
+        ],
+        about: "Supports Black engineers through leadership, networking, technical expertise, and community impact programs."
+    },
+
+    {
+        name: "oSTEM (Out in STEM)",
+        description: "LGBTQIA+ professional society providing weekly meetings, study spaces, guest speakers, and safe community for personal, academic, and professional growth in STEM fields.",
+        tags: ["LGBTQ+", "Networking", "Professional Dev"],  // oSTEM
+        category: "Technology",
+        logoUrl: "https://cdn.ymaws.com/ostem.site-ym.com/resource/resmgr/ostem_large_dark_logo.png",
+        memberCount: 35,
+        websiteUrl: "https://ostem.org/",
+        instagramUrl: "https://www.instagram.com/ostematucd/",
+        contactEmail: "ucdavis@chapters.ostem.org",
+        meetingInfo: {
+            frequency: "Weekly",
+            day: "Thursday",
+            time: "6:00 PM - 7:00 PM",
+            location: "Student Community Center"
+        },
+        focusAreas: ["Safe spaces", "Professional development", "Guest speakers", "Community building"],
+        officers: [
+            { position: "President", name: "Jaime Chou", email: "ucdavis@chapters.ostem.org" }
+        ],
+        about: "LGBTQIA+ professional society providing safe spaces and support for STEM students' growth."
+    },
+
+    {
+        name: "SASE (Society of Asian Scientists and Engineers)",
+        description: "Promotes career development for Asian scientists and engineers through tours, resume workshops, networking events, and community volunteer opportunities across multiple disciplines.",
+        tags: ["Asian/Pacific", "Professional Dev", "Networking", "Workshops"],  // SASE
+        category: "Engineering",
+        logoUrl: "https://lh3.googleusercontent.com/z8TFbRpw-66HyxMPxq4CgByJRVwfKwkh2xJD7p58Gchoy4ViqE-2Q1VJy52aVHbqpOpfCmrna9jrAFue8z2PnjfPZjdGcDTU_qMp9KWBcrUNpw6qHKkHl17BU_4Kgxu54_X017RqLqw",
+        memberCount: 40,
+        websiteUrl: "https://www.saseconnect.org/",
+        instagramUrl: "https://www.instagram.com/sase.at.ucd/",
+        contactEmail: "ideas@saseconnect.org",
+        meetingInfo: {
+            frequency: "Bi-weekly",
+            day: "Wednesday",
+            time: "6:00 PM - 7:30 PM",
+            location: "Giedt Hall"
+        },
+        focusAreas: ["Career workshops", "Company tours", "Resume building", "Community volunteering"],
+        officers: [
+            { position: "President", name: "Jamie Huynh", email: "ideas@saseconnect.org" }
+        ],
+        about: "Promotes career development through tours, workshops, networking, and community volunteer opportunities."
+    },
+
+    {
+        name: "PASE (Pilipinx Americans in Science and Engineering)",
+        description: "Offers professional workshops, design activities, socials, Engineering Conference for high school outreach, Etiquette Dinner, and alumni mentorship program PAANO for comprehensive student development.",
+        tags: ["Asian/Pacific", "Professional Dev", "Mentorship", "Workshops"],  // PASE
+        category: "Engineering",
+        logoUrl: "https://joinpase.weebly.com/uploads/2/4/0/7/24078235/published/websiteheader.png",
+        memberCount: 35,
+        websiteUrl: "https://joinpase.weebly.com/",
+        instagramUrl: "https://www.instagram.com/joinpase/",
+        contactEmail: "ucdpase@gmail.com",
+        meetingInfo: {
+            frequency: "Weekly",
+            day: "Friday",
+            time: "6:00 PM - 8:00 PM",
+            location: "Kemper Hall"
+        },
+        focusAreas: ["Engineering Conference", "Etiquette Dinner", "PAANO mentorship", "Design workshops"],
+        officers: [
+            { position: "President", name: "Joshua Hernandez", email: "ucdpase@gmail.com" },
+            { position: "Vice President", name: "RJ Garvida", email: "ucdpase@gmail.com" }
+        ],
+        about: "Offers workshops, biennial events, and alumni mentorship for Pilipinx engineering students."
+    },
+
+    {
+        name: "AISES (American Indian Science and Engineering Society)",
+        description: "Student-run organization promoting academic excellence among Native American students in science and engineering, welcoming all majors while fostering cultural connection and professional development.",
+        tags: ["Native American", "Networking", "Professional Dev"],  // AISES
+        category: "Engineering",
+        logoUrl: "https://i0.wp.com/aises.org/wp-content/uploads/2023/06/AISES-Logo-150x75-2.png",
+        memberCount: 25,
+        websiteUrl: "https://aises.engineering.ucdavis.edu/",
+        instagramUrl: "https://www.instagram.com/aises.ucdavis/",
+        contactEmail: "aises.ucd@gmail.com",
+        meetingInfo: {
+            frequency: "Bi-weekly",
+            day: "Thursday",
+            time: "5:30 PM - 7:00 PM",
+            location: "Native American Academic Student Success Center"
+        },
+        focusAreas: ["Academic excellence", "Cultural connection", "Professional development", "Community support"],
+        officers: [
+            { position: "Contact", name: "AISES Leadership", email: "aises.ucd@gmail.com" }
+        ],
+        about: "Promotes academic excellence for Native American students in science and engineering, welcoming all majors."
+    },
+
+    {
+        name: "Eta Kappa Nu",
+        description: "IEEE honor society recognizing academic excellence and character in electrical engineering, offering professional development and global networking opportunities for top students.",
+        tags: ["Honor Society", "Electrical", "Professional Dev"],  // Eta Kappa Nu
+        category: "Engineering",
+        logoUrl: "https://hkn.ieee.org/wp-content/uploads/2021/11/ieeehknhorizontallogo.png",
+        memberCount: 30,
+        websiteUrl: "https://hkn.ieee.org/hkn-chapters/all-chapters/university-of-california-davis-nu-mu",
+        instagramUrl: "",
+        contactEmail: "info@hkn.org",
+        meetingInfo: {
+            frequency: "Monthly",
+            day: "Tuesday",
+            time: "6:00 PM - 7:00 PM",
+            location: "Kemper Hall"
+        },
+        focusAreas: ["Academic excellence", "Character development", "Professional networking", "Global opportunities"],
+        officers: [
+            { position: "Contact", name: "HKN Leadership", email: "info@hkn.org" }
+        ],
+        about: "IEEE honor society recognizing excellence and character in electrical engineering with global networking."
+    },
+
+    {
+        name: "CALESS (Chicano and Latino Engineers and Scientists Society)",
+        description: "Supports Hispanic engineering students through industry networking with companies like Chevron and ThermoFisher, scholarship programs, leadership development, and graduate school preparation across six core pillars.",
+        tags: ["Hispanic/Latino", "Professional Dev", "Mentorship", "Networking"],  // CALESS
+        category: "Engineering",
+        logoUrl: "https://static.wixstatic.com/media/009aab_8a1888ee10234d9d94cc0d6517a70a5f~mv2.png",
+        memberCount: 40,
+        websiteUrl: "https://calessatucd.wixsite.com/calessatucd/",
+        instagramUrl: "https://www.instagram.com/caless.davis/",
+        contactEmail: "caless.communications@gmail.com",
+        meetingInfo: {
+            frequency: "Weekly",
+            day: "Wednesday",
+            time: "6:00 PM - 7:30 PM",
+            location: "Giedt Hall"
+        },
+        focusAreas: ["Industry connections", "Scholarship networks", "Leadership development", "Graduate preparation"],
+        officers: [
+            { position: "President", name: "Gicel Abraham", email: "caless.president@gmail.com" },
+            { position: "Vice President", name: "Olivia Carbajal", email: "caless.vicepresident@gmail.com" }
+        ],
+        about: "Supports Hispanic students through industry networking, scholarships, leadership, and graduate preparation."
+    },
+
+    {
+        name: "Women Machinists' Club (WMC)",
+        description: "Provides supportive machining environment for underrepresented genders to develop hands-on engineering skills, confidence, and critical thinking through practical fabrication and tool training.",
+        tags: ["Women in Tech", "Hardware", "Mechanical", "Workshops"],  // Women Machinists' Club
+        category: "Engineering",
+        logoUrl: "",
+        memberCount: 25,
+        websiteUrl: "https://aggielife.ucdavis.edu/womenmachinistsclub/home/",
+        instagramUrl: "https://www.instagram.com/wmcatucd/",
+        contactEmail: "wmcatucd@gmail.com",
+        meetingInfo: {
+            frequency: "Weekly",
+            day: "Thursday",
+            time: "7:00 PM - 9:00 PM",
+            location: "Engineering Student Design Center"
+        },
+        focusAreas: ["Machining skills", "Tool training", "Supportive environment", "Hands-on projects"],
+        officers: [
+            { position: "President", name: "Lena Araya", email: "wmcatucd@gmail.com" },
+            { position: "Vice President", name: "Lydia Miteza", email: "wmcatucd@gmail.com" }
+        ],
+        about: "Supportive machining space for underrepresented genders to develop hands-on engineering skills."
+    },
+
+    {
+        name: "Women in Robotics Club (WiR)",
+        description: "Women-led robotics projects with weekly study sessions, networking opportunities, and resume-building experiences for women in STEM fields.",
+        tags: ["Women in Tech", "Robotics", "Hardware", "Build Projects"],  // Women in Robotics
+        category: "Hardware",
+        logoUrl: "https://instagram.fsac1-2.fna.fbcdn.net/v/t51.2885-19/505740384_17845673943502006_7373307103104342762_n.jpg",
+        memberCount: 30,
+        websiteUrl: "",
+        instagramUrl: "https://www.instagram.com/wiratucd/",
+        contactEmail: "wiratucd@gmail.com",
+        meetingInfo: {
+            frequency: "Weekly",
+            day: "Monday",
+            time: "6:00 PM - 8:00 PM",
+            location: "Engineering Building II"
+        },
+        focusAreas: ["Women-led projects", "Study sessions", "Resume building", "Robotics development"],
+        officers: [
+            { position: "President", name: "Meriyah Haro", email: "wiratucd@gmail.com" },
+            { position: "Vice President", name: "Ashley Liu", email: "wiratucd@gmail.com" }
+        ],
+        about: "Women-led robotics projects with study sessions and networking for women in STEM."
+    },
+
+    {
+        name: "AWWA (American Water Works Association)",
+        description: "International scientific association improving water quality and supply, promoting future environmental engineers through networking between professionals, graduates, and undergraduates.",
+        tags: ["Civil", "Professional Dev", "Networking"],  // AWWA
+        category: "Engineering",
+        logoUrl: "https://instagram.fsac1-1.fna.fbcdn.net/v/t51.2885-19/125514655_361093698333959_7118362199308583774_n.jpg",
+        memberCount: 30,
+        websiteUrl: "https://awwaucdavis.weebly.com/",
+        instagramUrl: "https://www.instagram.com/awwaucd/",
+        contactEmail: "awwa_officers@ucdavis.edu",
+        meetingInfo: {
+            frequency: "Bi-weekly",
+            day: "Tuesday",
+            time: "5:00 PM - 6:30 PM",
+            location: "Giedt Hall"
+        },
+        focusAreas: ["Water resources", "Environmental engineering", "Professional networking", "Industry connections"],
+        officers: [
+            { position: "President", name: "Alex Chaney", email: "achaney@ucdavis.edu" },
+            { position: "Vice President", name: "Gigi Burye", email: "gmburye@ucdavis.edu" }
+        ],
+        about: "Promotes water quality improvement and environmental engineering through professional networking."
+    },
+
+    {
+        name: "Society of Manufacturing Engineers (SME)",
+        description: "Develops partnerships ensuring North American manufacturing competitiveness through events, media, workforce development, and education foundation supporting next-generation manufacturing talent.",
+        tags: ["Mechanical", "Professional Dev", "Workshops", "Networking"],  // SME
+        category: "Engineering",
+        logoUrl: "https://instagram.fsac1-2.fna.fbcdn.net/v/t51.2885-19/274271670_152270060561210_475991940151288067_n.jpg",
+        memberCount: 35,
+        websiteUrl: "https://sme.ucdavis.edu/",
+        instagramUrl: "https://www.instagram.com/smeatucdavis",
+        contactEmail: "sme-members@ucdavis.edu",
+        meetingInfo: {
+            frequency: "Weekly",
+            day: "Wednesday",
+            time: "6:00 PM - 7:30 PM",
+            location: "Engineering Student Design Center"
+        },
+        focusAreas: ["Manufacturing excellence", "Workforce development", "Industry partnerships", "Technology adoption"],
+        officers: [
+            { position: "President", name: "Atharv Kolhatkar", email: "askolhatkar@ucdavis.edu" },
+            { position: "Vice President", name: "Ronish Sharma", email: "rxxsharma@ucdavis.edu" }
+        ],
+        about: "Ensures manufacturing competitiveness through partnerships, education, and next-generation talent development."
+    },
+
+    {
+        name: "Davis Undergraduate Engineering Network (DUEN)",
+        description: "Fosters interdisciplinary collaboration within engineering, connecting like-minded engineers with career advancement opportunities through networking and professional development events.",
+        tags: ["Networking", "Professional Dev", "Beginner Friendly"],  // DUEN
+        category: "Engineering",
+        logoUrl: "https://instagram.fsac1-2.fna.fbcdn.net/v/t51.2885-19/540115829_18002233538805195_301655972216627620_n.jpg",
+        memberCount: 45,
+        websiteUrl: "https://duendavis.com/",
+        instagramUrl: "https://www.instagram.com/duen_ucd/",
+        contactEmail: "duen-eboard@ucdavis.edu",
+        meetingInfo: {
+            frequency: "Bi-weekly",
+            day: "Thursday",
+            time: "6:00 PM - 7:30 PM",
+            location: "Kemper Hall 1003"
+        },
+        focusAreas: ["Interdisciplinary collaboration", "Career advancement", "Professional networking", "Engineering connections"],
+        officers: [
+            { position: "President", name: "Aliya Abla", email: "duen-eboard@ucdavis.edu" },
+            { position: "Vice President", name: "Shruti Kakar", email: "duen-eboard@ucdavis.edu" }
+        ],
+        about: "Fosters interdisciplinary collaboration connecting engineers with career advancement opportunities."
+    },
+
+    {
+        name: "Advanced Modeling and Aeronautics Team (AMAT)",
+        description: "Student-led team of 30 engineering and CS students designing and building remote-controlled aircraft year-round for research projects and SAE Aero Design competitions.",
+        tags: ["Aerospace", "Competitions", "Build Projects"],  // AMAT
+        category: "Engineering",
+        logoUrl: "https://instagram.fsac1-2.fna.fbcdn.net/v/t51.2885-19/270938256_721194368858074_4713616020603929976_n.jpg",
+        memberCount: 30,
+        websiteUrl: "https://amat.engineering.ucdavis.edu/",
+        instagramUrl: "https://www.instagram.com/amatdavis/",
+        contactEmail: "amat@ucdavis.edu",
+        meetingInfo: {
+            frequency: "Weekly",
+            day: "Saturday",
+            time: "10:00 AM - 2:00 PM",
+            location: "Engineering Student Design Center"
+        },
+        focusAreas: ["RC aircraft design", "Competition preparation", "Research projects", "Aerodynamics testing"],
+        officers: [
+            { position: "Team Lead", name: "Contact AMAT", email: "amat@ucdavis.edu" }
+        ],
+        about: "Designs and builds RC aircraft for research and SAE Aero Design competitions."
+    },
+
+    {
+        name: "Aggie Propulsion and Rocketry Lab (APRL)",
+        description: "Student-run bi-propellant liquid-fueled rocketry team building UC Davis's first liquid rocket, enabling students to design, build, test, and launch rockets for years to come.",
+        tags: ["Aerospace", "Hardware", "Build Projects", "Research"],  // APRL
+        category: "Engineering",
+        logoUrl: "https://instagram.fsac1-2.fna.fbcdn.net/v/t51.2885-19/383229886_2025632337836763_1312390169527183636_n.jpg",
+        memberCount: 40,
+        websiteUrl: "https://aprl.space/",
+        instagramUrl: "https://www.instagram.com/aprl.davis/",
+        contactEmail: "aprl@ucdavis.edu",
+        meetingInfo: {
+            frequency: "Weekly",
+            day: "Friday",
+            time: "5:00 PM - 7:00 PM",
+            location: "Engineering Student Design Center"
+        },
+        focusAreas: ["Liquid propulsion", "Rocket design", "Testing systems", "Launch operations"],
+        officers: [
+            { position: "President", name: "Wilson Li", email: "aprl@ucdavis.edu" },
+            { position: "Vice President", name: "Kayla Cunningham", email: "aprl@ucdavis.edu" }
+        ],
+        about: "Builds UC Davis's first liquid rocket, teaching design, testing, and launch operations."
+    },
+
+    {
+        name: "Korean-American Scientists and Engineers Association (KSEA)",
+        description: "Helps Korean-American scientists and engineers develop full career potential through professional development, networking, and mentorship opportunities in STEM fields.",
+        tags: ["Asian/Pacific", "Professional Dev", "Networking", "Mentorship"],  // KSEA
+        category: "Engineering",
+        logoUrl: "https://instagram.fsac1-2.fna.fbcdn.net/v/t51.2885-19/451333646_404825829246489_7973121566971559542_n.jpg",
+        memberCount: 30,
+        websiteUrl: "https://www.ucdksea.com/",
+        instagramUrl: "https://www.instagram.com/kseadavis/",
+        contactEmail: "ucdksea@gmail.com",
+        meetingInfo: {
+            frequency: "Bi-weekly",
+            day: "Monday",
+            time: "6:00 PM - 7:30 PM",
+            location: "Giedt Hall"
+        },
+        focusAreas: ["Career development", "Professional networking", "Mentorship programs", "Korean-American community"],
+        officers: [
+            { position: "President", name: "Soojin You", email: "ucdksea@gmail.com" }
+        ],
+        about: "Helps Korean-American scientists and engineers develop full career potential through professional support."
+    },
+
+    {
+        name: "FACE (Female Association of Civil Engineers)",
+        description: "ASCE subgroup supporting women and non-binary civil engineering students through events, mentorship, and community building with $25,000+ annual budget serving 150+ members.",
+        tags: ["Women in Tech", "Civil", "Networking", "Mentorship"],  // FACERetry        category: "Engineering",
+        logoUrl: "https://instagram.fsac1-2.fna.fbcdn.net/v/t51.2885-19/270104144_4484803278314215_1217895411511640605_n.jpg",
+        memberCount: 50,
+        websiteUrl: "https://asceucdavis.weebly.com/",
+        instagramUrl: "https://www.instagram.com/ucd_face/",
+        contactEmail: "ucd.asce.president@gmail.com",
+        meetingInfo: {
+            frequency: "Bi-weekly",
+            day: "Wednesday",
+            time: "5:30 PM - 7:00 PM",
+            location: "Giedt Hall"
+        },
+        focusAreas: ["Women in civil engineering", "Community service", "Career fair", "Industry exposure"],
+        officers: [
+            { position: "President", name: "Freesia Finn", email: "ucd.asce.president@gmail.com" },
+            { position: "VP External Affairs", name: "Sarah Sin", email: "ucd.asce.president@gmail.com" }
+        ],
+        about: "Supports women and non-binary civil engineers through events, mentorship, and community building."
+    },
+
 ];
 
 // =============================================================================

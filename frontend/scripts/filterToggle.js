@@ -11,7 +11,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const filterToggle = document.getElementById('filterToggle');
     const filterTags = document.getElementById('filterTags');
     const clubSearch = document.getElementById('clubSearch');
-    const allTags = document.querySelectorAll('.tag');
     const allCards = document.querySelectorAll('.club-card');
 
     // FILTER STATE
@@ -24,49 +23,50 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // =============================================================================
-    // TOGGLE FILTER VISIBILITY
+    // FILTER CATEGORIES AND OPTIONS
     // =============================================================================
-
-    filterToggle.addEventListener('click', (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-
-        console.log('🔄 Toggling filter visibility');
-
-        const isHidden = filterTags.classList.contains('hidden');
-
-        if (isHidden) {
-            filterTags.classList.remove('hidden');
-            filterTags.setAttribute('aria-hidden', 'false');
-            filterToggle.setAttribute('aria-expanded', 'true');
-            console.log('✅ Filters shown');
-        } else {
-            filterTags.classList.add('hidden');
-            filterTags.setAttribute('aria-hidden', 'true');
-            filterToggle.setAttribute('aria-expanded', 'false');
-            console.log('✅ Filters hidden');
-        }
-    });
+    const FILTER_CATEGORIES = {
+        field: [
+            "Software",
+            "Hardware",
+            "Data Science",
+            "AI/ML",
+            "Robotics",
+            "Web Dev",
+            "Game Dev",
+            "Cybersecurity",
+            "Aerospace",
+            "Mechanical",
+            "Electrical",
+            "Civil",
+            "Biomedical"
+        ],
+        focus: [
+            "Build Projects",
+            "Competitions",
+            "Hackathons",
+            "Research",
+            "Workshops",
+            "Professional Dev",
+            "Networking",
+            "Mentorship",
+            "Beginner Friendly"
+        ],
+        community: [
+            "Women in Tech",
+            "LGBTQ+",
+            "Black/African",
+            "Hispanic/Latino",
+            "Asian/Pacific",
+            "Native American",
+            "Honor Society",
+            "Open to All"
+        ]
+    };
 
     // =============================================================================
-    // TAG CLICK HANDLERS
+    // TAG CLICK HANDLER - SINGLE DEFINITION
     // =============================================================================
-
-    allTags.forEach(tag => {
-        tag.addEventListener('click', (e) => {
-            e.preventDefault();
-            handleTagClick(tag);
-        });
-
-        // Keyboard support
-        tag.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                handleTagClick(tag);
-            }
-        });
-    });
-
     function handleTagClick(tag) {
         const filter = tag.getAttribute('data-filter');
         if (!filter) return;
@@ -76,12 +76,12 @@ document.addEventListener('DOMContentLoaded', () => {
         // Toggle filter state
         if (activeFilters.has(filter)) {
             activeFilters.delete(filter);
-            tag.classList.remove('active-filter');
+            tag.classList.remove('active-filter', 'active');
             tag.setAttribute('aria-pressed', 'false');
             console.log(`➖ Removed filter: ${filter}`);
         } else {
             activeFilters.add(filter);
-            tag.classList.add('active-filter');
+            tag.classList.add('active-filter', 'active');
             tag.setAttribute('aria-pressed', 'true');
             console.log(`➕ Added filter: ${filter}`);
         }
@@ -92,9 +92,125 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // =============================================================================
+    // GENERATE FILTER UI
+    // =============================================================================
+    function generateFilterUI() {
+        const filterContainer = document.getElementById('filterTags');
+        if (!filterContainer) return;
+
+        filterContainer.innerHTML = '';
+
+        // Store dropdown references
+        const dropdowns = [];
+
+        // Create filter pills for each category
+        Object.entries(FILTER_CATEGORIES).forEach(([category, options]) => {
+            // Create pill button
+            const pill = document.createElement('button');
+            pill.className = 'filter-pill';
+            pill.textContent = category.charAt(0).toUpperCase() + category.slice(1);
+
+            // Create dropdown
+            const dropdown = document.createElement('div');
+            dropdown.className = 'filter-dropdown';
+
+            const optionsContainer = document.createElement('div');
+            optionsContainer.className = 'filter-options';
+
+            options.forEach(option => {
+                const tag = document.createElement('div');
+                tag.className = 'filter-tag tag';
+                tag.setAttribute('data-filter', option);
+                tag.textContent = option;
+
+                // Add click handler for individual tags
+                tag.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    handleTagClick(tag);
+                });
+
+                optionsContainer.appendChild(tag);
+            });
+
+            dropdown.appendChild(optionsContainer);
+            dropdowns.push({ pill, dropdown });
+
+            // Toggle dropdown on pill click
+            pill.addEventListener('click', (e) => {
+                e.stopPropagation();
+
+                const isActive = dropdown.classList.contains('active');
+
+                // Close all dropdowns
+                dropdowns.forEach(({ pill: p, dropdown: d }) => {
+                    p.classList.remove('active');
+                    d.classList.remove('active');
+                });
+
+                // Toggle current dropdown
+                if (!isActive) {
+                    pill.classList.add('active');
+                    dropdown.classList.add('active');
+                }
+            });
+
+            filterContainer.appendChild(pill);
+            filterContainer.appendChild(dropdown);
+        });
+
+        // Add Clear All button
+        const clearBtn = document.createElement('button');
+        clearBtn.className = 'clear-all-btn';
+        clearBtn.textContent = 'Clear All';
+        clearBtn.addEventListener('click', () => {
+            clearAllFilters();
+            // Close all dropdowns
+            dropdowns.forEach(({ pill, dropdown }) => {
+                pill.classList.remove('active');
+                dropdown.classList.remove('active');
+            });
+        });
+        filterContainer.appendChild(clearBtn);
+
+        // Close dropdowns when clicking outside
+        document.addEventListener('click', () => {
+            dropdowns.forEach(({ pill, dropdown }) => {
+                pill.classList.remove('active');
+                dropdown.classList.remove('active');
+            });
+        });
+    }
+
+    // Generate the UI first
+    generateFilterUI();
+
+    // =============================================================================
+    // TOGGLE FILTER VISIBILITY
+    // =============================================================================
+    filterToggle.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        console.log('🔄 Toggling filter visibility');
+
+        const isHidden = filterTags.classList.contains('hidden');
+
+        if (isHidden) {
+            filterTags.classList.remove('hidden');
+            filterTags.style.display = 'flex';
+            filterToggle.setAttribute('aria-expanded', 'true');
+            console.log('✅ Filters shown');
+        } else {
+            filterTags.classList.add('hidden');
+            filterTags.style.display = 'none';
+            filterToggle.setAttribute('aria-expanded', 'false');
+            console.log('✅ Filters hidden');
+        }
+    });
+
+    // =============================================================================
     // SEARCH FUNCTIONALITY
     // =============================================================================
-
     if (clubSearch) {
         clubSearch.addEventListener('input', (e) => {
             searchTerm = e.target.value.toLowerCase().trim();
@@ -109,9 +225,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // =============================================================================
-    // APPLY FILTERS FUNCTION - ENHANCED
+    // APPLY FILTERS FUNCTION
     // =============================================================================
-
     function applyFilters() {
         console.log(`🔄 Applying filters: [${Array.from(activeFilters).join(', ')}] search: "${searchTerm}"`);
 
@@ -133,16 +248,21 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
 
-            // CHECK ACTIVE FILTERS
+            // CHECK ACTIVE FILTERS - Match ANY filter (OR logic)
             if (isVisible && activeFilters.size > 0) {
-                const cardTags = card.querySelector('.club-tags')?.textContent?.toLowerCase() || '';
+                const cardTags = card.querySelector('.club-tags')?.textContent || '';
 
-                // Card must match ALL active filters (AND logic)
+                let matchesAnyFilter = false;
                 for (const filter of activeFilters) {
-                    if (!cardTags.includes(filter.toLowerCase())) {
-                        isVisible = false;
+                    // Case-insensitive partial match
+                    if (cardTags.toLowerCase().includes(filter.toLowerCase())) {
+                        matchesAnyFilter = true;
                         break;
                     }
+                }
+
+                if (!matchesAnyFilter) {
+                    isVisible = false;
                 }
             }
 
@@ -171,7 +291,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // =============================================================================
     // UPDATE SEARCH RESULTS INFO
     // =============================================================================
-
     function updateSearchResults() {
         const searchResultsInfo = document.getElementById('searchResultsInfo');
         const resultsCount = document.getElementById('resultsCount');
@@ -201,9 +320,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // =============================================================================
-    // CLEAR FILTERS FUNCTIONALITY - FIXES PERSISTENT BUG
+    // CLEAR FILTERS FUNCTIONALITY
     // =============================================================================
-
     function clearAllFilters() {
         console.log('🧹 Clearing all filters and search...');
 
@@ -217,8 +335,8 @@ document.addEventListener('DOMContentLoaded', () => {
         activeFilters.clear();
 
         // Reset all tags
-        allTags.forEach(tag => {
-            tag.classList.remove('active-filter');
+        document.querySelectorAll('.tag').forEach(tag => {
+            tag.classList.remove('active-filter', 'active');
             tag.setAttribute('aria-pressed', 'false');
         });
 
@@ -235,60 +353,12 @@ document.addEventListener('DOMContentLoaded', () => {
             window.pagination.updateVisibleCards();
         }
 
-        // Hide filter tags
-        filterTags.classList.add('hidden');
-        filterTags.setAttribute('aria-hidden', 'true');
-        filterToggle.setAttribute('aria-expanded', 'false');
-
         console.log('✅ All filters cleared successfully');
-    }
-
-    // =============================================================================
-    // CLEAR BUTTONS SETUP
-    // =============================================================================
-
-    // Add clear button to search results if it doesn't exist
-    const clearAllBtn = document.getElementById('clearAllBtn');
-    if (clearAllBtn) {
-        clearAllBtn.addEventListener('click', clearAllFilters);
-    }
-
-    // Add clear button to filter tags if it doesn't exist
-    if (!document.getElementById('clearFiltersBtn')) {
-        const clearBtn = document.createElement('button');
-        clearBtn.id = 'clearFiltersBtn';
-        clearBtn.textContent = 'Clear All';
-        clearBtn.className = 'clear-filters-btn';
-        clearBtn.style.cssText = `
-            background: #e74c3c;
-            color: white;
-            border: none;
-            padding: 0.4rem 0.8rem;
-            border-radius: 12px;
-            font-size: 0.9rem;
-            cursor: pointer;
-            margin-left: 1rem;
-            transition: all 0.2s ease;
-        `;
-
-        clearBtn.addEventListener('mouseenter', () => {
-            clearBtn.style.background = '#c0392b';
-        });
-
-        clearBtn.addEventListener('mouseleave', () => {
-            clearBtn.style.background = '#e74c3c';
-        });
-
-        clearBtn.addEventListener('click', clearAllFilters);
-        filterTags.appendChild(clearBtn);
-
-        console.log('✅ Added clear filters button');
     }
 
     // =============================================================================
     // KEYBOARD SHORTCUTS
     // =============================================================================
-
     document.addEventListener('keydown', (e) => {
         // Ctrl/Cmd + K to focus search
         if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
@@ -307,70 +377,8 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // =============================================================================
-    // URL PARAMETER SUPPORT - BONUS FEATURE
-    // =============================================================================
-
-    function updateURLParams() {
-        const url = new URL(window.location);
-
-        if (searchTerm) {
-            url.searchParams.set('search', searchTerm);
-        } else {
-            url.searchParams.delete('search');
-        }
-
-        if (activeFilters.size > 0) {
-            url.searchParams.set('filters', Array.from(activeFilters).join(','));
-        } else {
-            url.searchParams.delete('filters');
-        }
-
-        // Update URL without page reload
-        window.history.replaceState({}, '', url.toString());
-    }
-
-    function loadFromURLParams() {
-        const url = new URL(window.location);
-
-        // Load search term
-        const urlSearch = url.searchParams.get('search');
-        if (urlSearch && clubSearch) {
-            clubSearch.value = urlSearch;
-            searchTerm = urlSearch.toLowerCase().trim();
-        }
-
-        // Load filters
-        const urlFilters = url.searchParams.get('filters');
-        if (urlFilters) {
-            const filters = urlFilters.split(',');
-            filters.forEach(filter => {
-                const tag = document.querySelector(`[data-filter="${filter}"]`);
-                if (tag) {
-                    activeFilters.add(filter);
-                    tag.classList.add('active-filter');
-                    tag.setAttribute('aria-pressed', 'true');
-                }
-            });
-        }
-
-        // Apply loaded filters
-        if (activeFilters.size > 0 || searchTerm) {
-            applyFilters();
-            updateSearchResults();
-        }
-    }
-
-    // Add listeners for URL updates
-    document.addEventListener('filtersChanged', updateURLParams);
-    document.addEventListener('searchChanged', updateURLParams);
-
-    // Load filters from URL on page load
-    loadFromURLParams();
-
-    // =============================================================================
     // PUBLIC API
     // =============================================================================
-
     window.filterSystem = {
         clearAll: clearAllFilters,
         addFilter: (filter) => {
@@ -395,17 +403,9 @@ document.addEventListener('DOMContentLoaded', () => {
         getSearchTerm: () => searchTerm
     };
 
+    // Start with filters hidden
+    filterTags.classList.add('hidden');
+    filterTags.style.display = 'none';
+
     console.log('✅ Enhanced filter system initialized');
 });
-
-// =============================================================================
-// DEBUG FUNCTIONS
-// =============================================================================
-
-window.debugFilters = function () {
-    console.log('🐛 Filter Debug Info:');
-    console.log('  Active filters:', window.filterSystem?.getActiveFilters());
-    console.log('  Search term:', window.filterSystem?.getSearchTerm());
-    console.log('  Visible cards:', document.querySelectorAll('.club-card:not([style*="display: none"])').length);
-    console.log('  Total cards:', document.querySelectorAll('.club-card').length);
-};

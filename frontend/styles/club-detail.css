@@ -648,131 +648,114 @@ body {
     word-wrap: break-word;
 }
 
-/* Alternative approach: Use margin-top instead of absolute positioning */
+/* =============================================================================
+   SOCIAL LINKS - Updated for PNG/SVG Icons
+   =============================================================================
+*/
+
+/* Social links container positioning */
 .contacts-box+.social-links {
-    margin-top: 10px;
+    margin-top: 15px;
     display: flex;
     flex-direction: row;
     justify-content: center;
-    gap: 1rem;
+    gap: 1.2rem;
     position: relative;
     z-index: 10;
 }
 
-/* Fallback: If the above doesn't work, try this more specific selector */
+/* Fallback selector for social links */
 .right-column>.social-links {
-    margin-top: 10px !important;
+    margin-top: 15px !important;
     display: flex !important;
     flex-direction: row !important;
     justify-content: center !important;
-    gap: 1rem !important;
+    gap: 1.2rem !important;
     position: relative !important;
     z-index: 10 !important;
 }
 
+/* Base social link button styles */
 .social-link {
-    width: 36px;
-    height: 36px;
-    border-radius: 8px;
+    width: 42px;
+    height: 42px;
+    border-radius: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
     text-decoration: none;
     transition: all 0.3s ease;
     background: rgba(255, 255, 255, 0.95);
-    border: 2px solid rgba(95, 150, 197, 0.3);
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
+    border: 2px solid rgba(95, 150, 197, 0.15);
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.1);
     position: relative;
     overflow: hidden;
-    font-size: 0;
-    text-indent: -9999px;
-    color: transparent;
+    padding: 0;
 }
 
+/* Hover effect for all social links */
 .social-link:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+    transform: translateY(-4px) scale(1.05);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+    background: rgba(255, 255, 255, 1);
 }
 
-/* Website icon */
-.social-link[href*="website"]::before,
-.social-link:first-child::before {
-    content: "🌐";
-    font-size: 1.3rem;
-    text-indent: 0;
-    color: initial;
+/* Style for PNG/SVG icons inside the links */
+.social-link img {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+    transition: all 0.3s ease;
+    filter: none;
 }
 
-.social-link[href*="website"]:hover,
-.social-link:first-child:hover {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    border-color: transparent;
+.social-link:hover img {
+    transform: scale(1.15);
 }
 
-/* Discord icon */
-.social-link[href*="discord"]::before {
-    content: "💬";
-    font-size: 1.3rem;
-    text-indent: 0;
-    color: initial;
+/* Platform-specific hover effects */
+.social-link[data-club-link="website"]:hover,
+.social-link[href*="website"]:hover {
+    background: linear-gradient(135deg,
+            rgba(102, 126, 234, 0.15) 0%,
+            rgba(118, 75, 162, 0.15) 100%);
+    border-color: #667eea;
 }
 
-.social-link[href*="discord"]:hover {
-    background: #5865F2;
-    border-color: transparent;
-}
-
-/* FIXED Instagram icon - clean symbol */
-.social-link[href*="instagram"] {
-    background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
-    border-color: transparent;
-}
-
-.social-link[href*="instagram"]::before {
-    content: "";
-    width: 18px;
-    height: 18px;
-    border: 2px solid white;
-    border-radius: 4px;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    text-indent: 0;
-}
-
-.social-link[href*="instagram"]::after {
-    content: "";
-    width: 5px;
-    height: 5px;
-    background: white;
-    border-radius: 50%;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 2;
-}
-
+.social-link[data-club-link="instagram"]:hover,
 .social-link[href*="instagram"]:hover {
-    transform: translateY(-3px) scale(1.05);
-    box-shadow: 0 8px 25px rgba(188, 24, 136, 0.4);
+    background: linear-gradient(45deg,
+            rgba(240, 148, 51, 0.15) 0%,
+            rgba(230, 104, 60, 0.15) 25%,
+            rgba(220, 39, 67, 0.15) 50%,
+            rgba(204, 35, 102, 0.15) 75%,
+            rgba(188, 24, 136, 0.15) 100%);
+    border-color: #E1306C;
 }
 
-/* Twitter icon */
-.social-link[href*="twitter"]::before {
-    content: "🐦";
-    font-size: 1.3rem;
-    text-indent: 0;
-    color: initial;
+.social-link[data-club-link="discord"]:hover,
+.social-link[href*="discord"]:hover {
+    background: rgba(88, 101, 242, 0.15);
+    border-color: #5865F2;
 }
 
+.social-link[data-club-link="twitter"]:hover,
 .social-link[href*="twitter"]:hover {
-    background: #1DA1F2;
-    border-color: transparent;
+    background: rgba(29, 161, 242, 0.15);
+    border-color: #1DA1F2;
 }
 
-/* FOOTER FIX: Prevent conflicts with club detail social icons */
+/* Remove all pseudo-elements (no more emojis) */
+.social-link::before,
+.social-link::after {
+    display: none !important;
+}
+
+/* =============================================================================
+   FOOTER SOCIAL LINKS - Keep separate from club detail social links
+   =============================================================================
+*/
+
 .footer-social .social-link {
     background: rgba(255, 255, 255, 0.1) !important;
     border: 1px solid rgba(255, 255, 255, 0.2) !important;
@@ -786,20 +769,30 @@ body {
     background: rgba(95, 150, 197, 0.2) !important;
     border-color: rgba(95, 150, 197, 0.5) !important;
     color: #5F96C5 !important;
+    transform: translateY(-2px) !important;
 }
 
-/* Remove pseudo-elements from footer social links */
-.footer-social .social-link::before,
-.footer-social .social-link::after {
-    display: none !important;
-}
-
-/* Ensure footer uses SVG icons only */
+/* Footer uses SVG icons */
 .footer-social .social-link svg {
     fill: currentColor !important;
     width: 20px !important;
     height: 20px !important;
 }
+
+.footer-social .social-link img {
+    width: 20px !important;
+    height: 20px !important;
+    opacity: 0.7;
+}
+
+.footer-social .social-link:hover img {
+    opacity: 1;
+}
+
+/* =============================================================================
+   BOOKMARK BUTTON
+   =============================================================================
+*/
 
 .bookmark-btn:hover {
     background: rgba(95, 150, 197, 0.1);
@@ -812,9 +805,10 @@ body {
 }
 
 /* =============================================================================
-   BACK SECTION - REMOVED (Now integrated into club name section)
+   BACK BUTTON
    =============================================================================
 */
+
 .back-btn {
     display: inline-flex !important;
     align-items: center !important;
@@ -840,7 +834,44 @@ body {
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15) !important;
 }
 
-/* Old back section styles removed - button now appears under club name */
+/* =============================================================================
+   RESPONSIVE DESIGN FOR SOCIAL LINKS
+   =============================================================================
+*/
+
+@media (max-width: 768px) {
+    .social-links {
+        gap: 1rem;
+        margin-top: 12px;
+    }
+
+    .social-link {
+        width: 38px;
+        height: 38px;
+    }
+
+    .social-link img {
+        width: 22px;
+        height: 22px;
+    }
+}
+
+@media (max-width: 480px) {
+    .social-links {
+        gap: 0.8rem;
+        margin-top: 10px;
+    }
+
+    .social-link {
+        width: 36px;
+        height: 36px;
+    }
+
+    .social-link img {
+        width: 20px;
+        height: 20px;
+    }
+}
 
 /* =============================================================================
    LOADING & ERROR STATES
