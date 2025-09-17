@@ -41,7 +41,7 @@ const clubData = [
     {
         name: "Davis Filmmaking Society",
         description: "Collaborative group producing short films through writing, directing, cinematography, and editing workshops, providing equipment access, crew experience, screenings, and festival submissions for aspiring filmmakers across campus.",
-        tags: ["creative", "media", "collaboration", "projects", "design", "presentation", "technical", "social"],
+        tags: ["Build Projects", "Workshops", "Networking", "Open to All"],
         category: "Design",
         logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/davisfilmmakingsociety/logo/01JVQSP5JQ1DK9D7GRFVJFK2J0.png",
         memberCount: 33,
@@ -200,7 +200,7 @@ const clubData = [
     {
         name: "Design Interactive",
         description: "User experience and product design organization hosting critiques, case study workshops, and client projects, helping students master research, prototyping, and storytelling while building strong portfolios and industry connections.",
-        tags: ["design", "ux", "ui", "research", "prototyping", "creative", "collaboration", "projects", "workshops"],
+        tags: ["Build Projects", "Workshops", "Professional Dev", "Open to All"],
         category: "Design",
         logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/designinteractive/logo/01JVQSWY96TCDNP38XEJ7TJ8HR.png",
         memberCount: 33,
@@ -583,7 +583,7 @@ const clubData = [
     {
         name: "Food Tech Club",
         description: "Interdisciplinary community exploring the intersection of food, science, and technology through tastings, product development, entrepreneurship, and industry panels, encouraging innovation and collaboration on sustainable, tasty solutions.",
-        tags: ["agtech", "innovation", "sustainability", "research", "networking", "professional", "technical", "collaboration"],
+        tags: ["Research", "Networking", "Professional Dev", "Build Projects"],
         category: "Data Science",
         logoUrl: "https://i.imgur.com/QagceHq.jpeg",
         memberCount: 28,
@@ -606,7 +606,7 @@ const clubData = [
     {
         name: "Green Innovation Network",
         description: "Student organization consulting on sustainability initiatives for companies and campus partners, providing real client experience, professional mentorship, and leadership opportunities at the intersection of business and impact.",
-        tags: ["sustainability", "innovation", "research", "startup", "collaboration", "projects", "networking", "social"],
+        tags: ["Build Projects", "Professional Dev", "Networking", "Mentorship"],
         category: "Data Science",
         logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/greeninnovationnetwork/logo/01JVQTX9J4WZT0GEW43NP65BGH.png",
         memberCount: 28,
@@ -629,7 +629,7 @@ const clubData = [
     {
         name: "Human Resources Managment Association (HRMA)",
         description: "Pre-professional organization preparing students for HR careers through case competitions, workshops, and company networking, developing skills in recruiting, organizational behavior, and strategic people operations.",
-        tags: ["leadership", "networking", "professional", "workshops", "enterprise", "social", "communication"],
+        tags: ["Competitions", "Workshops", "Professional Dev", "Networking"],
         category: "Data Science",
         logoUrl: "https://media.licdn.com/dms/image/v2/D4D0BAQFPWZ8uQQYfyQ/company-logo_200_200/company-logo_200_200/0/1727326225643?e=1761177600&v=beta&t=8WqEumZ62onSsb1UXmSBeA41_ILx0XFIIfizBPuyhmM",
         memberCount: 28,
@@ -721,7 +721,7 @@ const clubData = [
     {
         name: "The Davis Consulting Group ",
         description: "Consulting community preparing students through case workshops, client projects, and interview practice, developing problem-solving, communication, and professional skills for internships and full-time roles.",
-        tags: ["consulting", "leadership", "professional", "startup", "collaboration", "projects", "networking", "enterprise"],
+        tags: ["Build Projects", "Workshops", "Professional Dev", "Networking"],
         category: "Data Science",
         logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/thedavisconsultinggroup/logo/01JVQV6P3927RF799RFKZC351H.png",
         memberCount: 28,
@@ -882,7 +882,7 @@ const clubData = [
     {
         name: "Swift Coding Club",
         description: "Student developers learn Swift, SwiftUI, and iOS architecture through workshops and project sprints, building polished apps, practicing code reviews, and demoing products to peers and recruiters.",
-        tags: ["mobile", "programming", "workshops", "projects", "collaboration", "technical", "academic", "innovation"],
+        tags: ["Software", "Build Projects", "Workshops", "Professional Dev"],
         category: "Data Science",
         logoUrl: "https://media.licdn.com/dms/image/v2/D5603AQG1FanCgVr9vQ/profile-displayphoto-shrink_400_400/B56ZRMAtvaGQAg-/0/1736442043615?e=1761177600&v=beta&t=FY4Yf1DXgtPglbHPTzm9ysF7TwKJuWE7dSvfYutAEFk",
         memberCount: 28,
@@ -905,7 +905,7 @@ const clubData = [
     {
         name: "Finance and Investment Club",
         description: "Student investors learn valuation, portfolio construction, and market research through pitches, competitions, and mentorship, developing financial literacy and professional skills for careers in finance, fintech, and analytics.",
-        tags: ["fintech", "networking", "professional", "workshops", "analytics", "collaboration", "enterprise", "leadership"],
+        tags: ["Data Science", "Competitions", "Professional Dev", "Mentorship"],
         category: "Data Science",
         logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/financeandinvestmentclub/logo/01JVQTAFPNKYK9NDZBM3T272HC.png",
         memberCount: 28,
@@ -928,7 +928,7 @@ const clubData = [
     {
         name: "IDSA at UC Davis",
         description: "Industrial Designers Society of America student chapter fostering craft, process, and portfolios through critiques, workshops, studio tours, and talks connecting aspiring designers with professional mentors and opportunities.",
-        tags: ["design", "creative", "projects", "networking", "professional", "collaboration", "workshops", "innovation"],
+        tags: ["Build Projects", "Workshops", "Professional Dev", "Mentorship"],
         category: "Data Science",
         logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/idsaatucdavis/logo/01JVQTP4FZ4C6KPE4T06B5QFS0.png",
         memberCount: 28,
@@ -952,7 +952,7 @@ const clubData = [
     {
         name: "Project Catalyst",
         description: "Entrepreneurial program guiding student founders through validation, customer discovery, mentoring, and pitching, connecting teams with resources, partners, and funding opportunities to accelerate impactful ventures.",
-        tags: ["research", "collaboration", "projects", "innovation", "social", "mentorship", "academic", "volunteering"],
+        tags: ["Build Projects", "Mentorship", "Professional Dev", "Networking"],
         category: "Data Science",
         logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/projectcatalyst/logo/01JVQT7FFX2XBBSV8B28GBD2BY.png",
         memberCount: 28,
@@ -975,7 +975,7 @@ const clubData = [
     {
         name: "SACNAS",
         description: "Inclusive STEM association supporting Chicano, Hispanic, and Native students through mentorship, research opportunities, community, and leadership development, advancing representation and success across scientific fields and careers.",
-        tags: ["diversity", "research", "mentorship", "academic", "networking", "professional", "social", "leadership"],
+        tags: ["Research", "Mentorship", "Professional Dev", "Hispanic/Latino"],
         category: "Data Science",
         logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/sacnas/logo/01JVQSY7WSRAXVWGTRFGESWCFZ.png",
         memberCount: 28,
@@ -998,7 +998,7 @@ const clubData = [
     {
         name: "Science Says",
         description: "Science communication group translating research into engaging stories through writing, podcasts, graphics, and outreach, offering training, feedback, and publication opportunities for students passionate about public science.",
-        tags: ["communication", "research", "media", "collaboration", "workshops", "social", "academic", "presentation"],
+        tags: ["Research", "Workshops", "Professional Dev", "Networking"],
         category: "Data Science",
         logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/sciencesays/logo/01JVQV3RQ18TV15K87V0Z6JNQV.jpeg",
         memberCount: 28,
@@ -1022,11 +1022,11 @@ const clubData = [
     {
         name: "Construction Management Club",
         description: "Bridges students with the construction industry through site visits, competitions, technical workshops, and networking, developing practical skills in estimating, scheduling, safety, and leadership while exploring diverse career paths.",
-        tags: ["engineering", "professional", "networking", "competition", "collaboration", "technical", "projects", "enterprise"],
+        tags: ["Civil", "Competitions", "Workshops", "Professional Dev"],
         category: "Data Science",
         logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/constructionmanagementclub/logo/01JVQTNEGD0VDMSAVHDV6NRWY7.png",
         memberCount: 28,
-        websiteUrl: "https://collegebowlatucd.wixsite.com/collegebowlatucd",
+        websiteUrl: "https://aggielife.ucdavis.edu/cmc/home/",
         instagramUrl: "https://www.instagram.com/cm_at_ucd/#",
         contactEmail: "cmatucd@gmail.com",
         meetingInfo: {
@@ -1045,7 +1045,7 @@ const clubData = [
     {
         name: "EBSA",
         description: "Entrepreneurship and Business Student Association unites aspiring founders for workshops, speaker panels, and venture projects, supporting idea validation, pitching, and team formation with mentorship and industry connections.",
-        tags: ["enterprise", "networking", "professional", "competition", "leadership", "collaboration", "analytics", "consulting"],
+        tags: ["Build Projects", "Workshops", "Professional Dev", "Networking"],
         category: "Data Science",
         logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/economicsandbusinessstudentassociation/logo/01JVQT3ZV59JZKEBE01R8ZJTAK.png",
         memberCount: 28,
@@ -1068,7 +1068,7 @@ const clubData = [
     {
         name: "Materials Advantage Student Chapter",
         description: "Materials science and engineering community hosting seminars, lab tours, and outreach while connecting students with research groups, professional societies, conferences, and industry internships across materials-related fields.",
-        tags: ["engineering", "research", "professional", "networking", "technical", "academic", "collaboration", "innovation"],
+        tags: ["Research", "Professional Dev", "Networking", "Workshops"],
         category: "Data Science",
         logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/materialsadvantagestudentchapter/logo/01JVQST00BNH8BR6THS1WQ5Y2J.png",
         memberCount: 28,
@@ -1091,7 +1091,7 @@ const clubData = [
     {
         name: "American Institute of Chemical Engineers",
         description: "Professional home for chemical engineering students offering mentorship, industry panels, plant tours, competitions, and academic support, helping members explore career paths, develop leadership skills, and build strong professional networks.",
-        tags: ["engineering", "networking", "professional", "mentorship", "academic", "technical", "collaboration", "enterprise"],
+        tags: ["Mechanical", "Competitions", "Mentorship", "Professional Dev"],
         category: "Data Science",
         logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/americaninstituteofchemicalengineers/logo/01JVQTEKD0HRTAVN2W6W0R6CW5.png",
         memberCount: 28,
