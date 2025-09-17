@@ -1,5 +1,5 @@
 /* =============================================================================
-   MENTOR MATCHING STYLES
+   ENHANCED MENTOR MATCHING STYLES WITH DROPDOWN SUPPORT
    Save as: frontend/styles/mentor-matching.css
    ============================================================================= */
 
@@ -33,8 +33,14 @@ body {
 .page-title {
     font-size: 2.5rem;
     font-weight: 700;
-    margin-bottom: 40px;
+    margin-bottom: 15px;
     color: #333;
+}
+
+.page-subtitle {
+    font-size: 1.1rem;
+    color: #666;
+    margin-bottom: 40px;
 }
 
 /* Form Sections */
@@ -66,6 +72,7 @@ body {
 
 .tag-input-container:focus-within {
     border-color: #007bff;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
 }
 
 .tags-display {
@@ -126,7 +133,7 @@ body {
     outline: none;
     font-size: 1rem;
     padding: 6px;
-    color: #666;
+    color: #333;
     background: transparent;
 }
 
@@ -134,19 +141,110 @@ body {
     color: #999;
 }
 
-/* Navigation */
+/* Help Text */
+.input-help-text {
+    font-size: 0.85rem;
+    color: #999;
+    margin-top: 6px;
+    font-style: italic;
+}
+
+/* =============================================================================
+   DROPDOWN SUGGESTIONS STYLES
+   ============================================================================= */
+
+.dropdown-suggestions {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    max-height: 250px;
+    overflow-y: auto;
+    background: white;
+    border: 2px solid #e0e0e0;
+    border-top: none;
+    border-radius: 0 0 12px 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    margin-top: -2px;
+}
+
+/* Individual Dropdown Items */
+.dropdown-item {
+    padding: 12px 16px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    font-size: 0.95rem;
+    color: #333;
+    border-bottom: 1px solid #f5f5f5;
+}
+
+.dropdown-item:last-child {
+    border-bottom: none;
+    border-radius: 0 0 10px 10px;
+}
+
+.dropdown-item:hover,
+.dropdown-item.highlighted {
+    background-color: #f0f7ff;
+    color: #007bff;
+}
+
+.dropdown-item.highlighted {
+    background-color: #e6f2ff;
+}
+
+/* Empty dropdown state */
+.dropdown-empty {
+    padding: 12px 16px;
+    color: #999;
+    font-style: italic;
+    text-align: center;
+}
+
+/* Scrollbar styling for dropdown */
+.dropdown-suggestions::-webkit-scrollbar {
+    width: 8px;
+}
+
+.dropdown-suggestions::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 0 0 10px 0;
+}
+
+.dropdown-suggestions::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 4px;
+}
+
+.dropdown-suggestions::-webkit-scrollbar-thumb:hover {
+    background: #999;
+}
+
+/* =============================================================================
+   NAVIGATION AND PROGRESS
+   ============================================================================= */
+
 .form-navigation {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-top: 50px;
+    padding-top: 30px;
+    border-top: 1px solid #e0e0e0;
+}
+
+.progress-indicator {
+    font-size: 0.9rem;
+    color: #666;
+    font-style: italic;
 }
 
 .next-btn {
     display: flex;
     align-items: center;
     gap: 10px;
-    padding: 12px 30px;
+    padding: 14px 32px;
     background: #007bff;
     color: white;
     border: none;
@@ -155,11 +253,17 @@ body {
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
 }
 
 .next-btn:hover {
     background: #0056b3;
-    transform: translateX(5px);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 123, 255, 0.4);
+}
+
+.next-btn:active {
+    transform: translateY(0);
 }
 
 .arrow-icon {
@@ -167,7 +271,72 @@ body {
     height: 20px;
 }
 
-/* Results Container */
+.back-btn {
+    padding: 10px 20px;
+    background: #6c757d;
+    color: white;
+    border: none;
+    border-radius: 50px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin: 30px auto 0;
+    display: block;
+}
+
+.back-btn:hover {
+    background: #5a6268;
+    transform: translateY(-2px);
+}
+
+/* =============================================================================
+   LOADING STATE
+   ============================================================================= */
+
+.loading-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.95);
+    z-index: 9999;
+}
+
+.spinner {
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #007bff;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+    margin-bottom: 20px;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.loading-container p {
+    font-size: 1.1rem;
+    color: #666;
+}
+
+/* =============================================================================
+   RESULTS CONTAINER
+   ============================================================================= */
+
 .results-container {
     max-width: 1200px;
     margin: 0 auto;
@@ -192,7 +361,10 @@ body {
     margin-bottom: 50px;
 }
 
-/* Mentor Cards Grid */
+/* =============================================================================
+   MENTOR CARDS
+   ============================================================================= */
+
 .mentor-cards {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
@@ -200,7 +372,6 @@ body {
     margin-bottom: 40px;
 }
 
-/* Individual Mentor Card */
 .mentor-card {
     background: white;
     border: 2px solid #e0e0e0;
@@ -208,11 +379,13 @@ body {
     padding: 30px;
     text-align: center;
     transition: all 0.3s ease;
+    position: relative;
 }
 
 .mentor-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    border-color: #007bff;
 }
 
 .mentor-avatar {
@@ -222,6 +395,7 @@ body {
     border-radius: 50%;
     overflow: hidden;
     background: #f0f0f0;
+    border: 3px solid #e0e0e0;
 }
 
 .mentor-avatar img {
@@ -241,7 +415,7 @@ body {
     display: flex;
     justify-content: center;
     gap: 10px;
-    margin-bottom: 10px;
+    margin-bottom: 15px;
 }
 
 .badge {
@@ -253,15 +427,13 @@ body {
     font-weight: 500;
 }
 
-
-
-/* Mentor Card Sections */
 .section-label {
     font-size: 0.95rem;
     font-weight: 600;
     color: #555;
     margin-bottom: 10px;
     margin-top: 15px;
+    text-align: left;
 }
 
 .hobby-tags {
@@ -269,6 +441,7 @@ body {
     flex-wrap: wrap;
     gap: 8px;
     margin-bottom: 15px;
+    justify-content: center;
 }
 
 .hobby-tag {
@@ -282,11 +455,30 @@ body {
     font-weight: 500;
 }
 
+/* Match Score */
+.match-score {
+    margin: 20px 0;
+    padding: 10px;
+    background: #f0f7ff;
+    border-radius: 10px;
+}
+
+.score-label {
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.score-value {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #007bff;
+}
+
 /* Schedule Button */
 .schedule-btn {
     width: 100%;
     padding: 12px 24px;
-    background: #007bff;
+    background: #28a745;
     color: white;
     border: none;
     border-radius: 50px;
@@ -296,49 +488,34 @@ body {
     transition: all 0.3s ease;
     text-decoration: none;
     display: inline-block;
+    margin-top: 15px;
 }
 
 .schedule-btn:hover {
-    background: #0056b3;
+    background: #218838;
     transform: scale(1.02);
+    box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
 }
 
 /* Disclaimer */
 .disclaimer {
     text-align: center;
-    color: #999;
-    font-size: 0.9rem;
-    font-style: italic;
+    color: #666;
+    font-size: 0.95rem;
     margin-top: 30px;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 10px;
 }
 
-/* Loading State */
-.loading {
-    text-align: center;
-    padding: 60px;
+.disclaimer strong {
+    color: #333;
 }
 
-.spinner {
-    border: 4px solid #f3f3f3;
-    border-top: 4px solid #007bff;
-    border-radius: 50%;
-    width: 50px;
-    height: 50px;
-    animation: spin 1s linear infinite;
-    margin: 0 auto 20px;
-}
+/* =============================================================================
+   RESPONSIVE DESIGN
+   ============================================================================= */
 
-@keyframes spin {
-    0% {
-        transform: rotate(0deg);
-    }
-
-    100% {
-        transform: rotate(360deg);
-    }
-}
-
-/* Responsive Design */
 @media (max-width: 768px) {
 
     .form-container,
@@ -357,5 +534,43 @@ body {
 
     .tag-input {
         min-width: 150px;
+    }
+
+    .form-navigation {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .progress-indicator {
+        text-align: center;
+        width: 100%;
+    }
+
+    .next-btn {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .dropdown-suggestions {
+        max-height: 200px;
+    }
+}
+
+@media (max-width: 480px) {
+    .form-container {
+        padding: 20px 15px;
+    }
+
+    .page-title {
+        font-size: 1.75rem;
+    }
+
+    .mentor-avatar {
+        width: 120px;
+        height: 120px;
+    }
+
+    .mentor-name {
+        font-size: 1.3rem;
     }
 }

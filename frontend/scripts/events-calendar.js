@@ -1241,7 +1241,7 @@ function renderFeaturedEvents() {
 
         // Update event content
         eventCard.querySelector('.event-title').textContent = event.title;
-        eventCard.querySelector('.event-description').textContent = truncateText(event.description, 80);
+        eventCard.querySelector('.event-description').textContent = truncateText(event.description, 170);
         eventCard.querySelector('.time-text').textContent = event.formattedTime || event.time;
         eventCard.querySelector('.location-text').textContent = truncateText(event.location, 25);
 

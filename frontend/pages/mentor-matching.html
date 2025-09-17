@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -15,6 +15,7 @@
         <!-- Initial Form Page -->
         <div class="form-container" id="formContainer">
             <h1 class="page-title">Mentor Matching</h1>
+            <p class="page-subtitle">Tell us about yourself and we'll match you with the perfect mentor</p>
             
             <div class="form-section">
                 <label class="form-label">Add or select your major</label>
@@ -23,8 +24,11 @@
                     <input type="text" 
                            class="tag-input" 
                            id="majorInput" 
-                           placeholder="search for majors...">
+                           placeholder="Type or select from dropdown..."
+                           autocomplete="off">
+                    <!-- Dropdown will be dynamically inserted here -->
                 </div>
+                <div class="input-help-text">Start typing or click to see suggestions</div>
             </div>
 
             <div class="form-section">
@@ -34,8 +38,11 @@
                     <input type="text" 
                            class="tag-input" 
                            id="careerInput" 
-                           placeholder="search for careers...">
+                           placeholder="Type or select from dropdown..."
+                           autocomplete="off">
+                    <!-- Dropdown will be dynamically inserted here -->
                 </div>
+                <div class="input-help-text">Select multiple career paths you're interested in</div>
             </div>
 
             <div class="form-section">
@@ -45,8 +52,11 @@
                     <input type="text" 
                            class="tag-input" 
                            id="hobbiesInput" 
-                           placeholder="search for hobbies...">
+                           placeholder="Type or select from dropdown..."
+                           autocomplete="off">
+                    <!-- Dropdown will be dynamically inserted here -->
                 </div>
+                <div class="input-help-text">Share your interests outside of academics</div>
             </div>
 
             <div class="form-section">
@@ -56,8 +66,11 @@
                     <input type="text" 
                            class="tag-input" 
                            id="mentorshipInput" 
-                           placeholder="e.g., career guidance, interview prep...">
+                           placeholder="Type or select from dropdown..."
+                           autocomplete="off">
+                    <!-- Dropdown will be dynamically inserted here -->
                 </div>
+                <div class="input-help-text">What would you like help with?</div>
             </div>
 
             <div class="form-section">
@@ -67,14 +80,17 @@
                     <input type="text" 
                            class="tag-input" 
                            id="industryInput" 
-                           placeholder="e.g., Big Tech, Startups, Finance...">
+                           placeholder="Type or select from dropdown..."
+                           autocomplete="off">
+                    <!-- Dropdown will be dynamically inserted here -->
                 </div>
+                <div class="input-help-text">Which industries interest you most?</div>
             </div>
 
             <div class="form-navigation">
-                <span></span> <!-- Empty span for spacing -->
+                <span class="progress-indicator">Complete at least one field to continue</span>
                 <button class="next-btn" onclick="submitAndFindMentors()">
-                    Next
+                    Find My Mentors
                     <svg class="arrow-icon" width="24" height="24" viewBox="0 0 24 24" fill="none">
                         <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
@@ -83,17 +99,26 @@
         </div>
 
         <!-- Results Page -->
-
-
         <div class="results-container" id="resultsContainer" style="display: none;">
-            <h1 class="results-title">Match found!</h1>
-            <p class="results-subtitle">Based on your interests and hobbies, we've found multiple possible mentor matches for you:</p>
+            <h1 class="results-title">Perfect matches found! 🎉</h1>
+            <p class="results-subtitle">Based on your interests and goals, we've found these mentors for you:</p>
             
             <div class="mentor-cards" id="mentorCards">
                 <!-- Mentor cards will be dynamically inserted here -->
             </div>
 
-            <p class="disclaimer">By selecting "Schedule a Coffee Chat", you will be exiting this website and rerouted to expresso.</p>
+            <p class="disclaimer">
+                <strong>Note:</strong> Clicking "Schedule a Coffee Chat" will redirect you to Expresso, 
+                our partner platform for scheduling mentor meetings.
+            </p>
+            
+            <button class="back-btn" onclick="resetForm()">← Start Over</button>
+        </div>
+        
+        <!-- Loading State -->
+        <div class="loading-container" id="loadingContainer" style="display: none;">
+            <div class="spinner"></div>
+            <p>Finding your perfect mentors...</p>
         </div>
     </div>
 
