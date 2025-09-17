@@ -36,19 +36,19 @@ const eventsData = [
         isActive: true
     },
     {
-        title: "HackDavis 2025",
-        date: new Date('2025-09-16T17:00:00.000Z'),
-        time: "9:00 AM - 9:00 PM",
-        location: "Memorial Union",
-        description: "UC Davis's premier hackathon focused on social good! Build innovative projects, win prizes, and network with top tech companies.",
-        imageUrl: "https://hackdavis.io/assets/hackdavis-banner.jpg",
-        category: "Hackathon",
+        title: "Engineering Student Club Fair",
+        date: new Date('2025-09-19T17:00:00.000Z'), // 10:00am PDT = 17:00 UTC
+        time: "10:00am - 11:30am",
+        location: "Bainer Lawn",
+        description: "Come learn about all our amazing engineering clubs and how you can participate!",
+        imageUrl: "https://engineering.ucdavis.edu/sites/g/files/dgvnsk2151/files/styles/sf_landscape_16x9/public/media/images/53221921897_11fecef2ff_k.jpg?h=a1e1a043&itok=TRWcF3XH",
+        category: "Academic",
         featured: true,
         featuredPriority: 2,
         tags: ["hackathon", "coding", "competition", "prizes"],
         maxAttendees: 500,
         registrationRequired: true,
-        registrationUrl: "https://hackdavis.io",
+        registrationUrl: "",
         isActive: true
     },
     {

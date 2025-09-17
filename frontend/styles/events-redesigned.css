@@ -135,8 +135,8 @@ button {
     width: 100%;
     max-width: 450px;
     min-width: 320px;
-    height: 420px;
-    /* Increased height to accommodate layout */
+    height: 440px !important;
+    /* Increased from 420px to 440px */
     background-color: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
@@ -273,9 +273,9 @@ button {
 
 /* Event Content */
 .event-content {
-    height: 60%;
-    /* Increased from 45% to 60% */
-    padding: 1.2rem;
+    height: 62% !important;
+    /* Increased from 60% to 62% */
+    padding: 1.2rem !important;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -296,17 +296,19 @@ button {
 }
 
 .event-description {
-    font-size: 0.9rem;
-    /* Slightly larger */
+    font-size: 0.9rem !important;
     color: #666;
-    line-height: 1.5;
-    margin-bottom: 1rem;
+    line-height: 1.5 !important;
+    margin-bottom: 1rem !important;
     overflow: hidden;
     display: -webkit-box;
-    -webkit-line-clamp: 3;
-    /* Allow 3 lines instead of 2 */
+    -webkit-line-clamp: 5 !important;
+    /* Changed from 3 to 4 lines */
     -webkit-box-orient: vertical;
     flex-grow: 1;
+    max-height: 6em !important;
+    /* 4 lines × 1.5 line-height = 6em */
+    transition: all 0.3s ease;
 }
 
 /* Event Details */
@@ -1037,8 +1039,23 @@ button {
 
 /* Fix event card image size and content visibility */
 .event-card {
-    height: 420px !important;
-    /* Slightly taller cards */
+    width: 100%;
+    max-width: 450px;
+    min-width: 320px;
+    height: 440px !important;
+    /* Increased from 420px to 440px */
+    background-color: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.9);
+    border-radius: 15px;
+    overflow: hidden;
+    position: relative;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
 }
 
 /* Make image smaller - 35% instead of 50% */
@@ -1048,8 +1065,12 @@ button {
 
 /* Make content area larger - 60% instead of 45% */
 .event-content {
-    height: 60% !important;
+    height: 62% !important;
+    /* Increased from 60% to 62% */
     padding: 1.2rem !important;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 /* Make event title slightly larger and bolder */
@@ -1063,10 +1084,18 @@ button {
 /* Make description larger and allow 3 lines */
 .event-description {
     font-size: 0.9rem !important;
+    color: #666;
     line-height: 1.5 !important;
     margin-bottom: 1rem !important;
-    -webkit-line-clamp: 3 !important;
-    /* Show 3 lines instead of 2 */
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 5 !important;
+    /* Changed from 3 to 4 lines */
+    -webkit-box-orient: vertical;
+    flex-grow: 1;
+    max-height: 6em !important;
+    /* 4 lines × 1.5 line-height = 6em */
+    transition: all 0.3s ease;
 }
 
 /* Hide the first join button (left button) */
@@ -1148,3 +1177,135 @@ button {
         padding: 0.75rem !important;
     }
 }
+
+
+
+/* =============================================================================
+   EVENT CARD DESCRIPTION FIX - Add to END of events-redesigned.css
+   This will show more description text on the event cards
+   ============================================================================= */
+
+/* FORCE MORE TEXT TO SHOW - Using more specific selectors */
+.featured-events-section .event-card {
+    height: 460px !important;
+    /* Increased from 420px */
+}
+
+.featured-events-section .event-card .event-image-container {
+    height: 30% !important;
+    /* Reduced from 35% to give more room for text */
+}
+
+.featured-events-section .event-card .event-content {
+    height: 65% !important;
+    /* Increased from 60% */
+    padding: 1.5rem !important;
+    /* More padding for better spacing */
+}
+
+/* The key fix - show more lines of description text */
+.featured-events-section .event-card .event-description {
+    font-size: 0.95rem !important;
+    /* Slightly larger for readability */
+    color: #4a5568 !important;
+    line-height: 1.6 !important;
+    /* Better line spacing */
+    margin-bottom: 1rem !important;
+    overflow: hidden !important;
+    display: -webkit-box !important;
+    -webkit-line-clamp: 5 !important;
+    /* Show 5 lines instead of 3 */
+    -webkit-box-orient: vertical !important;
+    text-overflow: ellipsis !important;
+    max-height: none !important;
+    /* Remove height restriction */
+    flex-grow: 1 !important;
+}
+
+/* Adjust the bottom section to fit properly */
+.featured-events-section .event-card .event-bottom-section {
+    margin-top: auto;
+    /* Push to bottom */
+    padding-top: 0.5rem;
+}
+
+/* Make title slightly smaller to give more room for description */
+.featured-events-section .event-card .event-title {
+    font-size: 1.15rem !important;
+    /* Slightly smaller than before */
+    font-weight: 700 !important;
+    color: #2c3e50 !important;
+    margin-bottom: 0.5rem !important;
+    /* Less margin */
+    line-height: 1.2 !important;
+    overflow: hidden !important;
+    display: -webkit-box !important;
+    -webkit-line-clamp: 5 !important;
+    -webkit-box-orient: vertical !important;
+}
+
+/* Visual indicator that cards are clickable */
+.featured-events-section .event-card {
+    position: relative;
+    cursor: pointer;
+    transition: all 0.3s ease !important;
+}
+
+/* Enhanced hover effect */
+.featured-events-section .event-card:hover {
+    transform: translateY(-8px) !important;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* Optional: Add a subtle "View More" indicator on hover */
+.featured-events-section .event-card .event-description::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 2rem;
+    background: linear-gradient(to bottom,
+            transparent,
+            rgba(255, 255, 255, 0.9));
+    pointer-events: none;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .featured-events-section .event-card {
+        height: 420px !important;
+    }
+
+    .featured-events-section .event-card .event-description {
+        -webkit-line-clamp: 5 !important;
+        /* Show 4 lines on tablet */
+        font-size: 0.9rem !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .featured-events-section .event-card {
+        height: 400px !important;
+    }
+
+    .featured-events-section .event-card .event-description {
+        -webkit-line-clamp: 5 !important;
+        /* Show 3 lines on mobile */
+        font-size: 0.85rem !important;
+    }
+}
+
+/* =============================================================================
+   DEBUG: If the above doesn't work, try this nuclear option
+   ============================================================================= */
+
+/* Nuclear override - uncomment if needed */
+/*
+#featuredEventsGrid .event-card .event-description {
+    -webkit-line-clamp: 5 !important;
+    max-height: 8em !important;
+    overflow: visible !important;
+    text-overflow: clip !important;
+}
+*/
