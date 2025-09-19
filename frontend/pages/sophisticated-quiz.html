@@ -1,27 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Enhanced AI Career Discovery - UC Davis Tech Quiz</title>
-    
+
     <!-- External CSS -->
 
     <link rel="stylesheet" href="/styles/fonts.css" />
     <link rel="stylesheet" href="/styles/navbar.css" />
     <link rel="stylesheet" href="/styles/niche-quiz.css" />
     <link rel="stylesheet" href="/styles/enhanced-results.css" />
-    
+
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    
+
     <!-- Fonts -->
-    
+
     <!-- Navbar Scripts -->
     <script src="/scripts/navbar-component.js" defer></script>
     <script src="/scripts/navbar.js" defer></script>
     <script src="/scripts/enhancedThreeLevelQuizData.js"></script>
-    
+
     <script>
         tailwind.config = {
             theme: {
@@ -43,6 +44,7 @@
         }
     </script>
 </head>
+
 <body class="bg-gray-50 min-h-screen">
     <!-- Navbar - Will be dynamically loaded -->
     <div id="navbar-container"></div>
@@ -56,7 +58,7 @@
                 <div class="animate-bounce-in">
                     <h2 class="text-4xl font-bold mb-4">🚀 Enhanced 3-Level Career Discovery</h2>
                     <p class="text-xl text-blue-100 mb-6 max-w-2xl mx-auto">
-                        Revolutionary AI-powered assessment with level-based progression. 
+                        Revolutionary AI-powered assessment with level-based progression.
                         Get career guidance that matches your experience and provides targeted next steps.
                     </p>
                     <div class="glass-effect rounded-lg p-4 max-w-md mx-auto">
@@ -83,7 +85,8 @@
                     <div class="text-center p-4 bg-gradient-to-br from-green-50 to-emerald-50 rounded-lg">
                         <div class="text-3xl mb-3">🧠</div>
                         <h4 class="font-bold text-gray-900 mb-2">Enhanced AI Analysis</h4>
-                        <p class="text-sm text-gray-600">Experience-specific insights and development recommendations</p>
+                        <p class="text-sm text-gray-600">Experience-specific insights and development recommendations
+                        </p>
                     </div>
                     <div class="text-center p-4 bg-gradient-to-br from-orange-50 to-red-50 rounded-lg">
                         <div class="text-3xl mb-3">🎓</div>
@@ -105,7 +108,8 @@
 
             <!-- Start Button -->
             <div class="text-center">
-                <button id="startQuizBtn" class="bg-gradient-to-r from-tech-purple to-tech-cyan text-white px-8 py-4 rounded-xl text-lg font-bold hover:shadow-xl transition-all duration-300 hover:scale-105 animate-pulse-glow">
+                <button id="startQuizBtn"
+                    class="bg-gradient-to-r from-tech-purple to-tech-cyan text-white px-8 py-4 rounded-xl text-lg font-bold hover:shadow-xl transition-all duration-300 hover:scale-105 animate-pulse-glow">
                     🚀 Choose Your Experience Level
                 </button>
                 <p class="text-sm text-gray-600 mt-4">Trusted by UC Davis students • Enhanced with GPT-4</p>
@@ -117,14 +121,17 @@
             <div class="text-center">
                 <h2 class="text-3xl font-bold text-gray-900 mb-4">Choose Your Experience Level</h2>
                 <p class="text-lg text-gray-600 max-w-2xl mx-auto">
-                    Select the level that best matches your current tech experience for the most accurate career guidance.
+                    Select the level that best matches your current tech experience for the most accurate career
+                    guidance.
                 </p>
             </div>
 
             <div class="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
                 <!-- Beginner Level -->
-                <div class="level-card cursor-pointer transform hover:scale-105 transition-all duration-300" data-level="beginner">
-                    <div class="bg-white rounded-xl shadow-lg overflow-hidden border-2 border-gray-200 hover:border-green-400">
+                <div class="level-card cursor-pointer transform hover:scale-105 transition-all duration-300"
+                    data-level="beginner">
+                    <div
+                        class="bg-white rounded-xl shadow-lg overflow-hidden border-2 border-gray-200 hover:border-green-400">
                         <div class="bg-gradient-to-br from-green-50 to-emerald-50 p-6 text-center">
                             <div class="text-4xl mb-3"></div>
                             <h3 class="text-xl font-bold text-gray-900 mb-2">Tech Explorer</h3>
@@ -141,8 +148,10 @@
                                     <span class="font-semibold">12 questions</span>
                                 </div>
                             </div>
-                            <p class="text-sm text-gray-600 mb-4">Perfect for students exploring tech careers with no prior experience.</p>
-                            <button class="w-full bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600 transition-colors">
+                            <p class="text-sm text-gray-600 mb-4">Perfect for students exploring tech careers with no
+                                prior experience.</p>
+                            <button
+                                class="w-full bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600 transition-colors">
                                 Start Exploring Path
                             </button>
                         </div>
@@ -150,8 +159,10 @@
                 </div>
 
                 <!-- Intermediate Level -->
-                <div class="level-card cursor-pointer transform hover:scale-105 transition-all duration-300" data-level="intermediate">
-                    <div class="bg-white rounded-xl shadow-lg overflow-hidden border-2 border-gray-200 hover:border-blue-400">
+                <div class="level-card cursor-pointer transform hover:scale-105 transition-all duration-300"
+                    data-level="intermediate">
+                    <div
+                        class="bg-white rounded-xl shadow-lg overflow-hidden border-2 border-gray-200 hover:border-blue-400">
                         <div class="bg-gradient-to-br from-blue-50 to-indigo-50 p-6 text-center">
                             <div class="text-4xl mb-3"></div>
                             <h3 class="text-xl font-bold text-gray-900 mb-2">Tech Curious</h3>
@@ -168,8 +179,10 @@
                                     <span class="font-semibold">10 questions</span>
                                 </div>
                             </div>
-                            <p class="text-sm text-gray-600 mb-4">For students with some coding classes seeking their ideal focus.</p>
-                            <button class="w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition-colors">
+                            <p class="text-sm text-gray-600 mb-4">For students with some coding classes seeking their
+                                ideal focus.</p>
+                            <button
+                                class="w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition-colors">
                                 Find My Specialization
                             </button>
                         </div>
@@ -177,8 +190,10 @@
                 </div>
 
                 <!-- Advanced Level -->
-                <div class="level-card cursor-pointer transform hover:scale-105 transition-all duration-300" data-level="advanced">
-                    <div class="bg-white rounded-xl shadow-lg overflow-hidden border-2 border-gray-200 hover:border-purple-400">
+                <div class="level-card cursor-pointer transform hover:scale-105 transition-all duration-300"
+                    data-level="advanced">
+                    <div
+                        class="bg-white rounded-xl shadow-lg overflow-hidden border-2 border-gray-200 hover:border-purple-400">
                         <div class="bg-gradient-to-br from-purple-50 to-violet-50 p-6 text-center">
                             <div class="text-4xl mb-3"></div>
                             <h3 class="text-xl font-bold text-gray-900 mb-2">Tech Insider</h3>
@@ -195,8 +210,10 @@
                                     <span class="font-semibold">10 questions</span>
                                 </div>
                             </div>
-                            <p class="text-sm text-gray-600 mb-4">For experienced students leadership roles seeking their ideal path.</p>
-                            <button class="w-full bg-purple-500 text-white py-2 px-4 rounded-lg hover:bg-purple-600 transition-colors">
+                            <p class="text-sm text-gray-600 mb-4">For experienced students leadership roles seeking
+                                their ideal path.</p>
+                            <button
+                                class="w-full bg-purple-500 text-white py-2 px-4 rounded-lg hover:bg-purple-600 transition-colors">
                                 Optimize My Path
                             </button>
                         </div>
@@ -206,9 +223,10 @@
 
             <!-- Back Button -->
             <div class="text-center">
-                <button id="backToIntroBtn" class="text-gray-600 hover:text-gray-800 flex items-center mx-auto transition-colors">
+                <button id="backToIntroBtn"
+                    class="text-gray-600 hover:text-gray-800 flex items-center mx-auto transition-colors">
                     <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
                     </svg>
                     Back to Introduction
                 </button>
@@ -218,7 +236,7 @@
         <!-- Quiz Interface -->
         <div id="quizInterface" class="hidden">
             <!-- Progress Bar -->
-            <div class="bg-white rounded-xl p-6 mb-6 shadow-lg sticky top-20 z-40">
+            <div class="bg-white rounded-xl p-6 mb-6 shadow-lg z-40">
                 <div class="flex items-center justify-between mb-4">
                     <h2 id="quizTitle" class="text-xl font-bold text-gray-900">Enhanced Career Assessment</h2>
                     <div class="flex items-center space-x-4">
@@ -227,7 +245,9 @@
                     </div>
                 </div>
                 <div class="w-full bg-gray-200 rounded-full h-3">
-                    <div id="progressBar" class="bg-gradient-to-r from-tech-purple to-tech-cyan h-3 rounded-full transition-all duration-500" style="width: 0%"></div>
+                    <div id="progressBar"
+                        class="bg-gradient-to-r from-tech-purple to-tech-cyan h-3 rounded-full transition-all duration-500"
+                        style="width: 0%"></div>
                 </div>
             </div>
 
@@ -238,17 +258,21 @@
 
             <!-- Navigation -->
             <div class="flex justify-between items-center mt-8">
-                <button id="prevButton" class="px-6 py-3 text-gray-600 hover:text-gray-800 flex items-center transition-colors" style="display: none;">
+                <button id="prevButton"
+                    class="px-6 py-3 text-gray-600 hover:text-gray-800 flex items-center transition-colors"
+                    style="display: none;">
                     <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
                     </svg>
                     Previous
                 </button>
-                
-                <button id="nextButton" class="px-8 py-3 bg-gradient-to-r from-tech-purple to-tech-cyan text-white rounded-lg hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center transition-all" disabled>
+
+                <button id="nextButton"
+                    class="px-8 py-3 bg-gradient-to-r from-tech-purple to-tech-cyan text-white rounded-lg hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center transition-all"
+                    disabled>
                     <span id="nextButtonText">Continue</span>
                     <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                     </svg>
                 </button>
             </div>
@@ -257,9 +281,12 @@
         <!-- Loading Screen -->
         <div id="loadingScreen" class="hidden text-center py-12">
             <div class="bg-white rounded-xl p-8 shadow-lg max-w-md mx-auto">
-                <div class="animate-spin w-16 h-16 border-4 border-tech-purple border-t-transparent rounded-full mx-auto mb-6"></div>
+                <div
+                    class="animate-spin w-16 h-16 border-4 border-tech-purple border-t-transparent rounded-full mx-auto mb-6">
+                </div>
                 <h3 class="text-2xl font-bold text-gray-900 mb-3">🤖 Enhanced AI Analysis</h3>
-                <p class="text-gray-600 mb-4">Our advanced AI is analyzing your responses with level-specific insights...</p>
+                <p class="text-gray-600 mb-4">Our advanced AI is analyzing your responses with level-specific
+                    insights...</p>
                 <div class="text-sm text-tech-purple font-medium">
                     <span id="loadingStep" class="typing-indicator">Processing your responses...</span>
                 </div>
@@ -297,7 +324,7 @@
             setupEventListeners() {
                 document.getElementById('startQuizBtn').addEventListener('click', () => this.showLevelSelection());
                 document.getElementById('backToIntroBtn').addEventListener('click', () => this.showScreen('introScreen'));
-                
+
                 // Level selection handlers
                 document.querySelectorAll('.level-card').forEach(card => {
                     card.addEventListener('click', () => this.selectLevel(card.dataset.level));
@@ -315,7 +342,7 @@
             async selectLevel(level) {
                 console.log(`🎯 Level selected: ${level}`);
                 this.selectedLevel = level;
-                
+
                 // Visual feedback
                 document.querySelectorAll('.level-card').forEach(card => {
                     card.style.opacity = card.dataset.level === level ? '1' : '0.5';
@@ -323,76 +350,76 @@
 
                 // Load questions for the selected level
                 await this.loadQuestionsForLevel(level);
-                
+
                 setTimeout(() => this.startQuiz(), 500);
             }
 
             async loadQuestionsForLevel(level) {
-    try {
-        console.log(`Loading ${level} level questions...`);
-        
-        // Fix: Use correct endpoint path
-        const response = await fetch(`/api/quiz/enhanced/questions/${level}`, {
-            credentials: 'same-origin' // Include cookies for auth
-        });
-        
-        if (response.ok) {
-            const data = await response.json();
-            this.questions = data.questions;
-            console.log(`Loaded ${this.questions.length} ${level} questions from server`);
-            return;
-        } else {
-            throw new Error(`Server returned ${response.status}`);
-        }
-    } catch (error) {
-        console.error('Error loading questions:', error);
-        
-        // Better fallback handling
-        if (typeof window.enhancedThreeLevelQuizQuestions !== 'undefined' && 
-            window.enhancedThreeLevelQuizQuestions[level]) {
-            this.questions = window.enhancedThreeLevelQuizQuestions[level];
-            console.log(`Loaded ${this.questions.length} ${level} questions from local data`);
-        } else {
-            throw new Error('No questions available');
-        }
-    }
-}
-                        
+                try {
+                    console.log(`Loading ${level} level questions...`);
+
+                    // Fix: Use correct endpoint path
+                    const response = await fetch(`/api/quiz/enhanced/questions/${level}`, {
+                        credentials: 'same-origin' // Include cookies for auth
+                    });
+
+                    if (response.ok) {
+                        const data = await response.json();
+                        this.questions = data.questions;
+                        console.log(`Loaded ${this.questions.length} ${level} questions from server`);
+                        return;
+                    } else {
+                        throw new Error(`Server returned ${response.status}`);
+                    }
+                } catch (error) {
+                    console.error('Error loading questions:', error);
+
+                    // Better fallback handling
+                    if (typeof window.enhancedThreeLevelQuizQuestions !== 'undefined' &&
+                        window.enhancedThreeLevelQuizQuestions[level]) {
+                        this.questions = window.enhancedThreeLevelQuizQuestions[level];
+                        console.log(`Loaded ${this.questions.length} ${level} questions from local data`);
+                    } else {
+                        throw new Error('No questions available');
+                    }
+                }
+            }
+
             startQuiz() {
                 console.log(`Starting ${this.selectedLevel} level quiz...`);
                 this.startTime = Date.now();
                 this.currentQuestionIndex = 0;
                 this.answers = new Array(this.questions.length).fill(null);
-                
+
                 // Debug logging
                 console.log('Total questions loaded:', this.questions.length);
                 console.log('Question IDs:', this.questions.map(q => q.id));
                 console.log('Answers array initialized:', this.answers.length);
-                
+
                 // Update UI with level info
                 document.getElementById('selectedLevel').textContent = this.selectedLevel.charAt(0).toUpperCase() + this.selectedLevel.slice(1);
-                
+
                 this.showScreen('quizInterface');
                 this.renderQuestion();
             }
 
             renderQuestion() {
                 const question = this.questions[this.currentQuestionIndex];
-                
+
                 if (!question) {
                     console.error('No question found at index:', this.currentQuestionIndex);
                     return;
                 }
-                
+
                 console.log('Rendering question type:', question.type, question);
-                
+
                 // Update progress
                 document.getElementById('progressText').textContent = `Question ${this.currentQuestionIndex + 1} of ${this.questions.length}`;
                 const progress = ((this.currentQuestionIndex + 1) / this.questions.length) * 100;
                 document.getElementById('progressBar').style.width = `${progress}%`;
 
                 const container = document.getElementById('questionContainer');
-                
+
                 // Handle different question types based on your data structure
                 switch (question.type) {
                     case 'short_response':
@@ -422,9 +449,9 @@
             restorePreviousAnswer() {
                 const savedAnswer = this.answers[this.currentQuestionIndex];
                 if (!savedAnswer) return;
-                
+
                 const question = this.questions[this.currentQuestionIndex];
-                
+
                 switch (question.type) {
                     case 'short_response':
                         const textArea = document.getElementById('textResponse');
@@ -433,7 +460,7 @@
                             this.updateTextResponse(savedAnswer.textResponse);
                         }
                         break;
-                        
+
                     case 'visual_choice':
                     case 'multiple_choice':
                     case 'scenario':
@@ -445,7 +472,7 @@
                             }
                         }
                         break;
-                        
+
                     case 'scale':
                         if (savedAnswer.scaleValue) {
                             const slider = document.getElementById('scaleSlider');
@@ -520,7 +547,7 @@
                         `).join('')}
                     </div>
                 `;
-                
+
                 // Add click handlers after rendering
                 container.querySelectorAll('.visual-option').forEach(optionEl => {
                     optionEl.addEventListener('click', () => {
@@ -529,11 +556,11 @@
                             el.classList.remove('selected');
                             el.style.borderColor = '#e5e7eb';
                         });
-                        
+
                         // Select this option
                         optionEl.classList.add('selected');
                         optionEl.style.borderColor = '#6366f1';
-                        
+
                         const optionId = optionEl.dataset.optionId;
                         const selectedOption = question.options.find(opt => opt.id === optionId);
                         this.saveResponse({ selectedOption });
@@ -545,7 +572,7 @@
                 // Find a valid starting value that exists in the labels
                 const validValues = Object.keys(question.scale.labels).map(Number);
                 const middleValue = validValues[Math.floor(validValues.length / 2)];
-                
+
                 container.innerHTML = `
                     <div class="text-center mb-8">
                         <h3 class="text-2xl font-bold text-gray-900 mb-2">${question.question}</h3>
@@ -571,7 +598,7 @@
                         </div>
                     </div>
                 `;
-                
+
                 // Auto-save the default value
                 this.saveResponse({ scaleValue: middleValue });
             }
@@ -607,10 +634,10 @@
                         </div>
                     </div>
                 `;
-                
+
                 // Initialize drag and drop functionality
                 this.initializeDragAndDrop();
-                
+
                 // Save initial ranking
                 const ranking = question.items.map(item => item.id);
                 this.saveResponse({ ranking });
@@ -619,36 +646,36 @@
             initializeDragAndDrop() {
                 const container = document.getElementById('rankingContainer');
                 let draggedElement = null;
-                
+
                 // Add event listeners to all drag items
                 const dragItems = container.querySelectorAll('.drag-item');
-                
+
                 dragItems.forEach(item => {
                     item.addEventListener('dragstart', (e) => {
                         draggedElement = item;
                         item.style.opacity = '0.5';
                         e.dataTransfer.effectAllowed = 'move';
                     });
-                    
+
                     item.addEventListener('dragend', (e) => {
                         item.style.opacity = '1';
                         draggedElement = null;
                         this.updateRankNumbers();
                         this.saveRankingOrder();
                     });
-                    
+
                     item.addEventListener('dragover', (e) => {
                         e.preventDefault();
                         e.dataTransfer.dropEffect = 'move';
                     });
-                    
+
                     item.addEventListener('drop', (e) => {
                         e.preventDefault();
                         if (draggedElement && draggedElement !== item) {
                             const container = item.parentNode;
                             const draggedRect = draggedElement.getBoundingClientRect();
                             const targetRect = item.getBoundingClientRect();
-                            
+
                             if (draggedRect.top < targetRect.top) {
                                 container.insertBefore(draggedElement, item.nextSibling);
                             } else {
@@ -676,16 +703,16 @@
             updateScale(value) {
                 const question = this.questions[this.currentQuestionIndex];
                 const intValue = parseInt(value);
-                
+
                 document.getElementById('scaleValue').textContent = intValue;
-                
+
                 // Use fallback text if label/description doesn't exist for this value
                 const label = question.scale.labels[intValue] || `Level ${intValue}`;
                 const description = question.scale.descriptions[intValue] || `Selected value: ${intValue}`;
-                
+
                 document.getElementById('scaleLabel').textContent = label;
                 document.getElementById('scaleDescription').textContent = description;
-                
+
                 this.saveResponse({ scaleValue: intValue });
             }
 
@@ -717,7 +744,7 @@
             saveResponse(responseData) {
                 console.log('Saving response for question index:', this.currentQuestionIndex);
                 console.log('Question ID:', this.questions[this.currentQuestionIndex]?.id);
-                
+
                 this.answers[this.currentQuestionIndex] = {
                     questionId: this.questions[this.currentQuestionIndex].id,
                     questionType: this.questions[this.currentQuestionIndex].type,
@@ -725,10 +752,10 @@
                     timestamp: new Date().toISOString(),
                     timeTaken: Date.now() - this.startTime
                 };
-                
+
                 console.log('Response saved:', this.answers[this.currentQuestionIndex]);
                 console.log('Answers collected so far:', this.answers.filter(a => a !== null).length);
-                
+
                 // Enable next button
                 document.getElementById('nextButton').disabled = false;
             }
@@ -757,9 +784,9 @@
 
             nextQuestion() {
                 if (this.isSubmitting) return; // Prevent multiple submissions
-                
+
                 console.log('Next question called. Current index:', this.currentQuestionIndex, 'Total questions:', this.questions.length);
-                
+
                 if (this.currentQuestionIndex < this.questions.length - 1) {
                     this.currentQuestionIndex++;
                     this.renderQuestion();
@@ -774,54 +801,54 @@
             }
 
             async submitQuiz() {
-    console.log(`Submitting ${this.selectedLevel} level quiz for enhanced AI analysis...`);
-    
-    this.showScreen('loadingScreen');
-    this.animateLoadingSteps();
-    
-    try {
-        const submissionData = {
-            level: this.selectedLevel,
-            answers: this.answers.filter(a => a !== null),
-            completionTime: Math.floor((Date.now() - this.startTime) / 1000),
-            metadata: {
-                version: '3.0-Enhanced',
-                timestamp: new Date().toISOString()
+                console.log(`Submitting ${this.selectedLevel} level quiz for enhanced AI analysis...`);
+
+                this.showScreen('loadingScreen');
+                this.animateLoadingSteps();
+
+                try {
+                    const submissionData = {
+                        level: this.selectedLevel,
+                        answers: this.answers.filter(a => a !== null),
+                        completionTime: Math.floor((Date.now() - this.startTime) / 1000),
+                        metadata: {
+                            version: '3.0-Enhanced',
+                            timestamp: new Date().toISOString()
+                        }
+                    };
+
+                    const response = await fetch('/api/quiz/submit', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        credentials: 'same-origin',
+                        body: JSON.stringify(submissionData)
+                    });
+
+                    if (!response.ok) {
+                        const errorData = await response.json();
+                        throw new Error(errorData.message || 'Server error');
+                    }
+
+                    const data = await response.json();
+
+                    // Check for enhanced results redirect
+                    if (data.enhanced && data.redirectTo) {
+                        // Store results for the enhanced page
+                        sessionStorage.setItem('enhancedResults', JSON.stringify(data.results));
+                        window.location.href = data.redirectTo;
+                    } else {
+                        // Fallback to basic results display
+                        this.displayResults(data.results || data);
+                    }
+
+                } catch (error) {
+                    console.error('Quiz submission error:', error);
+                    alert('Failed to analyze your responses. Please try again.');
+                    this.showScreen('levelSelection');
+                }
             }
-        };
-
-        const response = await fetch('/api/quiz/submit', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            credentials: 'same-origin',
-            body: JSON.stringify(submissionData)
-        });
-
-        if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.message || 'Server error');
-        }
-
-        const data = await response.json();
-        
-        // Check for enhanced results redirect
-        if (data.enhanced && data.redirectTo) {
-            // Store results for the enhanced page
-            sessionStorage.setItem('enhancedResults', JSON.stringify(data.results));
-            window.location.href = data.redirectTo;
-        } else {
-            // Fallback to basic results display
-            this.displayResults(data.results || data);
-        }
-        
-    } catch (error) {
-        console.error('Quiz submission error:', error);
-        alert('Failed to analyze your responses. Please try again.');
-        this.showScreen('levelSelection');
-    }
-}
 
             animateLoadingSteps() {
                 const steps = [
@@ -831,10 +858,10 @@
                     'Generating personalized insights...',
                     'Preparing your custom action plan...'
                 ];
-                
+
                 let stepIndex = 0;
                 const stepElement = document.getElementById('loadingStep');
-                
+
                 const updateStep = () => {
                     if (stepIndex < steps.length) {
                         stepElement.textContent = steps[stepIndex];
@@ -842,24 +869,24 @@
                         setTimeout(updateStep, 800);
                     }
                 };
-                
+
                 updateStep();
             }
 
             displayResults(results) {
                 this.showScreen('resultsScreen');
-                
+
                 const container = document.getElementById('resultsScreen');
-                
+
                 // Handle the results structure from your backend
                 const topMatch = results.topMatch || results.results?.topMatch;
                 const allMatches = results.allMatches || results.results?.allMatches || [];
-                
+
                 if (!topMatch) {
                     console.error('No top match found in results:', results);
                     return;
                 }
-                
+
                 container.innerHTML = `
                     <div class="gradient-bg text-white rounded-xl p-8 text-center animate-bounce-in">
                         <h2 class="text-3xl font-bold mb-4">Your Enhanced ${this.selectedLevel.charAt(0).toUpperCase() + this.selectedLevel.slice(1)} Analysis is Ready!</h2>
@@ -906,12 +933,12 @@
                 this.answers = [];
                 this.startTime = null;
                 this.questions = [];
-                
+
                 // Reset level card styles
                 document.querySelectorAll('.level-card').forEach(card => {
                     card.style.opacity = '1';
                 });
-                
+
                 this.showScreen('levelSelection');
             }
         }
@@ -928,4 +955,5 @@
 
     </script>
 </body>
+
 </html>
