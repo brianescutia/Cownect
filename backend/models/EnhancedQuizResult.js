@@ -126,11 +126,19 @@ const careerMatchSchema = new mongoose.Schema({
 
 // AI Analysis Insights Schema
 const aiInsightsSchema = new mongoose.Schema({
-    personalityProfile: String,
-    workStyle: String,
+    personalityProfile: {
+        type: mongoose.Schema.Types.Mixed,
+        default: {}
+    },
+    workStyle: {
+        type: mongoose.Schema.Types.Mixed,
+        default: {}
+    },
     learningStyle: String,
     motivationFactors: [String],
     idealEnvironment: String,
+    strengthsToLeverage: [String],
+    potentialChallenges: [String],
     communicationStyle: String,
     leadershipPotential: String,
     riskTolerance: String,
@@ -143,11 +151,14 @@ const aiInsightsSchema = new mongoose.Schema({
     confidenceScore: {
         type: Number,
         min: 0,
-        max: 100
+        max: 100,
+        default: 0
+
     },
     analysisQuality: {
         type: String,
-        enum: ['excellent', 'good', 'fair', 'needs-improvement']
+        enum: ['excellent', 'good', 'fair', 'needs-improvement'],
+        default: 'good'
     }
 }, { _id: false });
 
@@ -206,6 +217,8 @@ const enhancedQuizResultSchema = new mongoose.Schema({
         reasoning: String,
         personalizedInsights: String,
         keyPatterns: [String],
+        entryRequirements: { type: mongoose.Schema.Types.Mixed, default: {} },
+        skillGapAnalysis: { type: mongoose.Schema.Types.Mixed, default: {} },
         marketData: marketInsightsSchema,
         nextSteps: [nextStepSchema],
         careerProgression: [{

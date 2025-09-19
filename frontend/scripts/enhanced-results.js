@@ -1,11 +1,15 @@
-// =============================================================================
-// ENHANCED RESULTS PAGE JAVASCRIPT - TARGET DESIGN
-// =============================================================================
+// frontend/scripts/enhanced-results.js
+// Complete implementation for displaying dynamic AI-generated career results
+
 
 class EnhancedResultsPage {
     constructor() {
         this.resultData = null;
+        this.resultId = null;
         this.bookmarkedClubs = new Set();
+        this.completedSteps = new Set();
+        this.careerDataCache = null;  // ADD THIS LINE
+
         this.init();
     }
 
@@ -13,9 +17,13 @@ class EnhancedResultsPage {
         console.log('🎯 Initializing Enhanced Results Page...');
 
         try {
+            // Get result ID from URL
+            const urlParams = new URLSearchParams(window.location.search);
+            this.resultId = urlParams.get('id');
+
             await this.loadResults();
             this.setupEventListeners();
-            this.populateResults();
+            await this.populateResults(); // Make this await
             this.startAnimations();
         } catch (error) {
             console.error('💥 Error initializing results page:', error);
@@ -23,91 +31,752 @@ class EnhancedResultsPage {
         }
     }
 
+    async fetchCareerData(careerName) {
+        try {
+            const response = await fetch(`/api/career-data/${encodeURIComponent(careerName)}`);
+            if (response.ok) {
+                return await response.json();
+            }
+        } catch (error) {
+            console.error('Error fetching career data:', error);
+        }
+        return null;
+    }
+
     async loadResults() {
         try {
-            // First try sessionStorage (from quiz submission)
-            const storedResults = sessionStorage.getItem('enhancedResults');
-            if (storedResults) {
-                console.log('📦 Loading results from session storage...');
-                this.resultData = JSON.parse(storedResults);
-                // Clear it after loading to prevent stale data
-                sessionStorage.removeItem('enhancedResults');
-                return;
-            }
-
-            // Then try URL parameter for saved results
-            const urlParams = new URLSearchParams(window.location.search);
-            const resultId = urlParams.get('id');
-
-            if (resultId) {
-                console.log('📊 Loading results from server...');
-                const response = await fetch(`/api/enhanced-results/${resultId}/data`, {
-                    credentials: 'same-origin'
-                });
-                if (response.ok) {
-                    const data = await response.json();
-                    this.resultData = data.results;
-                    return;
+            // First check if we have a result ID
+            if (!this.resultId) {
+                // Check sessionStorage for recent submission
+                const storedResults = sessionStorage.getItem('latestQuizResult');
+                if (storedResults) {
+                    this.resultId = storedResults;
+                    sessionStorage.removeItem('latestQuizResult');
                 }
             }
 
-            // Fallback to sample data
-            console.log('⚠️ Using sample data...');
-            this.resultData = this.getSampleData();
+            if (!this.resultId) {
+                throw new Error('No result ID found');
+            }
+
+            console.log('📊 Loading results from server...', this.resultId);
+
+            // Fetch results from API
+            const response = await fetch(`/api/enhanced-results/${this.resultId}/data`, {
+                credentials: 'same-origin'
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to fetch results');
+            }
+
+            const data = await response.json();
+            this.resultData = data.results;
+            // In enhanced-results.js, update the debug section:
+            console.log('=== SEARCHING FOR AI DATA ===');
+            console.log('Checking root level:');
+            console.log('- entryRequirements at root:', this.resultData?.entryRequirements);
+            console.log('- skillGapAnalysis at root:', this.resultData?.skillGapAnalysis);
+
+            console.log('Checking aiInsights:');
+            console.log('- Full aiInsights:', this.resultData?.aiInsights);
+
+            console.log('Checking all keys in resultData:');
+            console.log('- Keys:', Object.keys(this.resultData || {}));
+
+            console.log('Checking all keys in topMatch:');
+            console.log('- Keys:', Object.keys(this.resultData?.topMatch || {}));
+
+            console.log('✅ Results loaded successfully:', this.resultData);
 
         } catch (error) {
             console.error('Error loading results:', error);
+
+
+            // Fallback to sample data if everything fails
+            console.log('⚠️ Using sample data...');
             this.resultData = this.getSampleData();
         }
     }
 
-    populateResults() {
+    async populateResults() {
         if (!this.resultData) {
             console.error('No result data available');
             return;
         }
 
-        console.log('🎨 Populating results with data:', this.resultData);
+        console.log('🎨 Populating results with hybrid content...');
 
+        // These use AI-generated data (personalized)
         this.populateTopMatch();
-        this.populateClubs();
-        this.populateCareerProgression();
+        this.populateDynamicEntryRequirements();
+        this.populateSkillGapAnalysis();
+
+        // These use static data (reliable)
+        await this.populateCertificationsAndResources();
+        await this.populateCareerProgression();
+        await this.populateMarketInsights();
+
+        // Continue with other sections
         this.populateCareerMatches();
-        this.populateNextSteps();
-        this.populateMarketInsights();
+        this.populateUCDavisResources();
     }
 
     populateTopMatch() {
-        const topMatch = this.resultData.topMatch || this.resultData.results?.topMatch;
+        const topMatch = this.resultData.topMatch;
         if (!topMatch) return;
 
-        console.log('🥇 Populating top match:', topMatch);
+        console.log('🥇 Displaying top match:', topMatch.career);
 
-        // Use the actual career name from the AI analysis
-        const careerName = topMatch.career || topMatch.careerName || 'ERROR: No career determined';
-
-        document.getElementById('topCareerName').textContent = careerName;
+        // Career name and description
+        document.getElementById('topCareerName').textContent = topMatch.career;
         document.getElementById('topCareerDescription').textContent =
-            topMatch.reasoning || topMatch.description ||
-            `Based on your responses, ${careerName} aligns perfectly with your interests and skills.`;
+            topMatch.reasoning || `Based on your responses, ${topMatch.career} aligns perfectly with your interests and skills.`;
 
+        // Match percentage
         const percentage = topMatch.percentage || 85;
         document.getElementById('matchPercentage').textContent = `${percentage}%`;
 
+        // Confidence badge
         const confidence = topMatch.confidence || percentage;
         const confidenceLevel = confidence >= 80 ? 'High' : confidence >= 60 ? 'Medium' : 'Low';
         document.getElementById('confidenceBadge').textContent = `${confidenceLevel} Confidence`;
 
+        // Animate percentage circle
         this.animatePercentageCircle(percentage);
+    }
+
+    populateDynamicEntryRequirements() {
+        const topMatch = this.resultData.topMatch;
+        const requirements = topMatch?.entryRequirements ||
+            topMatch?.topMatch?.entryRequirements ||
+            this.resultData?.entryRequirements;
+
+        console.log('Entry requirements data:', requirements); // Debug log
+
+
+        if (!requirements || Object.keys(requirements).length === 0) {
+            console.warn('No entry requirements data found, using fallback');
+
+            // Populate with basic default data
+            const educationPrimary = document.getElementById('educationPrimary');
+            if (educationPrimary) {
+                educationPrimary.textContent = 'BS in Computer Science or related field';
+            }
+
+            const educationAlternative = document.getElementById('educationAlternative');
+            if (educationAlternative) {
+                educationAlternative.textContent = 'Bootcamp certification + strong portfolio';
+            }
+
+            const coursesContainer = document.getElementById('requiredCourses');
+            if (coursesContainer) {
+                coursesContainer.innerHTML = `
+                <li>Data Structures & Algorithms</li>
+                <li>Mobile Development</li>
+                <li>Software Engineering</li>
+            `;
+            }
+
+            const requiredSkillsContainer = document.getElementById('requiredSkills');
+            if (requiredSkillsContainer) {
+                requiredSkillsContainer.innerHTML = `
+                <span class="skill-tag required">Swift/Kotlin</span>
+                <span class="skill-tag required">Mobile UI/UX</span>
+                <span class="skill-tag required">Git</span>
+            `;
+            }
+
+            const preferredSkillsContainer = document.getElementById('preferredSkills');
+            if (preferredSkillsContainer) {
+                preferredSkillsContainer.innerHTML = `
+                <span class="skill-tag preferred">React Native</span>
+                <span class="skill-tag preferred">Firebase</span>
+                <span class="skill-tag preferred">API Integration</span>
+            `;
+            }
+
+            return;
+        }
+
+        console.log('📋 Displaying personalized entry requirements...');
+
+        // Education requirements - now personalized
+        if (requirements.education) {
+            const educationPrimary = document.getElementById('educationPrimary');
+            if (educationPrimary) {
+                educationPrimary.textContent = requirements.education.primary || 'Bachelor\'s degree in related field';
+            }
+
+            const educationAlternative = document.getElementById('educationAlternative');
+            if (educationAlternative) {
+                educationAlternative.textContent = requirements.education.alternative || 'Bootcamp or self-study with portfolio';
+            }
+
+            // Required courses - specific to user's year
+            const coursesContainer = document.getElementById('requiredCourses');
+            if (coursesContainer && requirements.education.requiredCourses) {
+                coursesContainer.innerHTML = requirements.education.requiredCourses
+                    .map(course => `<li>${course}</li>`)
+                    .join('');
+            }
+
+            // Add timeline if available
+            if (requirements.education.timeline) {
+                const timelineEl = document.createElement('div');
+                timelineEl.className = 'education-timeline';
+                timelineEl.innerHTML = `
+                    <span class="timeline-icon">🗓️</span>
+                    <span>${requirements.education.timeline}</span>
+                `;
+                document.querySelector('.requirement-content').appendChild(timelineEl);
+            }
+        }
+
+        // Technical skills - prioritized for the user
+        if (requirements.technicalSkills) {
+            const requiredSkillsContainer = document.getElementById('requiredSkills');
+            if (requiredSkillsContainer && requirements.technicalSkills.mustHave) {
+                requiredSkillsContainer.innerHTML = requirements.technicalSkills.mustHave
+                    .map(skill => `<span class="skill-tag required">${skill}</span>`)
+                    .join('');
+            }
+
+            const preferredSkillsContainer = document.getElementById('preferredSkills');
+            if (preferredSkillsContainer && requirements.technicalSkills.shouldHave) {
+                preferredSkillsContainer.innerHTML = requirements.technicalSkills.shouldHave
+                    .map(skill => `<span class="skill-tag preferred">${skill}</span>`)
+                    .join('');
+            }
+
+            // Add nice-to-have skills
+            if (requirements.technicalSkills.niceToHave) {
+                const niceToHaveContainer = document.createElement('div');
+                niceToHaveContainer.className = 'skills-section';
+                niceToHaveContainer.innerHTML = `
+                    <label>Advanced Skills:</label>
+                    <div class="skill-tags">
+                        ${requirements.technicalSkills.niceToHave
+                        .map(skill => `<span class="skill-tag advanced">${skill}</span>`)
+                        .join('')}
+                    </div>
+                `;
+                document.querySelector('.requirement-content').appendChild(niceToHaveContainer);
+            }
+        }
+
+        // Experience requirements - time-based
+        // In enhanced-results.js, around line 240-260
+        // Experience & Portfolio section
+        if (requirements.experience) {
+            const portfolioReq = document.getElementById('portfolioRequirement');
+            if (portfolioReq) {
+                portfolioReq.textContent = requirements.experience.immediate ||
+                    '3-5 full-stack projects on GitHub';
+            }
+
+            const internshipReq = document.getElementById('internshipRequirement');
+            if (internshipReq) {
+                internshipReq.textContent = requirements.experience.shortTerm ||
+                    '1+ software development internship preferred';
+            }
+
+            const projectIdeas = document.getElementById('projectIdeas');
+            if (projectIdeas) {
+                // Always display as list items, even if it comes as a string
+                const beforeGrad = requirements.experience.beforeGraduation;
+                if (typeof beforeGrad === 'string') {
+                    // Parse the string for project ideas
+                    const ideas = beforeGrad.split(/[,;]/).map(s => s.trim()).filter(s => s);
+                    if (ideas.length > 1) {
+                        projectIdeas.innerHTML = ideas.map(idea => `<li>${idea}</li>`).join('');
+                    } else {
+                        // If it's a single statement, still show it as a list item
+                        projectIdeas.innerHTML = `<li>${beforeGrad}</li>`;
+                    }
+                } else {
+                    // Fallback to static project ideas based on career
+                    const careerProjectIdeas = {
+                        'Mobile Developer (iOS/Android)': [
+                            'Todo list app with local storage',
+                            'Weather app using APIs',
+                            'Simple game or calculator app'
+                        ],
+                        'DEFAULT': [
+                            'Personal portfolio website',
+                            'CRUD application with authentication',
+                            'API integration project'
+                        ]
+                    };
+
+                    const ideas = careerProjectIdeas[topMatch.career] || careerProjectIdeas.DEFAULT;
+                    projectIdeas.innerHTML = ideas.map(idea => `<li>${idea}</li>`).join('');
+                }
+            }
+        }
+
+        // Unique advantage - personalized insight
+        if (requirements.uniqueAdvantage) {
+            const advantageSection = document.createElement('div');
+            advantageSection.className = 'unique-advantage-section';
+            advantageSection.innerHTML = `
+                <div class="advantage-card">
+                    <span class="advantage-icon">⭐</span>
+                    <div class="advantage-content">
+                        <h4>Your Unique Advantage</h4>
+                        <p>${requirements.uniqueAdvantage}</p>
+                    </div>
+                </div>
+            `;
+            document.querySelector('.requirement-card').appendChild(advantageSection);
+        }
+    }
+
+    populateSkillGapAnalysis() {
+        const skillGap = this.resultData.topMatch?.skillGapAnalysis;
+
+        if (!skillGap || Object.keys(skillGap).length === 0) {
+            // Use static fallback
+            this.populateStaticSkillGaps();
+            return;
+        }
+
+        // Overall readiness
+        const percentageEl = document.getElementById('skillMatchPercentage');
+        if (percentageEl) {
+            percentageEl.textContent = `${skillGap.overallReadiness || 65}%`;
+        }
+
+        const descEl = document.getElementById('skillMatchDescription');
+        if (descEl) {
+            descEl.textContent = skillGap.readinessDescription ||
+                'You have a solid foundation with room to grow.';
+        }
+
+        // Show only top 2 critical gaps
+        const container = document.getElementById('skillGapsGrid');
+        if (container && skillGap.criticalGaps) {
+            const topGaps = skillGap.criticalGaps.slice(0, 2);
+
+            container.innerHTML = topGaps.map(gap => `
+            <div class="skill-gap-item ${gap.importance.toLowerCase()}-priority">
+                <div class="gap-header">
+                    <span class="priority-badge ${gap.importance.toLowerCase()}">
+                        ${gap.importance}
+                    </span>
+                    <h4>${gap.skill}</h4>
+                </div>
+                <div class="current-level">
+                    <span class="level-label">Current:</span>
+                    <span class="level-value">${gap.currentLevel}</span>
+                </div>
+                <p class="gap-description">${gap.learningPath}</p>
+                <div class="gap-actions">
+                    <button class="action-btn">Start Learning</button>
+                    <span class="time-estimate">${gap.timeToLearn}</span>
+                </div>
+            </div>
+        `).join('');
+        }
+    }
+
+    async populateCertificationsAndResources() {
+        const careerName = this.resultData.topMatch?.career;
+
+        // Try to get static data from backend
+        const careerData = await this.fetchCareerData(careerName);
+
+        // Populate certifications
+        const optionalCertsContainer = document.getElementById('optionalCerts');
+        if (optionalCertsContainer) {
+            let certifications = [];
+
+            // Use static data if available
+            if (careerData?.certifications?.optional) {
+                certifications = careerData.certifications.optional;
+            } else if (careerData?.certifications?.recommended) {
+                certifications = careerData.certifications.recommended;
+            } else {
+                // Fallback certifications
+                certifications = [
+                    'AWS Certified Developer',
+                    'Google Cloud Associate',
+                    'Microsoft Azure Fundamentals'
+                ];
+            }
+
+            optionalCertsContainer.innerHTML = certifications.map(cert => `
+            <div class="cert-item">
+                <span>${cert}</span>
+                <span class="cert-level">Optional</span>
+            </div>
+        `).join('');
+        }
+
+        // Populate learning resources
+        const learningResourcesContainer = document.getElementById('learningResources');
+        if (learningResourcesContainer) {
+            let resources = [];
+
+            if (careerData?.certifications?.recommended) {
+                resources = careerData.certifications.recommended;
+            } else {
+                resources = [
+                    'freeCodeCamp',
+                    'The Odin Project',
+                    'Codecademy',
+                    'MDN Web Docs'
+                ];
+            }
+
+            learningResourcesContainer.innerHTML = resources.map(resource => `
+            <a href="#" class="resource-link">${resource}</a>
+        `).join('');
+        }
+    }
+
+    populatePersonalizedAdvice() {
+        const advice = this.resultData.topMatch?.personalizedAdvice;
+
+        if (!advice) {
+            console.warn('No personalized advice data');
+            return;
+        }
+
+        console.log('💡 Displaying personalized career insights...');
+
+        // Create comprehensive insights section
+        const insightsSection = document.createElement('section');
+        insightsSection.className = 'personalized-insights-section';
+        insightsSection.innerHTML = `
+            <div class="section-header">
+                <h2>Your Personalized Career Insights</h2>
+                <span class="section-icon">💡</span>
+            </div>
+            
+            <div class="insights-grid">
+                <!-- Your unique advantage -->
+                <div class="insight-card highlight">
+                    <h3>🌟 Your Unique Advantage</h3>
+                    <p>${advice.yourUniqueAdvantage}</p>
+                </div>
+                
+                <!-- Biggest challenge -->
+                <div class="insight-card">
+                    <h3>🎯 Your Biggest Challenge</h3>
+                    <p>${advice.biggestChallenge}</p>
+                </div>
+                
+                <!-- Day in the life -->
+                <div class="insight-card full-width">
+                    <h3>📅 A Day in Your Future Life</h3>
+                    <div class="day-timeline">
+                        <div class="timeline-item">
+                            <span class="time">Morning</span>
+                            <p>${advice.dayInTheLife?.morning || 'Starting your day with focus'}</p>
+                        </div>
+                        <div class="timeline-item">
+                            <span class="time">Core Work</span>
+                            <p>${advice.dayInTheLife?.core || 'Deep work on challenging problems'}</p>
+                        </div>
+                        <div class="timeline-item">
+                            <span class="time">Challenges</span>
+                            <p>${advice.dayInTheLife?.challenges || 'Solving complex technical issues'}</p>
+                        </div>
+                        <div class="timeline-item">
+                            <span class="time">Rewards</span>
+                            <p>${advice.dayInTheLife?.rewards || 'Seeing your impact on users'}</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Mentor advice -->
+                <div class="insight-card mentor-advice">
+                    <h3>👨‍🏫 Advice from a Senior Professional</h3>
+                    <blockquote>
+                        "${advice.mentorAdvice}"
+                    </blockquote>
+                </div>
+                
+                <!-- Unconventional path -->
+                ${advice.unconventionalPath ? `
+                    <div class="insight-card">
+                        <h3>🛤️ Alternative Path</h3>
+                        <p>${advice.unconventionalPath}</p>
+                    </div>
+                ` : ''}
+                
+                <!-- First internship strategy -->
+                ${advice.firstInternship ? `
+                    <div class="insight-card">
+                        <h3>💼 First Internship Strategy</h3>
+                        <ul>
+                            <li><strong>When:</strong> ${advice.firstInternship.when}</li>
+                            <li><strong>Where:</strong> ${advice.firstInternship.where}</li>
+                            <li><strong>How:</strong> ${advice.firstInternship.how}</li>
+                        </ul>
+                    </div>
+                ` : ''}
+                
+                <!-- Hidden opportunities -->
+                ${advice.hiddenGems ? `
+                    <div class="insight-card">
+                        <h3>💎 Hidden Opportunities</h3>
+                        <ul class="hidden-gems">
+                            ${advice.hiddenGems.map(gem =>
+            `<li>${gem}</li>`
+        ).join('')}
+                        </ul>
+                    </div>
+                ` : ''}
+                
+                <!-- Networking strategy -->
+                ${advice.networkingStrategy ? `
+                    <div class="insight-card">
+                        <h3>🤝 Your Networking Approach</h3>
+                        <p>${advice.networkingStrategy}</p>
+                    </div>
+                ` : ''}
+            </div>
+            
+            <!-- Success indicators -->
+            <div class="success-indicators">
+                <div class="indicators-grid">
+                    ${advice.greenFlags ? `
+                        <div class="green-flags">
+                            <h4>✅ Signs You're on the Right Track</h4>
+                            <ul>
+                                ${advice.greenFlags.map(flag =>
+            `<li>${flag}</li>`
+        ).join('')}
+                            </ul>
+                        </div>
+                    ` : ''}
+                    
+                    ${advice.redFlags ? `
+                        <div class="red-flags">
+                            <h4>⚠️ Warning Signs to Watch For</h4>
+                            <ul>
+                                ${advice.redFlags.map(flag =>
+            `<li>${flag}</li>`
+        ).join('')}
+                            </ul>
+                        </div>
+                    ` : ''}
+                </div>
+            </div>
+            
+            <!-- Backup plan -->
+            ${advice.backupPlan ? `
+                <div class="backup-plan">
+                    <h3>🔄 Smart Contingency Plan</h3>
+                    <p>${advice.backupPlan}</p>
+                </div>
+            ` : ''}
+        `;
+
+        // Insert after the clubs section
+        const clubsSection = document.querySelector('.clubs-section');
+        if (clubsSection) {
+            clubsSection.parentNode.insertBefore(insightsSection, clubsSection.nextSibling);
+        }
+    }
+
+    populateLearningPath() {
+        const learningPath = this.resultData.topMatch?.learningPath;
+
+        if (!learningPath) {
+            console.warn('No learning path data');
+            return;
+        }
+
+        console.log('🎓 Displaying personalized learning roadmap...');
+
+        // Create learning roadmap section
+        const roadmapSection = document.createElement('section');
+        roadmapSection.className = 'learning-roadmap-section';
+        roadmapSection.innerHTML = `
+            <div class="section-header">
+                <h2>Your Personalized Learning Roadmap</h2>
+                <span class="section-icon">🗺️</span>
+            </div>
+            
+            <div class="roadmap-timeline">
+                <!-- Week 1 -->
+                ${learningPath.week1 ? `
+                    <div class="roadmap-phase immediate">
+                        <div class="phase-header">
+                            <span class="phase-icon">🚀</span>
+                            <h3>This Week</h3>
+                            <span class="time-commitment">${learningPath.week1.timeCommitment || '1-2 hours/day'}</span>
+                        </div>
+                        <div class="phase-content">
+                            <h4>${learningPath.week1.focus}</h4>
+                            <div class="actions-list">
+                                ${learningPath.week1.actions.map(action =>
+            `<div class="action-item">
+                                        <input type="checkbox" id="week1-${action.substring(0, 10)}" 
+                                               onchange="window.enhancedResults.trackProgress('week1', '${action}')">
+                                        <label for="week1-${action.substring(0, 10)}">${action}</label>
+                                    </div>`
+        ).join('')}
+                            </div>
+                            ${learningPath.week1.resources ? `
+                                <div class="resources">
+                                    <strong>Resources:</strong>
+                                    ${learningPath.week1.resources.map(r =>
+            `<a href="#" class="resource-link">${r}</a>`
+        ).join(', ')}
+                                </div>
+                            ` : ''}
+                            <p class="expected-outcome">${learningPath.week1.expectedOutcome}</p>
+                        </div>
+                    </div>
+                ` : ''}
+                
+                <!-- Month 1 -->
+                ${learningPath.month1 ? `
+                    <div class="roadmap-phase short-term">
+                        <div class="phase-header">
+                            <span class="phase-icon">📚</span>
+                            <h3>First Month</h3>
+                        </div>
+                        <div class="phase-content">
+                            <h4>${learningPath.month1.focus}</h4>
+                            <div class="project-card">
+                                <strong>Project:</strong> ${learningPath.month1.project}
+                            </div>
+                            ${learningPath.month1.skills ? `
+                                <div class="skills-to-learn">
+                                    ${learningPath.month1.skills.map(skill =>
+            `<span class="skill-badge">${skill}</span>`
+        ).join('')}
+                                </div>
+                            ` : ''}
+                            ${learningPath.month1.courses ? `
+                                <div class="courses">
+                                    <strong>UC Davis Courses:</strong>
+                                    <ul>
+                                        ${learningPath.month1.courses.map(course =>
+            `<li>${course}</li>`
+        ).join('')}
+                                    </ul>
+                                </div>
+                            ` : ''}
+                            <div class="milestone">
+                                <strong>Milestone:</strong> ${learningPath.month1.milestone}
+                            </div>
+                        </div>
+                    </div>
+                ` : ''}
+                
+                <!-- Quarter 1 -->
+                ${learningPath.quarter1 ? `
+                    <div class="roadmap-phase medium-term">
+                        <div class="phase-header">
+                            <span class="phase-icon">💼</span>
+                            <h3>First Quarter</h3>
+                        </div>
+                        <div class="phase-content">
+                            <h4>${learningPath.quarter1.focus}</h4>
+                            ${learningPath.quarter1.projects ? `
+                                <div class="projects-list">
+                                    <strong>Portfolio Projects:</strong>
+                                    <ul>
+                                        ${learningPath.quarter1.projects.map(project =>
+            `<li>${project}</li>`
+        ).join('')}
+                                    </ul>
+                                </div>
+                            ` : ''}
+                            ${learningPath.quarter1.certifications ? `
+                                <div class="certifications">
+                                    <strong>Certifications:</strong>
+                                    ${learningPath.quarter1.certifications.map(cert =>
+            `<span class="cert-badge">${cert}</span>`
+        ).join('')}
+                                </div>
+                            ` : ''}
+                            <div class="internship-prep">
+                                <strong>Internship Prep:</strong> ${learningPath.quarter1.internshipPrep}
+                            </div>
+                        </div>
+                    </div>
+                ` : ''}
+                
+                <!-- Year 1 -->
+                ${learningPath.year1 ? `
+                    <div class="roadmap-phase long-term">
+                        <div class="phase-header">
+                            <span class="phase-icon">🎯</span>
+                            <h3>Year One Goals</h3>
+                        </div>
+                        <div class="phase-content">
+                            <h4>${learningPath.year1.focus}</h4>
+                            ${learningPath.year1.majorMilestones ? `
+                                <div class="major-milestones">
+                                    ${learningPath.year1.majorMilestones.map(milestone =>
+            `<div class="milestone-item">✓ ${milestone}</div>`
+        ).join('')}
+                                </div>
+                            ` : ''}
+                            <div class="job-readiness">
+                                <strong>Job Readiness:</strong> ${learningPath.year1.jobReadiness}
+                            </div>
+                        </div>
+                    </div>
+                ` : ''}
+            </div>
+            
+            <!-- Tips and warnings -->
+            <div class="learning-tips">
+                ${learningPath.personalizedTips ? `
+                    <div class="tips-section">
+                        <h3>💡 Personalized Tips for You</h3>
+                        <ul>
+                            ${learningPath.personalizedTips.map(tip =>
+            `<li>${tip}</li>`
+        ).join('')}
+                        </ul>
+                    </div>
+                ` : ''}
+                
+                ${learningPath.commonPitfalls ? `
+                    <div class="pitfalls-section">
+                        <h3>⚠️ Common Pitfalls to Avoid</h3>
+                        <ul>
+                            ${learningPath.commonPitfalls.map(pitfall =>
+            `<li>${pitfall}</li>`
+        ).join('')}
+                        </ul>
+                    </div>
+                ` : ''}
+                
+                ${learningPath.accelerators ? `
+                    <div class="accelerators-section">
+                        <h3>🚀 Ways to Accelerate Your Progress</h3>
+                        <ul>
+                            ${learningPath.accelerators.map(acc =>
+            `<li>${acc}</li>`
+        ).join('')}
+                        </ul>
+                    </div>
+                ` : ''}
+            </div>
+        `;
+
+        // Insert after personalized insights
+        const insightsSection = document.querySelector('.personalized-insights-section');
+        if (insightsSection) {
+            insightsSection.parentNode.insertBefore(roadmapSection, insightsSection.nextSibling);
+        }
     }
 
     populateClubs() {
         const clubsContainer = document.getElementById('clubsRow');
-        const clubs = this.resultData.clubRecommendations ||
-            this.resultData.results?.clubRecommendations ||
-            this.getDefaultClubs();
+        const clubs = this.resultData.clubRecommendations || [];
 
-        console.log('🏛️ Populating clubs:', clubs);
+        console.log('🏛️ Populating recommended clubs:', clubs.length);
 
         clubsContainer.innerHTML = '';
 
@@ -117,290 +786,117 @@ class EnhancedResultsPage {
         });
     }
 
-    // enhanced-results.js - Updated createClubCard function
-
     createClubCard(club, index) {
         const card = document.createElement('div');
         card.className = 'club-card';
-        card.dataset.clubId = club._id || club.id || `club-${index}`;
+        card.dataset.clubId = club.clubId || club._id || `club-${index}`;
 
-        const isBookmarked = this.bookmarkedClubs.has(club._id || club.id);
-
-        // Get first 2-3 tags from club data
-        const clubTags = club.tags || ['technology', 'programming'];
-        const displayTags = clubTags.slice(0, 2);
+        const isBookmarked = this.bookmarkedClubs.has(club.clubId);
 
         card.innerHTML = `
-        <div class="club-logo">
-            <img src="${club.logoUrl || '/assets/default-club-logo.png'}" 
-                 alt="${club.name || 'Club'}" 
-                 onerror="this.src='/assets/default-club-logo.png'">
-        </div>
-        <div class="bookmark-icon ${isBookmarked ? 'bookmarked' : ''}" 
-             data-club-id="${club._id || club.id}" 
-             title="Bookmark this club">
-            ${isBookmarked ? '★' : '☆'}
-        </div>
-        <h3 class="club-name">${club.name || 'Tech Club'}</h3>
-        <div class="club-tags">
-            ${displayTags.map(tag =>
-            `<span class="tag">${tag.toUpperCase()}</span>`
+            <div class="club-logo">
+                <img src="${club.logoUrl || '/assets/default-club-logo.png'}" 
+                     alt="${club.clubName || 'Club'}" 
+                     onerror="this.src='/assets/default-club-logo.png'">
+            </div>
+            <div class="bookmark-icon ${isBookmarked ? 'bookmarked' : ''}" 
+                 data-club-id="${club.clubId}" 
+                 title="Bookmark this club">
+                ${isBookmarked ? '★' : '☆'}
+            </div>
+            <h3 class="club-name">${club.clubName || 'Tech Club'}</h3>
+            <p class="club-relevance">${club.careerRelevance || 'Great for your career path'}</p>
+            <div class="club-score">
+                <span class="score-label">Relevance:</span>
+                <span class="score-value">${club.relevanceScore || 85}%</span>
+            </div>
+            <p class="recommendation-reason">${club.recommendationReason || 'Highly recommended for your interests'}</p>
+            ${club.suggestedActions && club.suggestedActions.length > 0 ? `
+                <div class="suggested-actions">
+                    <strong>Next Steps:</strong>
+                    <ul>
+                        ${club.suggestedActions.slice(0, 2).map(action =>
+            `<li>${action}</li>`
         ).join('')}
-        </div>
-    `;
+                    </ul>
+                </div>
+            ` : ''}
+        `;
 
-        // Add click handler for the card (excluding bookmark icon)
+        // Add click handler for the card
         card.addEventListener('click', (e) => {
             if (!e.target.classList.contains('bookmark-icon')) {
-                window.location.href = `/club/${club._id || club.id}`;
+                window.location.href = `/club/${club.clubId}`;
             }
         });
 
         return card;
     }
 
-    formatTag(tag) {
-        // Convert tag to display format
-        return tag.replace(/-/g, ' ')
-            .replace(/\b\w/g, l => l.toUpperCase());
-    }
-
-    populateCareerProgression() {
+    async populateCareerProgression() {
+        const careerName = this.resultData.topMatch?.career;
         const container = document.getElementById('progressionSteps');
-        const topMatch = this.resultData.topMatch || this.resultData.results?.topMatch;
-        const careerName = topMatch?.career || topMatch?.careerName || 'Software Engineering';
 
-        // Use career-specific progression from the AI results
-        const progression = topMatch?.careerProgression ||
-            this.getCareerSpecificProgression(careerName);
+        if (!container) {
+            console.error('Career progression container not found');
+            return;
+        }
 
-        console.log('📈 Populating career progression for:', careerName);
+        console.log('📈 Displaying career progression...');
 
-        container.innerHTML = '';
+        // Get static career data
+        const careerData = await this.fetchCareerData(careerName);
 
-        progression.forEach((step) => {
-            const stepElement = this.createProgressionStep(step, careerName);
-            container.appendChild(stepElement);
-        });
-    }
+        if (careerData?.careerProgression && Array.isArray(careerData.careerProgression)) {
+            container.innerHTML = '';
 
-    getCareerSpecificProgression(careerName) {
-        const progressions = {
-            'Technical Writing': [
-                {
-                    level: 'Entry',
-                    roles: ['Junior Technical Writer', 'Documentation Specialist', 'Content Developer'],
-                    timeline: '0-2 years',
-                    salary: { min: 60, max: 85 }
-                },
-                {
-                    level: 'Mid',
-                    roles: ['Technical Writer', 'Documentation Lead', 'Senior Content Developer'],
-                    timeline: '2-5 years',
-                    salary: { min: 85, max: 115 }
-                },
-                {
-                    level: 'Senior',
-                    roles: ['Senior Technical Writer', 'Documentation Manager', 'Content Strategy Lead'],
-                    timeline: '5+ years',
-                    salary: { min: 115, max: 150 }
-                }
-            ],
-            'Software Engineering': [
-                {
-                    level: 'Entry',
-                    roles: ['Junior Developer', 'Software Engineer I', 'Associate Engineer'],
-                    timeline: '0-2 years',
-                    salary: { min: 85, max: 110 }
-                },
-                {
-                    level: 'Mid',
-                    roles: ['Software Engineer II', 'Senior Developer', 'Full Stack Engineer'],
-                    timeline: '2-5 years',
-                    salary: { min: 110, max: 150 }
-                },
-                {
-                    level: 'Senior',
-                    roles: ['Staff Engineer', 'Principal Engineer', 'Engineering Lead'],
-                    timeline: '5+ years',
-                    salary: { min: 150, max: 220 }
-                }
-            ],
-            'Data Science': [
-                {
-                    level: 'Entry',
-                    roles: ['Data Analyst', 'Junior Data Scientist', 'Analytics Associate'],
-                    timeline: '0-2 years',
-                    salary: { min: 75, max: 100 }
-                },
-                {
-                    level: 'Mid',
-                    roles: ['Data Scientist', 'ML Engineer', 'Senior Analyst'],
-                    timeline: '2-5 years',
-                    salary: { min: 100, max: 140 }
-                },
-                {
-                    level: 'Senior',
-                    roles: ['Senior Data Scientist', 'Data Science Manager', 'ML Lead'],
-                    timeline: '5+ years',
-                    salary: { min: 140, max: 200 }
-                }
-            ],
-            'UX/UI Design': [
-                {
-                    level: 'Entry',
-                    roles: ['Junior UX Designer', 'UI Designer', 'UX Researcher'],
-                    timeline: '0-2 years',
-                    salary: { min: 70, max: 95 }
-                },
-                {
-                    level: 'Mid',
-                    roles: ['UX Designer', 'Senior UI Designer', 'Product Designer'],
-                    timeline: '2-5 years',
-                    salary: { min: 95, max: 130 }
-                },
-                {
-                    level: 'Senior',
-                    roles: ['Lead UX Designer', 'Design Manager', 'Principal Designer'],
-                    timeline: '5+ years',
-                    salary: { min: 130, max: 180 }
-                }
-            ],
-            'Product Management': [
-                {
-                    level: 'Entry',
-                    roles: ['Associate Product Manager', 'Product Analyst', 'Junior PM'],
-                    timeline: '0-2 years',
-                    salary: { min: 90, max: 120 }
-                },
-                {
-                    level: 'Mid',
-                    roles: ['Product Manager', 'Senior Product Manager', 'Technical PM'],
-                    timeline: '2-5 years',
-                    salary: { min: 120, max: 160 }
-                },
-                {
-                    level: 'Senior',
-                    roles: ['Principal PM', 'Group Product Manager', 'VP Product'],
-                    timeline: '5+ years',
-                    salary: { min: 160, max: 250 }
-                }
-            ],
-            'DevOps Engineering': [
-                {
-                    level: 'Entry',
-                    roles: ['Junior DevOps Engineer', 'Cloud Engineer', 'Build Engineer'],
-                    timeline: '0-2 years',
-                    salary: { min: 80, max: 125 }
-                },
-                {
-                    level: 'Mid',
-                    roles: ['DevOps Engineer', 'Site Reliability Engineer', 'Platform Engineer'],
-                    timeline: '2-5 years',
-                    salary: { min: 125, max: 175 }
-                },
-                {
-                    level: 'Senior',
-                    roles: ['Senior DevOps Engineer', 'Principal SRE', 'Infrastructure Architect'],
-                    timeline: '5+ years',
-                    salary: { min: 175, max: 275 }
-                }
-            ],
-            'Cybersecurity': [
-                {
-                    level: 'Entry',
-                    roles: ['Security Analyst', 'SOC Analyst', 'Junior Security Engineer'],
-                    timeline: '0-2 years',
-                    salary: { min: 75, max: 105 }
-                },
-                {
-                    level: 'Mid',
-                    roles: ['Security Engineer', 'Incident Response Specialist', 'Security Architect'],
-                    timeline: '2-5 years',
-                    salary: { min: 105, max: 145 }
-                },
-                {
-                    level: 'Senior',
-                    roles: ['Senior Security Engineer', 'Security Lead', 'CISO'],
-                    timeline: '5+ years',
-                    salary: { min: 145, max: 210 }
-                }
-            ],
-            'Machine Learning Engineering': [
-                {
-                    level: 'Entry',
-                    roles: ['Junior ML Engineer', 'AI Developer', 'ML Analyst'],
-                    timeline: '0-2 years',
-                    salary: { min: 95, max: 125 }
-                },
-                {
-                    level: 'Mid',
-                    roles: ['ML Engineer', 'AI Engineer', 'Computer Vision Engineer'],
-                    timeline: '2-5 years',
-                    salary: { min: 125, max: 165 }
-                },
-                {
-                    level: 'Senior',
-                    roles: ['Senior ML Engineer', 'ML Architect', 'AI Research Lead'],
-                    timeline: '5+ years',
-                    salary: { min: 165, max: 230 }
-                }
-            ],
-            'Web Development': [
-                {
-                    level: 'Entry',
-                    roles: ['Junior Web Developer', 'Frontend Developer', 'WordPress Developer'],
-                    timeline: '0-2 years',
-                    salary: { min: 65, max: 90 }
-                },
-                {
-                    level: 'Mid',
-                    roles: ['Web Developer', 'Full-Stack Developer', 'React Developer'],
-                    timeline: '2-5 years',
-                    salary: { min: 90, max: 125 }
-                },
-                {
-                    level: 'Senior',
-                    roles: ['Senior Web Developer', 'Lead Frontend Engineer', 'Web Architect'],
-                    timeline: '5+ years',
-                    salary: { min: 125, max: 170 }
-                }
-            ]
-        };
-
-        return progressions[careerName] || progressions['Software Engineering'];
-    }
-
-
-
-    createProgressionStep(step) {
-        const stepDiv = document.createElement('div');
-        stepDiv.className = 'progression-item';
-
-        const roles = Array.isArray(step.roles) ? step.roles.join(', ') : step.roles;
-        const salary = step.salary ? `${step.salary.min}k - ${step.salary.max}k` :
-            step.avgSalary ? `${step.avgSalary.min}k - ${step.avgSalary.max}k` : '';
-
-        const levelClass = step.level.toLowerCase();
-
-        stepDiv.innerHTML = `
-            <div class="level-badge ${levelClass}">${step.level || 'Entry'}</div>
-            <div class="progression-content">
-                <h4>${roles || 'Various roles available'}</h4>
-                <p>${step.timeline || step.timeframe || '0-2 years'} ${salary ? '• ' + salary : ''}</p>
+            careerData.careerProgression.forEach(step => {
+                const levelClass = step.level.toLowerCase().replace(/\s+/g, '-');
+                const stepDiv = document.createElement('div');
+                stepDiv.className = `progression-item ${levelClass}`;
+                stepDiv.innerHTML = `
+                <div class="level-badge ${levelClass}">${step.level}</div>
+                <div class="progression-content">
+                    <h4>${step.title}</h4>
+                    <p>${step.years} • ${step.salary}</p>
+                </div>
+            `;
+                container.appendChild(stepDiv);
+            });
+        } else {
+            // Fallback to generic progression
+            const fallbackCareer = careerName || 'Tech Professional';
+            container.innerHTML = `
+            <div class="progression-item entry">
+                <div class="level-badge entry">Entry</div>
+                <div class="progression-content">
+                    <h4>Junior ${fallbackCareer}</h4>
+                    <p>0-2 years • $70k-$100k</p>
+                </div>
+            </div>
+            <div class="progression-item mid">
+                <div class="level-badge mid">Mid</div>
+                <div class="progression-content">
+                    <h4>${fallbackCareer}</h4>
+                    <p>2-5 years • $100k-$140k</p>
+                </div>
+            </div>
+            <div class="progression-item senior">
+                <div class="level-badge senior">Senior</div>
+                <div class="progression-content">
+                    <h4>Senior ${fallbackCareer}</h4>
+                    <p>5+ years • $140k-$200k+</p>
+                </div>
             </div>
         `;
-
-        return stepDiv;
+        }
     }
 
     populateCareerMatches() {
         const matchesContainer = document.getElementById('matchesList');
-        const matches = this.resultData.allMatches ||
-            this.resultData.results?.allMatches ||
-            this.getDefaultMatches();
+        const matches = this.resultData.allMatches || [];
 
-        console.log('🎯 Populating career matches:', matches);
+        console.log('🎯 Populating career matches:', matches.length);
 
         matchesContainer.innerHTML = '';
 
@@ -409,7 +905,7 @@ class EnhancedResultsPage {
             matchesContainer.appendChild(matchItem);
         });
 
-        // Animate progress bars after a delay
+        // Animate progress bars
         setTimeout(() => this.animateProgressBars(), 500);
     }
 
@@ -421,8 +917,14 @@ class EnhancedResultsPage {
 
         item.innerHTML = `
             <div class="match-info">
-                <h4>${match.career || 'Tech Career'}</h4>
+                <h4>${match.career}</h4>
                 <p>${match.category || 'Technology'}</p>
+                ${match.marketData ? `
+                    <div class="match-market-data">
+                        <span class="salary">${match.marketData.avgSalary || 'Competitive'}</span>
+                        <span class="growth">${match.marketData.jobGrowth || 'Growing'}</span>
+                    </div>
+                ` : ''}
             </div>
             <div class="match-score">
                 <div class="progress-bar">
@@ -437,236 +939,245 @@ class EnhancedResultsPage {
 
     populateNextSteps() {
         const container = document.getElementById('stepsList');
-        const topMatch = this.resultData.topMatch || this.resultData.results?.topMatch;
-        const careerName = topMatch?.career || topMatch?.careerName || 'Software Engineering';
+        const nextSteps = this.resultData.topMatch?.nextSteps || [];
 
-        // Use career-specific steps
-        const steps = topMatch?.nextSteps || this.getCareerSpecificSteps(careerName);
-
-        console.log('✅ Populating next steps for:', careerName);
+        console.log('✅ Populating next steps:', nextSteps.length);
 
         container.innerHTML = '';
 
-        steps.slice(0, 3).forEach((step, index) => {
-            const stepElement = this.createStepItem(step, index + 1, careerName);
+        nextSteps.slice(0, 3).forEach((step, index) => {
+            const stepElement = this.createStepItem(step, index + 1);
             container.appendChild(stepElement);
         });
     }
 
-    getCareerSpecificSteps(careerName) {
-        const stepsMap = {
-            'Technical Writing': [
-                'Build a portfolio of technical documentation samples',
-                'Learn markup languages (Markdown, XML) and documentation tools (MadCap, Confluence)',
-                'Join writing clubs and contribute to open-source documentation'
-            ],
-            'Software Engineering': [
-                'Master data structures and algorithms fundamentals',
-                'Build 3-5 full-stack projects for your GitHub portfolio',
-                'Participate in hackathons and contribute to open source'
-            ],
-            'Data Science': [
-                'Learn Python/R and SQL for data manipulation',
-                'Complete machine learning projects with real datasets',
-                'Join AI Student Collective and participate in Kaggle competitions'
-            ],
-            'UX/UI Design': [
-                'Create a design portfolio with 3-5 case studies',
-                'Master Figma/Sketch and user research methods',
-                'Join Design Interactive club for hands-on projects'
-            ],
-            'Product Management': [
-                'Build product specs and roadmaps for practice projects',
-                'Learn analytics tools and A/B testing methodologies',
-                'Join Product Space @ UC Davis for mentorship'
-            ],
-            'DevOps Engineering': [
-                'Learn Docker, Kubernetes, and CI/CD pipelines',
-                'Get AWS/Azure certifications',
-                'Contribute to infrastructure automation projects'
-            ],
-            'Cybersecurity': [
-                'Practice on CTF platforms and ethical hacking labs',
-                'Get Security+ certification as a starting point',
-                'Join Cyber Security Club for hands-on learning'
-            ],
-            'Machine Learning Engineering': [
-                'Master deep learning frameworks (TensorFlow/PyTorch)',
-                'Build end-to-end ML projects with deployment',
-                'Participate in research projects with faculty'
-            ],
-            'Web Development': [
-                'Master HTML/CSS/JavaScript and modern frameworks',
-                'Build responsive websites and progressive web apps',
-                'Deploy projects to cloud platforms'
-            ]
-        };
-
-        return stepsMap[careerName] || stepsMap['Software Engineering'];
-    }
-
-
     createStepItem(step, number) {
         const stepDiv = document.createElement('div');
         stepDiv.className = 'step-item';
+        stepDiv.dataset.stepIndex = number - 1;
 
-        // Handle both string and object formats
-        const stepText = typeof step === 'string' ? step : step.step || step.text;
-        const description = step.description || 'Recommended action for your career development';
+        const isCompleted = this.completedSteps.has(number - 1);
 
         stepDiv.innerHTML = `
-            <div class="step-number">${number}</div>
+            <div class="step-number ${isCompleted ? 'completed' : ''}">${isCompleted ? '✓' : number}</div>
             <div class="step-content">
-                <h4>${stepText}</h4>
-                <p>${description}</p>
+                <h4>${typeof step === 'string' ? step : step.step}</h4>
+                ${step.category ? `<span class="step-category ${step.category}">${step.category}</span>` : ''}
+                ${step.timeframe ? `<p class="step-timeframe">⏱️ ${step.timeframe}</p>` : ''}
+                ${!isCompleted ? `
+                    <button class="complete-step-btn" onclick="window.enhancedResults.completeStep(${number - 1})">
+                        Mark as Complete
+                    </button>
+                ` : ''}
             </div>
         `;
 
         return stepDiv;
     }
 
-    populateMarketInsights() {
-        const container = document.getElementById('insightsGrid');
-        const topMatch = this.resultData.topMatch || this.resultData.results?.topMatch;
-        const careerName = topMatch?.career || topMatch?.careerName || 'Software Engineering';
+    async populateMarketInsights() {
+        const container = document.querySelector('.insights-grid');
+        const careerName = this.resultData.topMatch?.career;
 
-        const marketData = topMatch?.marketData || this.getCareerSpecificMarketData(careerName);
+        if (!container) {
+            console.error('Market insights container not found');
+            return;
+        }
 
-        console.log('📊 Populating market insights for:', careerName);
+        console.log('📊 Displaying market insights...');
 
-        const insights = [
-            {
-                label: 'Average Salary',
-                value: marketData.avgSalary || this.formatSalaryRange(careerName)
-            },
-            {
-                label: 'Job Growth',
-                value: marketData.jobGrowthRate || marketData.jobGrowth || this.getGrowthRate(careerName)
-            },
-            {
-                label: 'Annual Openings',
-                value: marketData.annualOpenings ?
-                    marketData.annualOpenings.toLocaleString() :
-                    this.getDefaultAnnualOpenings(careerName) // ✅ Fixed function name
-            },
-            {
-                label: 'Work-Life Balance',
-                value: marketData.workLifeBalance || this.getWorkLifeBalance(careerName)
-            }
-        ];
+        // Get static career data
+        const careerData = await this.fetchCareerData(careerName);
 
         container.innerHTML = '';
-        insights.forEach(insight => {
-            const item = document.createElement('div');
-            item.className = 'insight-item';
-            item.innerHTML = `
-            <h3>${insight.label}</h3>
-            <p class="insight-value">${insight.value}</p>
-        `;
-            container.appendChild(item);
-        });
-    }
 
-    formatSalaryRange(careerName) {
-        const salaryMap = {
-            'Technical Writing': '$75k - $125k',
-            'Software Engineering': '$110k - $180k',
-            'Data Science': '$95k - $165k',
-            'UX/UI Design': '$85k - $140k'
-        };
-        return salaryMap[careerName] || '$85k - $140k';
-    }
+        if (careerData?.marketData) {
+            const market = careerData.marketData;
 
-    getGrowthRate(careerName) {
-        const growthMap = {
-            'Technical Writing': '+12%',
-            'Software Engineering': '+22%',
-            'Data Science': '+35%',
-            'UX/UI Design': '+13%'
-        };
-        return growthMap[careerName] || '+15%';
-    }
-
-    getDefaultAnnualOpenings(careerName) {
-        const openingsMap = {
-            'Technical Writing': '5,800',
-            'Software Engineering': '189,200',
-            'Data Science': '13,500',
-            'UX/UI Design': '23,900'
-        };
-        return openingsMap[careerName] || '12,500';
-    }
-
-    getWorkLifeBalance(careerName) {
-        const balanceMap = {
-            'Technical Writing': '8.5/10',
-            'Software Engineering': '7.5/10',
-            'Data Science': '7.8/10',
-            'UX/UI Design': '8.2/10'
-        };
-        return balanceMap[careerName] || '8.0/10';
-    }
-    getCareerSpecificMarketData(careerName) {
-        const marketDataMap = {
-            'Technical Writing': {
-                avgSalary: '$75k - $125k',
-                jobGrowthRate: '+12%',
-                annualOpenings: 5800,
-                workLifeBalance: '8.5/10'
-            },
-            'Software Engineering': {
-                avgSalary: '$110k - $180k',
-                jobGrowthRate: '+22%',
-                annualOpenings: 189200,
-                workLifeBalance: '7.5/10'
-            },
-            'Data Science': {
-                avgSalary: '$95k - $165k',
-                jobGrowthRate: '+35%',
-                annualOpenings: 13500,
-                workLifeBalance: '7.8/10'
-            },
-            'UX/UI Design': {
-                avgSalary: '$85k - $140k',
-                jobGrowthRate: '+13%',
-                annualOpenings: 23900,
-                workLifeBalance: '8.2/10'
-            },
-            'Product Management': {
-                avgSalary: '$120k - $200k',
-                jobGrowthRate: '+19%',
-                annualOpenings: 31200,
-                workLifeBalance: '7.0/10'
-            },
-            'DevOps Engineering': {
-                avgSalary: '$125k - $200k',
-                jobGrowthRate: '+25%',
-                annualOpenings: 15200,
-                workLifeBalance: '7.5/10'
-            },
-            'Cybersecurity': {
-                avgSalary: '$105k - $175k',
-                jobGrowthRate: '+32%',
-                annualOpenings: 165200,
-                workLifeBalance: '7.2/10'
-            },
-            'Machine Learning Engineering': {
-                avgSalary: '$130k - $195k',
-                jobGrowthRate: '+40%',
-                annualOpenings: 8900,
-                workLifeBalance: '7.6/10'
-            },
-            'Web Development': {
-                avgSalary: '$85k - $140k',
-                jobGrowthRate: '+13%',
-                annualOpenings: 28900,
-                workLifeBalance: '7.8/10'
+            // Average Salary
+            if (market.avgSalary || market.entrySalary) {
+                container.innerHTML += `
+                <div class="insight-item">
+                    <h3>Average Salary</h3>
+                    <p class="insight-value">${market.avgSalary || market.entrySalary}</p>
+                    <span class="insight-detail">Industry average</span>
+                </div>
+            `;
             }
-        };
 
-        return marketDataMap[careerName] || marketDataMap['Software Engineering'];
+            // Job Growth
+            if (market.jobGrowth) {
+                container.innerHTML += `
+                <div class="insight-item">
+                    <h3>Job Growth</h3>
+                    <p class="insight-value">${market.jobGrowth}</p>
+                    <span class="insight-detail">Next 10 years</span>
+                </div>
+            `;
+            }
+
+            // Demand Level
+            if (market.demandLevel) {
+                container.innerHTML += `
+                <div class="insight-item">
+                    <h3>Demand Level</h3>
+                    <p class="insight-value">${market.demandLevel}</p>
+                    <span class="insight-detail">Current market</span>
+                </div>
+            `;
+            }
+
+            // Remote Percentage
+            if (market.remotePercentage) {
+                container.innerHTML += `
+                <div class="insight-item">
+                    <h3>Remote Options</h3>
+                    <p class="insight-value">${market.remotePercentage}</p>
+                    <span class="insight-detail">Remote available</span>
+                </div>
+            `;
+            }
+        } else {
+            // Fallback data
+            container.innerHTML = `
+            <div class="insight-item">
+                <h3>Average Salary</h3>
+                <p class="insight-value">$95k-$140k</p>
+                <span class="insight-detail">Industry average</span>
+            </div>
+            <div class="insight-item">
+                <h3>Job Growth</h3>
+                <p class="insight-value">+15%</p>
+                <span class="insight-detail">Growing field</span>
+            </div>
+            <div class="insight-item">
+                <h3>Demand Level</h3>
+                <p class="insight-value">High</p>
+                <span class="insight-detail">Current market</span>
+            </div>
+            <div class="insight-item">
+                <h3>Work-Life Balance</h3>
+                <p class="insight-value">7.5/10</p>
+                <span class="insight-detail">Industry average</span>
+            </div>
+        `;
+        }
     }
 
+    populateUCDavisResources() {
+        // First, update the Primary Clubs in the Entry Requirements section
+        const primaryClubsContainer = document.getElementById('primaryClubs');
+        if (primaryClubsContainer) {
+            const clubRecommendations = this.resultData.clubRecommendations || [];
+
+            if (clubRecommendations.length > 0) {
+                // Use the actual recommended clubs from clubRecommendations
+                primaryClubsContainer.innerHTML = clubRecommendations
+                    .slice(0, 3) // Take up to 3 clubs
+                    .map(club => {
+                        const clubId = club.clubId || club._id || '';
+                        const clubName = club.clubName || 'Tech Club';
+                        return `<a href="/club/${clubId}" class="club-link">${clubName}</a>`;
+                    })
+                    .join('');
+            }
+        }
+
+        // Now handle other UC Davis resources
+        const resources = this.resultData.topMatch?.ucDavisResources;
+
+        if (!resources) {
+            console.warn('No UC Davis resources data');
+            return;
+        }
+
+        console.log('🎓 Displaying UC Davis specific resources...');
+
+        // Create UC Davis resources section if it doesn't exist
+        const existingSection = document.querySelector('.ucdavis-resources-section');
+        if (!existingSection) {
+            const resourcesSection = document.createElement('section');
+            resourcesSection.className = 'ucdavis-resources-section';
+            resourcesSection.innerHTML = `
+                <div class="section-header">
+                    <h2>UC Davis Resources for You</h2>
+                    <span class="section-icon">🐎</span>
+                </div>
+                
+                <div class="resources-grid">
+                    ${resources.specificCourses ? `
+                        <div class="resource-card">
+                            <h3>📚 Recommended Courses</h3>
+                            <ul>
+                                ${resources.specificCourses.map(course =>
+                `<li>${course}</li>`
+            ).join('')}
+                            </ul>
+                        </div>
+                    ` : ''}
+                    
+                    ${resources.professors ? `
+                        <div class="resource-card">
+                            <h3>👨‍🏫 Connect with Faculty</h3>
+                            <ul>
+                                ${resources.professors.map(prof =>
+                `<li>${prof}</li>`
+            ).join('')}
+                            </ul>
+                        </div>
+                    ` : ''}
+                    
+                    ${resources.researchOpportunities ? `
+                        <div class="resource-card">
+                            <h3>🔬 Research Opportunities</h3>
+                            <ul>
+                                ${resources.researchOpportunities.map(opp =>
+                `<li>${opp}</li>`
+            ).join('')}
+                            </ul>
+                        </div>
+                    ` : ''}
+                    
+                    ${resources.careerEvents ? `
+                        <div class="resource-card">
+                            <h3>📅 Upcoming Events</h3>
+                            <ul>
+                                ${resources.careerEvents.map(event =>
+                `<li>${event}</li>`
+            ).join('')}
+                            </ul>
+                        </div>
+                    ` : ''}
+                    
+                    ${resources.alumniConnections ? `
+                        <div class="resource-card">
+                            <h3>🤝 Alumni Network</h3>
+                            <p>${resources.alumniConnections}</p>
+                        </div>
+                    ` : ''}
+                    
+                    ${resources.internshipPrograms ? `
+                        <div class="resource-card">
+                            <h3>💼 Internship Programs</h3>
+                            <ul>
+                                ${resources.internshipPrograms.map(program =>
+                `<li>${program}</li>`
+            ).join('')}
+                            </ul>
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+
+            // Insert at the end of main content
+            const mainContent = document.querySelector('.results-container');
+            if (mainContent) {
+                mainContent.appendChild(resourcesSection);
+            }
+        }
+    }
+
+    // Event Handlers
     setupEventListeners() {
         // Bookmark buttons
         document.addEventListener('click', (e) => {
@@ -676,7 +1187,7 @@ class EnhancedResultsPage {
             }
         });
 
-        // Action buttons
+        // Try another quiz button
         const tryAnotherBtn = document.getElementById('tryAnotherLevelBtn');
         if (tryAnotherBtn) {
             tryAnotherBtn.addEventListener('click', () => {
@@ -684,9 +1195,22 @@ class EnhancedResultsPage {
             });
         }
 
+        // Share results button
         const shareBtn = document.getElementById('shareResultsBtn');
         if (shareBtn) {
             shareBtn.addEventListener('click', () => this.shareResults());
+        }
+
+        // Download results button (if exists)
+        const downloadBtn = document.getElementById('downloadResultsBtn');
+        if (downloadBtn) {
+            downloadBtn.addEventListener('click', () => this.downloadResults());
+        }
+
+        // Save results button (if exists)
+        const saveBtn = document.getElementById('saveResultsBtn');
+        if (saveBtn) {
+            saveBtn.addEventListener('click', () => this.saveResults());
         }
     }
 
@@ -696,12 +1220,12 @@ class EnhancedResultsPage {
 
         if (isCurrentlyBookmarked) {
             this.bookmarkedClubs.delete(clubId);
-            button.textContent = '📌';
+            button.textContent = '☆';
             button.classList.remove('bookmarked');
             this.removeBookmark(clubId);
         } else {
             this.bookmarkedClubs.add(clubId);
-            button.textContent = '🔖';
+            button.textContent = '★';
             button.classList.add('bookmarked');
             this.addBookmark(clubId);
         }
@@ -741,40 +1265,100 @@ class EnhancedResultsPage {
 
     shareResults() {
         const shareData = {
-            title: 'My Enhanced Career Analysis Results',
+            title: 'My Career Analysis Results',
             text: `I discovered my ideal tech career path! Check out these AI-powered insights.`,
             url: window.location.href
         };
 
         if (navigator.share) {
             navigator.share(shareData).catch(err =>
-                console.log('Share cancelled by user')
+                console.log('Share cancelled')
             );
         } else {
             // Fallback: copy to clipboard
-            const shareText = `${shareData.text} ${shareData.url}`;
-            navigator.clipboard.writeText(shareText).then(() => {
+            navigator.clipboard.writeText(shareData.url).then(() => {
                 this.showNotification('Results link copied to clipboard!');
-            }).catch(() => {
-                console.warn('Could not copy to clipboard');
             });
         }
     }
 
+    async saveResults() {
+        try {
+            const response = await fetch('/api/enhanced-results/save', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    resultId: this.resultId,
+                    resultData: this.resultData
+                })
+            });
+
+            if (response.ok) {
+                this.showNotification('Results saved successfully!');
+            }
+        } catch (error) {
+            console.error('Error saving results:', error);
+            this.showError('Failed to save results');
+        }
+    }
+
+    downloadResults() {
+        // Generate PDF or formatted document of results
+        const resultsText = this.generateResultsText();
+        const blob = new Blob([resultsText], { type: 'text/plain' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `career-analysis-${Date.now()}.txt`;
+        a.click();
+        URL.revokeObjectURL(url);
+        this.showNotification('Results downloaded!');
+    }
+
+    generateResultsText() {
+        const topMatch = this.resultData.topMatch;
+        return `
+Career Analysis Results
+========================
+
+Top Career Match: ${topMatch.career}
+Match Percentage: ${topMatch.percentage}%
+Confidence: ${topMatch.confidence}
+
+Career Description:
+${topMatch.reasoning}
+
+Entry Requirements:
+- Education: ${topMatch.entryRequirements?.education?.primary || 'Bachelor\'s degree'}
+- Key Skills: ${topMatch.entryRequirements?.technicalSkills?.mustHave?.join(', ') || 'Various technical skills'}
+
+Your Unique Advantage:
+${topMatch.entryRequirements?.uniqueAdvantage || 'Your unique background and interests position you well for this career.'}
+
+Next Steps:
+${topMatch.nextSteps?.map((step, i) => `${i + 1}. ${step}`).join('\n') || 'Follow the personalized roadmap provided.'}
+
+Generated on: ${new Date().toLocaleDateString()}
+        `.trim();
+    }
+
+    // UI Helper Methods
     animatePercentageCircle(percentage) {
         const circle = document.getElementById('progressCircle');
         if (!circle) return;
 
-        const circumference = 2 * Math.PI * 54; // radius = 54
+        const circumference = 2 * Math.PI * 54;
         const offset = circumference - (percentage / 100) * circumference;
 
-        // Start with full offset (empty circle)
+        circle.style.strokeDasharray = circumference;
         circle.style.strokeDashoffset = circumference;
 
-        // Animate to the target offset
         setTimeout(() => {
+            circle.style.transition = 'stroke-dashoffset 1s ease';
             circle.style.strokeDashoffset = offset;
-        }, 500);
+        }, 100);
     }
 
     animateProgressBars() {
@@ -783,7 +1367,7 @@ class EnhancedResultsPage {
             const targetWidth = bar.dataset.width + '%';
             setTimeout(() => {
                 bar.style.width = targetWidth;
-            }, index * 200);
+            }, index * 100);
         });
     }
 
@@ -804,179 +1388,191 @@ class EnhancedResultsPage {
         });
     }
 
-    showNotification(message) {
+    showNotification(message, type = 'success') {
         const notification = document.createElement('div');
+        notification.className = `notification notification-${type}`;
         notification.style.cssText = `
             position: fixed;
             top: 20px;
             right: 20px;
-            background: #10b981;
+            background: ${type === 'success' ? '#10b981' : '#ef4444'};
             color: white;
             padding: 1rem 1.5rem;
             border-radius: 8px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.15);
             z-index: 1000;
             font-weight: 500;
+            animation: slideIn 0.3s ease;
         `;
         notification.textContent = message;
         document.body.appendChild(notification);
 
         setTimeout(() => {
-            notification.remove();
+            notification.style.animation = 'slideOut 0.3s ease';
+            setTimeout(() => notification.remove(), 300);
         }, 3000);
     }
 
     showError(message) {
-        console.error('Error:', message);
-        const errorDiv = document.createElement('div');
-        errorDiv.style.cssText = `
-            background: #fef2f2;
-            border: 1px solid #fecaca;
-            color: #dc2626;
-            padding: 1rem;
-            border-radius: 8px;
-            margin: 1rem 0;
-            text-align: center;
-        `;
-        errorDiv.textContent = message;
+        this.showNotification(message, 'error');
+    }
 
-        const container = document.querySelector('.results-container');
-        if (container) {
-            container.insertBefore(errorDiv, container.firstChild);
+    // Action Methods
+    showResources(skill) {
+        // Open modal or navigate to resources page for specific skill
+        console.log('Showing resources for:', skill);
+        this.showNotification(`Opening resources for ${skill}...`);
+        // Implement modal or navigation logic
+    }
+
+    trackProgress(phase, action) {
+        console.log(`Tracking progress: ${phase} - ${action}`);
+        // Save progress to localStorage or server
+        const progress = JSON.parse(localStorage.getItem('learningProgress') || '{}');
+        if (!progress[phase]) progress[phase] = [];
+        progress[phase].push({ action, completedAt: Date.now() });
+        localStorage.setItem('learningProgress', JSON.stringify(progress));
+        this.showNotification('Progress saved!');
+    }
+
+    completeStep(stepIndex) {
+        this.completedSteps.add(stepIndex);
+        const stepElement = document.querySelector(`[data-step-index="${stepIndex}"]`);
+        if (stepElement) {
+            const numberEl = stepElement.querySelector('.step-number');
+            numberEl.classList.add('completed');
+            numberEl.textContent = '✓';
+            const button = stepElement.querySelector('.complete-step-btn');
+            if (button) button.remove();
+        }
+        this.showNotification('Step completed! Great progress!');
+
+        // Save to server or localStorage
+        this.saveStepProgress(stepIndex);
+    }
+
+    async saveStepProgress(stepIndex) {
+        try {
+            await fetch('/api/progress/steps', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    resultId: this.resultId,
+                    stepIndex,
+                    completedAt: Date.now()
+                })
+            });
+        } catch (error) {
+            console.error('Error saving step progress:', error);
         }
     }
 
-    // Default/Sample Data Methods
+    // Fallback Sample Data
     getSampleData() {
         return {
             topMatch: {
-                career: 'DevOps Engineering',
-                percentage: 78,
+                career: 'Software Engineering',
+                percentage: 85,
                 confidence: 'High',
-                reasoning: 'Bridge development and operations through automation, infrastructure management, and continuous delivery. Enable teams to deploy software faster and more reliably.',
-                careerProgression: [
-                    {
-                        level: 'Entry',
-                        roles: ['Junior DevOps Engineer', 'Cloud Engineer', 'Build Engineer'],
-                        timeline: '0-2 years',
-                        salary: { min: 80, max: 125 }
+                reasoning: 'Your analytical skills, problem-solving abilities, and interest in technology make you an excellent fit for software engineering.',
+                entryRequirements: {
+                    education: {
+                        primary: 'BS in Computer Science or related field',
+                        alternative: 'Bootcamp + strong portfolio',
+                        requiredCourses: ['Data Structures', 'Algorithms', 'Web Development']
                     },
-                    {
-                        level: 'Mid',
-                        roles: ['DevOps Engineer', 'Site Reliability Engineer'],
-                        timeline: '2-5 years',
-                        salary: { min: 125, max: 175 }
+                    technicalSkills: {
+                        mustHave: ['JavaScript', 'Git', 'Problem Solving'],
+                        shouldHave: ['React', 'Node.js', 'Databases']
                     },
-                    {
-                        level: 'Senior',
-                        roles: ['Senior DevOps Engineer', 'Principal SRE', 'Infrastructure Architect'],
-                        timeline: '5+ years',
-                        salary: { min: 175, max: 275 }
-                    }
-                ],
+                    experience: {
+                        immediate: 'Start building projects this week',
+                        shortTerm: 'Apply for summer internships by February'
+                    },
+                    uniqueAdvantage: 'Your creative background gives you a unique perspective on user experience'
+                },
+                skillGapAnalysis: {
+                    overallReadiness: 65,
+                    readinessDescription: 'You have a strong foundation. Focus on practical application.',
+                    criticalGaps: [
+                        {
+                            skill: 'Data Structures',
+                            importance: 'High',
+                            currentLevel: 'Beginner',
+                            learningPath: 'Start with arrays and linked lists',
+                            timeToLearn: '2-3 months',
+                            resources: ['LeetCode', 'AlgoExpert']
+                        }
+                    ],
+                    quickWins: ['Set up GitHub profile', 'Join a coding club', 'Start a daily coding habit']
+                },
                 nextSteps: [
-                    'Explore DevOps Engineering courses',
-                    'Join relevant UC Davis clubs',
-                    'Connect with Career Center'
+                    'Complete CS50 course',
+                    'Build portfolio website',
+                    'Join Developer Community'
                 ],
                 marketData: {
-                    avgSalary: '$125k',
-                    jobGrowthRate: '+22%',
-                    annualOpenings: 15200,
-                    workLifeBalance: '7.5/10'
+                    currentDemand: { level: 'Very High', trend: 'Growing' },
+                    compensation: {
+                        entryLevel: { range: '$85k-$120k', factors: 'Location & skills' }
+                    }
                 }
             },
-            allMatches: [
-                { career: 'DevOps Engineering', category: 'Engineering', percentage: 78 },
-                { career: 'Cyber Security Engineering', category: 'Security', percentage: 77 },
-                { career: 'Hardware Engineering', category: 'Engineering', percentage: 75 },
-                { career: 'Data Science', category: 'Data', percentage: 60 },
-                { career: 'Product Management', category: 'Product', percentage: 48 }
+            clubRecommendations: [
+                {
+                    clubId: 'ai-collective',
+                    clubName: 'AI Student Collective',
+                    logoUrl: '/assets/ai-collective.png',
+                    careerRelevance: 'Build AI projects',
+                    relevanceScore: 90,
+                    recommendationReason: 'Perfect for ML interests'
+                }
             ],
-            clubRecommendations: this.getDefaultClubs()
-        };
-    }
-
-    getDefaultClubs() {
-        return [
-            {
-                _id: 'ai-collective',
-                name: 'AI Student Collective',
-                logoUrl: '/assets/aiStudentCollective.png',
-                tags: ['artificial-intelligence', 'machine-learning']
-            },
-            {
-                _id: 'code-lab',
-                name: '/code lab',
-                logoUrl: '/assets/codelab.png',
-                tags: ['programming', 'web-development']
-            },
-            {
-                _id: 'cs-tutoring',
-                name: 'Computer Science Tutoring Lab',
-                logoUrl: '/assets/cs-tutoring.png',
-                tags: ['tutoring', 'computer-science']
-            }
-        ];
-    }
-
-    getDefaultMatches() {
-        return [
-            { career: 'Software Engineering', category: 'Engineering', percentage: 85 },
-            { career: 'Data Science', category: 'Data', percentage: 78 },
-            { career: 'Web Development', category: 'Engineering', percentage: 72 },
-            { career: 'UX Design', category: 'Design', percentage: 65 }
-        ];
-    }
-
-    getDefaultProgression() {
-        return [
-            {
-                level: 'Entry',
-                roles: ['Junior Developer', 'Associate Engineer'],
-                timeline: '0-2 years',
-                salary: { min: 75, max: 95 }
-            },
-            {
-                level: 'Mid',
-                roles: ['Software Engineer', 'Developer'],
-                timeline: '2-5 years',
-                salary: { min: 95, max: 135 }
-            },
-            {
-                level: 'Senior',
-                roles: ['Senior Engineer', 'Tech Lead'],
-                timeline: '5+ years',
-                salary: { min: 135, max: 200 }
-            }
-        ];
-    }
-
-    getDefaultSteps() {
-        return [
-            'Master fundamental programming concepts',
-            'Build portfolio projects',
-            'Join relevant UC Davis tech clubs'
-        ];
-    }
-
-    getDefaultMarketData() {
-        return {
-            avgSalary: '$95k - $140k',
-            jobGrowthRate: '+15%',
-            annualOpenings: 12500,
-            workLifeBalance: '8.2/10'
+            allMatches: [
+                { career: 'Software Engineering', category: 'Engineering', percentage: 85 },
+                { career: 'Data Science', category: 'Data', percentage: 78 },
+                { career: 'Web Development', category: 'Engineering', percentage: 72 }
+            ]
         };
     }
 }
 
-// Initialize the page when DOM is loaded
+// Initialize when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('🚀 Enhanced Results Page starting...');
+    console.log('🚀 Starting Enhanced Results Page...');
     new EnhancedResultsPage();
 });
 
-// Export for potential module use
+// Add CSS animations
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes slideIn {
+        from {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+        to {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+    
+    @keyframes slideOut {
+        from {
+            transform: translateX(0);
+            opacity: 1;
+        }
+        to {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+    }
+`;
+document.head.appendChild(style);
+
+// Export for module use
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = EnhancedResultsPage;
 }

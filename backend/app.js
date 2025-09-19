@@ -20,6 +20,8 @@ const User = require('../backend/models/User');
 const Club = require('./models/Club');
 const { CareerField, QuizQuestion, QuizResult } = require('./models/nicheQuizModels');
 const Event = require('./models/eventModel');
+const careerDataRoutes = require('./routes/careerDataRoutes');
+
 
 
 // NOW load Google Auth AFTER trust proxy is set
@@ -28,7 +30,7 @@ require('./googleAuth');
 // Load services
 const MentorMatcher = require('./services/MentorMatcher'); // We'll create this service
 
-const EnhancedAICareerAnalyzer = require('./services/enhancedThreeLevelAIAnalyzer');
+const EnhancedAICareerAnalyzer = require('./services/completeCareerMatcher');
 const enhancedAnalyzer = new EnhancedAICareerAnalyzer();
 
 
@@ -3460,6 +3462,9 @@ app.get('/api/quiz/intro', async (req, res) => {
 // =============================================================================
 // ENHANCED 3-LEVEL QUIZ ROUTES INTEGRATION  
 // =============================================================================
+app.use('/api', careerDataRoutes);
+
+
 
 // Add the enhanced 3-level quiz routes
 const enhancedQuizRoutes = require('./routes/enhancedThreeLevelQuizRoutes');
@@ -3961,7 +3966,7 @@ app.post('/api/quiz/submit', requireAuth, async (req, res) => {
     });
 
     // Initialize AI analyzer
-    const EnhancedAIAnalyzer = require('./services/enhancedThreeLevelAIAnalyzer');
+    const EnhancedAIAnalyzer = require('./services/completeCareerMatcher');
     const enhancedAnalyzer = new EnhancedAIAnalyzer();
 
     console.log('🧠 Running AI-powered career analysis...');
@@ -4132,7 +4137,7 @@ app.post('/api/quiz/next-gen/submit', requireAuth, async (req, res) => {
     console.log('🧠 Running enhanced AI career analysis...');
 
     // Initialize the analyzer properly
-    const EnhancedAIAnalyzer = require('./services/enhancedThreeLevelAIAnalyzer');
+    const EnhancedAIAnalyzer = require('./services/completeCareerMatcher');
     const enhancedAnalyzer = new EnhancedAIAnalyzer();
 
     // Run enhanced AI analysis

@@ -29,7 +29,7 @@ const NAVBAR_CONFIG = {
             id: "events"
         },
         {
-            text: "Niche Test",
+            text: "Find Your Tech Path",
             href: "/niche-landing",
             id: "niche-test"
         },

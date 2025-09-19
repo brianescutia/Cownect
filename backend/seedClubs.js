@@ -650,7 +650,7 @@ const clubData = [
         about: "Explores people operations through company events, skill workshops, and networking that prepare students for HR roles."
     },
     {
-        name: "Nuerotech @ UCDavis",
+        name: "Neurotech @ UCDavis",
         description: "Student group exploring neurotechnology, brain-computer interfaces, and computational neuroscience through projects, journal clubs, and workshops, bridging engineering and neuroscience with hands-on tools and collaborative teams.",
         tags: ["Hardware", "Research", "AI/ML", "Build Projects"],  // Neurotech @ UCDavis
         category: "Data Science",
@@ -719,7 +719,7 @@ const clubData = [
         about: "Connects the Sacramento region through hackathons, workshops, and collaborations with nearby schools and clubs."
     },
     {
-        name: "The Davis Consulting Group ",
+        name: "The Davis Consulting Group",
         description: "Consulting community preparing students through case workshops, client projects, and interview practice, developing problem-solving, communication, and professional skills for internships and full-time roles.",
         tags: ["Build Projects", "Workshops", "Professional Dev", "Networking"],
         category: "Data Science",
@@ -742,7 +742,7 @@ const clubData = [
         about: "Prepares students for consulting through case practice, client projects, and training in research and presentation."
     },
     {
-        name: "The Hardware Club @ UC Davis ",
+        name: "The Hardware Club @ UC Davis",
         description: "Hands-on engineering community building electronics, embedded systems, and mechanical prototypes, teaching PCB design, fabrication, and testing while promoting collaborative projects, tool training, and maker culture.",
         tags: ["Hardware", "Electrical", "Build Projects", "Workshops"],  // The Hardware Club
         category: "Data Science",
@@ -788,7 +788,7 @@ const clubData = [
         about: "Builds an inclusive gaming community with events, education, and support for gender minorities in games."
     },
     {
-        name: "Aggie Space initiative ",
+        name: "Aggie Space initiative",
         description: "Student-led rocketry and space systems team designing, building, and launching high-power rockets and payloads while learning avionics, propulsion, and systems engineering through competitions and industry mentorship.",
         tags: ["Aerospace", "Hardware", "Build Projects", "Competitions"],  // Aggie Space Initiative
         category: "Data Science",

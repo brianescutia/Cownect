@@ -48,12 +48,524 @@
             </div>
         </div>
 
-        <!-- Recommended Clubs Section -->
-        <section class="clubs-section">
+        <!-- Add this new section to your enhanced-results.html after the top match card -->
+
+<!-- Entry Requirements Section - NEW -->
+<section class="entry-requirements-section">
     <div class="section-header">
-        <h2 class="section-title">Recommended Clubs</h2>
-        <span class="section-icon">🏛️</span>
+        <h2 class="section-title">Entry Requirements</h2>
+        <span class="section-icon">📋</span>
     </div>
+    
+    <div class="requirements-grid">
+        <!-- Education Requirements -->
+        <div class="requirement-card">
+            <div class="requirement-header">
+                <span class="requirement-icon">🎓</span>
+                <h3>Education</h3>
+            </div>
+            <div class="requirement-content">
+                <div class="requirement-item primary">
+                    <label>Primary Path:</label>
+                    <p id="educationPrimary">BS in Computer Science or related</p>
+                </div>
+                <div class="requirement-item">
+                    <label>Alternative Path:</label>
+                    <p id="educationAlternative">Bootcamp + strong portfolio</p>
+                </div>
+                <div class="requirement-courses">
+                    <label>Key Courses:</label>
+                    <ul id="requiredCourses">
+                        <li>Data Structures & Algorithms</li>
+                        <li>Web Development</li>
+                        <li>Database Systems</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Technical Skills -->
+        <div class="requirement-card">
+            <div class="requirement-header">
+                <span class="requirement-icon">💻</span>
+                <h3>Technical Skills</h3>
+            </div>
+            <div class="requirement-content">
+                <div class="skills-section">
+                    <label>Must Have:</label>
+                    <div class="skill-tags" id="requiredSkills">
+                        <span class="skill-tag required">JavaScript</span>
+                        <span class="skill-tag required">React</span>
+                        <span class="skill-tag required">Git</span>
+                    </div>
+                </div>
+                <div class="skills-section">
+                    <label>Nice to Have:</label>
+                    <div class="skill-tags" id="preferredSkills">
+                        <span class="skill-tag preferred">Docker</span>
+                        <span class="skill-tag preferred">AWS</span>
+                        <span class="skill-tag preferred">GraphQL</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Experience & Portfolio -->
+        <div class="requirement-card">
+            <div class="requirement-header">
+                <span class="requirement-icon">🏆</span>
+                <h3>Experience & Portfolio</h3>
+            </div>
+            <div class="requirement-content">
+                <div class="requirement-item">
+                    <label>Portfolio:</label>
+                    <p id="portfolioRequirement">3-5 full-stack projects on GitHub</p>
+                </div>
+                <div class="requirement-item">
+                    <label>Internships:</label>
+                    <p id="internshipRequirement">1+ software development internship preferred</p>
+                </div>
+                <div class="project-ideas">
+                    <label>Project Ideas:</label>
+                    <ul id="projectIdeas">
+                        <li>Personal portfolio website</li>
+                        <li>CRUD application with authentication</li>
+                        <li>API integration project</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- UC Davis Resources -->
+        <div class="requirement-card full-width">
+            <div class="requirement-header">
+                <span class="requirement-icon">🐮</span>
+                <h3>UC Davis Resources</h3>
+            </div>
+            <div class="requirement-content uc-davis-grid">
+                <div class="resource-section">
+                    <label>Primary Clubs:</label>
+                    <div class="club-links" id="primaryClubs">
+                        <a href="#" class="club-link">ACM</a>
+                        <a href="#" class="club-link">HackDavis</a>
+                        <a href="#" class="club-link">CodeLab</a>
+                    </div>
+                </div>
+                <div class="resource-section">
+                    <label>Recommended Courses:</label>
+                    <ul id="recommendedCourses">
+                        <li>ECS 162 - Web Programming</li>
+                        <li>ECS 165A - Database Systems</li>
+                        <li>ECS 160 - Software Engineering</li>
+                    </ul>
+                </div>
+                <div class="resource-section">
+                    <label>Events & Opportunities:</label>
+                    <ul id="eventsOpportunities">
+                        <li>HackDavis (Annual Hackathon)</li>
+                        <li>Tech Talk Tuesdays</li>
+                        <li>CoE Career Fair (Fall/Spring)</li>
+                    </ul>
+                </div>
+                <div class="resource-section">
+                    <label>Faculty Contacts:</label>
+                    <ul id="facultyContacts">
+                        <li>Prof. Chen - Web Development</li>
+                        <li>Prof. Devanbu - Software Engineering</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Certifications & Learning Paths -->
+       <!-- Certifications & Learning Resources -->
+<div class="requirement-card full-width">
+    <div class="requirement-header">
+        <span class="requirement-icon">📚</span>
+        <h3>Certifications & Learning Resources</h3>
+    </div>
+    <div class="requirement-content">
+        <div class="certification-grid">
+            <div class="cert-section">
+                <label>Optional Certifications:</label>
+                <div class="cert-list" id="optionalCerts">
+                    <!-- Will be populated dynamically -->
+                </div>
+            </div>
+            <div class="cert-section">
+                <label>Free Learning Resources:</label>
+                <div class="resource-links" id="learningResources">
+                    <!-- Will be populated dynamically -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</section>
+
+<!-- Skill Gap Analysis - NEW -->
+<section class="skill-gap-section" id="skillGapSection" aria-labelledby="skillGapTitle">
+  <div class="section-header">
+    <h2 class="section-title" id="skillGapTitle">Your Skill Gap Analysis</h2>
+    <span class="section-icon" aria-hidden="true">📊</span>
+  </div>
+
+  <div class="skill-gap-content">
+    <div class="skill-match-summary">
+      <div class="match-indicator" aria-live="polite">
+        <div class="match-percentage" id="skillMatchPercentage">—</div>
+        <div class="match-label">Skills Match</div>
+      </div>
+      <p class="match-description" id="skillMatchDescription">
+        <!-- set dynamically -->
+      </p>
+    </div>
+
+    <div class="skill-gaps-grid" id="skillGapsGrid">
+      <!-- populated dynamically -->
+    </div>
+  </div>
+</section>
+
+<!-- Add corresponding CSS styles -->
+<style>
+/* Entry Requirements Section */
+.entry-requirements-section {
+    background: white;
+    border-radius: 16px;
+    padding: 2rem;
+    margin: 2rem 0;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.requirements-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+}
+
+.requirement-card {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 1.5rem;
+    transition: all 0.3s ease;
+}
+
+.requirement-card:hover {
+    border-color: #3b82f6;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.1);
+}
+
+.requirement-card.full-width {
+    grid-column: 1 / -1;
+}
+
+.requirement-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid #e2e8f0;
+}
+
+.requirement-icon {
+    font-size: 1.5rem;
+}
+
+.requirement-header h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #1e293b;
+}
+
+.requirement-content label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #64748b;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.requirement-item {
+    margin-bottom: 1rem;
+}
+
+.requirement-item.primary p {
+    font-weight: 600;
+    color: #1e293b;
+}
+
+.requirement-item p {
+    color: #475569;
+    line-height: 1.5;
+}
+
+.requirement-courses ul,
+.project-ideas ul {
+    list-style: none;
+    padding: 0;
+}
+
+.requirement-courses li,
+.project-ideas li {
+    padding: 0.5rem 0;
+    padding-left: 1.5rem;
+    position: relative;
+    color: #475569;
+}
+
+.requirement-courses li:before,
+.project-ideas li:before {
+    content: "→";
+    position: absolute;
+    left: 0;
+    color: #3b82f6;
+}
+
+/* Skill Tags */
+.skill-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.skill-tag {
+    padding: 0.375rem 0.875rem;
+    border-radius: 20px;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.skill-tag.required {
+    background: linear-gradient(135deg, #fbbf24, #f59e0b);
+    color: white;
+}
+
+.skill-tag.preferred {
+    background: linear-gradient(135deg, #60a5fa, #3b82f6);
+    color: white;
+}
+
+/* UC Davis Resources Grid */
+.uc-davis-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+}
+
+.resource-section {
+    margin-bottom: 1rem;
+}
+
+.club-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+
+.club-link {
+    background: linear-gradient(135deg, #1AB4ED, #5F96C5);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.club-link:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(26, 180, 237, 0.3);
+}
+
+/* Certifications */
+.certification-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+}
+
+.cert-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    margin-bottom: 0.75rem;
+}
+
+.cert-level {
+    padding: 0.25rem 0.75rem;
+    background: #f1f5f9;
+    color: #64748b;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+.resource-links {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.resource-link {
+    color: #3b82f6;
+    text-decoration: none;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #f1f5f9;
+    transition: all 0.3s ease;
+}
+
+.resource-link:hover {
+    color: #1d4ed8;
+    padding-left: 0.5rem;
+}
+
+/* Skill Gap Analysis */
+.skill-gap-section {
+    background: white;
+    border-radius: 16px;
+    padding: 2rem;
+    margin: 2rem 0;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.skill-match-summary {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    padding: 1.5rem;
+    background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
+    border-radius: 12px;
+    margin-bottom: 2rem;
+}
+
+.match-indicator {
+    text-align: center;
+}
+
+.match-percentage {
+    font-size: 3rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.match-label {
+    font-size: 0.875rem;
+    color: #64748b;
+    font-weight: 500;
+}
+
+.skill-gaps-grid {
+    display: grid;
+    gap: 1rem;
+}
+
+.skill-gap-item {
+    padding: 1.5rem;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+}
+
+.skill-gap-item:hover {
+    transform: translateX(4px);
+    border-color: #3b82f6;
+}
+
+.gap-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 0.75rem;
+}
+
+.priority-badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.priority-badge.high {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+.priority-badge.medium {
+    background: #fef3c7;
+    color: #d97706;
+}
+
+.priority-badge.low {
+    background: #dbeafe;
+    color: #2563eb;
+}
+
+.gap-description {
+    color: #64748b;
+    margin-bottom: 1rem;
+}
+
+.gap-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.action-btn {
+    padding: 0.5rem 1rem;
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.action-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+.time-estimate {
+    color: #94a3b8;
+    font-size: 0.875rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .requirements-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .certification-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .uc-davis-grid {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+
+        <!-- Recommended Clubs Section -->
+        
     
     <div class="clubs-row" id="clubsRow">
         <!-- Clubs will be dynamically populated -->
@@ -100,38 +612,6 @@
                 </section>
 
                 <!-- Your Next Steps -->
-                <section class="next-steps">
-                    <div class="section-header">
-                        <h2>Your Next Steps</h2>
-                        <span class="section-icon">✅</span>
-                    </div>
-                    
-                    <div class="steps-list" id="stepsList">
-                        <div class="step-item">
-                            <div class="step-number">1</div>
-                            <div class="step-content">
-                                <h4>Explore DevOps Engineering courses</h4>
-                                <p>Start with introductory courses and informational interviews</p>
-                            </div>
-                        </div>
-
-                        <div class="step-item">
-                            <div class="step-number">2</div>
-                            <div class="step-content">
-                                <h4>Join relevant UC Davis clubs</h4>
-                                <p>Build experience and network in your field</p>
-                            </div>
-                        </div>
-
-                        <div class="step-item">
-                            <div class="step-number">3</div>
-                            <div class="step-content">
-                                <h4>Connect with Career Center</h4>
-                                <p>Get guidance and industry connections</p>
-                            </div>
-                        </div>
-                    </div>
-                </section>
             </div>
 
             <!-- Right Column -->
@@ -218,7 +698,7 @@
                         <span class="section-icon">📊</span>
                     </div>
                     
-                    <div class="insights-grid">
+                    <div class="insights-grid" id="insightsGrid">
                         <div class="insight-item">
                             <h3>Average Salary</h3>
                             <p class="insight-value">$125k</p>

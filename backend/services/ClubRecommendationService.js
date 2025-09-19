@@ -12,17 +12,75 @@ class ClubRecommendationService {
     constructor() {
         // Career to club name mappings (simplified)
         this.directMappings = {
-            'Software Engineering': ['#include', '/code lab', 'Google Developer Student Club'],
-            'Data Science': ['AI Student Collective', 'Data Science Club', 'Statistics Club'],
-            'AI/ML Engineering': ['AI Student Collective', 'Machine Learning Club', 'Computer Vision Club'],
-            'DevOps Engineering': ['#include', 'Cloud Computing Club', 'SysAdmin Club'],
-            'UX/UI Design': ['Design Club', 'HCI Club', 'Creative Tech Club'],
-            'Product Management': ['Product Club', 'Business Tech Club', 'Startup Club'],
-            'Cybersecurity': ['Cybersecurity Club', 'Ethical Hacking Club', 'InfoSec Club'],
-            'Web Development': ['#include', '/code lab', 'Frontend Club'],
-            'Mobile Development': ['Mobile Dev Club', '#include', 'App Development Club'],
-            'Game Development': ['Game Development Club', 'Graphics Club', 'Unity Club']
+            // backend/services/ClubRecommendationService.js
+            // --- Software/CS Focused (20) ---
+            "Software Engineer (Full Stack)": ["HackDavis", "CodeLab", "AggieWorks"],
+            "Frontend Engineer": ["Design Interactive", "HackDavis", "Women in Computer Science"],
+            "Backend Engineer": ["Google Developer Student Club", "CodeLab"],
+            "Web Developer": ["AggieWorks", "HackDavis", "CodeLab", "#include"],
+            "Mobile Developer (iOS/Android)": ["Swift Coding Club", "HackDavis", "CodeLab"],
+            "DevOps Engineer": ["AggieWorks", "Google Developer Student Club",],
+            "Site Reliability Engineer (SRE)": ["AggieWorks", "HackDavis", "Google Developer Student Club"],
+            "Graphics/Rendering Engineer": ["Game Development and Arts Club", "Women in Gaming at UC Davis"],
+            "Blockchain Developer": ["HackDavis", "Google Developer Student Club"],
+            "AR/VR Developer": ["Game Development and Arts Club", "HackDavis"],
+            "ML Infrastructure Engineer": ["AI Student Collective", "Davis Data Science Club", "AggieWorks"],
+            "Game Developer": ["Game Development and Arts Club", "Women in Gaming at UC Davis"],
+            "Technical Writer": ["Science Says", "Computer Science Tutoring Club"],
+            "Developer Advocate": ["Google Developer Student Club", "HackDavis", "ColorStack"],
+            "IT Support Engineer": ["Computer Science Tutoring Club", "#include"],
+            "QA/Test Automation Engineer": ["AggieWorks", "CodeLab"],
+            "Data Scientist": ["Davis Data Science Club", "AI Student Collective", "Aggie Sports Analytics", "Davis Data Driven Change"],
+            "Data Analyst": ["Aggie Sports Analytics", "Davis Data Driven Change", "Davis Data Science Club"],
+            "Machine Learning Engineer": ["AI Student Collective", "Davis Data Science Club", "Aggie Sports Analytics", "Cognitive Science Student Association"],
+            "Cybersecurity Engineer": ["Cyber Security Club at UC Davis"],
+
+            // --- Hardware/EE Focused (12) ---
+            "Embedded Systems Engineer": ["The Hardware Club @ UC Davis", "IEEE (Institute of Electrical & Electronics Engineers)", "Davis Robotics Club"],
+            "Hardware Design Engineer": ["The Hardware Club @ UC Davis", "IEEE (Institute of Electrical & Electronics Engineers)"],
+            "FPGA Engineer": ["The Hardware Club @ UC Davis", "IEEE (Institute of Electrical & Electronics Engineers)"],
+            "Digital Design Engineer": ["IEEE (Institute of Electrical & Electronics Engineers)", "Eta Kappa Nu"],
+            "RF Engineer": ["IEEE (Institute of Electrical & Electronics Engineers)"],
+            "Power Systems Engineer": ["IEEE (Institute of Electrical & Electronics Engineers)", "Formula Racing at UC Davis (FRUCD)", "EcoCAR"],
+            "Control Systems Engineer": ["Davis Robotics Club", "Cyclone RoboSub", "EcoCAR"],
+            "Signal Processing Engineer": ["IEEE (Institute of Electrical & Electronics Engineers)", "The Hardware Club @ UC Davis"],
+            "Computer Vision Engineer": ["AI Student Collective", "Cyclone RoboSub", "Davis Robotics Club"],
+            "Firmware Engineer": ["The Hardware Club @ UC Davis", "Davis Robotics Club"],
+            "PCB Design Engineer": ["The Hardware Club @ UC Davis", "IEEE (Institute of Electrical & Electronics Engineers)"],
+            "Hardware Security Engineer": ["Cyber Security Club at UC Davis", "IEEE (Institute of Electrical & Electronics Engineers)"],
+
+            // --- Aerospace (4) ---
+            "Aerospace Software Engineer": ["Aggie Space initiative", "Space and Satellite Systems (SSS) Club", "Aggie Propulsion and Rocketry Lab (APRL)", "Advanced Modeling and Aeronautics Team (AMAT)"],
+            "Systems Integration Engineer": ["Aggie Space initiative", "Space and Satellite Systems (SSS) Club", "EcoCAR"],
+            "Avionics Engineer": ["Aggie Space initiative", "Space and Satellite Systems (SSS) Club", "Aggie Propulsion and Rocketry Lab (APRL)"],
+            "Autonomous Systems Engineer (Drones/UAV)": ["Cyclone RoboSub", "Aggie Space initiative", "Space and Satellite Systems (SSS) Club", "EcoCAR"],
+
+            // --- Biomedical (10) ---
+            "Medical Device Software Engineer": ["Biomedical Engineering Society (BES)", "Neurotech @ UCDavis"],
+            "Clinical Systems Engineer": ["Biomedical Engineering Society (BES)", "Neurotech @ UCDavis"],
+            "Bioinformatics Engineer": ["Biomedical Engineering Society (BES)", "Davis Data Science Club"],
+            "Healthcare Data Analyst": ["Biomedical Engineering Society (BES)", "Davis Data Driven Change", "Davis Data Science Club"],
+            "Medical Imaging Software Developer": ["Biomedical Engineering Society (BES)", "Neurotech @ UCDavis"],
+            "Wearable Technology Engineer": ["Neurotech @ UCDavis", "Biomedical Engineering Society (BES)"],
+            "Health Tech Software Engineer": ["Biomedical Engineering Society (BES)", "Neurotech @ UCDavis"],
+            "Computational Biology Engineer": ["Biomedical Engineering Society (BES)", "Davis Data Science Club"],
+            "Medical Robotics Engineer": ["Davis Robotics Club", "Women in Robotics Club (WiR)", "Biomedical Engineering Society (BES)"],
+            "Biomedical Signal Processing Engineer": ["Neurotech @ UCDavis", "Biomedical Engineering Society (BES)"],
+
+            // --- Industrial/Manufacturing (6) ---
+            "Industrial Software Engineer": ["Society of Manufacturing Engineers (SME)", "The Hardware Club @ UC Davis"],
+            "Automation Engineer": ["The Hardware Club @ UC Davis", "Davis Robotics Club", "Cyclone RoboSub"],
+            "Industrial IoT Engineer": ["The Hardware Club @ UC Davis", "Society of Manufacturing Engineers (SME)"],
+            "Quality Systems Engineer": ["Society of Manufacturing Engineers (SME)", "IEEE (Institute of Electrical & Electronics Engineers)"],
+            "Factory Automation Developer": ["Society of Manufacturing Engineers (SME)", "Davis Robotics Club"],
+            "Supply Chain Technology Analyst": ["Green Innovation Network", "The Davis Consulting Group", "Society of Manufacturing Engineers (SME)"],
+
+            // --- Business-Tech Hybrid (3) ---
+            "Technical Product Manager": ["Product Space @ UC Davis", "AggieWorks", "HackDavis"],
+            "Sales Engineer": ["The Davis Consulting Group", "Green Innovation Network", "AggieWorks"],
+            "Research Engineer": ["AI Student Collective", "Quantum Computing Society at Davis", "Cognitive Science Student Association"]
         };
+
 
         // Tag-based mappings as fallback
         this.careerTags = {
@@ -310,4 +368,6 @@ class ClubRecommendationService {
     }
 }
 
+// Export for validation script
 module.exports = ClubRecommendationService;
+module.exports.careerClubMap = ClubRecommendationService.prototype.directMappings || new ClubRecommendationService().directMappings;

@@ -2,20 +2,21 @@
 // COMPLETE REPLACEMENT - Questions Only, No AI Analyzer Code
 
 const enhancedThreeLevelQuizQuestions = {
-    // =============================================================================
-    // BEGINNER LEVEL - Tech Explorer (12 Questions)
-    // =============================================================================
+    // ============================================================================
+    // BEGINNER LEVEL - Tech Explorer (15 Questions: B01–B15)
+    // ============================================================================
     beginner: [
+        // B01–B12 (your originals)
         {
             id: 'B01',
             type: 'short_response',
             category: 'natural_curiosity',
-            question: "Think of the last time you got completely absorbed in figuring something out (could be anything - a puzzle, fixing something, learning a skill). What was it and what kept you hooked?",
+            question:
+                "Think of the last time you got completely absorbed in figuring something out (could be anything - a puzzle, fixing something, learning a skill). What was it and what kept you hooked?",
             subtitle: "This helps us understand what naturally captures your attention",
             placeholder: "I remember getting completely absorbed when I was...",
             max_length: 200
         },
-
         {
             id: 'B02',
             type: 'multiple_choice',
@@ -26,32 +27,35 @@ const enhancedThreeLevelQuizQuestions = {
                 {
                     id: 'interface_frustration',
                     title: 'Apps with confusing or cluttered interfaces',
-                    description: 'When things are hard to find or the design doesn\'t make sense'
+                    description: "When things are hard to find or the design doesn't make sense"
                 },
                 {
                     id: 'speed_reliability',
                     title: 'Things that are slow or unreliable',
-                    description: 'When apps crash, websites load slowly, or systems don\'t work consistently'
+                    description:
+                        "When apps crash, websites load slowly, or systems don't work consistently"
                 },
                 {
                     id: 'personalization_limits',
                     title: 'One-size-fits-all solutions',
-                    description: 'When technology doesn\'t adapt to your specific needs or preferences'
+                    description:
+                        "When technology doesn't adapt to your specific needs or preferences"
                 },
                 {
                     id: 'complexity_barriers',
                     title: 'Unnecessarily complicated processes',
-                    description: 'When simple tasks require too many steps or technical knowledge'
+                    description:
+                        'When simple tasks require too many steps or technical knowledge'
                 }
             ]
         },
-
         {
             id: 'B03',
             type: 'visual_choice',
             category: 'natural_focus',
-            question: "When you discover a really cool new app or website, what's the FIRST thing you notice?",
-            subtitle: "Go with your gut reaction",
+            question:
+                "When you discover a really cool new app or website, what's the FIRST thing you notice?",
+            subtitle: 'Go with your gut reaction',
             options: [
                 {
                     id: 'visual_design',
@@ -79,27 +83,28 @@ const enhancedThreeLevelQuizQuestions = {
                 }
             ]
         },
-
         {
             id: 'B04',
             type: 'short_response',
             category: 'impact_motivation',
-            question: "You have unlimited time and resources to build one thing that would genuinely help UC Davis students. What would you create?",
+            question:
+                'You have unlimited time and resources to build one thing that would genuinely help UC Davis students. What would you create?',
             subtitle: "Think about problems you've actually experienced or witnessed",
-            placeholder: "I would build something that helps students with...",
+            placeholder: 'I would build something that helps students with...',
             max_length: 200
         },
-
         {
             id: 'B05',
             type: 'multiple_choice',
             category: 'natural_aptitudes',
-            question: "What's something you're naturally good at that friends or family often ask you to help with?",
+            question:
+                "What's something you're naturally good at that friends or family often ask you to help with?",
             options: [
                 {
                     id: 'troubleshooting_fixing',
                     title: 'Troubleshooting and fixing things',
-                    description: 'When something isn\'t working, people come to you to figure out why'
+                    description:
+                        "When something isn't working, people come to you to figure out why"
                 },
                 {
                     id: 'explaining_teaching',
@@ -114,42 +119,42 @@ const enhancedThreeLevelQuizQuestions = {
                 {
                     id: 'creative_solutions',
                     title: 'Coming up with creative alternatives',
-                    description: 'Finding unconventional solutions when the obvious approach doesn\'t work'
+                    description:
+                        "Finding unconventional solutions when the obvious approach doesn't work"
                 }
             ]
         },
-
         {
             id: 'B06',
             type: 'scale',
             category: 'work_preference',
-            question: "What type of work environment makes you most productive and energized?",
-            subtitle: "Think about when you do your best work",
+            question: 'What type of work environment makes you most productive and energized?',
+            subtitle: 'Think about when you do your best work',
             scale: {
                 min: 1,
                 max: 10,
                 labels: {
-                    1: "Solo focus time with minimal interruption",
-                    3: "Mostly independent with occasional collaboration",
-                    5: "Balanced mix of solo work and teamwork",
-                    7: "Collaborative environment with regular interaction",
-                    10: "High-energy team environment with constant communication"
+                    1: 'Solo focus time with minimal interruption',
+                    3: 'Mostly independent with occasional collaboration',
+                    5: 'Balanced mix of solo work and teamwork',
+                    7: 'Collaborative environment with regular interaction',
+                    10: 'High-energy team environment with constant communication'
                 },
                 descriptions: {
                     1: "You're most productive when you can dive deep without distractions",
-                    3: "You like working independently but value periodic check-ins",
-                    5: "You work well both alone and with others, depending on the task",
+                    3: 'You like working independently but value periodic check-ins',
+                    5: 'You work well both alone and with others, depending on the task',
                     7: "You thrive on collaboration and regular feedback from teammates",
                     10: "You're energized by constant interaction and team problem-solving"
                 }
             }
         },
-
         {
             id: 'B07',
             type: 'multiple_choice',
             category: 'learning_approach',
-            question: "You need to learn a new skill quickly for a project. What's your go-to approach?",
+            question:
+                'You need to learn a new skill quickly for a project. What\'s your go-to approach?',
             options: [
                 {
                     id: 'structured_learning',
@@ -169,17 +174,18 @@ const enhancedThreeLevelQuizQuestions = {
                 {
                     id: 'documentation_research',
                     title: 'Read documentation and experiment',
-                    description: 'Study the official docs and try different approaches systematically'
+                    description:
+                        'Study the official docs and try different approaches systematically'
                 }
             ]
         },
-
         {
             id: 'B08',
             type: 'ranking',
             category: 'decision_values',
-            question: "When making important decisions about your future, what matters most to you?",
-            subtitle: "Rank these from most important to least important",
+            question:
+                'When making important decisions about your future, what matters most to you?',
+            subtitle: 'Rank these from most important to least important',
             items: [
                 {
                     id: 'intellectual_challenge',
@@ -208,17 +214,18 @@ const enhancedThreeLevelQuizQuestions = {
                 }
             ]
         },
-
         {
             id: 'B09',
             type: 'multiple_choice',
             category: 'attention_to_detail',
-            question: "What do you notice about technology that your friends don't seem to care about?",
+            question:
+                "What do you notice about technology that your friends don't seem to care about?",
             options: [
                 {
                     id: 'design_inconsistencies',
                     title: 'Design inconsistencies and visual details',
-                    description: 'Things like misaligned buttons, inconsistent fonts, or poor color choices'
+                    description:
+                        'Things like misaligned buttons, inconsistent fonts, or poor color choices'
                 },
                 {
                     id: 'efficiency_optimization',
@@ -228,7 +235,8 @@ const enhancedThreeLevelQuizQuestions = {
                 {
                     id: 'accessibility_issues',
                     title: 'How hard things are for some people to use',
-                    description: 'Barriers that might affect people with different abilities or technical skills'
+                    description:
+                        'Barriers that might affect people with different abilities or technical skills'
                 },
                 {
                     id: 'security_privacy',
@@ -237,17 +245,18 @@ const enhancedThreeLevelQuizQuestions = {
                 }
             ]
         },
-
         {
             id: 'B10',
             type: 'scenario',
             category: 'collaboration_style',
-            question: "You're working on a group project where everyone has different ideas about the direction. What role do you naturally fall into?",
+            question:
+                "You're working on a group project where everyone has different ideas about the direction. What role do you naturally fall into?",
             options: [
                 {
                     id: 'mediator_synthesizer',
                     title: 'The Bridge Builder',
-                    description: 'Help everyone understand each other and find ways to combine different ideas'
+                    description:
+                        'Help everyone understand each other and find ways to combine different ideas'
                 },
                 {
                     id: 'researcher_analyst',
@@ -257,26 +266,26 @@ const enhancedThreeLevelQuizQuestions = {
                 {
                     id: 'implementer_doer',
                     title: 'The Implementer',
-                    description: 'Focus on what you can contribute while others debate the big picture'
+                    description:
+                        'Focus on what you can contribute while others debate the big picture'
                 },
                 {
                     id: 'facilitator_organizer',
                     title: 'The Organizer',
-                    description: 'Keep the group on track and make sure everyone\'s voice is heard'
+                    description: "Keep the group on track and make sure everyone's voice is heard"
                 }
             ]
         },
-
         {
             id: 'B11',
             type: 'multiple_choice',
             category: 'motivation_source',
-            question: "What type of work makes you lose track of time?",
+            question: 'What type of work makes you lose track of time?',
             options: [
                 {
                     id: 'creative_building',
                     title: 'Creating or building something new',
-                    description: 'When you\'re bringing an idea to life or making something from scratch'
+                    description: "When you're bringing an idea to life or making something from scratch"
                 },
                 {
                     id: 'problem_solving',
@@ -295,29 +304,143 @@ const enhancedThreeLevelQuizQuestions = {
                 }
             ]
         },
-
         {
             id: 'B12',
             type: 'scale',
             category: 'risk_comfort',
-            question: "How do you feel about trying new approaches when the familiar way works fine?",
-            subtitle: "Consider both personal projects and academic work",
+            question:
+                'How do you feel about trying new approaches when the familiar way works fine?',
+            subtitle: 'Consider both personal projects and academic work',
             scale: {
                 min: 1,
                 max: 10,
                 labels: {
-                    1: "Stick with what works reliably",
-                    3: "Try new things occasionally",
-                    5: "Balance between proven and experimental",
-                    7: "Often experiment with new approaches",
-                    10: "Always looking for better ways to do things"
+                    1: 'Stick with what works reliably',
+                    3: 'Try new things occasionally',
+                    5: 'Balance between proven and experimental',
+                    7: 'Often experiment with new approaches',
+                    10: 'Always looking for better ways to do things'
                 },
                 descriptions: {
-                    1: "You prefer reliable, proven methods that you know will work",
+                    1: 'You prefer reliable, proven methods that you know will work',
                     3: "You'll try new approaches sometimes, but default to what's familiar",
-                    5: "You balance trying new things with using reliable approaches",
-                    7: "You actively seek out new methods and tools to improve your work",
+                    5: 'You balance trying new things with using reliable approaches',
+                    7: 'You actively seek out new methods and tools to improve your work',
                     10: "You're always experimenting and pushing boundaries, even if it's riskier"
+                }
+            }
+        },
+
+        // NEW: B13–B15 we finalized
+        {
+            id: 'B13',
+            type: 'visual_choice',
+            category: 'work_environment',
+            question: 'Picture your ideal work setting — where would you feel most energized?',
+            subtitle: 'Choose the environment that feels most like you',
+            options: [
+                {
+                    id: 'lab_research',
+                    visual: '🧪',
+                    title: 'Laboratory / Clean Room',
+                    description: 'Testing prototypes, running experiments, biomedical or materials research',
+                    role_signals: ['Biomedical', 'Hardware R&D']
+                },
+                {
+                    id: 'modern_office',
+                    visual: '💻',
+                    title: 'Modern Tech Office',
+                    description: 'Open workspace, multiple monitors, coding or design focus',
+                    role_signals: ['Software', 'Data', 'Product']
+                },
+                {
+                    id: 'hospital_clinic',
+                    visual: '🏥',
+                    title: 'Hospital / Clinical Setting',
+                    description: 'Technology directly supporting doctors, nurses, and patients',
+                    role_signals: ['Biomedical', 'HealthTech']
+                },
+                {
+                    id: 'factory_floor',
+                    visual: '🏭',
+                    title: 'Factory / Industrial Environment',
+                    description: 'Automation, robotics, manufacturing, IoT, process optimization',
+                    role_signals: ['Industrial', 'Automation', 'IoT']
+                }
+            ]
+        },
+        {
+            id: 'B14',
+            type: 'multiple_choice',
+            category: 'impact_orientation',
+            question: 'Five years from now, which outcomes would make you proudest about your work?',
+            subtitle: 'Select up to 2',
+            allow_multiple: 2,
+            validation: { min: 1, max: 2 },
+            options: [
+                {
+                    id: 'save_lives',
+                    title: 'Improve or save lives directly',
+                    description:
+                        'Medical devices, clinical software, health data systems, safety-critical tools',
+                    role_signals: ['Biomedical', 'HealthTech', 'Medical Imaging', 'Robotics (medical)']
+                },
+                {
+                    id: 'reach_millions',
+                    title: 'Reach millions every day',
+                    description: 'Consumer apps, mobile/web products, games, creator platforms',
+                    role_signals: ['Frontend', 'Mobile', 'Full Stack', 'Game Dev', 'Developer Advocate', 'Technical Writer']
+                },
+                {
+                    id: 'advance_frontier',
+                    title: 'Advance the frontier',
+                    description: 'AI/ML, graphics, AR/VR, aerospace, autonomous systems, emerging tech',
+                    role_signals: ['ML Eng', 'Data Science', 'Graphics/Rendering', 'AR/VR', 'Aerospace', 'Autonomy']
+                },
+                {
+                    id: 'make_systems_reliable',
+                    title: 'Make systems fast, safe, and reliable',
+                    description: 'Infrastructure, cloud scale, SRE, DevOps, cybersecurity, QA',
+                    role_signals: ['SRE', 'DevOps', 'Cybersecurity', 'QA/Automation', 'Backend', 'ML Infra']
+                },
+                {
+                    id: 'boost_efficiency',
+                    title: 'Make organizations radically more efficient',
+                    description: 'Automation, pipelines, industrial/IoT, supply chain, data-driven ops',
+                    role_signals: ['Industrial Software', 'Automation', 'Industrial IoT', 'Quality Systems', 'Supply Chain Tech', 'Data Analyst']
+                },
+                {
+                    id: 'build_in_the_physical_world',
+                    title: 'Build things you can touch',
+                    description:
+                        'Embedded, firmware, PCB, sensors, power & control systems, robotics hardware',
+                    role_signals: ['Embedded', 'Firmware', 'PCB Design', 'Power Systems', 'Control Systems', 'Signal Processing', 'Hardware Security', 'FPGA']
+                }
+            ]
+        },
+        {
+            id: 'B15',
+            type: 'scale',
+            category: 'abstraction_preference',
+            question:
+                "When you’re most in your element, are you working with things you can physically touch or abstract systems you can only imagine?",
+            subtitle: 'This helps identify your balance between hardware and software',
+            scale: {
+                min: 1,
+                max: 10,
+                labels: {
+                    1: 'Hands-on hardware and circuits',
+                    3: 'Mostly hardware with some programming',
+                    5: 'Equal mix of hardware and software',
+                    7: 'Mostly software but mindful of hardware',
+                    10: 'Pure software, data, and algorithms'
+                },
+                descriptions: {
+                    1: 'You thrive when working with tools, boards, and sensors in the physical world',
+                    3: 'You enjoy hardware but see software as a supporting piece',
+                    5: 'You’re equally comfortable soldering a circuit or writing a script',
+                    7: 'You prefer coding but like to understand the hardware underneath',
+                    10: 'You think in logic, abstractions, and pure software architectures'
                 }
             }
         }
@@ -584,6 +707,99 @@ const enhancedThreeLevelQuizQuestions = {
             subtitle: "We're interested in how you handle setbacks and learn from them",
             placeholder: "I was trying to... and when it completely failed, I...",
             max_length: 250
+        },
+
+        {
+            id: 'I11',
+            type: 'scale',
+            category: 'technical_specialization',
+            question: "When solving technical problems, where do you find yourself most engaged?",
+            subtitle: "Think about where you lose track of time",
+            scale: {
+                min: 1,
+                max: 10,
+                labels: {
+                    1: "Physical prototypes and hardware debugging",
+                    3: "Embedded systems and firmware",
+                    5: "Full-stack applications bridging hardware and software",
+                    7: "Pure software architecture and algorithms",
+                    10: "Data models and machine learning systems"
+                },
+                descriptions: {
+                    1: "You love oscilloscopes, soldering, and getting your hands dirty with circuits",
+                    3: "You enjoy making hardware and software communicate seamlessly",
+                    5: "You're equally happy debugging circuits or optimizing databases",
+                    7: "You prefer elegant code solutions and system design patterns",
+                    10: "You think in statistical models and data pipelines"
+                }
+            }
+        },
+
+        {
+            id: 'I12',
+            type: 'multiple_choice',
+            category: 'industry_preference',
+            question: "Which of these industry challenges excites you most?",
+            subtitle: "Consider both the problem space and the impact you'd want to have",
+            allow_multiple: 2,
+            validation: { min: 1, max: 2 },
+            options: [
+                {
+                    id: 'healthcare_biotech',
+                    title: 'Improving human health and medical outcomes',
+                    description: 'Medical devices, diagnostic tools, genomics, wearable health tech, clinical systems'
+                },
+                {
+                    id: 'aerospace_defense',
+                    title: 'Pushing the boundaries of flight and space',
+                    description: 'Satellites, rockets, drones, avionics, autonomous aerial systems'
+                },
+                {
+                    id: 'industrial_automation',
+                    title: 'Revolutionizing manufacturing and logistics',
+                    description: 'Factory automation, robotics, supply chain optimization, IoT sensors'
+                },
+                {
+                    id: 'consumer_products',
+                    title: 'Creating products millions use daily',
+                    description: 'Mobile apps, games, social platforms, consumer electronics'
+                },
+                {
+                    id: 'infrastructure_systems',
+                    title: 'Building critical infrastructure and platforms',
+                    description: 'Cloud systems, cybersecurity, networking, enterprise software'
+                }
+            ]
+        },
+
+        {
+            id: 'I13',
+            type: 'scenario',
+            category: 'interdisciplinary_preference',
+            question: "You're on a project that requires expertise outside your comfort zone. How do you approach this?",
+            subtitle: "This reveals your preferences for specialization vs. generalization",
+            options: [
+                {
+                    id: 'deep_partnership',
+                    title: 'Find domain experts to partner with closely',
+                    description: 'Stay specialized while building strong collaborative relationships'
+                },
+                {
+                    id: 'rapid_learning',
+                    title: 'Dive deep into learning the new domain myself',
+                    description: 'Expand your expertise to become self-sufficient in multiple areas'
+                },
+                {
+                    id: 'bridge_builder',
+                    title: 'Become the translator between different specialties',
+                    description: 'Focus on integration and communication between domain experts'
+                },
+                {
+                    id: 'tool_creator',
+                    title: 'Build tools that abstract away the complexity',
+                    description: 'Create systems that make the specialized knowledge accessible to others'
+                }
+            ]
         }
     ],
 
@@ -820,30 +1036,174 @@ const enhancedThreeLevelQuizQuestions = {
                     description: 'Focus on developing team capabilities that remain valuable regardless of direction changes'
                 }
             ]
+        },
+
+        {
+            id: 'A11',
+            type: 'multiple_choice',
+            category: 'complexity_handling',
+            question: "You're designing a critical system from scratch. Which constraints would you find most intellectually stimulating?",
+            subtitle: "Choose up to 2 that would energize rather than frustrate you",
+            allow_multiple: 2,
+            validation: { min: 1, max: 2 },
+            options: [
+                {
+                    id: 'safety_critical',
+                    title: 'Life-or-death reliability requirements',
+                    description: 'Medical devices, aviation systems, or autonomous vehicles where failure means catastrophe'
+                },
+                {
+                    id: 'extreme_scale',
+                    title: 'Massive scale with billions of users',
+                    description: 'Global platforms handling enormous data volumes and concurrent users'
+                },
+                {
+                    id: 'resource_constrained',
+                    title: 'Severe hardware and power limitations',
+                    description: 'Embedded systems, IoT devices, or space applications with tight constraints'
+                },
+                {
+                    id: 'real_time',
+                    title: 'Microsecond-level timing requirements',
+                    description: 'High-frequency trading, gaming engines, or industrial control systems'
+                },
+                {
+                    id: 'regulatory_complex',
+                    title: 'Heavy regulatory and compliance requirements',
+                    description: 'Healthcare, finance, or aerospace with extensive certification needs'
+                }
+            ]
+        },
+
+        {
+            id: 'A12',
+            type: 'scenario',
+            category: 'leadership_vision',
+            question: "Your company is deciding between two technical strategies for the next 5 years. Which would you champion?",
+            subtitle: "Consider both technical merit and business impact",
+            options: [
+                {
+                    id: 'vertical_integration',
+                    title: 'Build custom hardware/software stack for competitive advantage',
+                    description: 'Control the full stack from silicon to services, like Apple or Tesla'
+                },
+                {
+                    id: 'platform_ecosystem',
+                    title: 'Create an open platform that others build upon',
+                    description: 'Focus on enabling others to innovate, like Android or AWS'
+                },
+                {
+                    id: 'ai_transformation',
+                    title: 'Restructure everything around AI and machine learning',
+                    description: 'Make AI the core of all products and operations'
+                },
+                {
+                    id: 'specialized_excellence',
+                    title: 'Become the absolute best at one critical technology',
+                    description: 'Deep specialization in areas like quantum computing or bioengineering'
+                }
+            ]
+        },
+
+        {
+            id: 'A13',
+            type: 'scale',
+            category: 'innovation_preference',
+            question: "In your ideal role, how would you balance creating new solutions versus perfecting existing ones?",
+            subtitle: "Consider where you create the most value",
+            scale: {
+                min: 1,
+                max: 10,
+                labels: {
+                    1: "100% optimizing and perfecting existing systems",
+                    3: "Mostly refinement with occasional innovation",
+                    5: "Equal mix of optimization and new development",
+                    7: "Mostly new development with some optimization",
+                    10: "100% greenfield projects and breakthrough innovation"
+                },
+                descriptions: {
+                    1: "You excel at taking good systems and making them exceptional through optimization",
+                    3: "You prefer improving proven solutions while occasionally exploring new ideas",
+                    5: "You enjoy both the creativity of new projects and the craftsmanship of refinement",
+                    7: "You thrive on building new things but appreciate the importance of polish",
+                    10: "You live for the bleeding edge and completely novel solutions"
+                }
+            }
         }
     ]
 };
 
-// Enhanced career options for matching
+// Add this at the end of backend/data/enhancedThreeLevelQuizData.js
+// Replace the existing enhancedCareerOptions array
+
+// Enhanced career options for matching - 55 careers
 const enhancedCareerOptions = [
-    'Software Engineering',
-    'Data Science',
-    'UX/UI Design',
-    'Product Management',
-    'DevOps Engineering',
-    'Machine Learning Engineering',
-    'Cybersecurity',
-    'Web Development',
-    'Mobile Development',
-    'Game Development',
-    'Technical Writing',
-    'Developer Relations',
-    'Sales Engineering',
-    'Startup Founder',
+    // Software/CS Focused (20)
+    'Software Engineer (Full Stack)',
+    'Frontend Engineer',
+    'Backend Engineer',
+    'Web Developer',
+    'Mobile Developer (iOS/Android)',
+    'DevOps Engineer',
+    'Site Reliability Engineer (SRE)',
+    'Graphics/Rendering Engineer',
+    'Blockchain Developer',
+    'AR/VR Developer',
+    'ML Infrastructure Engineer',
+    'Game Developer',
+    'Technical Writer',
+    'Developer Advocate',
+    'IT Support Engineer',
+    'QA/Test Automation Engineer',
+    'Data Scientist',
+    'Data Analyst',
+    'Machine Learning Engineer',
+    'Cybersecurity Engineer',
+
+    // Hardware/EE Focused (12)
+    'Embedded Systems Engineer',
+    'Hardware Design Engineer',
+    'FPGA Engineer',
+    'Digital Design Engineer',
+    'RF Engineer',
+    'Power Systems Engineer',
+    'Control Systems Engineer',
+    'Signal Processing Engineer',
+    'Computer Vision Engineer',
+    'Firmware Engineer',
+    'PCB Design Engineer',
+    'Hardware Security Engineer',
+
+    // Aerospace (4)
+    'Aerospace Software Engineer',
+    'Systems Integration Engineer',
+    'Avionics Engineer',
+    'Autonomous Systems Engineer (Drones/UAV)',
+
+    // Biomedical (10)
+    'Medical Device Software Engineer',
+    'Clinical Systems Engineer',
+    'Bioinformatics Engineer',
+    'Healthcare Data Analyst',
+    'Medical Imaging Software Developer',
+    'Wearable Technology Engineer',
+    'Health Tech Software Engineer',
+    'Computational Biology Engineer',
+    'Medical Robotics Engineer',
+    'Biomedical Signal Processing Engineer',
+
+    // Industrial/Manufacturing (6)
+    'Industrial Software Engineer',
+    'Automation Engineer',
+    'Industrial IoT Engineer',
+    'Quality Systems Engineer',
+    'Factory Automation Developer',
+    'Supply Chain Technology Analyst',
+
+    // Business-Tech Hybrid (3)
     'Technical Product Manager',
-    'Research Scientist',
-    'Design Engineering',
-    'Creative Technologist'
+    'Sales Engineer',
+    'Research Engineer'
 ];
 
 module.exports = {
