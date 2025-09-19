@@ -179,7 +179,7 @@ const clubData = [
         description: "Organization supporting women and nonbinary students in computing through mentorship, technical workshops, interview preparation, and community events that foster belonging, confidence, and career advancement.",
         tags: ["Women in Tech", "Software", "Mentorship", "Professional Dev"],  // Women in Computer Science
         category: "Technology",
-        logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/womenincomputerscience/logo/01JVQT439C2QTFM5XZZH3XYHQ5.png",
+        logoUrl: "https://i.imgur.com/G1fGXWH.png",
         memberCount: 48,
         websiteUrl: "https://wics.engineering.ucdavis.edu/",
         instagramUrl: "https://www.instagram.com/wicsdavis/",
@@ -723,7 +723,7 @@ const clubData = [
         description: "Consulting community preparing students through case workshops, client projects, and interview practice, developing problem-solving, communication, and professional skills for internships and full-time roles.",
         tags: ["Build Projects", "Workshops", "Professional Dev", "Networking"],
         category: "Data Science",
-        logoUrl: "https://pub-1030958593964b819d564f7f21715215.r2.dev/thedavisconsultinggroup/logo/01JVQV6P3927RF799RFKZC351H.png",
+        logoUrl: "https://i.imgur.com/4ueTMOg.png",
         memberCount: 28,
         websiteUrl: "https://www.davisconsultinggroup.org/",
         instagramUrl: "https://www.instagram.com/thedavisconsultinggroup/#",

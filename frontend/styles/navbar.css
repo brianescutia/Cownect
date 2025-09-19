@@ -14,60 +14,60 @@ div.navbar,
     box-sizing: border-box !important;
 }
 
-/* MAIN NAVBAR CONTAINER - PERFECT SPACING */
+/* MAIN NAVBAR CONTAINER - FLUID RESPONSIVE DESIGN */
 .navbar,
 nav.navbar,
 div.navbar {
     display: flex !important;
     justify-content: center !important;
     align-items: center !important;
-    border-radius: 25px !important;
-    margin: 1rem auto !important;
-    padding: 0.75rem 2rem !important;
+    border-radius: clamp(15px, 3vw, 25px) !important;
+    margin: clamp(0.5rem, 2vw, 1rem) auto !important;
+    padding: clamp(0.3rem, 1.2vw, 0.75rem) clamp(0.8rem, 3vw, 2rem) !important;
 
-    /* ✅ PERFECT DIMENSIONS FOR ALL PAGES */
-    max-width: 1130px !important;
-    width: 90% !important;
-    height: clamp(50px, 8vw, 68px) !important;
+    /* ✅ FLUID WIDTH AND HEIGHT - MATCHES YOUR SCALING */
+    max-width: min(1130px, 98vw) !important;
+    width: clamp(280px, 92vw, 1130px) !important;
+    height: clamp(40px, 6.5vw, 68px) !important;
 
-    /* ✅ PERFECT GAP BETWEEN NAVBAR AND PROFILE */
-    gap: 4.5rem !important;
+    /* ✅ DYNAMIC GAP - TIGHTER FOR SMALL SCREENS */
+    gap: clamp(0.5rem, 4vw, 4.5rem) !important;
 
     background: none !important;
     border: none !important;
     font-family: 'Rethink Sans', sans-serif !important;
+    position: relative !important;
 }
 
-/* NAVBAR INNER CONTAINER - STRETCH GRAY BACKGROUND CLOSER TO PROFILE */
+/* NAVBAR INNER CONTAINER - RESPONSIVE BACKGROUND */
 .navbar-container,
 .navbar .navbar-container {
     display: flex !important;
     justify-content: space-between !important;
     align-items: center !important;
     background-color: rgba(183, 183, 183, 0.30) !important;
-    border-radius: 25px !important;
+    border-radius: clamp(15px, 3vw, 25px) !important;
 
-    /* ✅ STRETCH GRAY BACKGROUND CLOSER TO PROFILE */
-    padding: 0 3rem !important;
+    /* ✅ FLUID PADDING AND WIDTH - BETTER SCALING */
+    padding: clamp(0.3rem, 1.5vw, 0.75rem) clamp(0.8rem, 3vw, 3rem) !important;
     flex: 1 !important;
-    max-width: 850px !important;
-    /* ✅ INCREASED FROM 750px TO 850px */
+    max-width: min(850px, calc(100vw - 80px)) !important;
+    min-width: 180px !important;
 
     width: auto !important;
     height: auto !important;
     box-sizing: border-box !important;
 }
 
-/* LOGO AND TITLE - MORE SPACE BETWEEN LOGO AND TEXT */
+/* LOGO AND TITLE - RESPONSIVE SIZING */
 .logo-title,
 .navbar .logo-title {
     display: flex !important;
     align-items: center !important;
-    gap: 1.5rem !important;
-    /* ✅ INCREASED FROM 1rem TO 1.5rem */
+    gap: clamp(0.5rem, 2vw, 1.5rem) !important;
     font-weight: bold !important;
-    font-size: 1.2rem !important;
-    margin-left: -1rem !important;
+    font-size: clamp(0.9rem, 2.5vw, 1.2rem) !important;
+    margin-left: clamp(-0.5rem, -1vw, -1rem) !important;
     text-decoration: none !important;
     color: inherit !important;
     cursor: pointer !important;
@@ -78,7 +78,7 @@ div.navbar {
 
 .logo,
 .navbar .logo {
-    height: 40px !important;
+    height: clamp(25px, 6vw, 40px) !important;
     width: auto !important;
     flex-shrink: 0 !important;
 }
@@ -88,9 +88,10 @@ div.navbar {
     font-weight: bold !important;
     color: inherit !important;
     font-family: 'Rethink Sans', sans-serif !important;
+    display: block !important;
 }
 
-/* NAVIGATION LINKS - PERFECT SPACING LIKE TECH-CLUBS */
+/* NAVIGATION LINKS - ADAPTIVE LAYOUT */
 .nav-links,
 .navbar .nav-links,
 ul.nav-links {
@@ -100,11 +101,22 @@ ul.nav-links {
     margin: 0 !important;
     padding: 0 !important;
 
-    /* ✅ PERFECT SPACING BETWEEN NAV ITEMS */
-    gap: 4.5rem !important;
+    /* ✅ PROGRESSIVE GAP SCALING */
+    gap: clamp(0.3rem, 2.5vw, 4.5rem) !important;
 
     width: auto !important;
     box-sizing: border-box !important;
+    flex-wrap: nowrap !important;
+    overflow-x: visible !important;
+    scrollbar-width: none !important;
+    -ms-overflow-style: none !important;
+    min-width: 0 !important;
+    flex: 1 !important;
+    justify-content: center !important;
+}
+
+.nav-links::-webkit-scrollbar {
+    display: none !important;
 }
 
 .nav-links li,
@@ -121,12 +133,12 @@ ul.nav-links {
 .navbar .nav-link {
     font-family: 'Rethink Sans', sans-serif !important;
     font-weight: 500 !important;
-    font-size: 1rem !important;
+    font-size: clamp(0.7rem, 2vw, 1rem) !important;
     text-decoration: none !important;
     color: inherit !important;
     transition: all 0.3s ease !important;
     position: relative !important;
-    padding: 0.5rem 0 !important;
+    padding: clamp(0.25rem, 1vw, 0.5rem) 0 !important;
     cursor: pointer !important;
     display: inline-block !important;
     white-space: nowrap !important;
@@ -154,24 +166,24 @@ ul.nav-links {
     bottom: -2px !important;
     left: 0 !important;
     right: 0 !important;
-    height: 2px !important;
+    height: clamp(1px, 0.3vw, 2px) !important;
     background: linear-gradient(135deg, #5F96C5, #4a8bc2) !important;
     border-radius: 1px !important;
 }
 
-/* PROFILE CIRCLE - EXACT TECH-CLUBS STYLING */
+/* PROFILE CIRCLE - RESPONSIVE SIZING */
 .navbar-profile-circle,
 .navbar .navbar-profile-circle,
 #navbarProfileCircle {
-    width: 55px !important;
-    height: 55px !important;
+    width: clamp(35px, 8vw, 55px) !important;
+    height: clamp(35px, 8vw, 55px) !important;
     border-radius: 50% !important;
     background: linear-gradient(135deg, #5F96C5, #4a8bc2) !important;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
     color: white !important;
-    font-size: 1rem !important;
+    font-size: clamp(0.7rem, 2vw, 1rem) !important;
     font-weight: bold !important;
     cursor: pointer !important;
     transition: all 0.3s ease !important;
@@ -192,7 +204,7 @@ ul.nav-links {
 }
 
 #navbarProfileInitials {
-    font-size: 0.9rem !important;
+    font-size: clamp(0.6rem, 1.8vw, 0.9rem) !important;
     font-weight: 600 !important;
     text-transform: uppercase !important;
     letter-spacing: 0.5px !important;
@@ -209,48 +221,119 @@ ul.nav-links {
     border-radius: 50% !important;
 }
 
-/* ✅ RESPONSIVE DESIGN - MAINTAIN PROPORTIONS */
+/* ============================================
+   NEW PROPORTIONAL SCALING BELOW 768px
+   Everything scales down together
+   ============================================ */
 @media (max-width: 768px) {
     .navbar {
-        gap: 2rem !important;
-        padding: 0.5rem 1.5rem !important;
+        /* Scale calculation: at 768px = 100%, at 320px = 60% */
+        --scale-factor: calc(0.6 + (100vw - 320px) * 0.4 / 448) !important;
+
+        /* Apply scaled dimensions */
+        height: calc(68px * var(--scale-factor)) !important;
+        gap: calc(4.5rem * var(--scale-factor)) !important;
+        padding: calc(0.75rem * var(--scale-factor)) calc(2rem * var(--scale-factor)) !important;
+        border-radius: calc(25px * var(--scale-factor)) !important;
+        margin: calc(1rem * var(--scale-factor)) auto !important;
+
+        /* Keep your existing width settings */
+        max-width: min(1130px, 98vw) !important;
+        width: clamp(280px, 92vw, 1130px) !important;
     }
 
     .navbar-container {
-        padding: 0 2rem !important;
+        padding: calc(0.75rem * var(--scale-factor)) calc(3rem * var(--scale-factor)) !important;
+        border-radius: calc(25px * var(--scale-factor)) !important;
+    }
+
+    .logo-title {
+        gap: calc(1.5rem * var(--scale-factor)) !important;
+        font-size: calc(1.2rem * var(--scale-factor)) !important;
+        margin-left: calc(-1rem * var(--scale-factor)) !important;
+    }
+
+    .logo {
+        height: calc(40px * var(--scale-factor)) !important;
     }
 
     .nav-links {
-        gap: 2rem !important;
+        gap: calc(4.5rem * var(--scale-factor)) !important;
+    }
+
+    .nav-link,
+    .nav-links a {
+        font-size: calc(1rem * var(--scale-factor)) !important;
+        padding: calc(0.5rem * var(--scale-factor)) 0 !important;
     }
 
     .navbar-profile-circle,
     #navbarProfileCircle {
-        width: 40px !important;
-        height: 40px !important;
-        font-size: 0.9rem !important;
+        width: calc(55px * var(--scale-factor)) !important;
+        height: calc(55px * var(--scale-factor)) !important;
+        font-size: calc(1rem * var(--scale-factor)) !important;
+    }
+
+    #navbarProfileInitials {
+        font-size: calc(0.9rem * var(--scale-factor)) !important;
     }
 }
 
-@media (max-width: 480px) {
+/* Lock minimum scale at very small screens */
+@media (max-width: 320px) {
     .navbar {
-        gap: 1rem !important;
-        padding: 0.5rem 1rem !important;
+        --scale-factor: 0.6 !important;
+        /* Lock at 60% minimum */
+    }
+}
+
+/* ============================================
+   KEEP EXISTING BREAKPOINTS ABOVE 768px
+   ============================================ */
+
+/* Medium Devices (tablets, 768px and up) */
+@media (min-width: 769px) and (max-width: 992px) {
+    .navbar {
+        gap: 2.5rem !important;
     }
 
     .navbar-container {
-        padding: 0 1.5rem !important;
+        padding: 0.7rem 2rem !important;
     }
 
     .nav-links {
-        gap: 1rem !important;
+        gap: 2rem !important;
+    }
+}
+
+/* Large Devices (desktops, 992px and up) */
+@media (min-width: 993px) and (max-width: 1200px) {
+    .navbar {
+        gap: 3.5rem !important;
     }
 
-    .navbar-profile-circle,
-    #navbarProfileCircle {
-        width: 35px !important;
-        height: 35px !important;
-        font-size: 0.8rem !important;
+    .navbar-container {
+        padding: 0.75rem 2.5rem !important;
+    }
+
+    .nav-links {
+        gap: 3rem !important;
+    }
+}
+
+/* Extra Large Devices (large desktops, 1200px and up) */
+@media (min-width: 1201px) {
+    .navbar {
+        gap: 4.5rem !important;
+    }
+
+    .navbar-container {
+        padding: 0.75rem 3rem !important;
+        max-width: 850px !important;
+    }
+
+    .nav-links {
+        gap: 4.5rem !important;
     }
 }
 
@@ -280,15 +363,77 @@ ul.nav-links {
     border-radius: 4px !important;
 }
 
+/* CONTAINER QUERIES FOR MODERN BROWSERS */
+@supports (container-type: inline-size) {
+    .navbar {
+        container-type: inline-size !important;
+    }
+
+    @container (max-width: 500px) {
+        .nav-links {
+            gap: 0.5rem !important;
+        }
+    }
+
+    @container (min-width: 501px) and (max-width: 800px) {
+        .nav-links {
+            gap: 1.5rem !important;
+        }
+    }
+
+    @container (min-width: 801px) {
+        .nav-links {
+            gap: 3rem !important;
+        }
+    }
+}
+
+/* PRINT STYLES */
+@media print {
+    .navbar {
+        display: none !important;
+    }
+}
+
+/* HIGH DPI / RETINA DISPLAYS */
+@media (-webkit-min-device-pixel-ratio: 2),
+(min-resolution: 192dpi) {
+    .navbar-profile-circle {
+        border-width: 1px !important;
+    }
+}
+
+/* REDUCED MOTION PREFERENCE */
+@media (prefers-reduced-motion: reduce) {
+
+    .navbar,
+    .nav-links a,
+    .navbar-profile-circle {
+        transition: none !important;
+        animation: none !important;
+    }
+}
+
+/* DARK MODE SUPPORT */
+@media (prefers-color-scheme: dark) {
+    .navbar-container {
+        background-color: rgba(64, 64, 64, 0.4) !important;
+    }
+
+    .nav-links a {
+        color: #e0e0e0 !important;
+    }
+}
+
 /* ✅ OVERRIDE ANY PAGE-SPECIFIC STYLES */
 html .navbar,
 body .navbar,
 main .navbar,
 section .navbar,
 div .navbar {
-    max-width: 1130px !important;
-    width: 90% !important;
-    gap: 4.5rem !important;
+    max-width: min(1130px, 98vw) !important;
+    width: clamp(280px, 92vw, 1130px) !important;
+    gap: clamp(0.5rem, 4vw, 4.5rem) !important;
 }
 
 html .nav-links,
@@ -296,7 +441,7 @@ body .nav-links,
 main .nav-links,
 section .nav-links,
 div .nav-links {
-    gap: 4.5rem !important;
+    gap: clamp(0.3rem, 2.5vw, 4.5rem) !important;
 }
 
 html .navbar-container,
@@ -304,7 +449,6 @@ body .navbar-container,
 main .navbar-container,
 section .navbar-container,
 div .navbar-container {
-    max-width: 850px !important;
-    /* ✅ UPDATED TO MATCH ABOVE */
-    padding: 0 3rem !important;
+    max-width: min(850px, calc(100vw - 80px)) !important;
+    padding: clamp(0.3rem, 1.5vw, 0.75rem) clamp(0.8rem, 3vw, 3rem) !important;
 }

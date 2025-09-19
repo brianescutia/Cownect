@@ -1924,7 +1924,7 @@ template {
     position: relative;
 }
 
-.scale-slider {
+#scale-slider {
     width: 100%;
     height: 8px;
     border-radius: 4px;
@@ -1934,7 +1934,7 @@ template {
     cursor: pointer;
 }
 
-.scale-slider::-webkit-slider-thumb {
+#scale-slider::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
     width: 24px;
@@ -1946,7 +1946,7 @@ template {
     transition: all 0.3s ease;
 }
 
-.scale-slider::-webkit-slider-thumb:hover {
+#scale-slider::-webkit-slider-thumb:hover {
     transform: scale(1.1);
     box-shadow: 0 6px 16px rgba(95, 150, 197, 0.5);
 }

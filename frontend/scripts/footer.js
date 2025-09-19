@@ -345,20 +345,20 @@ class CownectFooter {
                             <div class="footer-section">
                                 <h4>Company</h4>
                                 <ul>
-                                    <li><a href="/about">About</a></li>
-                                    <li><a href="/contact">Contact</a></li>
-                                    <li><a href="/feedback">Feedback Form</a></li>
-                                    <li><a href="/careers">Careers</a></li>
+                                    <li><a href="https://ucdavis.edu">About</a></li>
+                                    <li><a href="https://ucdavis.edu">Contact</a></li>
+                                    <li><a href="https://ucdavis.edu">Feedback Form</a></li>
+                                    <li><a href="https://ucdavis.edu">Careers</a></li>
                                 </ul>
                             </div>
 
                             <div class="footer-section">
                                 <h4>Resources</h4>
                                 <ul>
-                                    <li><a href="/help">Help Center</a></li>
-                                    <li><a href="/privacy">Privacy Policy</a></li>
-                                    <li><a href="/terms">Terms of Service</a></li>
-                                    <li><a href="/support">Support</a></li>
+                                    <li><a href="https://ucdavis.edu">Help Center</a></li>
+                                    <li><a href="https://ucdavis.edu">Privacy Policy</a></li>
+                                    <li><a href="https://ucdavis.edu">Terms of Service</a></li>
+                                    <li><a href="https://ucdavis.edu">Support</a></li>
                                 </ul>
                             </div>
 
@@ -407,9 +407,9 @@ class CownectFooter {
                                 © <span id="currentYear">2025</span> Cownect. All rights reserved.
                             </p>
                             <div class="footer-bottom-links">
-                                <a href="/privacy">Privacy</a>
-                                <a href="/terms">Terms</a>
-                                <a href="/cookies">Cookies</a>
+                                <a href="https://ucdavis.edu">Privacy</a>
+                                <a href="https://ucdavis.edu">Terms</a>
+                                <a href="https://ucdavis.edu">Cookies</a>
                             </div>
                             <div class="footer-stats" id="footerStats">
                                 <span class="stat-item">                        

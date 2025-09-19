@@ -381,64 +381,79 @@ button {
 }
 
 /* =============================================================================
-   RESPONSIVE DESIGN
+   RESPONSIVE DESIGN - MOBILE FRIENDLY 768px AND UNDER
    =============================================================================
 */
 
-@media (max-width: 1400px) {
+/* Tablet - 768px and under */
+@media (max-width: 768px) {
+
+    /* Background blurs - reduce size on mobile */
+    .tech-clubs-blur-left,
+    .tech-clubs-blur-right {
+        width: 70%;
+        opacity: 0.4;
+    }
+
+    /* Search wrapper - make it more mobile friendly */
+    .search-wrapper {
+        width: 90vw;
+        height: 50px;
+        padding: 0 1rem;
+        margin: 1rem auto;
+    }
+
+    .search-bar {
+        font-size: 0.9rem;
+    }
+
+    .search-icon {
+        height: 24px;
+        width: 24px;
+    }
+
+    /* Filter tags - adjust for mobile */
+    .filter-tags {
+        max-width: 90vw;
+        padding: 0.5rem;
+        gap: 0.4rem;
+    }
+
+    .tag {
+        font-size: 0.8rem;
+        padding: 0.3rem 0.6rem;
+    }
+
+    /* GRID - 2 columns on tablet */
+    .clubs-grid {
+        grid-template-columns: repeat(2, 1fr);
+        grid-template-rows: auto;
+        gap: 1.5rem;
+        padding: 1rem;
+        max-width: 100%;
+    }
+
+    /* Show first 6 cards (3 rows × 2 columns) */
+    .club-card:nth-child(n+7) {
+        display: none;
+    }
+
+    /* Adjust card for tablet */
     .club-card {
+        max-width: 100%;
         height: 280px;
-        max-width: 260px;
+        padding: 0.875rem;
+        border-width: 2px;
     }
 
     .club-logo {
         height: 70px;
         width: 70px;
     }
-}
-
-@media (max-width: 1100px) {
-    .club-card {
-        height: 270px;
-        max-width: 280px;
-    }
-
-    .club-logo {
-        height: 65px;
-        width: 65px;
-    }
-}
-
-@media (max-width: 768px) {
-    .club-card {
-        height: 250px;
-        padding: 0.875rem;
-        border-width: 2px;
-        max-width: 320px;
-    }
-
-    .club-logo {
-        height: 60px;
-        /* Still bigger than original 40px */
-        width: 60px;
-    }
 
     .bookmark-icon img {
-        height: 30px;
-        width: 30px;
-    }
-}
-
-@media (max-width: 600px) {
-    .club-card {
-        height: 240px;
-        max-width: 100%;
-    }
-
-    .club-logo {
-        height: 55px;
-        /* Bigger than original even on mobile */
-        width: 55px;
+        height: 2.5rem;
+        width: 2.5rem;
     }
 
     .club-name {
@@ -447,12 +462,225 @@ button {
 
     .club-description {
         font-size: 0.85rem;
-        -webkit-line-clamp: 2;
-        /* Further reduced on mobile */
     }
 
     .club-tags {
         font-size: 0.8rem;
+    }
+
+    /* Pagination - smaller on mobile */
+    .pagination {
+        gap: 0.3rem;
+        margin: 1.5rem 0;
+    }
+
+    .pagination button {
+        padding: 0.4rem 0.7rem;
+        font-size: 0.9rem;
+    }
+}
+
+/* Mobile - 600px and under */
+@media (max-width: 600px) {
+
+    /* Search wrapper - full width on mobile */
+    .search-wrapper {
+        width: 92vw;
+        height: 45px;
+    }
+
+    /* GRID - 1 column on mobile */
+    .clubs-grid {
+        grid-template-columns: 1fr;
+        gap: 1.2rem;
+        padding: 1rem 0.5rem;
+    }
+
+    /* Show all 6 cards in single column */
+    .club-card {
+        height: 260px;
+        max-width: min(100%, 350px);
+        margin: 0 auto;
+    }
+
+    .club-logo {
+        height: 65px;
+        width: 65px;
+    }
+
+    .club-description {
+        -webkit-line-clamp: 2;
+    }
+}
+
+/* Small Mobile - 480px and under */
+@media (max-width: 480px) {
+
+    /* Hide background blurs on very small screens */
+    .tech-clubs-blur-left,
+    .tech-clubs-blur-right {
+        display: none;
+    }
+
+    /* Search wrapper - even smaller */
+    .search-wrapper {
+        width: 94vw;
+        height: 42px;
+        border-radius: 20px;
+    }
+
+    .search-bar {
+        font-size: 0.85rem;
+    }
+
+    .search-icon {
+        height: 20px;
+        width: 20px;
+    }
+
+    /* Filter tags - more compact */
+    .filter-tags {
+        max-width: 94vw;
+        padding: 0.4rem;
+    }
+
+    /* Cards - more compact */
+    .club-card {
+        height: 250px;
+        padding: 0.75rem;
+    }
+
+    .club-logo {
+        height: 60px;
+        width: 60px;
+        border-radius: 10px;
+    }
+
+    .bookmark-icon img {
+        height: 2rem;
+        width: 2rem;
+    }
+
+    .club-name {
+        font-size: 0.95rem;
+    }
+
+    .club-description {
+        font-size: 0.8rem;
+        line-height: 1.3;
+    }
+
+    .club-tags {
+        font-size: 0.75rem;
+    }
+
+    /* Pagination - very compact */
+    .pagination button {
+        padding: 0.35rem 0.6rem;
+        font-size: 0.85rem;
+        border-radius: 6px;
+    }
+}
+
+/* Extra Small Mobile - 360px and under */
+@media (max-width: 360px) {
+    .search-wrapper {
+        width: 95vw;
+        height: 40px;
+        padding: 0 0.75rem;
+    }
+
+    .club-card {
+        height: 240px;
+        padding: 0.7rem;
+    }
+
+    .club-logo {
+        height: 55px;
+        width: 55px;
+    }
+
+    .club-name {
+        font-size: 0.9rem;
+    }
+
+    .club-description {
+        font-size: 0.75rem;
+    }
+}
+
+/* =============================================================================
+   ADDITIONAL RESPONSIVE COMPONENTS
+   =============================================================================
+*/
+
+/* Filter dropdown responsive */
+@media (max-width: 768px) {
+    #filterTags {
+        max-width: 90vw;
+        padding: 0.75rem;
+        gap: 0.5rem;
+        margin: 1rem auto;
+    }
+
+    .filter-pill {
+        font-size: 0.8rem;
+        padding: 0.5rem 0.9rem;
+    }
+
+    .filter-dropdown {
+        padding: 0.75rem;
+    }
+
+    .filter-tag {
+        font-size: 0.75rem;
+        padding: 0.3rem 0.6rem;
+    }
+
+    .clear-all-btn {
+        font-size: 0.8rem;
+        padding: 0.5rem 0.9rem;
+    }
+}
+
+@media (max-width: 480px) {
+    #filterTags {
+        flex-wrap: wrap;
+    }
+
+    .filter-pill {
+        font-size: 0.75rem;
+        padding: 0.4rem 0.8rem;
+    }
+}
+
+/* Tag pills responsive */
+@media (max-width: 768px) {
+    .club-tags-container {
+        gap: 0.3rem;
+    }
+
+    .tag-pill {
+        font-size: 0.7rem;
+        padding: 0.2rem 0.5rem;
+    }
+
+    .more-tags-btn {
+        font-size: 0.7rem;
+        padding: 0.2rem 0.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .tag-pill {
+        font-size: 0.65rem;
+        padding: 0.15rem 0.4rem;
+        border-radius: 10px;
+    }
+
+    .more-tags-btn {
+        font-size: 0.65rem;
+        padding: 0.15rem 0.4rem;
     }
 }
 
