@@ -1,3 +1,8 @@
+/* =============================================================================
+   TRULY DYNAMIC NAVBAR CSS - ONE SOURCE OF TRUTH FOR ALL PAGES
+   =============================================================================
+*/
+
 /* COMPLETE RESET - Remove any conflicting styles */
 .navbar,
 nav.navbar,
@@ -216,216 +221,75 @@ ul.nav-links {
     border-radius: 50% !important;
 }
 
-/* ULTRA-SPECIFIC WIDTH BREAKPOINTS TO MATCH YOUR IMAGES */
-
-/* Large Laptop (1200px+) - Image 1 */
-@media (min-width: 1200px) {
-    .nav-links {
-        gap: 4.5rem !important;
-    }
-
+/* ============================================
+   NEW PROPORTIONAL SCALING BELOW 768px
+   Everything scales down together
+   ============================================ */
+@media (max-width: 768px) {
     .navbar {
-        gap: 4.5rem !important;
-    }
-}
+        /* Scale calculation: at 768px = 100%, at 320px = 60% */
+        --scale-factor: calc(0.6 + (100vw - 320px) * 0.4 / 448) !important;
 
-/* Medium Laptop (900px-1199px) - Image 2 */
-@media (min-width: 900px) and (max-width: 1199px) {
-    .nav-links {
-        gap: 3rem !important;
-    }
+        /* Apply scaled dimensions */
+        height: calc(68px * var(--scale-factor)) !important;
+        gap: calc(4.5rem * var(--scale-factor)) !important;
+        padding: calc(0.75rem * var(--scale-factor)) calc(2rem * var(--scale-factor)) !important;
+        border-radius: calc(25px * var(--scale-factor)) !important;
+        margin: calc(1rem * var(--scale-factor)) auto !important;
 
-    .navbar {
-        gap: 3rem !important;
-    }
-}
-
-/* Small Laptop/Tablet (600px-899px) - Image 3 */
-@media (min-width: 600px) and (max-width: 899px) {
-    .nav-links {
-        gap: 1.5rem !important;
-    }
-
-    .navbar {
-        gap: 2rem !important;
-    }
-}
-
-/* Large Mobile (400px-599px) - Image 4 */
-@media (min-width: 400px) and (max-width: 599px) {
-    .nav-links {
-        gap: 0.8rem !important;
-    }
-
-    .navbar {
-        gap: 1rem !important;
-    }
-
-    .logo-text {
-        font-size: 0.9rem !important;
-    }
-
-    .nav-links a {
-        font-size: 0.75rem !important;
-    }
-}
-
-/* Small Mobile (350px-399px) - Image 5 */
-@media (min-width: 350px) and (max-width: 399px) {
-    .nav-links {
-        gap: 0.5rem !important;
-    }
-
-    .navbar {
-        gap: 0.8rem !important;
-    }
-
-    .logo-text {
-        font-size: 0.8rem !important;
-    }
-
-    .nav-links a {
-        font-size: 0.7rem !important;
-    }
-
-    /* Hide less important nav items */
-    .nav-links li:last-child {
-        display: none !important;
-    }
-}
-
-/* Tiny Mobile (320px-349px) - Image 6 */
-@media (max-width: 349px) {
-    .nav-links {
-        gap: 0.3rem !important;
-    }
-
-    .navbar {
-        gap: 0.5rem !important;
-    }
-
-    .logo-text {
-        display: none !important;
-    }
-
-    .nav-links a {
-        font-size: 0.6rem !important;
-    }
-
-    /* Show only logo and profile */
-    .nav-links {
-        display: none !important;
-    }
-}
-
-/* MOBILE-FIRST BREAKPOINTS */
-
-/* Extra Small Devices (phones, 320px and up) */
-@media (max-width: 480px) {
-    .navbar {
-        margin: 0.5rem auto !important;
-        padding: 0.4rem 0.6rem !important;
-        gap: 0.6rem !important;
-        max-width: 95vw !important;
+        /* Keep your existing width settings */
+        max-width: min(1130px, 98vw) !important;
+        width: clamp(280px, 92vw, 1130px) !important;
     }
 
     .navbar-container {
-        padding: 0.4rem 0.8rem !important;
-        min-height: 35px !important;
+        padding: calc(0.75rem * var(--scale-factor)) calc(3rem * var(--scale-factor)) !important;
+        border-radius: calc(25px * var(--scale-factor)) !important;
+    }
+
+    .logo-title {
+        gap: calc(1.5rem * var(--scale-factor)) !important;
+        font-size: calc(1.2rem * var(--scale-factor)) !important;
+        margin-left: calc(-1rem * var(--scale-factor)) !important;
+    }
+
+    .logo {
+        height: calc(40px * var(--scale-factor)) !important;
     }
 
     .nav-links {
-        gap: 0.4rem !important;
+        gap: calc(4.5rem * var(--scale-factor)) !important;
     }
 
-    .logo-text {
-        font-size: 0.85rem !important;
-    }
-
+    .nav-link,
     .nav-links a {
-        font-size: 0.7rem !important;
-        padding: 0.2rem 0 !important;
+        font-size: calc(1rem * var(--scale-factor)) !important;
+        padding: calc(0.5rem * var(--scale-factor)) 0 !important;
     }
 
-    /* Progressive text shortening */
-    .nav-link[data-page="mentor-matching"]::after {
-        content: "Mentor" !important;
+    .navbar-profile-circle,
+    #navbarProfileCircle {
+        width: calc(55px * var(--scale-factor)) !important;
+        height: calc(55px * var(--scale-factor)) !important;
+        font-size: calc(1rem * var(--scale-factor)) !important;
     }
 
-    .nav-link[data-page="mentor-matching"] {
-        font-size: 0 !important;
-    }
-}
-
-/* Tiny Devices (very small phones, 360px and down) */
-@media (max-width: 360px) {
-    .navbar {
-        gap: 0.4rem !important;
-        padding: 0.3rem 0.5rem !important;
-    }
-
-    .navbar-container {
-        padding: 0.3rem 0.6rem !important;
-    }
-
-    .nav-links {
-        gap: 0.2rem !important;
-    }
-
-    .logo-text {
-        display: none !important;
-    }
-
-    /* Show only essential nav items */
-    .nav-links li:nth-child(n+4) {
-        display: none !important;
+    #navbarProfileInitials {
+        font-size: calc(0.9rem * var(--scale-factor)) !important;
     }
 }
 
-/* Ultra-tiny (watches, 320px and down) */
+/* Lock minimum scale at very small screens */
 @media (max-width: 320px) {
     .navbar {
-        padding: 0.2rem 0.4rem !important;
-        gap: 0.3rem !important;
-    }
-
-    .navbar-container {
-        padding: 0.2rem 0.4rem !important;
-    }
-
-    .nav-links {
-        gap: 0.1rem !important;
-    }
-
-    /* Show only 2 most important nav items */
-    .nav-links li:nth-child(n+3) {
-        display: none !important;
-    }
-
-    .nav-links a {
-        font-size: 0.6rem !important;
+        --scale-factor: 0.6 !important;
+        /* Lock at 60% minimum */
     }
 }
 
-/* Small Devices (landscape phones, 576px and up) */
-@media (min-width: 481px) and (max-width: 768px) {
-    .navbar {
-        gap: 1.5rem !important;
-    }
-
-    .navbar-container {
-        padding: 0.6rem 1.5rem !important;
-    }
-
-    .nav-links {
-        gap: 1.2rem !important;
-    }
-
-    .logo-text {
-        display: block !important;
-        font-size: 1rem !important;
-    }
-}
+/* ============================================
+   KEEP EXISTING BREAKPOINTS ABOVE 768px
+   ============================================ */
 
 /* Medium Devices (tablets, 768px and up) */
 @media (min-width: 769px) and (max-width: 992px) {
@@ -470,54 +334,6 @@ ul.nav-links {
 
     .nav-links {
         gap: 4.5rem !important;
-    }
-}
-
-/* HAMBURGER MENU FOR VERY SMALL SCREENS */
-@media (max-width: 360px) {
-    .nav-links {
-        position: absolute !important;
-        top: 100% !important;
-        left: 0 !important;
-        right: 0 !important;
-        background-color: rgba(183, 183, 183, 0.95) !important;
-        flex-direction: column !important;
-        padding: 1rem !important;
-        border-radius: 0 0 15px 15px !important;
-        gap: 0.8rem !important;
-        transform: translateY(-100%) !important;
-        opacity: 0 !important;
-        visibility: hidden !important;
-        transition: all 0.3s ease !important;
-        z-index: 1000 !important;
-    }
-
-    .nav-links.active {
-        transform: translateY(0) !important;
-        opacity: 1 !important;
-        visibility: visible !important;
-    }
-
-    .navbar-container {
-        position: relative !important;
-    }
-
-    /* Add hamburger toggle (you'll need to add this to your JS) */
-    .hamburger-toggle {
-        display: block !important;
-        width: 25px !important;
-        height: 20px !important;
-        cursor: pointer !important;
-        position: relative !important;
-    }
-
-    .hamburger-toggle span {
-        display: block !important;
-        height: 2px !important;
-        width: 100% !important;
-        background: #333 !important;
-        margin: 4px 0 !important;
-        transition: 0.3s !important;
     }
 }
 
