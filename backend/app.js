@@ -5056,7 +5056,10 @@ console.log('🚀 Next-Generation Quiz Routes loaded successfully');
 const { requireAuth: requireAuthentication, requireVerification } = require('../backend/authMiddleware');
 
 
-
+//Route for broken links//
+app.get('../../frontend/components/construction', (req, res) => {
+  res.sendFile(path.join(__dirname, '../frontend/components/construction'));
+});
 
 
 // Add this route for testing
