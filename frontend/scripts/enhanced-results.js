@@ -72,6 +72,8 @@ class EnhancedResultsPage {
 
             const data = await response.json();
             this.resultData = data.results;
+
+
             // In enhanced-results.js, update the debug section:
             console.log('=== SEARCHING FOR AI DATA ===');
             console.log('Checking root level:');
@@ -88,6 +90,9 @@ class EnhancedResultsPage {
             console.log('- Keys:', Object.keys(this.resultData?.topMatch || {}));
 
             console.log('✅ Results loaded successfully:', this.resultData);
+            console.log('Full result data:', this.resultData);
+            console.log('Entry requirements:', this.resultData?.topMatch?.entryRequirements);
+            console.log('Experience data:', this.resultData?.topMatch?.entryRequirements?.experience);
 
         } catch (error) {
             console.error('Error loading results:', error);
@@ -152,56 +157,18 @@ class EnhancedResultsPage {
             topMatch?.topMatch?.entryRequirements ||
             this.resultData?.entryRequirements;
 
-        console.log('Entry requirements data:', requirements); // Debug log
-
+        console.log('Requirements received:', requirements);
+        console.log('Experience data:', requirements?.experience);
 
         if (!requirements || Object.keys(requirements).length === 0) {
             console.warn('No entry requirements data found, using fallback');
-
-            // Populate with basic default data
-            const educationPrimary = document.getElementById('educationPrimary');
-            if (educationPrimary) {
-                educationPrimary.textContent = 'BS in Computer Science or related field';
-            }
-
-            const educationAlternative = document.getElementById('educationAlternative');
-            if (educationAlternative) {
-                educationAlternative.textContent = 'Bootcamp certification + strong portfolio';
-            }
-
-            const coursesContainer = document.getElementById('requiredCourses');
-            if (coursesContainer) {
-                coursesContainer.innerHTML = `
-                <li>Data Structures & Algorithms</li>
-                <li>Mobile Development</li>
-                <li>Software Engineering</li>
-            `;
-            }
-
-            const requiredSkillsContainer = document.getElementById('requiredSkills');
-            if (requiredSkillsContainer) {
-                requiredSkillsContainer.innerHTML = `
-                <span class="skill-tag required">Swift/Kotlin</span>
-                <span class="skill-tag required">Mobile UI/UX</span>
-                <span class="skill-tag required">Git</span>
-            `;
-            }
-
-            const preferredSkillsContainer = document.getElementById('preferredSkills');
-            if (preferredSkillsContainer) {
-                preferredSkillsContainer.innerHTML = `
-                <span class="skill-tag preferred">React Native</span>
-                <span class="skill-tag preferred">Firebase</span>
-                <span class="skill-tag preferred">API Integration</span>
-            `;
-            }
-
+            this.populateFallbackRequirements();
             return;
         }
 
         console.log('📋 Displaying personalized entry requirements...');
 
-        // Education requirements - now personalized
+        // Education requirements
         if (requirements.education) {
             const educationPrimary = document.getElementById('educationPrimary');
             if (educationPrimary) {
@@ -213,7 +180,7 @@ class EnhancedResultsPage {
                 educationAlternative.textContent = requirements.education.alternative || 'Bootcamp or self-study with portfolio';
             }
 
-            // Required courses - specific to user's year
+            // Required courses
             const coursesContainer = document.getElementById('requiredCourses');
             if (coursesContainer && requirements.education.requiredCourses) {
                 coursesContainer.innerHTML = requirements.education.requiredCourses
@@ -221,115 +188,165 @@ class EnhancedResultsPage {
                     .join('');
             }
 
-            // Add timeline if available
+            // Timeline if available
             if (requirements.education.timeline) {
                 const timelineEl = document.createElement('div');
                 timelineEl.className = 'education-timeline';
                 timelineEl.innerHTML = `
-                    <span class="timeline-icon">🗓️</span>
-                    <span>${requirements.education.timeline}</span>
-                `;
-                document.querySelector('.requirement-content').appendChild(timelineEl);
+                <span class="timeline-icon">🗓️</span>
+                <span>${requirements.education.timeline}</span>
+            `;
+                const requirementContent = document.querySelector('.requirement-content');
+                if (requirementContent) {
+                    requirementContent.appendChild(timelineEl);
+                }
             }
         }
 
-        // Technical skills - prioritized for the user
+        // Technical skills
         if (requirements.technicalSkills) {
             const requiredSkillsContainer = document.getElementById('requiredSkills');
-            if (requiredSkillsContainer && requirements.technicalSkills.mustHave) {
-                requiredSkillsContainer.innerHTML = requirements.technicalSkills.mustHave
+
+            // Handle both field name formats: 'required' (static) and 'mustHave' (AI)
+            const requiredSkills = requirements.technicalSkills.required ||
+                requirements.technicalSkills.mustHave || [];
+
+            if (requiredSkillsContainer && requiredSkills.length > 0) {
+                requiredSkillsContainer.innerHTML = requiredSkills
                     .map(skill => `<span class="skill-tag required">${skill}</span>`)
                     .join('');
             }
 
             const preferredSkillsContainer = document.getElementById('preferredSkills');
-            if (preferredSkillsContainer && requirements.technicalSkills.shouldHave) {
-                preferredSkillsContainer.innerHTML = requirements.technicalSkills.shouldHave
+
+            // Handle both field name formats: 'preferred' (static) and 'shouldHave' (AI)
+            const preferredSkills = requirements.technicalSkills.preferred ||
+                requirements.technicalSkills.shouldHave || [];
+
+            if (preferredSkillsContainer && preferredSkills.length > 0) {
+                preferredSkillsContainer.innerHTML = preferredSkills
                     .map(skill => `<span class="skill-tag preferred">${skill}</span>`)
                     .join('');
             }
-
-            // Add nice-to-have skills
-            if (requirements.technicalSkills.niceToHave) {
-                const niceToHaveContainer = document.createElement('div');
-                niceToHaveContainer.className = 'skills-section';
-                niceToHaveContainer.innerHTML = `
-                    <label>Advanced Skills:</label>
-                    <div class="skill-tags">
-                        ${requirements.technicalSkills.niceToHave
-                        .map(skill => `<span class="skill-tag advanced">${skill}</span>`)
-                        .join('')}
-                    </div>
-                `;
-                document.querySelector('.requirement-content').appendChild(niceToHaveContainer);
-            }
         }
 
-        // Experience requirements - time-based
-        // In enhanced-results.js, around line 240-260
-        // Experience & Portfolio section
+        // Experience & Portfolio section - FIXED to handle both data formats
         if (requirements.experience) {
             const portfolioReq = document.getElementById('portfolioRequirement');
             if (portfolioReq) {
-                portfolioReq.textContent = requirements.experience.immediate ||
-                    '3-5 full-stack projects on GitHub';
+                // Check for all possible field names
+                portfolioReq.textContent =
+                    requirements.experience.portfolio ||  // Static data format
+                    requirements.experience.immediate ||  // AI data format
+                    '3-5 projects demonstrating core skills';
             }
 
             const internshipReq = document.getElementById('internshipRequirement');
             if (internshipReq) {
-                internshipReq.textContent = requirements.experience.shortTerm ||
-                    '1+ software development internship preferred';
+                // Check for all possible field names
+                internshipReq.textContent =
+                    requirements.experience.internships ||  // Static data format
+                    requirements.experience.shortTerm ||    // AI data format
+                    '1+ relevant internship preferred';
             }
 
             const projectIdeas = document.getElementById('projectIdeas');
             if (projectIdeas) {
-                // Always display as list items, even if it comes as a string
-                const beforeGrad = requirements.experience.beforeGraduation;
-                if (typeof beforeGrad === 'string') {
-                    // Parse the string for project ideas
-                    const ideas = beforeGrad.split(/[,;]/).map(s => s.trim()).filter(s => s);
-                    if (ideas.length > 1) {
-                        projectIdeas.innerHTML = ideas.map(idea => `<li>${idea}</li>`).join('');
-                    } else {
-                        // If it's a single statement, still show it as a list item
-                        projectIdeas.innerHTML = `<li>${beforeGrad}</li>`;
-                    }
-                } else {
-                    // Fallback to static project ideas based on career
-                    const careerProjectIdeas = {
-                        'Mobile Developer (iOS/Android)': [
-                            'Todo list app with local storage',
-                            'Weather app using APIs',
-                            'Simple game or calculator app'
-                        ],
-                        'DEFAULT': [
-                            'Personal portfolio website',
-                            'CRUD application with authentication',
-                            'API integration project'
-                        ]
-                    };
+                let projectsList = [];
 
-                    const ideas = careerProjectIdeas[topMatch.career] || careerProjectIdeas.DEFAULT;
-                    projectIdeas.innerHTML = ideas.map(idea => `<li>${idea}</li>`).join('');
+                // Handle multiple possible data formats
+                if (requirements.experience.projects && Array.isArray(requirements.experience.projects)) {
+                    // Static data format: projects is already an array
+                    projectsList = requirements.experience.projects;
+                } else if (requirements.experience.beforeGraduation) {
+                    // AI data format: beforeGraduation might be a string
+                    const beforeGrad = requirements.experience.beforeGraduation;
+                    if (typeof beforeGrad === 'string') {
+                        projectsList = beforeGrad.split(/[,;]/).map(s => s.trim()).filter(s => s);
+                    } else if (Array.isArray(beforeGrad)) {
+                        projectsList = beforeGrad;
+                    }
+                }
+
+                // If we have projects to display
+                if (projectsList.length > 0) {
+                    projectIdeas.innerHTML = projectsList.map(project => `<li>${project}</li>`).join('');
+                } else {
+                    // Use career-specific fallbacks
+                    this.populateFallbackProjects(projectIdeas, topMatch.career);
                 }
             }
         }
+    }
 
-        // Unique advantage - personalized insight
-        if (requirements.uniqueAdvantage) {
-            const advantageSection = document.createElement('div');
-            advantageSection.className = 'unique-advantage-section';
-            advantageSection.innerHTML = `
-                <div class="advantage-card">
-                    <span class="advantage-icon">⭐</span>
-                    <div class="advantage-content">
-                        <h4>Your Unique Advantage</h4>
-                        <p>${requirements.uniqueAdvantage}</p>
-                    </div>
-                </div>
-            `;
-            document.querySelector('.requirement-card').appendChild(advantageSection);
+    // Helper method for fallback requirements
+    populateFallbackRequirements() {
+        const educationPrimary = document.getElementById('educationPrimary');
+        if (educationPrimary) {
+            educationPrimary.textContent = 'BS in Computer Science or related field';
         }
+
+        const educationAlternative = document.getElementById('educationAlternative');
+        if (educationAlternative) {
+            educationAlternative.textContent = 'Bootcamp certification + strong portfolio';
+        }
+
+        const coursesContainer = document.getElementById('requiredCourses');
+        if (coursesContainer) {
+            coursesContainer.innerHTML = `
+            <li>Data Structures & Algorithms</li>
+            <li>Software Development</li>
+            <li>Software Engineering</li>
+        `;
+        }
+
+        const requiredSkillsContainer = document.getElementById('requiredSkills');
+        if (requiredSkillsContainer) {
+            requiredSkillsContainer.innerHTML = `
+            <span class="skill-tag required">Programming Fundamentals</span>
+            <span class="skill-tag required">Version Control (Git)</span>
+            <span class="skill-tag required">Problem Solving</span>
+        `;
+        }
+
+        const preferredSkillsContainer = document.getElementById('preferredSkills');
+        if (preferredSkillsContainer) {
+            preferredSkillsContainer.innerHTML = `
+            <span class="skill-tag preferred">Cloud Platforms</span>
+            <span class="skill-tag preferred">Testing</span>
+            <span class="skill-tag preferred">Agile Methods</span>
+        `;
+        }
+    }
+
+    // Helper method for project fallbacks
+    populateFallbackProjects(projectIdeas, careerName) {
+        const careerProjectIdeas = {
+            'Mobile Developer (iOS/Android)': [
+                'Weather app with API integration',
+                'Social media clone with real-time features',
+                'E-commerce mobile app',
+                'AR/Camera feature app'
+            ],
+            'Frontend Engineer': [
+                'Interactive portfolio website',
+                'React dashboard with data visualization',
+                'E-commerce frontend'
+            ],
+            'Backend Engineer': [
+                'RESTful API with authentication',
+                'Microservices architecture project',
+                'Real-time chat server'
+            ],
+            'DEFAULT': [
+                'Personal portfolio website',
+                'Full-stack web application',
+                'API integration project'
+            ]
+        };
+
+        const ideas = careerProjectIdeas[careerName] || careerProjectIdeas.DEFAULT;
+        projectIdeas.innerHTML = ideas.map(idea => `<li>${idea}</li>`).join('');
     }
 
     populateSkillGapAnalysis() {

@@ -441,6 +441,8 @@ router.post('/submit', requireAuth, rateLimitQuizSubmission, async (req, res) =>
             console.warn('⚠️ Legacy save failed (continuing):', error.message);
         }
 
+        console.log(`${topCareer} static data:`, JSON.stringify(staticCareerData.experience));
+
         // Create enhanced result with all dynamic content
         const enhancedResult = new EnhancedQuizResult({
             user: userId,
@@ -488,8 +490,8 @@ router.post('/submit', requireAuth, rateLimitQuizSubmission, async (req, res) =>
                 confidence: match.confidence || match.percentage || 75,
                 reasoning: match.whyFit || 'Strong alignment with your interests',
                 marketData: completeCareerRequirements[match.career]?.marketData || {
-                    avgSalary: 'Competitive',
-                    jobGrowth: 'Growing',
+                    avgSalary: 'Moderate',
+                    jobGrowth: '15%',
                     demandLevel: 'High'
                 }
             })),
