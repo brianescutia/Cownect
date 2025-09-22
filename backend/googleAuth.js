@@ -2,17 +2,13 @@ const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const User = require('./models/User');
 
-// Use environment variable for base URL, fallback to your custom domain
-const BASE_URL = process.env.BASE_URL || 'https://cownect.org';
-
 const callbackURL = process.env.NODE_ENV === 'production'
-    ? `${BASE_URL}/auth/google/callback`  // Now uses your custom domain
+    ? 'https://cownect-production.up.railway.app/auth/google/callback'
     : 'http://localhost:3000/auth/google/callback';
 
 // Debug logging
 console.log('🔐 Google OAuth Configuration:');
 console.log('   Environment:', process.env.NODE_ENV);
-console.log('   Base URL:', BASE_URL);
 console.log('   Callback URL:', callbackURL);
 console.log('   Client ID exists:', !!process.env.GOOGLE_CLIENT_ID);
 console.log('   Client Secret exists:', !!process.env.GOOGLE_CLIENT_SECRET);
@@ -21,7 +17,7 @@ console.log('   Client Secret exists:', !!process.env.GOOGLE_CLIENT_SECRET);
 passport.use(new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL: callbackURL,  // Fixed: now using the variable with your custom domain
+    callbackURL: callbackURL,  // Fixed: now using the variable with HTTPS
     proxy: true
 },
     async (accessToken, refreshToken, profile, done) => {
