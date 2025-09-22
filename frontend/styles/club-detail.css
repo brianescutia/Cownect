@@ -90,8 +90,7 @@ body {
     grid-template-columns: 750px 380px;
     gap: 25px;
     margin: 1rem 0;
-    justify-content: flex-start;
-    padding-left: 100px;
+    justify-content: center;
 }
 
 /* =============================================================================
