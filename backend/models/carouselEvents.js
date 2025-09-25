@@ -68,4 +68,5 @@ const carouselEventSchema = new mongoose.Schema({
 carouselEventSchema.index({ clubId: 1, date: -1 });
 
 const CarouselEvent = mongoose.model('CarouselEvent', carouselEventSchema);
-/
+
+module.exports = CarouselEvent;

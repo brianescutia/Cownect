@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Manage Carousel Events (Admin)</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            margin: 2rem;
+        }
+
+        form,
+        .event-list {
+            max-width: 600px;
+            margin: 2rem auto;
+        }
+
+        label {
+            display: block;
+            margin-top: 1rem;
+        }
+
+        input,
+        textarea,
+        select {
+            width: 100%;
+            padding: 0.5rem;
+            margin-top: 0.25rem;
+        }
+
+        button {
+            margin-top: 1rem;
+            padding: 0.5rem 1.5rem;
+        }
+
+        .success {
+            color: green;
+        }
+
+        .error {
+            color: red;
+        }
+
+        .event-item {
+            border: 1px solid #ccc;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 8px;
+        }
+
+        .event-actions {
+            margin-top: 0.5rem;
+        }
+
+        .event-actions button {
+            margin-right: 0.5rem;
+        }
+
+        .edit-form {
+            background: #f9f9f9;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+        }
+    </style>
+</head>
+
+<body>
+    <h2>Manage Carousel Events for a Club (Admin)</h2>
+    <form id="clubIdForm">
+        <label>
+            Club ID
+            <input type="text" id="clubId" required placeholder="Paste Club's MongoDB _id here" />
+        </label>
+        <button type="submit">Load Events</button>
+        <div id="clubResult"></div>
+    </form>
+
+    <div id="eventSection" style="display:none;">
+        <h3>Add New Carousel Event</h3>
+        <form id="addEventForm">
+            <label>Title <input type="text" id="title" required /></label>
+            <label>Date <input type="date" id="date" required /></label>
+            <label>Start Time <input type="time" id="startTime" required /></label>
+            <label>End Time <input type="time" id="endTime" required /></label>
+            <label>Location <input type="text" id="location" required /></label>
+            <label>Description <textarea id="description" required></textarea></label>
+            <label>Image URL <input type="url" id="imageUrl" placeholder="https://..." /></label>
+            <label>Registration URL <input type="url" id="registrationUrl" placeholder="https://..." /></label>
+            <button type="submit">Add Carousel Event</button>
+            <div id="addResult"></div>
+        </form>
+
+        <h3>Existing Carousel Events</h3>
+        <div id="eventList" class="event-list"></div>
+    </div>
+
+    <script>
+        let currentClubId = null;
+        let events = [];
+
+        // Load events for a club
+        document.getElementById('clubIdForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+            currentClubId = document.getElementById('clubId').value.trim();
+            document.getElementById('clubResult').textContent = '';
+            document.getElementById('eventSection').style.display = 'none';
+            if (!currentClubId) return;
+            try {
+                const res = await fetch(`/api/clubs/${currentClubId}/carousel-events`);
+                const data = await res.json();
+                if (res.ok) {
+                    events = data.events || [];
+                    document.getElementById('eventSection').style.display = '';
+                    renderEventList();
+                } else {
+                    document.getElementById('clubResult').textContent = data.error || 'Failed to load events';
+                }
+            } catch (err) {
+                document.getElementById('clubResult').textContent = 'Network error: ' + err.message;
+            }
+        });
+
+        // Add new event
+        document.getElementById('addEventForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+            const payload = {
+                title: document.getElementById('title').value,
+                date: document.getElementById('date').value,
+                startTime: document.getElementById('startTime').value,
+                endTime: document.getElementById('endTime').value,
+                location: document.getElementById('location').value,
+                description: document.getElementById('description').value,
+                imageUrl: document.getElementById('imageUrl').value,
+                registrationUrl: document.getElementById('registrationUrl').value
+            };
+            const addResult = document.getElementById('addResult');
+            addResult.textContent = '';
+            try {
+                const res = await fetch(`/api/clubs/${currentClubId}/carousel-events`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const data = await res.json();
+                if (res.ok && data.success) {
+                    addResult.textContent = '✅ Event added!';
+                    addResult.className = 'success';
+                    this.reset();
+                    // Reload events
+                    events.push(data.event);
+                    renderEventList();
+                } else {
+                    addResult.textContent = '❌ ' + (data.error || 'Failed to add event');
+                    addResult.className = 'error';
+                }
+            } catch (err) {
+                addResult.textContent = '❌ Network error: ' + err.message;
+                addResult.className = 'error';
+            }
+        });
+
+        // Render event list
+        function renderEventList() {
+            const eventList = document.getElementById('eventList');
+            eventList.innerHTML = '';
+            if (!events.length) {
+                eventList.textContent = 'No carousel events for this club.';
+                return;
+            }
+            events.forEach(event => {
+                const div = document.createElement('div');
+                div.className = 'event-item';
+                div.innerHTML = `
+          <strong>${event.title}</strong> (${event.date ? event.date.substring(0, 10) : ''})<br>
+          <em>${event.startTime} - ${event.endTime} @ ${event.location}</em><br>
+          <span>${event.description}</span><br>
+          <span>Image: ${event.imageUrl ? `<a href="${event.imageUrl}" target="_blank">View</a>` : 'None'}</span><br>
+          <span>Registration: ${event.registrationUrl ? `<a href="${event.registrationUrl}" target="_blank">Link</a>` : 'None'}</span><br>
+          <div class="event-actions">
+            <button onclick="editEvent('${event._id}')">Edit</button>
+            <button onclick="deleteEvent('${event._id}')">Delete</button>
+          </div>
+          <div id="editForm-${event._id}"></div>
+        `;
+                eventList.appendChild(div);
+            });
+        }
+
+        // Delete event
+        window.deleteEvent = async function (eventId) {
+            if (!confirm('Delete this event?')) return;
+            try {
+                const res = await fetch(`/api/carousel-events/${eventId}`, { method: 'DELETE' });
+                const data = await res.json();
+                if (res.ok && data.success) {
+                    events = events.filter(ev => ev._id !== eventId);
+                    renderEventList();
+                } else {
+                    alert(data.error || 'Failed to delete event');
+                }
+            } catch (err) {
+                alert('Network error: ' + err.message);
+            }
+        };
+
+        // Edit event
+        window.editEvent = function (eventId) {
+            const event = events.find(ev => ev._id === eventId);
+            const editDiv = document.getElementById(`editForm-${eventId}`);
+            if (!event || !editDiv) return;
+            editDiv.innerHTML = `
+        <form class="edit-form" onsubmit="return updateEvent('${eventId}', this)">
+          <label>Title <input type="text" name="title" value="${event.title}" required /></label>
+          <label>Date <input type="date" name="date" value="${event.date ? event.date.substring(0, 10) : ''}" required /></label>
+          <label>Start Time <input type="time" name="startTime" value="${event.startTime}" required /></label>
+          <label>End Time <input type="time" name="endTime" value="${event.endTime}" required /></label>
+          <label>Location <input type="text" name="location" value="${event.location}" required /></label>
+          <label>Description <textarea name="description" required>${event.description}</textarea></label>
+          <label>Image URL <input type="url" name="imageUrl" value="${event.imageUrl || ''}" /></label>
+          <label>Registration URL <input type="url" name="registrationUrl" value="${event.registrationUrl || ''}" /></label>
+          <button type="submit">Update</button>
+          <button type="button" onclick="cancelEdit('${eventId}')">Cancel</button>
+          <div class="editResult"></div>
+        </form>
+      `;
+        };
+
+        // Cancel edit
+        window.cancelEdit = function (eventId) {
+            const editDiv = document.getElementById(`editForm-${eventId}`);
+            if (editDiv) editDiv.innerHTML = '';
+        };
+
+        // Update event
+        window.updateEvent = async function (eventId, form) {
+            const payload = {
+                title: form.title.value,
+                date: form.date.value,
+                startTime: form.startTime.value,
+                endTime: form.endTime.value,
+                location: form.location.value,
+                description: form.description.value,
+                imageUrl: form.imageUrl.value,
+                registrationUrl: form.registrationUrl.value
+            };
+            const editResult = form.querySelector('.editResult');
+            editResult.textContent = '';
+            try {
+                const res = await fetch(`/api/carousel-events/${eventId}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const data = await res.json();
+                if (res.ok && data.success) {
+                    // Update local event
+                    const idx = events.findIndex(ev => ev._id === eventId);
+                    if (idx !== -1) events[idx] = { ...events[idx], ...payload };
+                    renderEventList();
+                } else {
+                    editResult.textContent = data.error || 'Failed to update event';
+                    editResult.className = 'error';
+                }
+            } catch (err) {
+                editResult.textContent = 'Network error: ' + err.message;
+                editResult.className = 'error';
+            }
+            return false; // prevent form submit
+        };
+    </script>
+</body>
+
+</html>
