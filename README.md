@@ -2,7 +2,7 @@
 
 A full-stack web application helping UC Davis students discover tech clubs, explore career paths, and build community connections. Features real club data, user authentication, interactive career quiz, and modern responsive design.
 
-** Live Demo:** [Insert deployment URL]  
+** Live Demo:** https://www.cownect.org/  
 ** GitHub:** https://github.com/brianescutia/Cownect
 
 ---
