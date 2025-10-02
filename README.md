@@ -511,7 +511,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 **⭐ If you find this project useful, please consider giving it a star!**
 
-Made with ❤️ by UC Davis students, for UC Davis students
+Made with ❤️ by UC Davis students, for UC Davis students!
 
 ![UC Davis](https://img.shields.io/badge/UC%20Davis-Aggies-DAAA00?style=for-the-badge)
 
