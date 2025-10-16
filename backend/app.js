@@ -1419,7 +1419,6 @@ app.get('/api/set-hero-images', requireAuth, async (req, res) => {
   }
 });
 
-<<<<<<< HEAD
 app.post('/api/events/import-from-instagram', requireAuth, async (req, res) => {
   try {
     // Optional: Add admin check here
@@ -1444,7 +1443,6 @@ app.post('/api/events/import-from-instagram', requireAuth, async (req, res) => {
   }
 });
 
-=======
 //Carousel Events
 //ADD CAROUSEL EVENT
 app.post('/api/clubs/:clubId/carousel-events', requireAuth, async (req, res) => {
@@ -1494,7 +1492,6 @@ app.delete('/api/carousel-events/:eventId', requireAuth, async (req, res) => {
 });
 
 
->>>>>>> 6f477e4a2bff3607706c4083a6e0988842683605
 //  JOIN EVENT - Enhanced version
 app.post('/api/events/:id/join', requireAuth, async (req, res) => {
   try {
