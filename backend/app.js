@@ -5,6 +5,10 @@ const mongoose = require('mongoose');
 const session = require('express-session');
 const MongoStore = require('connect-mongo');
 const passport = require('passport');
+const cron = require('node-cron');
+const InstagramStoryService = require('./services/instagramStoryService');
+const { startStoryScraperJob } = require('./jobs/storyScraperJob');
+
 
 // Create Express app
 const app = express();
@@ -83,6 +87,25 @@ mongoose.connect(process.env.MONGO_URI, {
 })
   .then(() => console.log('Connected to MongoDB Atlas'))
   .catch(err => console.error('MongoDB connection error:', err));
+
+if (process.env.INSTAGRAM_ACCESS_TOKEN) {
+  console.log('⏰ Scheduling Instagram story checks...');
+
+  cron.schedule('0 * * * *', async () => {
+    console.log('\n🕐 Running scheduled Instagram story check...');
+    try {
+      const service = new InstagramStoryService();
+      const results = await service.processStories();
+      console.log('✅ Scheduled check complete:', results);
+    } catch (error) {
+      console.error('❌ Scheduled check failed:', error);
+    }
+  });
+
+  console.log('✅ Instagram story checks scheduled (every hour)');
+} else {
+  console.log('⚠️ Instagram integration disabled (no access token)');
+}
 
 // AUTHENTICATION MIDDLEWARE - Our "bouncer" function
 // This checks if someone has a valid wristband before letting them into protected areas
@@ -1392,6 +1415,30 @@ app.get('/api/set-hero-images', requireAuth, async (req, res) => {
   } catch (error) {
     console.error('💥 Error updating hero images:', error);
     res.status(500).json({ error: 'Failed to update hero images' });
+  }
+});
+
+app.post('/api/events/import-from-instagram', requireAuth, async (req, res) => {
+  try {
+    // Optional: Add admin check here
+    console.log(`📸 Manual Instagram import triggered by ${req.session.userEmail}`);
+
+    const service = new InstagramStoryService();
+    const results = await service.processStories();
+
+    res.json({
+      success: true,
+      message: 'Instagram stories processed successfully',
+      results: results
+    });
+
+  } catch (error) {
+    console.error('❌ Manual import failed:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Failed to process Instagram stories',
+      details: error.message
+    });
   }
 });
 
@@ -5055,6 +5102,42 @@ app.get('/api/quiz/next-gen/analytics', requireAuth, async (req, res) => {
 });
 
 console.log('🚀 Next-Generation Quiz Routes loaded successfully');
+
+// Delete duplicate events
+app.get('/api/test/cleanup-duplicates', requireAuth, async (req, res) => {
+  try {
+    // Find all events with same title and date
+    const duplicates = await Event.aggregate([
+      {
+        $group: {
+          _id: { title: '$title', date: '$date' },
+          count: { $sum: 1 },
+          ids: { $push: '$_id' }
+        }
+      },
+      {
+        $match: { count: { $gt: 1 } }
+      }
+    ]);
+
+    let deletedCount = 0;
+
+    // Keep the first one, delete the rest
+    for (const dup of duplicates) {
+      const idsToDelete = dup.ids.slice(1); // Keep first, delete rest
+      await Event.deleteMany({ _id: { $in: idsToDelete } });
+      deletedCount += idsToDelete.length;
+    }
+
+    res.json({
+      success: true,
+      message: `Deleted ${deletedCount} duplicate events`,
+      duplicates: duplicates.length
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
 // =============================================================================
 //Email Verification
 // =============================================================================
@@ -5111,6 +5194,13 @@ app.get('/api/test/openai', async (req, res) => {
     });
   }
 });
+
+if (process.env.INSTAGRAM_ACCESS_TOKEN) {
+  console.log('🤖 Starting Instagram story scraper...');
+  startStoryScraperJob();
+} else {
+  console.warn('⚠️ Instagram access token not found, story scraper disabled');
+}
 
 // =============================================================================
 // HELPER FUNCTIONS FOR ENHANCED QUIZ RESULTS
@@ -5351,6 +5441,13 @@ app.get('/api/test/bulk-update', (req, res) => {
 // START SERVER
 // =============================================================================
 app.listen(port, '0.0.0.0', () => {
+  if (process.env.INSTAGRAM_ACCESS_TOKEN && process.env.INSTAGRAM_BUSINESS_ACCOUNT_ID) {
+    console.log('🤖 Starting Instagram story scraper...');
+    startStoryScraperJob();
+  } else {
+    console.warn('⚠️ Instagram credentials not found - story scraper disabled');
+    console.warn('   Add INSTAGRAM_ACCESS_TOKEN and INSTAGRAM_BUSINESS_ACCOUNT_ID to .env');
+  }
   console.log(`🚀 Cownect server running at port ${port}`);
   console.log(`🌍 Environment: ${isProduction ? 'Production' : 'Development'}`);
   console.log(`📊 Database: MongoDB Atlas`);
