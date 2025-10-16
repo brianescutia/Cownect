@@ -530,7 +530,7 @@ const clubData = [
         },
         focusAreas: ["Weekly workshops", "Project teams", "Mentorship ladder", "Competition prep"],
         officers: [
-            { position: "President", name: "Apoorva Hooda", email: "idk" },
+            { position: "President", name: "Apoorva Hooda", email: "" },
             { position: "Vice President", name: "Maya Nordin", email: "mnordin@ucdavis.edu" }
         ],
         about: "Provides workshops, mentorship, and project teams that grow practical data skills for research and careers."
@@ -552,7 +552,7 @@ const clubData = [
         },
         focusAreas: ["Interclub coordination", "Event planning", "Leadership roles", "Campus impact"],
         officers: [
-            { position: "President", name: "Jason Pieck", email: "idk" },
+            { position: "President", name: "Jason Pieck", email: "" },
             { position: "Vice President", name: "Heather Lin", email: "healin@ucdavis.edu" }
         ],
         about: "Supports engineering clubs, funding, and large events while coordinating collaboration across disciplines."

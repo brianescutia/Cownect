@@ -789,6 +789,44 @@ body {
 }
 
 /* =============================================================================
+   SEE MORE STYLING
+   =============================================================================
+*/
+
+.event-description {
+    transition: max-height 0.3s ease-out;
+    overflow: hidden;
+    margin: 0;
+    line-height: 1.4;
+}
+
+.event-description.short {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    max-height: 4.5em;
+}
+
+.see-more-btn {
+    background: none;
+    border: none;
+    color: #5F96C5;
+    cursor: pointer;
+    font-size: 0.85rem;
+    padding: 0;
+    margin: 0.25rem 0;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.see-more-btn:hover {
+    color: #4a8bc2;
+    text-decoration: underline;
+}
+
+
+/* =============================================================================
    BOOKMARK BUTTON
    =============================================================================
 */

@@ -23,6 +23,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         // Load club details
         await loadClubDetails(clubId);
+        await loadCarouselEvents(clubId);
 
         // Set up carousel and other features
         setupEventsCarousel();
@@ -524,6 +525,109 @@ function updateHeroImage(club) {
         heroImage.style.backgroundRepeat = 'no-repeat';
     }
 }
+
+// ===================== CAROUSEL EVENTS FETCH & RENDER =====================
+
+async function loadCarouselEvents(clubId) {
+    try {
+        const res = await fetch(`/api/clubs/${clubId}/carousel-events`);
+        const data = await res.json();
+        if (res.ok && data.events) {
+            renderCarouselEvents(data.events);
+        } else {
+            renderCarouselEvents([]);
+        }
+    } catch (err) {
+        console.error('Error loading carousel events:', err);
+        renderCarouselEvents([]);
+    }
+}
+
+function formatTimeToAMPM(time) {
+    if (!time) return '';
+    const [hours, minutes] = time.split(':');
+    const hour = parseInt(hours);
+    const ampm = hour >= 12 ? 'PM' : 'AM';
+    const formattedHour = hour % 12 || 12;
+    return `${formattedHour}:${minutes} ${ampm}`;
+}
+
+function renderCarouselEvents(events) {
+    const carousel = document.getElementById('eventsCarousel');
+    if (!carousel) return;
+    carousel.innerHTML = '';
+
+    if (!events.length) {
+        carousel.innerHTML = '<p style="padding:2rem;">No upcoming events for this club.</p>';
+        return;
+    }
+
+    events.forEach(event => {
+        const dateObj = new Date(event.date);
+        const day = dateObj.getDate().toString().padStart(2, '0');
+        const month = dateObj.toLocaleString('default', { month: 'short' }).toUpperCase();
+
+        //Formatting start and end times
+        const formattedStartTime = formatTimeToAMPM(event.startTime);
+        const formattedEndTime = formatTimeToAMPM(event.endTime);
+
+        const shortDescription = event.description.length > 100
+            ? event.description.substring(0, 100) + '...'
+            : event.description;
+
+        carousel.innerHTML += `
+        <div class="event-card">
+            <div class="event-image">
+                <img src="${event.imageUrl || '/assets/events/default-event.jpg'}" alt="${event.title}" />
+                <div class="event-date-overlay">
+                    <span class="day">${day}</span>
+                    <span class="month">${month}</span>
+                </div>
+                <button class="event-bookmark" data-event-id="${event._id}">
+                    <img src="/assets/bookmark.png" alt="Bookmark Event" />
+                </button>
+            </div>
+            <div class="event-details">
+                 <h4>${event.title}</h4>
+                    <div class="description-container">
+                        <p class="event-description collapsed" data-full="${event.description}">${shortDescription}</p>
+                        ${event.description.length > 100 ?
+                `<button class="see-more-btn" onclick="toggleDescription(this)">See more</button>`
+                : ''}
+                    </div>
+                    <div class="event-meta">
+                        <p class="event-time">${formattedStartTime} to ${formattedEndTime}</p>
+                        <p class="event-location">${event.location}</p>
+                    </div>
+                </div>
+            </div>
+        `;
+    });
+}
+
+//See more
+// Replace the existing toggleDescription function with this updated version
+function toggleDescription(button) {
+    const descriptionElement = button.previousElementSibling;
+    const fullText = descriptionElement.getAttribute('data-full');
+
+    if (descriptionElement.classList.contains('collapsed')) {
+        // Expanding
+        descriptionElement.innerHTML = fullText; // Use innerHTML instead of textContent
+        descriptionElement.classList.remove('collapsed');
+        button.textContent = 'See less';
+    } else {
+        // Collapsing
+        const shortText = fullText.substring(0, 100) + '...';
+        descriptionElement.innerHTML = shortText;
+        descriptionElement.classList.add('collapsed');
+        button.textContent = 'See more';
+    }
+
+    // Preserve the data-full attribute
+    descriptionElement.setAttribute('data-full', fullText);
+}
+
 
 // =============================================================================
 // EVENT LISTENERS FOR DYNAMIC CONTENT

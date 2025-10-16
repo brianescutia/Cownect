@@ -25,6 +25,7 @@ const Club = require('./models/Club');
 const { CareerField, QuizQuestion, QuizResult } = require('./models/nicheQuizModels');
 const Event = require('./models/eventModel');
 const careerDataRoutes = require('./routes/careerDataRoutes');
+const CarouselEvent = require('./models/carouselEvents');
 
 
 
@@ -1418,6 +1419,7 @@ app.get('/api/set-hero-images', requireAuth, async (req, res) => {
   }
 });
 
+<<<<<<< HEAD
 app.post('/api/events/import-from-instagram', requireAuth, async (req, res) => {
   try {
     // Optional: Add admin check here
@@ -1442,6 +1444,57 @@ app.post('/api/events/import-from-instagram', requireAuth, async (req, res) => {
   }
 });
 
+=======
+//Carousel Events
+//ADD CAROUSEL EVENT
+app.post('/api/clubs/:clubId/carousel-events', requireAuth, async (req, res) => {
+  try {
+    const { clubId } = req.params;
+    const eventData = { ...req.body, clubId };
+    const newEvent = new CarouselEvent(eventData);
+    await newEvent.save();
+    res.status(201).json({ success: true, event: newEvent });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to add carousel event' });
+  }
+});
+
+//GET CAROUSEL EVENTS FOR A CLUB
+app.get('/api/clubs/:clubId/carousel-events', async (req, res) => {
+  try {
+    const { clubId } = req.params;
+    const events = await CarouselEvent.find({ clubId }).sort({ date: 1 });
+    res.json({ events });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch carousel events' });
+  }
+});
+
+//UPDATE CAROUSEL EVENT
+app.put('/api/carousel-events/:eventId', requireAuth, async (req, res) => {
+  try {
+    const { eventId } = req.params;
+    const updatedEvent = await CarouselEvent.findByIdAndUpdate(eventId, req.body, { new: true });
+    if (!updatedEvent) return res.status(404).json({ error: 'Event not found' });
+    res.json({ success: true, event: updatedEvent });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to update carousel event' });
+  }
+});
+
+//DELETE CAROUSEL EVENT
+app.delete('/api/carousel-events/:eventId', requireAuth, async (req, res) => {
+  try {
+    const { eventId } = req.params;
+    await CarouselEvent.findByIdAndDelete(eventId);
+    res.json({ success: true });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to delete carousel event' });
+  }
+});
+
+
+>>>>>>> 6f477e4a2bff3607706c4083a6e0988842683605
 //  JOIN EVENT - Enhanced version
 app.post('/api/events/:id/join', requireAuth, async (req, res) => {
   try {
