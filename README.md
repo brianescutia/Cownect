@@ -6,14 +6,14 @@
 
 <div align="center">
 
-[![Live Demo](https://img.shields.io/badge/demo-live-success)](cownect.org) 
+[![Live Demo](https://img.shields.io/badge/demo-live-success)](https://www.cownect.org/) 
 [![GitHub](https://img.shields.io/badge/github-repo-blue)](https://github.com/brianescutia/Cownect)
 [![MongoDB](https://img.shields.io/badge/MongoDB-Atlas-green)](https://www.mongodb.com/cloud/atlas)
 [![Node.js](https://img.shields.io/badge/Node.js-18+-339933?logo=node.js)](https://nodejs.org/)
 
 **An intelligent career discovery and club matching platform empowering UC Davis students to find their path in tech.**
 
-[🚀 Live Demo](cownect.org) • [📖 Documentation](#documentation) • [🐛 Report Bug](https://github.com/brianescutia/Cownect/issues)
+[🚀 Live Demo](https://www.cownect.org/) • [📖 Documentation](#documentation) • [🐛 Report Bug](https://github.com/brianescutia/Cownect/issues)
 
 </div>
 
