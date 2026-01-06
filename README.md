@@ -4,11 +4,11 @@
 
 AI-powered career discovery for UC Davis students
 
-[![Live Demo](https://img.shields.io/badge/demo-live-success)](https://your-live-url.com)
-![Users](https://img.shields.io/badge/users-350+-orange)
+[![Live Demo](https://img.shields.io/badge/demo-live-success)](https://www.cownect.org/)
+![Users](https://img.shields.io/badge/users-400+-orange)
 ![Node](https://img.shields.io/badge/node-18+-green)
 
-[Live Demo](https://your-live-url.com) • [Report Bug](https://github.com/brianescutia/Cownect/issues)
+[Live Demo](https://www.cownect.org/) • [Report Bug](https://github.com/brianescutia/Cownect/issues)
 
 </div>
 
